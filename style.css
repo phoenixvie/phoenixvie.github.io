@@ -1,0 +1,57 @@
+
+
+body, html {
+	height: 100%;
+	margin: 0;
+	background-image: url(E1.jpg);
+	background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.all {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+}
+
+.area {
+	height: 200px;
+	width: 400px;
+	padding: 10px;
+	text-align: center;
+	background-color: yellow;
+	border-radius: 25px;
+}
+
+h1 {
+	color: black;
+	font-weight: bold;
+	background: yellow;
+	padding-bottom: 20px;
+}
+
+
+.btn-primary {
+	color: black;
+	border-color: black;
+	background-color: yellow;
+	margin: auto;
+	top: 59%;
+	border-radius: 10px;
+
+}
+
+.btn-primary:hover {
+	border-color: yellow;
+	background-color: black;
+	color: yellow;
+}
+
+.btn:focus,.btn:active {
+   outline: none !important;
+   box-shadow: none;
+}
