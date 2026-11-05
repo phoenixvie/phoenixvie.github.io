@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-05T15:11:44+01:00",
+  "checkedAt": "2026-11-05T15:12:18+01:00",
   "origin": "Quellseiten und PDF / redaktionell geprüft 05.11.2026",
   "sources": [
     {
@@ -425,17 +425,17 @@
       "days": {
         "2026-11-02": [
           {
-            "category": "Veggie",
             "name": "Knackiger Gemüse-Wok mit Jasminreis, Mangold-Pakora und Sweet-Chili-Sauce",
             "price": 9.5,
+            "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
           },
           {
-            "category": "Fleisch",
-            "name": "Tandoori-Masala-Chicken-Curry mit Basmatireis",
+            "name": "Tandoori-Masala-Chicken-Curry mit Basmatireis Allergene: Glutenfrei",
             "price": 9.5,
+            "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
@@ -443,17 +443,17 @@
         ],
         "2026-11-03": [
           {
-            "category": "Veggie",
             "name": "Süßkartoffel-Gemüse-Curry mit Basmatireis",
             "price": 9.5,
+            "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
           },
           {
-            "category": "Fleisch",
             "name": "Hühnerschnitzel mit Bratkartoffeln",
             "price": 9.5,
+            "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
@@ -461,17 +461,17 @@
         ],
         "2026-11-04": [
           {
-            "category": "Veggie",
             "name": "Linsen-Spinat-Gemüse-Curry mit Basmatireis",
             "price": 9.5,
+            "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
           },
           {
-            "category": "Fleisch",
             "name": "Teriyaki-Crispy-Chicken mit würzigem Eierreis",
             "price": 9.5,
+            "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
@@ -479,17 +479,17 @@
         ],
         "2026-11-05": [
           {
-            "category": "Veggie",
             "name": "Kichererbsen-Curry mit Basmatireis und Joghurt",
             "price": 9.5,
+            "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
           },
           {
-            "category": "Fleisch",
-            "name": "Mit Mozzarella gefüllte Natur-Hühnerbrust auf Kartoffel-Rote-Rüben-Püree",
+            "name": "Natur-Hühnerbrust mit Mozzarella gefüllt, auf Kartoffel-Rote-Rüben-Püree",
             "price": 9.5,
+            "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
@@ -497,17 +497,17 @@
         ],
         "2026-11-06": [
           {
-            "category": "Veggie",
-            "name": "Falafel-Bowl mit Reis, Hummus, frischem Salat und Gemüse",
+            "name": "Falafel-Bowl mit Reis, Hummus, frischem Salat & Gemüse",
             "price": 9.5,
+            "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
           },
           {
-            "category": "Fleisch",
             "name": "Thai-Kokos-Chicken-Curry mit Basmatireis",
             "price": 9.5,
+            "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
             "allergens": []
