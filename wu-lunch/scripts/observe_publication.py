@@ -28,6 +28,9 @@ SOURCES = {
     "baschly-veggie": URLS["baschly_veg"],
     "baschly-fleisch": URLS["baschly_meat"],
     "losteria": URLS["losteria"],
+    "topfdeckel": URLS["topfdeckel"],
+    "gruenehuette": URLS["gruenehuette"],
+    "lia": URLS["lia"],
 }
 def read_state():
     try:
@@ -61,6 +64,9 @@ def normalize(raw, name):
         "baschly-veggie": ["Angebot der Woche", "Das Angebot dieser Woche"],
         "baschly-fleisch": ["Angebot der Woche", "Das Angebot dieser Woche"],
         "losteria": ["Menu della Casa", "MENU DELLA CASA"],
+        "topfdeckel": ["Was heute", "Main Dish"],
+        "gruenehuette": ["TAGESTELLER / LUNCH SPECIAL"],
+        "lia": ["Tagesmenü Lia Coffee am WU Campus"],
     }
     for anchor in anchors.get(name, []):
         idx=content.casefold().find(anchor.casefold())
