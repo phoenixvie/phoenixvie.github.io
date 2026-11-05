@@ -253,6 +253,7 @@ html,body,.page { background:#fff; }
 }
 .weekend-hint{max-width:1110px;margin:13px auto 0;padding:10px 14px;border:1px solid #e4e7ea;border-radius:5px;background:#f7f9fc;color:#586577;font-size:14px;line-height:1.5}
 @media(max-width:750px){.weekend-hint{margin:12px 0 0;font-size:13px;padding:10px 12px}}
+.logo-omakueche{background:#b82c31;color:#fff}.logo-topfdeckel{background:#d48d29;color:#fff}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#8558a7;color:#fff}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxCjy3Q/MP9q+7jLhSqcI+zM=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head>
 <body>
@@ -292,7 +293,7 @@ html,body,.page { background:#fff; }
       const reply = await fetch('./data/menus.json?fresh=' + Date.now(), {cache:'no-store'});
       if (!reply.ok) throw new Error('HTTP '+reply.status);
       const candidate = await reply.json();
-      if (!candidate?.weekStart || !Array.isArray(candidate?.restaurants) || candidate.restaurants.length!==5)
+      if (!candidate?.weekStart || !Array.isArray(candidate?.restaurants) || candidate.restaurants.length<9)
         throw new Error('Ungültiges Menüformat');
       freshData = candidate;
     } catch(error) {
@@ -314,7 +315,7 @@ html,body,.page { background:#fff; }
     const footerNote = null;
 
     const brandClasses = {
-      mensa:'logo-mensa', campus:'logo-campus', baschly:'logo-baschly', glashaus:'logo-glashaus', losteria:'logo-losteria'
+      mensa:'logo-mensa', campus:'logo-campus', baschly:'logo-baschly', glashaus:'logo-glashaus', losteria:'logo-losteria', omakueche:'logo-omakueche', topfdeckel:'logo-topfdeckel', gruenehuette:'logo-gruenehuette', lia:'logo-lia'
     };
     const logoUrls = {"mensa":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Mensa.jpg","campus":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Das_Campus.jpg","baschly":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Baschly.jpg","losteria":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Losteria.jpg","glashaus":"https://www.dasglashaus.at/favicon.ico"};
     const brandLabels = {
@@ -397,6 +398,14 @@ html,body,.page { background:#fff; }
       const validFrom=restaurant.validFrom||'';
       // Kein Übertragen eines Wochengerichts in die Folgewoche.
       if(!isCurrentWeek){
+        if(restaurant.id==='omakueche'){
+          const weekday=new Date(selectedDate+'T12:00:00Z').getUTCDay();
+          return [{
+            name:weekday===5?'Chinesisches All-you-can-eat-Buffet (Erwachsene)':'All-you-can-eat-Buffet (Erwachsene)',
+            price:10.90, category:'Buffet', diet:'unknown',
+            description:'Mo–Fr 11:00–15:00 Uhr; Menüangebot laut Preisaushang'
+          }];
+        }
         return restaurant.id==='losteria' && Array.isArray(restaurant.seasonal) ? restaurant.seasonal : [];
       }
       const items=restaurant.days?.[selectedDate]||[];
@@ -441,7 +450,7 @@ html,body,.page { background:#fff; }
       const items=visibleDishes(restaurant);
       const row=document.createElement('article');
       row.className='row';
-      const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L'};
+      const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L',omakueche:'O',topfdeckel:'T',gruenehuette:'H',lia:'L'};
       const label=initials[restaurant.id]||restaurant.name.charAt(0).toUpperCase();
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.price==null?'':escapeHtml(formatPrice(item.price)))+'</span></div>'
@@ -467,13 +476,62 @@ html,body,.page { background:#fff; }
       campus:{address:'Welthandelsplatz 1, Gebäude D2, 1020 Wien',building:'D2',lat:48.21213,lon:16.41021,letter:'C',color:'#387dda'},
       baschly:{address:'Welthandelsplatz 1, Gebäude D4, 1020 Wien',building:'D4',lat:48.21445,lon:16.40743,letter:'B',color:'#8a55a6'},
       glashaus:{address:'Am Grünen Prater 11, 1020 Wien',building:'Am Grünen Prater 11',lat:48.2118847,lon:16.4120651,letter:'G',color:'#6f9e39'},
-      losteria:{address:'Freudplatz 2, 1020 Wien',building:'D5/Freudplatz',lat:48.21468,lon:16.4052,letter:'L',color:'#bc7837'}
+      losteria:{address:'Freudplatz 2, 1020 Wien',building:'D5/Freudplatz',lat:48.21468,lon:16.4052,letter:'L',color:'#bc7837'},
+      omakueche:{address:'Vorgartenstraße 206B/1, 1020 Wien',building:'Vorgartenstraße 206B',letter:'O',color:'#b82c31'},
+      topfdeckel:{address:'Vorgartenstraße 206B, 1020 Wien',building:'BIZ ZWEI',letter:'T',color:'#d48d29'},
+      gruenehuette:{address:'Prater 196, 1020 Wien',building:'Prater 196',letter:'H',color:'#448b54'},
+      lia:{address:'Welthandelsplatz 1, LC, 1020 Wien',building:'Library & Learning Center',letter:'L',color:'#8558a7'}
     };
     // Google Maps Suche mit Restaurantname, WU-Standort und Adresse.
     // Keine erfundenen Place-IDs; Google Maps kann das passende Profil auflösen.
     function googleMapsUrl(restaurant, info){
       return 'https://www.google.com/maps/search/?api=1&query='+
         encodeURIComponent(restaurant.name+', '+info.address+', Wien, Österreich');
+    }
+
+    let mapGeoStarted=false;
+    function addRestaurantPin(restaurant,info){
+      const icon=L.divIcon({
+        className:'leaflet-div-icon',
+        html:'<span class="map-pin" style="background:'+info.color+'">'+info.letter+'</span>',
+        iconSize:[38,38],iconAnchor:[19,19],popupAnchor:[0,-18]
+      });
+      const marker=L.marker([info.lat,info.lon],{icon,title:restaurant.name}).addTo(realMap);
+      const content=document.createElement('div');
+      const title=document.createElement('strong');title.textContent=restaurant.name;
+      const address=document.createElement('p');address.textContent=info.address;
+      const directions=document.createElement('a');
+      directions.textContent='Auf Google Maps öffnen';
+      directions.href=googleMapsUrl(restaurant,info);
+      directions.target='_blank';directions.rel='noopener noreferrer';
+      content.append(title,address,directions);
+      marker.bindPopup(content);
+    }
+    async function loadMissingMapPins(){
+      if(mapGeoStarted)return;
+      mapGeoStarted=true;
+      // Adressen dynamisch statt erfundener Koordinaten; begrenzte Abrufe.
+      for(const restaurant of DATA.restaurants){
+        const info=locationInfo[restaurant.id];
+        if(!info||info.lat)continue;
+        try{
+          const address=info.address.replace(/\/1(?=,)/,'');
+          const url='https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=at&q='+
+             encodeURIComponent(address);
+          const response=await fetch(url,{headers:{Accept:'application/json'}});
+          if(response.ok){
+            const hits=await response.json();
+            if(hits.length){
+              const lat=Number(hits[0].lat),lon=Number(hits[0].lon);
+              if(lat>48.17&&lat<48.27&&lon>16.32&&lon<16.49){
+                info.lat=lat;info.lon=lon;
+                addRestaurantPin(restaurant,info);
+              }
+            }
+          }
+        }catch(error){console.warn('Standort noch nicht geocodiert:',restaurant.name);}
+        await new Promise(done=>setTimeout(done,1150));
+      }
     }
     function loadRealMap(){
       if(!window.L){
@@ -482,7 +540,7 @@ html,body,.page { background:#fff; }
       }
       if(!realMap){
         mapStage.replaceChildren();
-        realMap=L.map(mapStage,{scrollWheelZoom:false,zoomControl:true}).setView([48.2132,16.4088],16);
+        realMap=L.map(mapStage,{scrollWheelZoom:false,zoomControl:true}).setView([48.2132,16.4088],15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
           attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap-Mitwirkende</a>',
           maxZoom:19,detectRetina:false
@@ -490,26 +548,13 @@ html,body,.page { background:#fff; }
         const bounds=[];
         DATA.restaurants.forEach(restaurant=>{
           const info=locationInfo[restaurant.id];
-          if(!info)return;
-          const icon=L.divIcon({
-            className:'leaflet-div-icon',
-            html:'<span class="map-pin" style="background:'+info.color+'">'+info.letter+'</span>',
-            iconSize:[38,38],iconAnchor:[19,19],popupAnchor:[0,-18]
-          });
-          const marker=L.marker([info.lat,info.lon],{icon,title:restaurant.name}).addTo(realMap);
-          const content=document.createElement('div');
-          const title=document.createElement('strong');title.textContent=restaurant.name;
-          const address=document.createElement('p');address.textContent=info.address;
-          const directions=document.createElement('a');
-          directions.textContent='Auf Google Maps öffnen';
-          directions.href=googleMapsUrl(restaurant, info);
-          directions.target='_blank';directions.rel='noopener noreferrer';
-          content.append(title,address,directions);
-          marker.bindPopup(content);
+          if(!info||!Number.isFinite(info.lat)||!Number.isFinite(info.lon))return;
+          addRestaurantPin(restaurant,info);
           bounds.push([info.lat,info.lon]);
         });
-        realMap.fitBounds(bounds,{padding:[40,40],maxZoom:17});
+        if(bounds.length)realMap.fitBounds(bounds,{padding:[40,40],maxZoom:16});
       }
+      loadMissingMapPins();
       requestAnimationFrame(()=>realMap.invalidateSize({pan:false}));
       setTimeout(()=>realMap.invalidateSize({pan:false}),250);
     }
