@@ -1,0 +1,45 @@
+name: WU Lunch – Veröffentlichungszeiten beobachten
+
+on:
+  schedule:
+    # Stichproben November/Dezember 2026, GitHub cron in UTC.
+    # 06/09/12/16 UTC = 07/10/13/17 Uhr in Wien (Winterzeit).
+    - cron: '0 6,9,12,16 * * 0-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wu-lunch-publication-monitor
+  cancel-in-progress: false
+
+jobs:
+  observe:
+    if: github.repository == 'phoenixvie/phoenixvie.github.io'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: wu-lunch/requirements.txt
+      - name: Abhängigkeiten installieren
+        run: pip install -r wu-lunch/requirements.txt
+      - name: Veröffentlichungsänderungen erfassen
+        run: python wu-lunch/scripts/observe_publication.py
+      - name: Nur neue Stichproben speichern
+        shell: bash
+        run: |
+          git config user.name "wu-lunch-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wu-lunch/data/publication-observations.json
+          if ! git diff --cached --quiet; then
+            git commit -m "WU Lunch: Veröffentlichungsmonitor $(TZ=Europe/Vienna date +%F-%H)"
+            git pull --rebase origin "${{ github.event.repository.default_branch }}"
+            git push origin HEAD:"${{ github.event.repository.default_branch }}"
+          fi
