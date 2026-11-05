@@ -49,6 +49,42 @@
       "note": "Menu della Casa – Saisonkarte; keine täglich wechselnden Mittagsmenüs",
       "validFrom": null,
       "validUntil": null
+    },
+    {
+      "id": "omakueche",
+      "name": "Oma Küche",
+      "url": "https://www.xn--omakche-q2a.at/",
+      "status": "recurring",
+      "note": "Buffet für Erwachsene, Mo–Fr 11:00–15:00; freitags chinesisches Buffet. Quelle: ausgehängte Preisliste (Foto vom 05.11.2026).",
+      "validFrom": null,
+      "validUntil": null
+    },
+    {
+      "id": "topfdeckel",
+      "name": "Topf & Deckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "status": "empty",
+      "note": "Täglich wechselnde Karte; kleine und große Portionen, Kombis separat.",
+      "validFrom": null,
+      "validUntil": null
+    },
+    {
+      "id": "gruenehuette",
+      "name": "Zur Grünen Hütte",
+      "url": "https://www.zurgruenenhuette.com/mittags-menu",
+      "status": "empty",
+      "note": "Wöchentliches Lunch Special; Suppe gegen Aufpreis.",
+      "validFrom": null,
+      "validUntil": null
+    },
+    {
+      "id": "lia",
+      "name": "Lia Coffee WU",
+      "url": "https://lia.coffee/lia-coffee-wu/",
+      "status": "empty",
+      "note": "Nur Lia Coffee am WU Campus; anderes Lia-Bistro nicht übernommen.",
+      "validFrom": null,
+      "validUntil": null
     }
   ],
   "restaurants": [
@@ -623,6 +659,129 @@
           "allergens": []
         }
       ]
+    },
+    {
+      "id": "omakueche",
+      "name": "Oma Küche",
+      "monogram": "O",
+      "url": "https://www.xn--omakche-q2a.at/",
+      "status": "recurring",
+      "note": "Buffet für Erwachsene, Mo–Fr 11:00–15:00; freitags chinesisches Buffet. Quelle: ausgehängte Preisliste (Foto vom 05.11.2026).",
+      "validFrom": null,
+      "validUntil": null,
+      "days": {
+        "2026-11-02": [
+          {
+            "name": "All-you-can-eat-Buffet (Erwachsene)",
+            "price": 10.9,
+            "category": "Buffet",
+            "diet": "unknown",
+            "description": "11:00–15:00 Uhr; Buffet to go 10,90 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-03": [
+          {
+            "name": "All-you-can-eat-Buffet (Erwachsene)",
+            "price": 10.9,
+            "category": "Buffet",
+            "diet": "unknown",
+            "description": "11:00–15:00 Uhr; Buffet to go 10,90 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-04": [
+          {
+            "name": "All-you-can-eat-Buffet (Erwachsene)",
+            "price": 10.9,
+            "category": "Buffet",
+            "diet": "unknown",
+            "description": "11:00–15:00 Uhr; Buffet to go 10,90 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-05": [
+          {
+            "name": "All-you-can-eat-Buffet (Erwachsene)",
+            "price": 10.9,
+            "category": "Buffet",
+            "diet": "unknown",
+            "description": "11:00–15:00 Uhr; Buffet to go 10,90 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-06": [
+          {
+            "name": "Chinesisches All-you-can-eat-Buffet (Erwachsene)",
+            "price": 10.9,
+            "category": "Buffet",
+            "diet": "unknown",
+            "description": "11:00–15:00 Uhr; Buffet to go 10,90 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ]
+      }
+    },
+    {
+      "id": "topfdeckel",
+      "name": "Topf & Deckel",
+      "monogram": "T",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "status": "empty",
+      "note": "Täglich wechselnde Karte; kleine und große Portionen, Kombis separat.",
+      "validFrom": null,
+      "validUntil": null,
+      "days": {
+        "2026-11-02": [],
+        "2026-11-03": [],
+        "2026-11-04": [],
+        "2026-11-05": [],
+        "2026-11-06": []
+      }
+    },
+    {
+      "id": "gruenehuette",
+      "name": "Zur Grünen Hütte",
+      "monogram": "H",
+      "url": "https://www.zurgruenenhuette.com/mittags-menu",
+      "status": "empty",
+      "note": "Wöchentliches Lunch Special; Suppe gegen Aufpreis.",
+      "validFrom": null,
+      "validUntil": null,
+      "days": {
+        "2026-11-02": [],
+        "2026-11-03": [],
+        "2026-11-04": [],
+        "2026-11-05": [],
+        "2026-11-06": []
+      }
+    },
+    {
+      "id": "lia",
+      "name": "Lia Coffee WU",
+      "monogram": "L",
+      "url": "https://lia.coffee/lia-coffee-wu/",
+      "status": "empty",
+      "note": "Nur Lia Coffee am WU Campus; anderes Lia-Bistro nicht übernommen.",
+      "validFrom": null,
+      "validUntil": null,
+      "days": {
+        "2026-11-02": [],
+        "2026-11-03": [],
+        "2026-11-04": [],
+        "2026-11-05": [],
+        "2026-11-06": []
+      }
     }
   ]
 }
