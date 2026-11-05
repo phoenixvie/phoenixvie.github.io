@@ -61,6 +61,23 @@ def period(text):
             q=date(int(z),MONTHS[mn.lower()[:3]],int(b))
             return (x,q) if 0 <= (q-x).days <= 14 else None
         except (KeyError,ValueError): pass
+    # Webseiten mit Jahreszahl nur am Ende: "03.08 bis 07.08.2026".
+    m=re.search(r"(\d{1,2})\s*[./]\s*(\d{1,2})\s*(?:[-–—]|bis)\s*(\d{1,2})\s*[./]\s*(\d{1,2})\s*[./]\s*(\d{4})",text,re.I)
+    if m:
+        a,b,d,e,y=map(int,m.groups())
+        try:
+            end=date(y,e,d); start=date(y-(1 if b>e else 0),b,a)
+            return (start,end) if 0 <= (end-start).days <=14 else None
+        except ValueError: pass
+    # Monatsnamen mit nur einer Jahreszahl: "2. Nov - 6. Nov 2026".
+    m=re.search(r"(\d{1,2})\.\s*([a-zäöü]{3,})\.?\s*(?:[-–—]|bis)\s*(\d{1,2})\.\s*([a-zäöü]{3,})\.?\s*(\d{4})",text,re.I)
+    if m:
+        a,ma,b,mb,y=m.groups()
+        try:
+            end=date(int(y),MONTHS[mb.lower()[:3]],int(b))
+            start=date(int(y)-(1 if MONTHS[ma.lower()[:3]]>end.month else 0),MONTHS[ma.lower()[:3]],int(a))
+            return (start,end) if 0 <= (end-start).days <=14 else None
+        except (ValueError,KeyError): pass
     return None
 
 def load_data():
@@ -160,7 +177,7 @@ def parse_glashaus(raw,monday):
     lines=html_lines(raw); whole="\n".join(lines)
     p=period(whole)
     if not p or not (p[0]<=monday<=p[1]):
-        raise ValueError(f"Glashaus: Plan nicht für KW {monday}: {p}")
+        raise ValueError(f"Glashaus: Plan nicht für KW {monday}: {p}; Textanfang: {whole[:230]!r}")
     blocks=day_blocks(lines)
     mt=re.search(r"Vegetarisch\s*€\s*(\d+[,\.]\d{2}).*?Fisch\s*&\s*Fleisch\s*€\s*(\d+[,\.]\d{2})",whole,re.I|re.S)
     costs=[float(c.replace(",",".")) for c in mt.groups()] if mt else [None,None]
@@ -230,7 +247,7 @@ def parse_mensa(raw,monday):
         text="\n".join(p.get_text("text") for p in doc)
         p=period(text)
         if p is None or p[0]!=monday or p[1] not in (monday+timedelta(days=4),monday+timedelta(days=3)):
-            raise ValueError(f"Mensa: PDF ist nicht aus aktueller Woche: {p}")
+            raise ValueError(f"Mensa: PDF ist nicht aus aktueller Woche: {p}; Textlänge={len(text)}, Textanfang={text[:165]!r}")
         cats=[("Tagessuppe",r"^Tagess?uppe$"),
               ("Powered by plants / Veggie",r"^Powered by plants|^100% plant based|^Veggie$"),
               ("Meaty",r"^Meaty$"),("Global & Grill",r"^Global\s*&\s*Grill$"),
