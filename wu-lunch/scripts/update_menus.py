@@ -4,6 +4,7 @@ Keine externen Zugangsdaten nötig. GitHub Actions führt das Skript aus.
 """
 from __future__ import annotations
 import argparse
+from difflib import SequenceMatcher
 import json
 import logging
 import re
@@ -378,6 +379,20 @@ def weekly_cache_valid(data,identifier,monday):
     if r.get("validFrom") and not (r["validFrom"]<=monday.isoformat()<=r.get("validUntil","")):return False
     return sum(len(v) for v in r.get("days",{}).values())>= (10 if identifier=="mensa" else 6)
 
+def compare_verified_week(old_days,new_days):
+    """Schützt bereits überprüfte Wochenmenüs vor grob falsch gelesenen PDF-Spalten."""
+    ratios=[]
+    for day,items in new_days.items():
+        previously={x.get("category"):x.get("name","") for x in old_days.get(day,[])}
+        for x in items:
+            name=previously.get(x["category"])
+            if name:
+                a=re.sub(r"\W+","",name.casefold())
+                b=re.sub(r"\W+","",x["name"].casefold())
+                ratios.append(SequenceMatcher(None,a,b,autojunk=False).ratio())
+    if len(ratios)>=8 and sum(v<0.34 for v in ratios)>len(ratios)*0.35:
+        raise ValueError("Mensa: PDF-Zellzuordnung widerspricht vorhandenen, überprüften Tagesgerichten")
+    
 def apply_result(data,identifier,days,status,validity=None):
     r=restaurant(data,identifier); s=source(data,identifier)
     r["days"]=days; r["status"]=status
@@ -452,6 +467,8 @@ def run(today):
                 if parsed is None:
                     raise ValueError("Mensa: aktuelle PDF-Woche nicht verifizierbar: "+" | ".join(errors[:3]))
                 days,validity=parsed
+                if data.get("weekStart")==monday.isoformat():
+                    compare_verified_week(restaurant(data,"mensa").get("days",{}),days)
                 apply_result(data,"mensa",days,"verified",validity)
             elif ident=="glashaus":
                 days,validity=parse_glashaus(safe_get(URLS["glashaus"]),monday)
