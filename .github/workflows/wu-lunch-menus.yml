@@ -6,6 +6,11 @@ on:
     # 07:15 UTC = 08:15 Winterzeit. Der Guard führt nur einmal aus.
     - cron: '15 6,7 * * 1-5'
   workflow_dispatch:
+  push:
+    paths:
+      - 'wu-lunch/scripts/**'
+      - 'wu-lunch/requirements.txt'
+      - '.github/workflows/wu-lunch-menus.yml'
 
 permissions:
   contents: write
