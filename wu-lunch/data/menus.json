@@ -72,7 +72,7 @@
       "id": "gruenehuette",
       "name": "Zur Grünen Hütte",
       "url": "https://www.zurgruenenhuette.com/mittags-menu",
-      "status": "empty",
+      "status": "not_published",
       "note": "Wöchentliches Lunch Special; Suppe gegen Aufpreis.",
       "validFrom": null,
       "validUntil": null
@@ -80,8 +80,8 @@
     {
       "id": "lia",
       "name": "Lia Coffee WU",
-      "url": "https://lia.coffee/lia-coffee-wu/",
-      "status": "empty",
+      "url": "https://lia.coffee/",
+      "status": "not_published",
       "note": "Nur Lia Coffee am WU Campus; anderes Lia-Bistro nicht übernommen.",
       "validFrom": null,
       "validUntil": null
@@ -876,8 +876,8 @@
       "name": "Zur Grünen Hütte",
       "monogram": "H",
       "url": "https://www.zurgruenenhuette.com/mittags-menu",
-      "status": "empty",
-      "note": "Wöchentliches Lunch Special; Suppe gegen Aufpreis.",
+      "status": "not_published",
+      "note": "Der zuletzt veröffentlichte Wochenplan ist nicht aktuell; keine Übernahme ohne gültiges Wochendatum.",
       "validFrom": null,
       "validUntil": null,
       "days": {
@@ -892,9 +892,9 @@
       "id": "lia",
       "name": "Lia Coffee WU",
       "monogram": "L",
-      "url": "https://lia.coffee/lia-coffee-wu/",
-      "status": "empty",
-      "note": "Nur Lia Coffee am WU Campus; anderes Lia-Bistro nicht übernommen.",
+      "url": "https://lia.coffee/",
+      "status": "not_published",
+      "note": "WU-Campus-Menüs stehen auf der Lia-Startseite; dort aktuell nur ein älterer datierter Plan. Keine Übernahme ohne passende Kalenderwoche.",
       "validFrom": null,
       "validUntil": null,
       "days": {
