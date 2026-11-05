@@ -198,6 +198,58 @@ html,body,.page { background:#fff; }
  .menu-line,.dish-price {font-size:12px}
 }
 
+
+/* Sichere Leaflet-Basisregeln, auch wenn das externe Stylesheet blockiert ist */
+.leaflet-container{position:relative;overflow:hidden;background:#e6edf1;outline-offset:1px;touch-action:none;font-family:Arial,sans-serif}
+.leaflet-pane,.leaflet-tile,.leaflet-marker-icon,.leaflet-marker-shadow,.leaflet-tile-container,.leaflet-pane>svg,.leaflet-pane>canvas,.leaflet-zoom-box,.leaflet-image-layer,.leaflet-layer{position:absolute;left:0;top:0}
+.leaflet-pane{z-index:400}
+.leaflet-tile-pane{z-index:200}
+.leaflet-overlay-pane{z-index:400}
+.leaflet-shadow-pane{z-index:500}
+.leaflet-marker-pane{z-index:600}
+.leaflet-tooltip-pane{z-index:650}
+.leaflet-popup-pane{z-index:700}
+.leaflet-map-pane canvas{z-index:100}
+.leaflet-map-pane svg{z-index:200}
+.leaflet-tile{filter:inherit;visibility:hidden}
+.leaflet-tile-loaded{visibility:inherit}
+.leaflet-zoom-animated{transform-origin:0 0}
+.leaflet-container img{max-width:none!important;max-height:none!important}
+.leaflet-top,.leaflet-bottom{position:absolute;z-index:1000;pointer-events:none}
+.leaflet-top{top:0}.leaflet-bottom{bottom:0}.leaflet-left{left:0}.leaflet-right{right:0}
+.leaflet-control{position:relative;z-index:800;pointer-events:auto;clear:both}
+.leaflet-top .leaflet-control{margin-top:10px}
+.leaflet-bottom .leaflet-control{margin-bottom:10px}
+.leaflet-left .leaflet-control{margin-left:10px;float:left}
+.leaflet-right .leaflet-control{margin-right:10px;float:right}
+.leaflet-control-zoom a{display:block;height:30px;width:30px;text-align:center;background:#fff;border:1px solid #bbb;font-weight:700;font-size:20px;line-height:30px;color:#333;text-decoration:none}
+.leaflet-control-zoom a:first-child{border-radius:4px 4px 0 0}
+.leaflet-control-zoom a:last-child{border-radius:0 0 4px 4px}
+.leaflet-control-attribution{background:rgba(255,255,255,.88);font-size:11px;padding:3px 5px}
+.leaflet-marker-icon{border:0}
+.leaflet-popup{position:absolute;text-align:center;margin-bottom:20px;transform:translate(-50%,-100%)}
+.leaflet-popup-content-wrapper{background:#fff;padding:8px 14px;border-radius:8px;box-shadow:0 3px 12px #0002;text-align:left;min-width:180px}
+.leaflet-popup-content{font-size:13px;line-height:1.5}
+.leaflet-popup-tip-container{width:20px;height:12px;position:absolute;left:50%;transform:translateX(-50%);overflow:hidden}
+.leaflet-popup-tip{width:12px;height:12px;background:#fff;transform:rotate(45deg);position:absolute;top:-8px;left:4px}
+.leaflet-popup-close-button{position:absolute;right:6px;top:4px;font-size:18px;color:#444;z-index:5}
+.leaflet-div-icon{background:transparent;border:0}
+.map-pin{display:grid;place-items:center;width:38px;height:38px;border:3px solid #fff;border-radius:50%;color:#fff;font-size:18px;font-weight:800;box-shadow:0 3px 9px #0004}
+.logo-box{font-size:34px!important;font-weight:800!important;letter-spacing:0!important;color:#fff!important;border-radius:9px!important;box-shadow:none!important}
+.logo-mensa{background:#e30613!important}
+.logo-campus{background:#387dda!important}
+.logo-glashaus{background:#6f9e39!important}
+.logo-baschly{background:#8a55a6!important}
+.logo-losteria{background:#bc7837!important}
+.restaurant-title h3,.menu-line,.dish-price{font-size:15px!important;line-height:1.5!important}
+.dish-price{font-weight:600!important}
+.map-stage{height:450px;min-height:360px;isolation:isolate}
+.map-stage .leaflet-container{width:100%;height:100%}
+@media(max-width:750px){
+ .restaurant-title h3,.menu-line,.dish-price{font-size:14px!important;line-height:1.45!important}
+ .logo-box{font-size:27px!important}
+ .map-stage{height:350px;min-height:320px}
+}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxCjy3Q/MP9q+7jLhSqcI+zM=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head>
 <body>
@@ -227,7 +279,7 @@ html,body,.page { background:#fff; }
     
   </div>
 
-  <script src="data.js?v=2"></script>
+  <script src="data.js?v=3"></script>
   <script>
     const DATA = window.CAMPUS_LUNCH_DATA;
     const WEEKDAY_NAMES = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
@@ -318,10 +370,15 @@ html,body,.page { background:#fff; }
 
     function visibleDishes(restaurant){
       const raw=dishesForRestaurant(restaurant);
-      if(restaurant.id!=='mensa') return raw.map(item=>({name:item.name,price:item.price}));
-      const soup=raw.find(item=>item.category==='Tagessuppe');
-      const mains=raw.filter(item=>item.category!=='Tagessuppe');
-      return mains.map(item=>({name:(soup?soup.name+' + ':'')+item.name,price:item.price}));
+      if(restaurant.id==='glashaus'){
+        return raw.map(item=>({name:'Suppe + '+item.name,price:item.price}));
+      }
+      if(restaurant.id==='mensa'){
+        const soup=raw.find(item=>item.category==='Tagessuppe');
+        const mains=raw.filter(item=>item.category!=='Tagessuppe');
+        return mains.map(item=>({name:(soup?soup.name+' + ':'')+item.name,price:item.price}));
+      }
+      return raw.map(item=>({name:item.name,price:item.price}));
     }
     function escapeHtml(value){
       return String(value??'').replace(/[&<>"']/g,chr=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[chr]));
@@ -330,20 +387,15 @@ html,body,.page { background:#fff; }
       const items=visibleDishes(restaurant);
       const row=document.createElement('article');
       row.className='row';
-      const logoText=brandLabels[restaurant.id]||restaurant.name;
-      const logoUrl=logoUrls[restaurant.id];
-      const logo=logoUrl
-        ? '<img class="logo-image" src="'+escapeHtml(logoUrl)+'" alt="'+escapeHtml(restaurant.name)+' Logo" loading="lazy">'
-        : escapeHtml(logoText).replace(/\n/g,'<br>');
+      const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L'};
+      const label=initials[restaurant.id]||restaurant.name.charAt(0).toUpperCase();
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.price==null?'':escapeHtml(formatPrice(item.price)))+'</span></div>'
       ).join('') : '<div class="empty-row">Kein Mittagsmenü für diesen Tag verfügbar.</div>';
-      row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'">'+logo+'</div></div>'
+      row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+escapeHtml(label)+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
        +'<div class="menu-lines">'+dishRows+'</div>'
        +'<a class="source-link" href="'+escapeHtml(restaurant.url)+'" target="_blank" rel="noopener noreferrer">Zum Restaurant</a></div>';
-      const img=row.querySelector('.logo-image');
-      if(img)img.addEventListener('error',()=>{img.remove();row.querySelector('.logo-box').textContent=restaurant.monogram||restaurant.name;});
       return row;
     }
 
@@ -354,49 +406,52 @@ html,body,.page { background:#fff; }
     }
 
 
-    let realMap=null, loadedPins=false;
+
+    let realMap=null;
     const locationInfo={
-      mensa:{address:'Welthandelsplatz 1, Gebäude D1, 1020 Wien',building:'D1'},
-      campus:{address:'Welthandelsplatz 1, Gebäude D2, 1020 Wien',building:'D2'},
-      baschly:{address:'Welthandelsplatz 1, Gebäude D4, 1020 Wien',building:'D4'},
-      glashaus:{address:'Welthandelsplatz 1, 1020 Wien, das Glashaus',building:'Campus WU'},
-      losteria:{address:'Freudplatz 2, 1020 Wien',building:'D5'}
+      mensa:{address:'Welthandelsplatz 1, D1/TC, 1020 Wien',building:'D1/TC',lat:48.2129611,lon:16.4098281,letter:'M',color:'#e30613'},
+      campus:{address:'Welthandelsplatz 1, Gebäude D2, 1020 Wien',building:'D2',lat:48.21213,lon:16.41021,letter:'C',color:'#387dda'},
+      baschly:{address:'Welthandelsplatz 1, Gebäude D4, 1020 Wien',building:'D4',lat:48.21445,lon:16.40743,letter:'B',color:'#8a55a6'},
+      glashaus:{address:'Am Grünen Prater 11, 1020 Wien',building:'Am Grünen Prater 11',lat:48.2118847,lon:16.4120651,letter:'G',color:'#6f9e39'},
+      losteria:{address:'Freudplatz 2, 1020 Wien',building:'D5/Freudplatz',lat:48.21468,lon:16.4052,letter:'L',color:'#bc7837'}
     };
-    async function loadRealMap(){
-      if(!window.L){mapStage.innerHTML='<div class="map-error">Kartenbibliothek nicht erreichbar. Adresslinks stehen unten bereit.</div>';return;}
+    function loadRealMap(){
+      if(!window.L){
+        mapStage.innerHTML='<div class="map-error">Die interaktive Karte ist derzeit nicht verfügbar. Über die unten stehenden Links lassen sich die Standorte auf OpenStreetMap öffnen.</div>';
+        return;
+      }
       if(!realMap){
         mapStage.replaceChildren();
-        realMap=L.map(mapStage,{scrollWheelZoom:false}).setView([48.2131,16.4094],16);
+        realMap=L.map(mapStage,{scrollWheelZoom:false,zoomControl:true}).setView([48.2132,16.4088],16);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-          attribution:'&copy; OpenStreetMap-Mitwirkende',maxZoom:19
+          attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap-Mitwirkende</a>',
+          maxZoom:19,detectRetina:false
         }).addTo(realMap);
+        const bounds=[];
+        DATA.restaurants.forEach(restaurant=>{
+          const info=locationInfo[restaurant.id];
+          if(!info)return;
+          const icon=L.divIcon({
+            className:'leaflet-div-icon',
+            html:'<span class="map-pin" style="background:'+info.color+'">'+info.letter+'</span>',
+            iconSize:[38,38],iconAnchor:[19,19],popupAnchor:[0,-18]
+          });
+          const marker=L.marker([info.lat,info.lon],{icon,title:restaurant.name}).addTo(realMap);
+          const content=document.createElement('div');
+          const title=document.createElement('strong');title.textContent=restaurant.name;
+          const address=document.createElement('p');address.textContent=info.address;
+          const directions=document.createElement('a');
+          directions.textContent='Route öffnen';
+          directions.href='https://www.openstreetmap.org/directions?to='+info.lat+'%2C'+info.lon;
+          directions.target='_blank';directions.rel='noopener noreferrer';
+          content.append(title,address,directions);
+          marker.bindPopup(content);
+          bounds.push([info.lat,info.lon]);
+        });
+        realMap.fitBounds(bounds,{padding:[40,40],maxZoom:17});
       }
-      setTimeout(()=>realMap.invalidateSize(),60);
-      if(loadedPins) return;
-      loadedPins=true;
-      const bounds=[];
-      for(const restaurant of DATA.restaurants){
-        const info=locationInfo[restaurant.id];
-        try{
-          const q=restaurant.name+', '+info.address+', Wien, Österreich';
-          const response=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q),{headers:{Accept:'application/json'}});
-          if(response.ok){
-            const results=await response.json();
-            if(results.length){
-              const lat=Number(results[0].lat),lon=Number(results[0].lon);
-              const pop=document.createElement('div');
-              const heading=document.createElement('strong');heading.textContent=restaurant.name;
-              const line=document.createElement('p');line.textContent=info.address;
-              const link=document.createElement('a');link.href='https://www.openstreetmap.org/directions?to='+lat+'%2C'+lon;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Route anzeigen';
-              pop.append(heading,line,link);
-              L.marker([lat,lon],{title:restaurant.name}).addTo(realMap).bindPopup(pop);
-              bounds.push([lat,lon]);
-            }
-          }
-        }catch(err){console.warn('Standort nicht verfügbar',restaurant.name);}
-        await new Promise(resolve=>setTimeout(resolve,1200));
-      }
-      if(bounds.length)realMap.fitBounds(bounds,{padding:[38,38],maxZoom:17});
+      requestAnimationFrame(()=>realMap.invalidateSize({pan:false}));
+      setTimeout(()=>realMap.invalidateSize({pan:false}),250);
     }
     function renderMap(){
       mapList.replaceChildren();
