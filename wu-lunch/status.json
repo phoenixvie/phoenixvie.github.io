@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-05T15:16:45+01:00",
+  "checked_at": "2026-11-05T15:17:27+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
   "health": "degraded",
@@ -8,22 +8,22 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
       "last_success": null,
-      "consecutive_failures": 2
+      "consecutive_failures": 3
     },
     "glashaus": {
       "state": "error",
       "error": "ValueError: Glashaus: Plan nicht für KW 2026-11-02: None; Textanfang: 'Mittagsmenüs | DAS GLASHAUS\\ntop of page\\nScroll\\nJeweils mit Suppe oder Salat\\nVegetarisch € 14,90 / Fisch&Fleisch € 15,90\\nMittagsmenüs\\n2. Nov. 2026\\n6. Nov. ",
       "last_success": null,
-      "consecutive_failures": 2
+      "consecutive_failures": 3
     },
     "campus": {
       "state": "ok",
-      "last_success": "2026-11-05T15:16:45+01:00",
+      "last_success": "2026-11-05T15:17:27+01:00",
       "consecutive_failures": 0
     },
     "baschly": {
       "state": "ok",
-      "last_success": "2026-11-05T15:16:45+01:00",
+      "last_success": "2026-11-05T15:17:27+01:00",
       "consecutive_failures": 0
     },
     "losteria": {
