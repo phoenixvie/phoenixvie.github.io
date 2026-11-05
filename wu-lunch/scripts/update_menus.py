@@ -479,36 +479,50 @@ def parse_topfdeckel(raw,today,monday):
     return result
 
 def parse_gruenehuette(raw,monday):
-    """Wochenteller ohne fälschlich als inklusive gebuchte €2-Suppe."""
+    """Wochenteller inkl. getrenntem HTML von Tageskürzel und Gerichtstext.
+
+    Squarespace erzeugt <strong>MO:</strong><span>Gericht</span> als zwei
+    stripped_strings. Es darf weder ein leeres Gericht gespeichert noch
+    der Folgetext dem falschen Tag zugeordnet werden.
+    """
     lines=html_lines(raw); whole="\n".join(lines)
-    # Squarespace veröffentlicht Datumsformatierungen wie "5.10. 2026" oder "12. 10. 2026".
     m=re.search(r"TAGESTELLER\s*/\s*LUNCH\s*SPECIAL\s*(\d{1,2})\s*\.\s*(\d{1,2})\s*\.\s*(\d{4})",whole,re.I)
     if not m:raise ValueError("Grüne Hütte: Datumsüberschrift fehlt")
     start=date(int(m.group(3)),int(m.group(2)),int(m.group(1)))
     if start!=monday:raise ValueError(f"Grüne Hütte: Plan ist nicht von aktueller Woche: {start}")
     out=blank_days(monday)
-    labels=("MO","DI","MI","DO","FR")
-    for i,label in enumerate(labels):
-        entries=[]
-        for ln in lines:
-            z=tidy(ln)
-            if re.match(r"^"+label+r"\s*:",z,re.I):
-                entries.append(make_item(tidy(z.split(":",1)[1]),14.50 if i==4 else 13.50,
-                                         "Tagesteller","unknown","Suppe optional +2,00 €"))
-            elif re.match(r"^Veggie\s*:",z,re.I):
-                # Veggie zu vorigem Tag zuordnen durch lineare Abschnittssuche unten
-                pass
-        if entries:out[(monday+timedelta(days=i)).isoformat()].extend(entries[:1])
+    labels={"MO":0,"DI":1,"MI":2,"DO":3,"FR":4}
     current=None
-    for ln in lines:
-        z=tidy(ln)
-        mday=re.match(r"^(MO|DI|MI|DO|FR)\s*:",z,re.I)
-        if mday:current=labels.index(mday.group(1).upper())
-        elif current is not None and re.match(r"^Veggie\s*:",z,re.I):
-            out[(monday+timedelta(days=current)).isoformat()].append(
-                make_item(tidy(z.split(":",1)[1]),14.50 if current==4 else 13.50,
-                          "Vegetarisch","veggie","Suppe optional +2,00 €"))
-    if sum(len(v) for v in out.values())<5:raise ValueError("Grüne Hütte: weniger als fünf Tagesgerichte")
+    pending=None
+    rx=re.compile(r"^(MO|DI|MI|DO|FR|Veggie)\s*:\s*(.*)$",re.I)
+    for line in lines:
+        text=tidy(line)
+        match=rx.match(text)
+        if match:
+            label,content=match.group(1).upper(),tidy(match.group(2))
+            if label in labels:current=labels[label];pending="meat"
+            elif current is not None:pending="veggie"
+            else:continue
+            if not content:continue
+        elif pending is not None:
+            # Erwartete getrennte Textzeile direkt nach "MO:" oder "Veggie:".
+            content=text
+            if re.match(r"^(?:TAGESTELLER|Suppen zur Auswahl|[€\d]|Take out|Kaffeepause)",content,re.I):
+                pending=None
+                continue
+        else:
+            continue
+        # Nur vollwertige Gerichtsnamen übernehmen.
+        if current is not None and len(content)>=9 and not re.fullmatch(r"[ACDEFGHLMNOPR,\s]+",content,re.I):
+            day=(monday+timedelta(days=current)).isoformat()
+            if len(out[day])<2 and content not in [x["name"] for x in out[day]]:
+                out[day].append(make_item(content,14.50 if current==4 else 13.50,
+                    "Vegetarisch" if pending=="veggie" else "Tagesteller",
+                    "veggie" if pending=="veggie" else "unknown",
+                    "Suppe optional +2,00 €"))
+        pending=None
+    if sum(len(v) for v in out.values())<5 or sum(bool(v) for v in out.values())<4:
+        raise ValueError("Grüne Hütte: unvollständiger Wochenplan; keine leeren Gerichte veröffentlichen")
     return out,(monday,monday+timedelta(days=4))
 
 def parse_lia_week(raw,monday):
