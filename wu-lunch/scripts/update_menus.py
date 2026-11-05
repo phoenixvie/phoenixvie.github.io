@@ -685,14 +685,15 @@ def run(today):
         should_check=True
         if today.weekday()>=5:
             should_check=False
-        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat():
+        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==2):
             should_check=False
         elif ident=="losteria" and restaurant(data,ident).get("seasonal") and prev_success:
             try:should_check=(today-date.fromisoformat(prev_success[:10])).days>=14
             except ValueError:pass
         if not should_check:
             operations[ident]={"state":"cached","last_success":prev_success,
-                               "consecutive_failures":meta.get("consecutive_failures",0)}
+                               "consecutive_failures":meta.get("consecutive_failures",0),
+                               "parser_version":meta.get("parser_version")}
             continue
         try:
             if ident=="mensa":
@@ -749,7 +750,8 @@ def run(today):
                 restaurant(data,"losteria")["seasonal"]=items
                 restaurant(data,"losteria")["status"]="seasonal"
                 source(data,"losteria")["status"]="seasonal"
-            operations[ident]={"state":"ok","last_success":now,"consecutive_failures":0}
+            operations[ident]={"state":"ok","last_success":now,"consecutive_failures":0,
+                               "parser_version":2 if ident=="lia" else meta.get("parser_version")}
         except Exception as exc:
             desc=f"{type(exc).__name__}: {str(exc)[:220]}"
             # Noch nicht veröffentlichte Pläne sind kein technischer Ausfall.
