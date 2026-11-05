@@ -179,8 +179,9 @@ html,body,.page { background:#fff; }
  .page{padding:0 13px 24px}
  .hero { margin:0 -13px; width:calc(100% + 26px); height:clamp(132px,30vw,205px); }
  .toolbar { align-items:stretch; gap:10px }
- .day-tabs { width:100%; justify-content:flex-start; overflow-x:auto; overscroll-behavior-inline:contain; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
- .day-tab { flex:0 0 91px; min-width:91px; font-size:13px; }
+ .day-tabs { width:100%; max-width:100%; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); justify-content:stretch; overflow:visible; padding:0; }
+ .day-tab { width:100%; min-width:0; flex:none; font-size:clamp(10px,2.7vw,13px); letter-spacing:-.035em; white-space:nowrap; padding:9px 2px; }
+ .day-tab .small-date {font-size:clamp(9px,2.35vw,11px);letter-spacing:0;}
  .view-tabs { align-self:center }
  .content-wrap { margin:10px auto 0; }
  .row { grid-template-columns:70px minmax(0,1fr); gap:10px; padding:14px 0; }
