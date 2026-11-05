@@ -188,7 +188,8 @@ def parse_baschly(raw,monday,meat=False):
     if not m: raise ValueError("Baschly: Wochenabschnitt fehlt – möglicherweise Seitendesign geändert")
     blocks=day_blocks(txt[m.end():].splitlines())
     result=blank_days(monday)
-    cost=euros(txt[:600])
+    # Shopify-Header können mehrere Tausend Zeichen lang sein. Nicht nur den Anfang prüfen.
+    cost=euros(txt)
     if cost is None: raise ValueError("Baschly: Produktpreis fehlt")
     for d,w in weekday_dates(monday):
         options=[]
