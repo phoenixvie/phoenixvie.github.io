@@ -4,7 +4,7 @@ from datetime import date, timedelta
 import fitz
 from update_menus import (
     period, parse_campus, parse_glashaus, parse_baschly, parse_mensa,
-    blank_days, make_item, weekly_cache_valid
+    blank_days, make_item, weekly_cache_valid, compare_verified_week
 )
 
 MONDAY = date(2026, 11, 2)
@@ -85,6 +85,18 @@ class ParserTests(unittest.TestCase):
         self.assertGreaterEqual(sum(len(v) for v in broken_start.values()),10)
         with self.assertRaises(ValueError):
             parse_mensa(self.make_pdf("26.10.2026 - 30.10.2026"),MONDAY)
+
+    def test_corrupt_pdf_will_not_replace_trusted_week(self):
+        trusted=blank_days(MONDAY); corrupt=blank_days(MONDAY)
+        for d in trusted:
+            trusted[d]=[make_item("Klare Gemüsesuppe mit Einlage",None,"Tagessuppe"),
+                        make_item("Spinatlasagne mit Knoblauchsauce",5.8,"Powered by plants / Veggie"),
+                        make_item("Gebackenes Hühnerschnitzel mit Kartoffeln",6.4,"Meaty")]
+            corrupt[d]=[make_item("esuppe Einlage Selleriecreme",None,"Tagessuppe"),
+                        make_item("ne leichte Kichererbsen ahmsauce Curry",5.8,"Powered by plants / Veggie"),
+                        make_item("tter Chicken Erdäpfel Würstl",6.4,"Meaty")]
+        with self.assertRaises(ValueError):
+            compare_verified_week(trusted,corrupt)
 
     def test_weekly_cache(self):
         dates=blank_days(MONDAY)
