@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-05T15:43:19+01:00",
+  "checked_at": "2026-11-05T16:06:34+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
   "health": "degraded",
@@ -8,7 +8,7 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
-      "consecutive_failures": 7
+      "consecutive_failures": 8
     },
     "glashaus": {
       "state": "cached",
@@ -17,12 +17,12 @@
     },
     "campus": {
       "state": "ok",
-      "last_success": "2026-11-05T15:43:19+01:00",
+      "last_success": "2026-11-05T16:06:34+01:00",
       "consecutive_failures": 0
     },
     "baschly": {
       "state": "ok",
-      "last_success": "2026-11-05T15:43:19+01:00",
+      "last_success": "2026-11-05T16:06:34+01:00",
       "consecutive_failures": 0
     },
     "losteria": {
