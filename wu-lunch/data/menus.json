@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-05T17:45:02+01:00",
+  "checkedAt": "2026-11-05T17:46:04+01:00",
   "origin": "Quellseiten und PDF / redaktionell geprüft 05.11.2026",
   "sources": [
     {
@@ -995,7 +995,7 @@
       "days": {
         "2026-11-02": [
           {
-            "name": "Stroganoff vom Schweinsfilet mit Langkornreis /",
+            "name": "Stroganoff vom Schweinsfilet mit Langkornreis",
             "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -1005,27 +1005,7 @@
             "included_choices": []
           },
           {
-            "name": "Stroganoff of pork tenderloin with long grain rice",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Champignon-Buchweizenbraten auf Haselnuss-Karottenragout /",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Mushroom and buckwheat roast on hazelnut and carrot ragout",
+            "name": "Champignon-Buchweizenbraten auf Haselnuss-Karottenragout",
             "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -1037,7 +1017,7 @@
         ],
         "2026-11-03": [
           {
-            "name": "Wiener Schnitzel mit Pommes /",
+            "name": "Wiener Schnitzel mit Pommes",
             "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -1047,27 +1027,7 @@
             "included_choices": []
           },
           {
-            "name": "Viennese schnitzel with fries",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Gebackenes Gemüse mit Pommes /",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Baked vegetables with fries",
+            "name": "Gebackenes Gemüse mit Pommes",
             "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -1089,18 +1049,8 @@
             "included_choices": []
           },
           {
-            "name": "Pizza with salami",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
             "name": "Pizza mit Salami",
-            "price": 10.0,
+            "price": 6.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1109,8 +1059,8 @@
             "included_choices": []
           },
           {
-            "name": "Pizza with salami",
-            "price": 10.0,
+            "name": "Kürbis-Reis-Pfanne mit Salat",
+            "price": 11.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1121,7 +1071,7 @@
         ],
         "2026-11-05": [
           {
-            "name": "Lasagne klassisch – mit Schwein & Rind /",
+            "name": "Lasagne klassisch – mit Schwein & Rind",
             "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -1131,27 +1081,7 @@
             "included_choices": []
           },
           {
-            "name": "Lasagne – classic style with beef & pork",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Gemüselasagne /",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Vegetable lasagna",
+            "name": "Gemüselasagne",
             "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -1163,7 +1093,7 @@
         ],
         "2026-11-06": [
           {
-            "name": "Lachs-Teriyaki-Bowl mit Edamame, Avocado & Karotten /",
+            "name": "Lachs-Teriyaki-Bowl mit Edamame, Avocado & Karotten",
             "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -1173,27 +1103,7 @@
             "included_choices": []
           },
           {
-            "name": "Salmon teriyaki bowl with edamame, avocado & carrots",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Tempeh-Bowl mit Hummus, Karotten & Kraut /",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Tempeh bowl with hummus, carrots & cabbage",
+            "name": "Tempeh-Bowl mit Hummus, Karotten & Kraut",
             "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
