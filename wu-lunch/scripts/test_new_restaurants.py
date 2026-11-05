@@ -1,7 +1,7 @@
 """Regressionstests für vier neu ergänzte Mittagsangebote (ohne externe Abrufe)."""
 import unittest
 from datetime import date
-from update_menus import buffet_days,parse_topfdeckel,parse_gruenehuette,parse_lia
+from update_menus import buffet_days,parse_topfdeckel,parse_gruenehuette,parse_lia_week
 
 MON=date(2026,11,2)
 THU=date(2026,11,5)
@@ -45,17 +45,40 @@ class NewRestaurantTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_gruenehuette(text.encode(),date(2026,11,9))
 
-    def test_lia_uses_only_wu_section_and_refuses_old_dates(self):
+    def test_gruenehuette_spaces_in_date_and_stale_week(self):
+        text="""<h2>TAGESTELLER / LUNCH SPECIAL 5.10. 2026</h2>
+        <p>MO: Gulasch mit Serviettenknödel</p>
+        <p>DI: Schnitzel mit Reis</p><p>MI: Huhn mit Erbsen</p>
+        <p>DO: Spinatstrudel mit Sauce</p><p>FR: Fisch mit Erdäpfelsalat</p>"""
+        with self.assertRaisesRegex(ValueError,"nicht von aktueller Woche"):
+            parse_gruenehuette(text.encode(),MON)
+
+    def test_lia_weekly_wu_section_dated_items_and_other_location_rejected(self):
         html="""<h2>Tagesmenü Lia Coffee am WU Campus</h2>
-        <p>Hauptgericht € 10,00</p><h3>Donnerstag, 5.11.</h3>
-        <p>Gegrillte Hühnerkeule mit Tomaten-Paprika-Sauce und Reis / English translation</p>
-        <p>Verfügbar von 11:30 bis 14:00 Uhr</p>
+        <p>Hauptgericht € 10,00</p>
+        <h3>Montag, 2.11.</h3><p>Gegrillte Hühnerkeule auf Couscous-Salat / Grilled chicken leg (ALO)</p>
+        <p>€ 9,00 Quinoa-Salat mit Feta und Brot / Quinoa salad (AGLO) Veggie</p>
+        <h3>Dienstag, 3.11.</h3>
+        <p>Hühnerschnitzel mit Petersilkartoffeln / chicken schnitzel (ACGL)</p>
+        <h3>Mittwoch, 4.11.</h3><p>Gebratener Reis mit Gemüse und Hühnerfleisch / rice (LO)</p>
+        <h3>Donnerstag, 5.11.</h3><p>Gegrillte Hühnerbrust mit Reis / chicken with rice (L)</p>
+        <h3>Freitag, 6.11.</h3><p>Gebackener Seelachs mit Erdäpfelpüree / fish (ACDGL)</p>
         <h2>Tagesmenü Lia Bistro</h2><h3>Donnerstag, 5.11.</h3>
         <p>Andere fremde Filiale mit anderem Gemüsegericht</p>"""
-        items=parse_lia(html.encode(),THU)
-        self.assertEqual(len(items),1)
-        self.assertNotIn("fremde",items[0]["name"])
-        with self.assertRaises(ValueError):
-            parse_lia(html.encode(),date(2026,11,6))
+        days, validity=parse_lia_week(html.encode(),MON)
+        self.assertEqual(validity[0],MON)
+        self.assertEqual(len(days["2026-11-02"]),2)
+        self.assertEqual(days["2026-11-02"][1]["price"],9.00)
+        self.assertEqual(days["2026-11-05"][0]["price"],10.00)
+        self.assertNotIn("fremde",str(days))
+
+    def test_lia_stale_month_is_not_current_week(self):
+        html="""<h2>Tagesmenü Lia Coffee am WU Campus</h2>
+        <h3>Montag, 10.8.</h3>
+        <p>Gegrillte Hühnerkeule auf Couscous-Salat / chicken (ALO)</p>
+        <h2>Tagesmenü Lia Bistro</h2>
+        <h3>Donnerstag, 5.11.</h3><p>Fremde Filiale</p>"""
+        with self.assertRaisesRegex(ValueError,"kein gültiger Wochenplan"):
+            parse_lia_week(html.encode(),MON)
 
 if __name__=="__main__":unittest.main()
