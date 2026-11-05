@@ -26,7 +26,7 @@ STATUS_PATH = ROOT / "status.json"
 TZ = ZoneInfo("Europe/Vienna")
 WEEKDAYS = ("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
 ALLOWED = {"shop.baschly.com", "www.wumensa.at", "wumensa.at", "www.dascampus.at",
-           "dascampus.at", "www.dasglashaus.at", "dasglashaus.at", "losteria.net", "www.losteria.net"}
+           "dascampus.at", "www.dasglashaus.at", "dasglashaus.at", "losteria.net", "www.losteria.net", "xn--omakche-q2a.at", "www.xn--omakche-q2a.at", "topfdeckel.at", "www.topfdeckel.at", "www.zurgruenenhuette.com", "zurgruenenhuette.com", "lia.coffee", "www.lia.coffee"}
 MONTHS = {"jan":1,"jänner":1,"feb":2,"mär":3,"maer":3,"apr":4,"mai":5,"jun":6,"jul":7,
           "aug":8,"sep":9,"okt":10,"nov":11,"dez":12}
 URLS = {
@@ -36,6 +36,10 @@ URLS = {
     "baschly_veg":"https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie",
     "baschly_meat":"https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch",
     "losteria":"https://losteria.net/at/menue/menu-della-casa/",
+    "omakueche":"https://www.xn--omakche-q2a.at/",
+    "topfdeckel":"https://topfdeckel.at/",
+    "gruenehuette":"https://www.zurgruenenhuette.com/mittags-menu",
+    "lia":"https://lia.coffee/lia-coffee-wu/",
 }
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
@@ -419,6 +423,106 @@ def parse_losteria(raw):
     if len(items)<2:raise ValueError("L'Osteria: Saisonkarte nicht lesbar")
     return items
 
+
+def buffet_days(monday):
+    """Foto der Erwachsenen-Tafel: ein Tagesbuffet, freitags chinesisch."""
+    days=blank_days(monday)
+    for i,(d,weekday) in enumerate(weekday_dates(monday)):
+        name="Chinesisches All-you-can-eat-Buffet (Erwachsene)" if i==4 else "All-you-can-eat-Buffet (Erwachsene)"
+        days[d.isoformat()]=[make_item(name,10.90,"Buffet","unknown",
+            "Mo–Fr 11:00–15:00; Buffet to go 10,90 €")]
+    return days
+
+def parse_topfdeckel(raw,today,monday):
+    """Nur tagesaktuelle Hauptgerichte übernehmen; keine Kombi als gratis Beilage."""
+    lines=html_lines(raw); whole="\n".join(lines)
+    month_names={"jänner":1,"januar":1,"februar":2,"märz":3,"april":4,"mai":5,"juni":6,
+                 "juli":7,"august":8,"september":9,"oktober":10,"november":11,"dezember":12}
+    # Homepage nennt den aktuellen Tag explizit, die allgemeine Tageskarte nicht immer.
+    m=re.search(r"(Montag|Dienstag|Mittwoch|Donnerstag|Freitag),?\s+(\d{1,2})\.\s*(\w+)\s+(\d{4})",whole,re.I)
+    if not m: raise ValueError("Topf&Deckel: datierter Tagesplan fehlt")
+    mo=month_names.get(m.group(3).lower())
+    if mo is None or date(int(m.group(4)),mo,int(m.group(2)))!=today or m.group(1).lower()!=WEEKDAYS[today.weekday()].lower():
+        raise ValueError("Topf&Deckel: kein datierter Plan für heute")
+    idx=next((i for i,t in enumerate(lines) if t.lower().strip()=="main dish"),None)
+    if idx is None: raise ValueError("Topf&Deckel: Main Dish-Bereich fehlt")
+    end=next((i for i in range(idx+1,len(lines)) if lines[i].lower().strip()=="dessert"),len(lines))
+    section=lines[idx+1:end]
+    result=[]
+    stop_terms=("beilage:","allergene","veggie","veg","klein","gross","groß")
+    for i,t in enumerate(section):
+        line=tidy(t)
+        if len(line)<18 or line.lower().startswith(stop_terms) or "€" in line:continue
+        if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line,re.I):continue
+        if line.lower().startswith(("image:","salat", "mit ", "main dish")):continue
+        if line in [x["name"] for x in result]:continue
+        if len(result)>=6:break
+        # Verhindert die Veröffentlichung des ganzen Seitenrahmens als Gerichtsname.
+        if len(line)>155:continue
+        is_veg=any("veggie" in item.lower() for item in section[i+1:i+3])
+        result.append(make_item(line,7.50,"Hauptgericht klein","veggie" if is_veg else "unknown",
+                                "Große Portion regulär 11,90 €; Lunch-Kombo ab 9,50 €; Beilage bei Gerichten separat ausgewiesen"))
+    if len(result)<2:raise ValueError("Topf&Deckel: zu wenige Hauptgerichte")
+    return result
+
+def parse_gruenehuette(raw,monday):
+    """Wochenteller ohne fälschlich als inklusive gebuchte €2-Suppe."""
+    lines=html_lines(raw); whole="\n".join(lines)
+    m=re.search(r"TAGESTELLER\s*/\s*LUNCH\s*SPECIAL\s*(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})",whole,re.I)
+    if not m:raise ValueError("Grüne Hütte: Datumsüberschrift fehlt")
+    start=date(int(m.group(3)),int(m.group(2)),int(m.group(1)))
+    if start!=monday:raise ValueError(f"Grüne Hütte: Plan ist nicht von aktueller Woche: {start}")
+    out=blank_days(monday)
+    labels=("MO","DI","MI","DO","FR")
+    for i,label in enumerate(labels):
+        entries=[]
+        for ln in lines:
+            z=tidy(ln)
+            if re.match(r"^"+label+r"\s*:",z,re.I):
+                entries.append(make_item(tidy(z.split(":",1)[1]),14.50 if i==4 else 13.50,
+                                         "Tagesteller","unknown","Suppe optional +2,00 €"))
+            elif re.match(r"^Veggie\s*:",z,re.I):
+                # Veggie zu vorigem Tag zuordnen durch lineare Abschnittssuche unten
+                pass
+        if entries:out[(monday+timedelta(days=i)).isoformat()].extend(entries[:1])
+    current=None
+    for ln in lines:
+        z=tidy(ln)
+        mday=re.match(r"^(MO|DI|MI|DO|FR)\s*:",z,re.I)
+        if mday:current=labels.index(mday.group(1).upper())
+        elif current is not None and re.match(r"^Veggie\s*:",z,re.I):
+            out[(monday+timedelta(days=current)).isoformat()].append(
+                make_item(tidy(z.split(":",1)[1]),14.50 if current==4 else 13.50,
+                          "Vegetarisch","veggie","Suppe optional +2,00 €"))
+    if sum(len(v) for v in out.values())<5:raise ValueError("Grüne Hütte: weniger als fünf Tagesgerichte")
+    return out,(monday,monday+timedelta(days=4))
+
+def parse_lia(raw,today):
+    """Nur WU Campus, keine Tagesmenüs anderer Lia-Filialen."""
+    lines=html_lines(raw)
+    start=next((i for i,t in enumerate(lines) if "Tagesmenü Lia Coffee am WU Campus" in t),None)
+    if start is None:raise ValueError("Lia WU: Menü-Abschnitt fehlt")
+    stop=next((i for i in range(start+1,len(lines)) if "Tagesmenü Lia Bistro" in lines[i]),len(lines))
+    region=lines[start:stop]
+    expected=WEEKDAYS[today.weekday()]
+    pattern=r"^"+expected+r",?\s*(\d{1,2})\.\s*(\d{1,2})\."
+    matches=[(i,re.search(pattern,txt,re.I)) for i,txt in enumerate(region)]
+    matched=next(((i,m) for i,m in matches if m),None)
+    if not matched:raise ValueError("Lia WU: Tag nicht veröffentlicht")
+    i,heading=matched
+    if int(heading.group(1))!=today.day or int(heading.group(2))!=today.month:
+        raise ValueError("Lia WU: veraltete Datumsangabe")
+    dishes=[]
+    for t in region[i+1:]:
+        if re.match(r"^(Montag|Dienstag|Mittwoch|Donnerstag|Freitag),?\s*\d",t,re.I):break
+        if "Verfügbar von" in t:break
+        name=tidy(t.split(" / ")[0])
+        if len(name)>=18 and "€" not in name and not re.search(r"allergene|hauptgericht",name,re.I):
+            dishes.append(make_item(name,10.00,"Hauptgericht","unknown",
+              "Suppe/Salat optional (Preis nicht bestätigt); Studierendenrabatt mit AG-Sticker: 1,00 €"))
+    if not dishes:raise ValueError("Lia WU: keine Tagesgerichte erkannt")
+    return dishes[:4]
+
 def restaurant(data,identifier):
     return next(v for v in data["restaurants"] if v["id"]==identifier)
 
@@ -481,10 +585,10 @@ def reset_week(data,monday):
     data["weekEnd"]=(monday+timedelta(days=4)).isoformat()
     for r in data["restaurants"]:
         r["days"]=blank_days(monday)
-        if r["id"]!="losteria":
+        if r["id"] not in ("losteria","omakueche"):
             r["status"]="empty";r["validFrom"]=r["validUntil"]=None
     for s in data["sources"]:
-        if s["id"]!="losteria":
+        if s["id"] not in ("losteria","omakueche"):
             s["status"]="empty";s["validFrom"]=s["validUntil"]=None
 
 def run(today):
@@ -497,13 +601,14 @@ def run(today):
     problems=[]
     operations={}
     previous=state.get("sources",{})
-    for ident in ("mensa","glashaus","campus","baschly","losteria"):
+    apply_result(data,"omakueche",buffet_days(monday),"recurring")
+    for ident in ("mensa","glashaus","campus","baschly","losteria","topfdeckel","gruenehuette","lia"):
         meta=previous.get(ident,{})
         prev_success=meta.get("last_success")
         should_check=True
         if today.weekday()>=5:
             should_check=False
-        elif ident in ("mensa","glashaus") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat():
+        elif ident in ("mensa","glashaus","gruenehuette") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat():
             should_check=False
         elif ident=="losteria" and restaurant(data,ident).get("seasonal") and prev_success:
             try:should_check=(today-date.fromisoformat(prev_success[:10])).days>=14
@@ -552,6 +657,17 @@ def run(today):
                 meat=parse_baschly(safe_get(URLS["baschly_meat"]),monday,True)
                 days={d:veg[d]+meat[d] for d in veg}
                 apply_result(data,"baschly",days,"undated")
+            elif ident=="topfdeckel":
+                items=parse_topfdeckel(safe_get(URLS["topfdeckel"]),today,monday)
+                restaurant(data,ident)["days"][today.isoformat()]=items
+                restaurant(data,ident)["status"]=source(data,ident)["status"]="daily"
+            elif ident=="gruenehuette":
+                days,validity=parse_gruenehuette(safe_get(URLS["gruenehuette"]),monday)
+                apply_result(data,ident,days,"verified",validity)
+            elif ident=="lia":
+                items=parse_lia(safe_get(URLS["lia"]),today)
+                restaurant(data,ident)["days"][today.isoformat()]=items
+                restaurant(data,ident)["status"]=source(data,ident)["status"]="daily"
             else:
                 items=parse_losteria(safe_get(URLS["losteria"]))
                 restaurant(data,"losteria")["seasonal"]=items
@@ -566,7 +682,7 @@ def run(today):
             problems.append(f"{ident}: {desc}")
             # Nie alten Wochenplan als neuen Plan ausgeben. Gültige Daten derselben Woche erhalten.
             r=restaurant(data,ident)
-            if ident!="losteria" and sum(len(v) for v in r.get("days",{}).values())==0:
+            if ident not in ("losteria","omakueche") and sum(len(v) for v in r.get("days",{}).values())==0:
                 r["status"]="empty";source(data,ident)["status"]="empty"
             logging.warning("%s",problems[-1])
     data["checkedAt"]=now
@@ -574,7 +690,7 @@ def run(today):
         "checked_at":now,
         "week_start":monday.isoformat(),
         "week_end":(monday+timedelta(days=4)).isoformat(),
-        "health":"healthy" if not problems else ("failed" if len(problems)==5 else "degraded"),
+        "health":"healthy" if not problems else ("failed" if len(problems)==8 else "degraded"),
         "sources":operations,
         "problems":problems,
         "next_run":"next business day ~08:15 Europe/Vienna",
@@ -600,8 +716,8 @@ def main():
         assert period("02. Nov. 2026 - 06. Nov. 2026")== (date(2026,11,2),date(2026,11,6))
         assert period("13.07.2026 - 17.07.2026") != (date(2026,11,2),date(2026,11,6))
         d=load_data()
-        assert len(d["restaurants"])==5 and len(d["sources"])==5
-        assert {x["id"] for x in d["restaurants"]}=={"mensa","campus","glashaus","baschly","losteria"}
+        assert len(d["restaurants"])==9 and len(d["sources"])==9
+        assert {x["id"] for x in d["restaurants"]}=={"mensa","campus","glashaus","baschly","losteria","omakueche","topfdeckel","gruenehuette","lia"}
         assert all(x.get("days") for x in d["restaurants"])
         print("Smoke tests OK")
         return 0
