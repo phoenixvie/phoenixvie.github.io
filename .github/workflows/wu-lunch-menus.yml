@@ -66,14 +66,29 @@ jobs:
         if: steps.guard.outputs.skip == 'false'
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name "wu-lunch-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
-          if ! git diff --cached --quiet; then
+          branch="${{ github.event.repository.default_branch }}"
+          # Bei parallelen Code-/Datencommits auf dem neuesten Branch erneut importieren.
+          # Nie konflikthafte JSON-Dateien blind zusammenführen oder force-pushen.
+          for attempt in 1 2 3; do
+            git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
+            if git diff --cached --quiet; then
+              echo "Keine Datenänderungen"
+              exit 0
+            fi
             git commit -m "WU Lunch: Menüimport $(TZ=Europe/Vienna date +%F)"
-            git pull --rebase origin "${{ github.event.repository.default_branch }}"
-            git push origin HEAD:"${{ github.event.repository.default_branch }}"
-          fi
+            if git push origin HEAD:"$branch"; then
+              exit 0
+            fi
+            echo "Push-Konflikt, versuche erneuten Import ($attempt/3)"
+            git fetch origin "$branch"
+            git reset --hard "origin/$branch"
+            python wu-lunch/scripts/update_menus.py
+          done
+          echo "::error::Menüimport konnte nach drei Konfliktversuchen nicht veröffentlicht werden."
+          exit 1
       - name: Importstatus prüfen
         if: steps.guard.outputs.skip == 'false'
         run: |
