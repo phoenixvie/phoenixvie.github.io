@@ -4,6 +4,7 @@ Keine externen Zugangsdaten nötig. GitHub Actions führt das Skript aus.
 """
 from __future__ import annotations
 import argparse
+import hashlib
 from difflib import SequenceMatcher
 import json
 import logging
@@ -611,6 +612,29 @@ def weekly_cache_valid(data,identifier,monday):
     if r.get("validFrom") and not (r["validFrom"]<=monday.isoformat()<=r.get("validUntil","")):return False
     return sum(len(v) for v in r.get("days",{}).values())>= (10 if identifier=="mensa" else 6)
 
+def menu_fingerprint(raw):
+    """Fingerprint des sichtbaren HTML-Textes ohne Skripte oder volatile Attribute."""
+    if raw.startswith(b"%PDF-"):return hashlib.sha256(raw).hexdigest()
+    soup=BeautifulSoup(raw,"html.parser")
+    for tag in soup(["script","style","svg","noscript","header","footer","nav","template"]):
+        tag.decompose()
+    return hashlib.sha256(" ".join(soup.stripped_strings).encode("utf-8")).hexdigest()
+
+def candidate_quality_gate(identifier,old_days,new_days):
+    previous=sum(len(x) for x in old_days.values())
+    current=sum(len(x) for x in new_days.values())
+    if current<1 or (previous>=5 and current<previous*.65):
+        raise ValueError(f"{identifier}: Menü enthält deutlich weniger Gerichte ({previous} -> {current})")
+    for day,items in new_days.items():
+        for item in items:
+            name=tidy(item.get("name",""))
+            price=item.get("price")
+            if len(name)<7 or len(name)>190 or name.endswith((" /",":")):
+                raise ValueError(f"{identifier} {day}: auffälliger Gerichtsname")
+            if price is not None and (not isinstance(price,(int,float)) or price<=0 or price>120):
+                raise ValueError(f"{identifier} {day}: auffälliger Preis")
+    return True
+
 def compare_verified_week(old_days,new_days):
     """Schützt bereits überprüfte Wochenmenüs vor grob falsch gelesenen PDF-Spalten."""
     ratios=[]
@@ -683,17 +707,29 @@ def run(today):
         meta=previous.get(ident,{})
         prev_success=meta.get("last_success")
         should_check=True
+        prefetched_raw=None
+        observed_digest=meta.get('content_sha256')
         if today.weekday()>=5:
             should_check=False
         elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==2):
-            should_check=False
+            if ident=="mensa":
+                should_check=False
+            else:
+                try:
+                    prefetched_raw=safe_get(URLS[ident])
+                    observed_digest=menu_fingerprint(prefetched_raw)
+                    should_check=(observed_digest!=meta.get("content_sha256"))
+                except Exception as exc:
+                    problems.append(f"{ident}: Änderungsprüfung fehlgeschlagen: {str(exc)[:145]}")
+                    should_check=False
         elif ident=="losteria" and restaurant(data,ident).get("seasonal") and prev_success:
             try:should_check=(today-date.fromisoformat(prev_success[:10])).days>=14
             except ValueError:pass
         if not should_check:
             operations[ident]={"state":"cached","last_success":prev_success,
                                "consecutive_failures":meta.get("consecutive_failures",0),
-                               "parser_version":meta.get("parser_version")}
+                               "parser_version":meta.get("parser_version"),
+                               "content_sha256":observed_digest}
             continue
         try:
             if ident=="mensa":
@@ -725,7 +761,7 @@ def run(today):
                     compare_verified_week(restaurant(data,"mensa").get("days",{}),days)
                 apply_result(data,"mensa",days,"verified",validity)
             elif ident=="glashaus":
-                days,validity=parse_glashaus(safe_get(URLS["glashaus"]),monday)
+                days,validity=parse_glashaus(prefetched_raw if prefetched_raw is not None else safe_get(URLS["glashaus"]),monday)
                 apply_result(data,"glashaus",days,"verified",validity)
             elif ident=="campus":
                 days,validity=parse_campus(safe_get(URLS["campus"]),monday)
@@ -740,10 +776,16 @@ def run(today):
                 restaurant(data,ident)["days"][today.isoformat()]=items
                 restaurant(data,ident)["status"]=source(data,ident)["status"]="daily"
             elif ident=="gruenehuette":
-                days,validity=parse_gruenehuette(safe_get(URLS["gruenehuette"]),monday)
+                days,validity=parse_gruenehuette(prefetched_raw if prefetched_raw is not None else safe_get(URLS["gruenehuette"]),monday)
+                candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
+                candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
+                candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
                 apply_result(data,ident,days,"verified",validity)
+                observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
+                observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
+                observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
             elif ident=="lia":
-                days,validity=parse_lia_week(safe_get(URLS["lia"]),monday)
+                days,validity=parse_lia_week(prefetched_raw if prefetched_raw is not None else safe_get(URLS["lia"]),monday)
                 apply_result(data,ident,days,"verified",validity)
             else:
                 items=parse_losteria(safe_get(URLS["losteria"]))
@@ -751,7 +793,8 @@ def run(today):
                 restaurant(data,"losteria")["status"]="seasonal"
                 source(data,"losteria")["status"]="seasonal"
             operations[ident]={"state":"ok","last_success":now,"consecutive_failures":0,
-                               "parser_version":2 if ident=="lia" else meta.get("parser_version")}
+                               "parser_version":2 if ident=="lia" else meta.get("parser_version"),
+                               "content_sha256":observed_digest}
         except Exception as exc:
             desc=f"{type(exc).__name__}: {str(exc)[:220]}"
             # Noch nicht veröffentlichte Pläne sind kein technischer Ausfall.
@@ -766,7 +809,8 @@ def run(today):
                 continue
             failures=meta.get("consecutive_failures",0)+1
             operations[ident]={"state":"error","error":desc,"last_success":prev_success,
-                               "consecutive_failures":failures}
+                               "consecutive_failures":failures,
+                               "content_sha256":meta.get("content_sha256")}
             problems.append(f"{ident}: {desc}")
             # Nie alten Wochenplan als neuen Plan ausgeben. Gültige Daten derselben Woche erhalten.
             r=restaurant(data,ident)
