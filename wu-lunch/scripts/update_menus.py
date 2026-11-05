@@ -457,12 +457,25 @@ def parse_topfdeckel(raw,today,monday):
         if line.lower().startswith(("image:","salat", "mit ", "main dish")):continue
         if line in [x["name"] for x in result]:continue
         if len(result)>=6:break
-        # Verhindert die Veröffentlichung des ganzen Seitenrahmens als Gerichtsname.
         if len(line)>155:continue
         is_veg=any("veggie" in item.lower() for item in section[i+1:i+3])
-        result.append(make_item(line,7.50,"Hauptgericht klein","veggie" if is_veg else "unknown",
-                                "Große Portion regulär 11,90 €; Lunch-Kombo ab 9,50 €; Beilage bei Gerichten separat ausgewiesen"))
+        special=line.lower().startswith("special")
+        if special:
+            price=euros(" ".join(section[i+1:i+5]))
+            if price is None:raise ValueError("Topf&Deckel: Special-Preis fehlt")
+            note="Nur als große Portion; kein regulärer Kleinpreis"
+        else:
+            price=7.50
+            note="Große Portion regulär 11,90 €; Beilage bei Gerichten separat ausgewiesen"
+        result.append(make_item(line,price,"Hauptgericht" if special else "Hauptgericht klein",
+                                "veggie" if is_veg else "unknown",note))
     if len(result)<2:raise ValueError("Topf&Deckel: zu wenige Hauptgerichte")
+    result += [
+       make_item("Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+                 9.50,"Menükombo","unknown","Eine Option zum Hauptgericht wählbar"),
+       make_item("Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+                 13.90,"Menükombo","unknown","Eine Option zum Hauptgericht wählbar")
+    ]
     return result
 
 def parse_gruenehuette(raw,monday):
@@ -676,6 +689,15 @@ def run(today):
             operations[ident]={"state":"ok","last_success":now,"consecutive_failures":0}
         except Exception as exc:
             desc=f"{type(exc).__name__}: {str(exc)[:220]}"
+            # Noch nicht veröffentlichte Pläne sind kein technischer Ausfall.
+            if ident in ("topfdeckel","gruenehuette","lia") and isinstance(exc,ValueError) and any(
+                fragment in str(exc).lower() for fragment in (
+                  "kein datierter plan für heute","kein datierter plan", "nicht von aktueller woche",
+                  "veraltete datumsangabe", "tag nicht veröffentlicht")):
+                operations[ident]={"state":"not_published","last_success":prev_success,
+                                   "consecutive_failures":0,"note":str(exc)[:170]}
+                restaurant(data,ident)["status"]=source(data,ident)["status"]="not_published"
+                continue
             failures=meta.get("consecutive_failures",0)+1
             operations[ident]={"state":"error","error":desc,"last_success":prev_success,
                                "consecutive_failures":failures}
