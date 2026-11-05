@@ -559,19 +559,38 @@ def parse_lia_week(raw,monday):
         if actual!=expected:continue
         limit=headings[n+1][0] if n+1<len(headings) else len(region)
         items=[]
+        pending_price=None
+        skip_english=False
         for line in region[idx+1:limit]:
             if re.search(r"(?:Verfügbar von|Änderungen vorbehalten|Alle Preise inkl)",line,re.I):break
             text=tidy(line)
             if not text or text.lower().startswith(("hauptgericht","tagesmenü","suppe zum","salat zum")):continue
-            if text.startswith("€") and not re.search(r"[A-Za-zÄÖÜäöü]{4}",text):continue
-            price=9.00 if re.search(r"€\s*9[,\.]00",text) else 10.00
-            text=re.sub(r"^\s*€\s*\d+[,\.]\d{2}\s*", "", text).strip()
-            text=tidy(text.split(" / ")[0])
+            vegetarian=bool(re.search(r"\b(?:Veggie|Vegan)\b",line,re.I))
+            if skip_english:
+                if vegetarian and items:items[-1]["diet"]="veggie"
+                skip_english=False
+                continue
+            pref=re.match(r"^€\s*(\d+[,\.]\d{2})",text)
+            if pref:
+                pending_price=float(pref.group(1).replace(",","."))
+                text=tidy(text[pref.end():])
+                if not text:continue
+            # Deutsch und Englisch stehen bei Lia teils in getrennten HTML-Spans;
+            # ein abschließender Slash kündigt den englischen Teil an.
+            english_after=bool(re.search(r"\s+/\s*$",text))
+            text=re.split(r"\s+/\s*",text,maxsplit=1)[0]
             text=re.sub(r"\s*\([A-Z, ]{1,16}\)\s*(?:Veggie|Vegan)?$", "", text, flags=re.I).strip()
-            if len(text)<13 or len(text)>175:continue
-            diet="veggie" if re.search(r"\bVeggie\b|\bVegan\b",line,re.I) else "unknown"
-            items.append(make_item(text,price,"Hauptgericht",diet,
-                "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €"))
+            if len(text)<13 or len(text)>175:
+                if english_after:skip_english=True
+                continue
+            price=pending_price if pending_price is not None else 10.00
+            pending_price=None
+            diet="veggie" if vegetarian else "unknown"
+            # Doppelte deutsche Einträge im WU-Menü ebenfalls nicht duplizieren.
+            if not any(x["name"].casefold()==text.casefold() for x in items):
+                items.append(make_item(text,price,"Hauptgericht",diet,
+                    "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €"))
+            if english_after:skip_english=True
         if items:
             result[expected.isoformat()]=items[:4]
     if sum(len(v) for v in result.values())<1:
