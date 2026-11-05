@@ -265,6 +265,29 @@ def pdf_lines(page):
                 lines.append((x,y,tidy(" ".join(s["text"] for s in spans))))
     return sorted(lines,key=lambda v:(v[1],v[0]))
 
+def pdf_cell_word_lines(page, left, right, top, bottom):
+    """Extrahiere innerhalb einer echten Tabellenzelle anhand der Wort-Bounding-Boxes.
+    Verhindert, dass eine PyMuPDF-Zeile an einer benachbarten Tagesspalte klebt.
+    """
+    words=[]
+    for word in page.get_text("words",sort=False):
+        x0,y0,x1,y1,txt,*_=word
+        cx=(x0+x1)/2
+        cy=(y0+y1)/2
+        if left<=cx<right and top<=cy<bottom:
+            value=tidy(txt)
+            if value: words.append((cy,x0,value))
+    words.sort(key=lambda x:(round(x[0]/3),x[1]))
+    lines=[]
+    for y,x,value in words:
+        if not lines or abs(y-lines[-1][0])>3.2:
+            lines.append([y,[(x,value)]])
+        else:
+            lines[-1][1].append((x,value))
+    return [(min(x for x,_ in tokens),y,tidy(" ".join(value for x,value in sorted(tokens))))
+            for y,tokens in lines]
+
+
 def parse_mensa(raw,monday):
     if not raw.startswith(b"%PDF-"): raise ValueError("Mensa: PDF nicht gefunden")
     if len(raw)>12_000_000: raise ValueError("Mensa-PDF zu groß")
@@ -335,8 +358,12 @@ def parse_mensa(raw,monday):
                     if bottom<=sy+4:continue
                     # Volle PDF-Textzeilen verwenden statt get_text(clip=...):
                     # Clipping schneidet am Spaltenrand Wörter ab und mischt Nachbarzellen.
-                    cell=[(x,y,text) for x,y,text in rows
-                          if left-1 <= x < right-1 and sy+1 <= y < bottom-1]
+                    # Wortzentren statt linkem Zeilenanfang verwenden:
+                    # die fünf Tages-Spalten enthalten stark unterschiedlich breite Zeilen.
+                    cell=pdf_cell_word_lines(page,left,right,sy+1,bottom-1)
+                    if not cell:
+                        cell=[(x,y,text) for x,y,text in rows
+                              if left-1<=x<right-1 and sy+1<=y<bottom-1]
                     cell.sort(key=lambda v:(round(v[1]/3),v[0]))
                     content="\n".join(v[2] for v in cell)
                     cost=euros(content)
@@ -356,7 +383,7 @@ def parse_mensa(raw,monday):
     for day_items in result.values():
         for item in day_items:
             title=item["name"]
-            if not title or not title[0].isupper() or len(title)>160:
+            if not title or len(title)>160 or not re.match(r"[A-ZÄÖÜ]",title):
                 raise ValueError(f"Mensa: verstümmelter Tabellenzelltext erkannt ({title[:55]!r})")
             if item["category"]=="Tagessuppe" and "suppe" not in title.casefold():
                 raise ValueError(f"Mensa: verdächtige Suppe ({title[:55]!r})")
