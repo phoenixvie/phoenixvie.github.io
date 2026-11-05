@@ -39,7 +39,7 @@ URLS = {
     "omakueche":"https://www.xn--omakche-q2a.at/",
     "topfdeckel":"https://topfdeckel.at/",
     "gruenehuette":"https://www.zurgruenenhuette.com/mittags-menu",
-    "lia":"https://lia.coffee/lia-coffee-wu/",
+    "lia":"https://lia.coffee/",
 }
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
@@ -481,7 +481,8 @@ def parse_topfdeckel(raw,today,monday):
 def parse_gruenehuette(raw,monday):
     """Wochenteller ohne fälschlich als inklusive gebuchte €2-Suppe."""
     lines=html_lines(raw); whole="\n".join(lines)
-    m=re.search(r"TAGESTELLER\s*/\s*LUNCH\s*SPECIAL\s*(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})",whole,re.I)
+    # Squarespace veröffentlicht Datumsformatierungen wie "5.10. 2026" oder "12. 10. 2026".
+    m=re.search(r"TAGESTELLER\s*/\s*LUNCH\s*SPECIAL\s*(\d{1,2})\s*\.\s*(\d{1,2})\s*\.\s*(\d{4})",whole,re.I)
     if not m:raise ValueError("Grüne Hütte: Datumsüberschrift fehlt")
     start=date(int(m.group(3)),int(m.group(2)),int(m.group(1)))
     if start!=monday:raise ValueError(f"Grüne Hütte: Plan ist nicht von aktueller Woche: {start}")
@@ -510,31 +511,59 @@ def parse_gruenehuette(raw,monday):
     if sum(len(v) for v in out.values())<5:raise ValueError("Grüne Hütte: weniger als fünf Tagesgerichte")
     return out,(monday,monday+timedelta(days=4))
 
-def parse_lia(raw,today):
-    """Nur WU Campus, keine Tagesmenüs anderer Lia-Filialen."""
+def parse_lia_week(raw,monday):
+    """Lia WU speichert eine ganze Woche auf der Homepage, nicht auf der Filial-Unterseite.
+
+    Nur der WU-Abschnitt ist zulässig: ein datierter Eintrag für einen anderen
+    Lia-Standort ist kein WU-Menü.
+    """
     lines=html_lines(raw)
-    start=next((i for i,t in enumerate(lines) if "Tagesmenü Lia Coffee am WU Campus" in t),None)
-    if start is None:raise ValueError("Lia WU: Menü-Abschnitt fehlt")
-    stop=next((i for i in range(start+1,len(lines)) if "Tagesmenü Lia Bistro" in lines[i]),len(lines))
-    region=lines[start:stop]
-    expected=WEEKDAYS[today.weekday()]
-    pattern=r"^"+expected+r",?\s*(\d{1,2})\.\s*(\d{1,2})\."
-    matches=[(i,re.search(pattern,txt,re.I)) for i,txt in enumerate(region)]
-    matched=next(((i,m) for i,m in matches if m),None)
-    if not matched:raise ValueError("Lia WU: Tag nicht veröffentlicht")
-    i,heading=matched
-    if int(heading.group(1))!=today.day or int(heading.group(2))!=today.month:
-        raise ValueError("Lia WU: veraltete Datumsangabe")
-    dishes=[]
-    for t in region[i+1:]:
-        if re.match(r"^(Montag|Dienstag|Mittwoch|Donnerstag|Freitag),?\s*\d",t,re.I):break
-        if "Verfügbar von" in t:break
-        name=tidy(t.split(" / ")[0])
-        if len(name)>=18 and "€" not in name and not re.search(r"allergene|hauptgericht",name,re.I):
-            dishes.append(make_item(name,10.00,"Hauptgericht","unknown",
-              "Suppe/Salat optional (Preis nicht bestätigt); Studierendenrabatt mit AG-Sticker: 1,00 €"))
-    if not dishes:raise ValueError("Lia WU: keine Tagesgerichte erkannt")
-    return dishes[:4]
+    head=next((i for i,t in enumerate(lines) if "Tagesmenü Lia Coffee am WU Campus" in t),None)
+    if head is None:
+        raise ValueError("Lia WU: Menüabschnitt fehlt auf der Startseite")
+    tail=next((i for i in range(head+1,len(lines))
+               if re.search(r"Tagesmenü Lia (Bistro|Cafeteria|Canteen)\b",lines[i],re.I)),len(lines))
+    region=lines[head:tail]
+    headings=[]
+    pattern=re.compile(r"^(Montag|Dienstag|Mittwoch|Donnerstag|Freitag)\s*,?\s*(\d{1,2})\s*\.\s*(\d{1,2})\s*\.?",re.I)
+    for i,line in enumerate(region):
+        m=pattern.search(line)
+        if m:headings.append((i,m))
+    if not headings:
+        raise ValueError("Lia WU: keine datierten Gerichte auf der Startseite")
+    result=blank_days(monday)
+    found_dates=[]
+    for n,(idx,match) in enumerate(headings):
+        weekday=next((i for i,w in enumerate(WEEKDAYS) if w.lower()==match.group(1).lower()),None)
+        if weekday is None:continue
+        try:
+            actual=date(monday.year,int(match.group(3)),int(match.group(2)))
+        except ValueError:
+            continue
+        expected=monday+timedelta(days=weekday)
+        found_dates.append(actual.isoformat())
+        if actual!=expected:continue
+        limit=headings[n+1][0] if n+1<len(headings) else len(region)
+        items=[]
+        for line in region[idx+1:limit]:
+            if re.search(r"(?:Verfügbar von|Änderungen vorbehalten|Alle Preise inkl)",line,re.I):break
+            text=tidy(line)
+            if not text or text.lower().startswith(("hauptgericht","tagesmenü","suppe zum","salat zum")):continue
+            if text.startswith("€") and not re.search(r"[A-Za-zÄÖÜäöü]{4}",text):continue
+            price=9.00 if re.search(r"€\s*9[,\.]00",text) else 10.00
+            text=re.sub(r"^\s*€\s*\d+[,\.]\d{2}\s*", "", text).strip()
+            text=tidy(text.split(" / ")[0])
+            text=re.sub(r"\s*\([A-Z, ]{1,16}\)\s*(?:Veggie|Vegan)?$", "", text, flags=re.I).strip()
+            if len(text)<13 or len(text)>175:continue
+            diet="veggie" if re.search(r"\bVeggie\b|\bVegan\b",line,re.I) else "unknown"
+            items.append(make_item(text,price,"Hauptgericht",diet,
+                "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €"))
+        if items:
+            result[expected.isoformat()]=items[:4]
+    if sum(len(v) for v in result.values())<1:
+        raise ValueError("Lia WU: kein gültiger Wochenplan für "+monday.isoformat()+
+                         " (veröffentlichte Daten: "+", ".join(found_dates[:5])+")")
+    return result,(monday,monday+timedelta(days=4))
 
 def restaurant(data,identifier):
     return next(v for v in data["restaurants"] if v["id"]==identifier)
@@ -623,7 +652,7 @@ def run(today):
         should_check=True
         if today.weekday()>=5:
             should_check=False
-        elif ident in ("mensa","glashaus","gruenehuette") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat():
+        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat():
             should_check=False
         elif ident=="losteria" and restaurant(data,ident).get("seasonal") and prev_success:
             try:should_check=(today-date.fromisoformat(prev_success[:10])).days>=14
@@ -680,9 +709,8 @@ def run(today):
                 days,validity=parse_gruenehuette(safe_get(URLS["gruenehuette"]),monday)
                 apply_result(data,ident,days,"verified",validity)
             elif ident=="lia":
-                items=parse_lia(safe_get(URLS["lia"]),today)
-                restaurant(data,ident)["days"][today.isoformat()]=items
-                restaurant(data,ident)["status"]=source(data,ident)["status"]="daily"
+                days,validity=parse_lia_week(safe_get(URLS["lia"]),monday)
+                apply_result(data,ident,days,"verified",validity)
             else:
                 items=parse_losteria(safe_get(URLS["losteria"]))
                 restaurant(data,"losteria")["seasonal"]=items
@@ -695,7 +723,8 @@ def run(today):
             if ident in ("topfdeckel","gruenehuette","lia") and isinstance(exc,ValueError) and any(
                 fragment in str(exc).lower() for fragment in (
                   "kein datierter plan für heute","kein datierter plan", "nicht von aktueller woche",
-                  "veraltete datumsangabe", "tag nicht veröffentlicht")):
+                  "veraltete datumsangabe", "tag nicht veröffentlicht",
+                  "kein gültiger wochenplan", "datumsüberschrift fehlt")):
                 operations[ident]={"state":"not_published","last_success":prev_success,
                                    "consecutive_failures":0,"note":str(exc)[:170]}
                 restaurant(data,ident)["status"]=source(data,ident)["status"]="not_published"
