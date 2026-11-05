@@ -152,6 +152,52 @@
     }
   
 .logo-image{width:92px;height:76px;object-fit:contain;max-width:100%}.logo-box:has(.logo-image){background:white;box-shadow:none}.map-stage{height:420px;background:#e7edf2}.map-stage:before,.map-stage:after{display:none}.map-error{padding:24px;color:#555;font-size:14px}
+
+/* Kompakte, weiße Listenansicht – Stand 05.11.2026 */
+:root { --bg:#fff; --panel:#fff; }
+html,body,.page { background:#fff; }
+.page { max-width:none; padding:0 22px 28px; }
+.hero { height: clamp(138px, 22vw, 250px); border-radius:0; margin:0 -22px; width:calc(100% + 44px); }
+.hero img { object-fit:cover; object-position:center center; }
+.toolbar { gap:9px; margin-top:12px; }
+.date-label,.legend,.footer-note,.source-note,.status-pill,.price-cell,.menu-line .category,.menu-line .separator,.menu-line .extra { display:none !important; }
+.content-wrap { max-width:1110px; margin:18px auto 0; }
+.row { grid-template-columns:100px minmax(0,1fr); gap:14px; padding:17px 4px 19px 0; border-bottom:1px solid #e8e8e8; }
+.logo-cell { justify-content:center; padding-top:0 }
+.logo-box { width:76px; height:76px; font-size:18px }
+.logo-image { width:76px; height:70px; }
+.restaurant-title { margin:0 0 7px }
+.restaurant-title h3 { font-size:15px; letter-spacing:0; font-weight:700 }
+.menu-lines { gap:7px; }
+.menu-line { display:flex; gap:16px; justify-content:space-between; align-items:baseline; font-size:13px; line-height:1.46; }
+.dish-text { flex:1; min-width:0; overflow-wrap:break-word; }
+.dish-price { flex:none; color:#444; font-size:13px; white-space:nowrap; font-weight:600; text-align:right; }
+.source-link { margin-top:7px; font-size:11px; color:#777; }
+.day-tabs { flex-wrap:nowrap; max-width:1120px; }
+.day-tab { flex:1; min-width:0; }
+@media(max-width:750px) {
+ .page{padding:0 13px 24px}
+ .hero { margin:0 -13px; width:calc(100% + 26px); height:clamp(132px,30vw,205px); }
+ .toolbar { align-items:stretch; gap:10px }
+ .day-tabs { width:100%; justify-content:flex-start; overflow-x:auto; overscroll-behavior-inline:contain; -webkit-overflow-scrolling:touch; padding-bottom:4px; }
+ .day-tab { flex:0 0 91px; min-width:91px; font-size:13px; }
+ .view-tabs { align-self:center }
+ .content-wrap { margin:10px auto 0; }
+ .row { grid-template-columns:70px minmax(0,1fr); gap:10px; padding:14px 0; }
+ .logo-box {width:65px;height:65px;font-size:14px}
+ .logo-image {width:64px;height:58px}
+ .menu-line { font-size:12.5px; gap:8px }
+ .dish-price {font-size:12.5px}
+ .restaurant-title h3 {font-size:14px}
+ .map-stage {height:330px}
+}
+@media(max-width:370px) {
+ .row { grid-template-columns:61px minmax(0,1fr); gap:9px }
+ .logo-box {width:55px;height:55px;font-size:12px}
+ .logo-image {width:54px;height:52px}
+ .menu-line,.dish-price {font-size:12px}
+}
+
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxCjy3Q/MP9q+7jLhSqcI+zM=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head>
 <body>
@@ -166,15 +212,10 @@
         <button class="view-tab active" data-view="list" aria-selected="true">Listview</button>
         <button class="view-tab" data-view="map" aria-selected="false">Mapview</button>
       </div>
-      <div class="date-label" id="dateLabel"></div>
+      
     </section>
 
     <main class="content-wrap">
-      <div class="legend">
-        <div><strong id="legendTitle">Mittagsmenüs</strong> <span class="hint">inklusive vergangener Tage dieser Woche</span></div>
-        <div id="legendRight" class="hint"></div>
-      </div>
-
       <section class="list-view active" id="listView"></section>
 
       <section class="map-view" id="mapView">
@@ -183,10 +224,10 @@
       </section>
     </main>
 
-    <div class="footer-note" id="footerNote"></div>
+    
   </div>
 
-  <script src="data.js?v=1"></script>
+  <script src="data.js?v=2"></script>
   <script>
     const DATA = window.CAMPUS_LUNCH_DATA;
     const WEEKDAY_NAMES = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
@@ -197,10 +238,10 @@
     const mapView = document.getElementById('mapView');
     const mapStage = document.getElementById('mapStage');
     const mapList = document.getElementById('mapList');
-    const legendTitle = document.getElementById('legendTitle');
-    const legendRight = document.getElementById('legendRight');
-    const dateLabel = document.getElementById('dateLabel');
-    const footerNote = document.getElementById('footerNote');
+    const legendTitle = null;
+    const legendRight = null;
+    const dateLabel = null;
+    const footerNote = null;
 
     const brandClasses = {
       mensa:'logo-mensa', campus:'logo-campus', baschly:'logo-baschly', glashaus:'logo-glashaus', losteria:'logo-losteria'
@@ -247,11 +288,9 @@
 
     const weekDates = getWeekDates();
     function defaultSelectedDate(){
-      const today = new Date();
-      const day = today.getDay();
-      const mondayIndex = MONDAY_FIRST.indexOf(day);
-      if(mondayIndex >= 0 && weekDates[mondayIndex]) return weekDates[mondayIndex].iso;
-      return weekDates.find(d=>d.iso === DATA.checkedAt?.slice(0,10))?.iso || weekDates[0].iso;
+      const todayIso=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Vienna',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+      if(weekDates.some(d=>d.iso===todayIso))return todayIso;
+      return weekDates.find(d=>d.iso===DATA.checkedAt?.slice(0,10))?.iso || weekDates[0].iso;
     }
 
     let selectedDate = defaultSelectedDate();
@@ -276,35 +315,35 @@
       return [];
     }
 
+
+    function visibleDishes(restaurant){
+      const raw=dishesForRestaurant(restaurant);
+      if(restaurant.id!=='mensa') return raw.map(item=>({name:item.name,price:item.price}));
+      const soup=raw.find(item=>item.category==='Tagessuppe');
+      const mains=raw.filter(item=>item.category!=='Tagessuppe');
+      return mains.map(item=>({name:(soup?soup.name+' + ':'')+item.name,price:item.price}));
+    }
+    function escapeHtml(value){
+      return String(value??'').replace(/[&<>"']/g,chr=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[chr]));
+    }
     function renderRow(restaurant){
-      const items = dishesForRestaurant(restaurant);
-      const row = document.createElement('article');
-      row.className = 'row';
-
-      const logoText = brandLabels[restaurant.id] || restaurant.name;
-      const prices = items.map(item => formatPrice(item.price)).filter(Boolean);
-
-      row.innerHTML = `
-        <div class="logo-cell">
-          <div class="logo-box ${brandClasses[restaurant.id] || ''}">${logoUrls[restaurant.id] ? `<img class="logo-image" src="${logoUrls[restaurant.id]}" alt="${restaurant.name} Logo" loading="lazy" onerror="this.remove();this.parentElement.textContent=\'${restaurant.monogram}\'">` : logoText.replace(/\n/g,'<br>')}</div>
-        </div>
-        <div class="menu-cell">
-          <div class="restaurant-title">
-            <h3>${restaurant.name}</h3>
-            <span class="status-pill ${getStatusClass(restaurant.status)}">${getStatusLabel(restaurant.status)}</span>
-          </div>
-          <div class="menu-lines">
-            ${items.length ? items.map(item => `
-              <div class="menu-line"><span class="category">${item.category}</span><span class="separator">|</span>${item.name}${item.description ? `<span class="extra"> · ${item.description}</span>`:''}${item.allergens && item.allergens.length ? `<span class="extra"> · Allergene: ${item.allergens.join(', ')}</span>`:''}</div>
-            `).join('') : `<div class="empty-row">Für diesen Tag liegt derzeit kein bestätigtes Mittagsmenü vor.</div>`}
-          </div>
-          <div class="source-note">${restaurant.note || ''}</div>
-          <a class="source-link" href="${restaurant.url}" target="_blank" rel="noopener noreferrer">Quelle öffnen ↗</a>
-        </div>
-        <div class="price-cell">
-          ${items.length ? items.map(item => `<div class="price ${item.price == null ? 'empty' : ''}">${item.price == null ? '—' : formatPrice(item.price)}</div>`).join('') : `<div class="price empty">—</div>`}
-        </div>
-      `;
+      const items=visibleDishes(restaurant);
+      const row=document.createElement('article');
+      row.className='row';
+      const logoText=brandLabels[restaurant.id]||restaurant.name;
+      const logoUrl=logoUrls[restaurant.id];
+      const logo=logoUrl
+        ? '<img class="logo-image" src="'+escapeHtml(logoUrl)+'" alt="'+escapeHtml(restaurant.name)+' Logo" loading="lazy">'
+        : escapeHtml(logoText).replace(/\n/g,'<br>');
+      const dishRows=items.length ? items.map(item=>
+        '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.price==null?'':escapeHtml(formatPrice(item.price)))+'</span></div>'
+      ).join('') : '<div class="empty-row">Kein Mittagsmenü für diesen Tag verfügbar.</div>';
+      row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'">'+logo+'</div></div>'
+       +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
+       +'<div class="menu-lines">'+dishRows+'</div>'
+       +'<a class="source-link" href="'+escapeHtml(restaurant.url)+'" target="_blank" rel="noopener noreferrer">Zum Restaurant</a></div>';
+      const img=row.querySelector('.logo-image');
+      if(img)img.addEventListener('error',()=>{img.remove();row.querySelector('.logo-box').textContent=restaurant.monogram||restaurant.name;});
       return row;
     }
 
@@ -370,17 +409,8 @@
         card.append(title,location,link);mapList.append(card);
       });
     }
-    function updateMeta(){
-      legendTitle.textContent = formatDate(selectedDate);
-      const totalOffers = DATA.restaurants.reduce((sum,r)=>sum + dishesForRestaurant(r).length,0);
-      legendRight.textContent = `${DATA.restaurants.length} Restaurants · ${totalOffers} Einträge`;
-      dateLabel.textContent = `Aktiver Tag: ${formatDate(selectedDate)}`;
-      footerNote.innerHTML = `Datenstand: ${new Date(DATA.checkedAt).toLocaleString('de-AT')} · Quellen: WU Mensa, Das Campus, Das Glashaus, Baschly, L'Osteria. Bei der Mensa werden nur Tagessuppe, Powered by plants / Veggie, Meaty und Global & Grill angezeigt. Undatierte Wochenpläne und Saisonkarten sind klar gekennzeichnet.`;
-    }
-
     function update(){
       renderTabs();
-      updateMeta();
       renderList();
       renderMap();
       document.querySelectorAll('.view-tab').forEach(btn=>{
