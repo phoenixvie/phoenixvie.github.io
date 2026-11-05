@@ -22,8 +22,10 @@ class NewRestaurantTests(unittest.TestCase):
         <h3>Cremiges Brokkoli Kokoscurry mit Erdnüssen</h3>
         <h2>Dessert</h2></main>"""
         items=parse_topfdeckel(html.encode(),THU,MON)
-        self.assertEqual(len(items),3)
+        self.assertEqual(len(items),5)
         self.assertEqual(items[0]["price"],7.50)
+        self.assertEqual(items[-2]["price"],9.50)
+        self.assertEqual(items[-1]["price"],13.90)
         with self.assertRaises(ValueError):
             parse_topfdeckel(html.encode(),date(2026,11,6),MON)
 
