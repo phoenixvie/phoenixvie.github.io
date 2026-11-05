@@ -281,7 +281,21 @@ html,body,.page { background:#fff; }
 
   <script src="data.js?v=3"></script>
   <script>
-    const DATA = window.CAMPUS_LUNCH_DATA;
+  (async function initializeLunchPage() {
+    // Lädt täglich aktualisierte JSON-Daten direkt aus dem GitHub-Actions-Import.
+    // Vorhandenes data.js bleibt ein Fallback, falls JSON kurzfristig nicht erreichbar ist.
+    let freshData = window.CAMPUS_LUNCH_DATA;
+    try {
+      const reply = await fetch('./data/menus.json?fresh=' + Date.now(), {cache:'no-store'});
+      if (!reply.ok) throw new Error('HTTP '+reply.status);
+      const candidate = await reply.json();
+      if (!candidate?.weekStart || !Array.isArray(candidate?.restaurants) || candidate.restaurants.length!==5)
+        throw new Error('Ungültiges Menüformat');
+      freshData = candidate;
+    } catch(error) {
+      console.warn('Live-Menüs nicht abrufbar; statisches Fallback verwendet:', error);
+    }
+    const DATA = freshData;
     const WEEKDAY_NAMES = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const SHORT_WEEKDAY = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const MONDAY_FIRST = [1,2,3,4,5,6,0];
@@ -482,6 +496,7 @@ html,body,.page { background:#fff; }
     });
 
     update();
+  })();
   </script>
 </body>
 </html>
