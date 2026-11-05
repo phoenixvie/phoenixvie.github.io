@@ -356,9 +356,11 @@ html,body,.page { background:#fff; }
     nextMonday.setUTCDate(todayDate.getUTCDate()+(8-todayDate.getUTCDay())%7);
     // Ausserhalb der aktuellen Woche darf kein altes Speiseangebot als neu erscheinen.
     // Am Wochenende zeigt die Navigation immer die kommende Arbeitswoche.
+    const currentMonday=new Date(todayDate);
+    currentMonday.setUTCDate(todayDate.getUTCDate()-(todayDate.getUTCDay()+6)%7);
     const displayMondayIso=weekend
       ? nextMonday.toISOString().slice(0,10)
-      : DATA.weekStart;
+      : currentMonday.toISOString().slice(0,10);
     function getWeekDates(){
       const monday=new Date(displayMondayIso+'T12:00:00Z');
       return Array.from({length:5},(_,i)=>{
