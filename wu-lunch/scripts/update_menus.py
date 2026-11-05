@@ -318,12 +318,17 @@ def parse_mensa(raw,monday):
                     if label not in {"Tagessuppe","Powered by plants / Veggie","Meaty","Global & Grill"}:continue
                     bottom=boundary[j+1][0] if j+1<len(boundary) else page.rect.height
                     if bottom<=sy+4:continue
-                    content=page.get_text("text",clip=fitz.Rect(left,sy+2,right-1,bottom-1),sort=True)
+                    # Volle PDF-Textzeilen verwenden statt get_text(clip=...):
+                    # Clipping schneidet am Spaltenrand Wörter ab und mischt Nachbarzellen.
+                    cell=[(x,y,text) for x,y,text in rows
+                          if left-1 <= x < right-1 and sy+1 <= y < bottom-1]
+                    cell.sort(key=lambda v:(round(v[1]/3),v[0]))
+                    content="\n".join(v[2] for v in cell)
                     cost=euros(content)
                     names=[]
-                    for line in content.splitlines():
-                        line=tidy(line)
+                    for _,_,line in cell:
                         if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line,re.I):continue
+                        if re.search(r"Mach den Deal|Smart Menü|Beilagensalat um nur|zu deinem Menü",line,re.I):continue
                         line=re.sub(r"€\s*\d{1,3}[,.]\d{2}|\d{1,3}[,.]\d{2}\s*€?","",line)
                         line=tidy(line)
                         if line and line.lower() not in {"xxx","-","laut tagesaushang"}:names.append(line)
