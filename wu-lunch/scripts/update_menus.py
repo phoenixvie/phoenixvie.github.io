@@ -355,6 +355,12 @@ def parse_mensa(raw,monday):
                 for j,(sy,label) in enumerate(boundary):
                     if label not in {"Tagessuppe","Powered by plants / Veggie","Meaty","Global & Grill"}:continue
                     bottom=boundary[j+1][0] if j+1<len(boundary) else page.rect.height
+                    # Die Mensa legt einen roten Smart-Menü-Werbebanner direkt
+                    # unter „Meaty“. Er ist kein Bestandteil des Tagesgerichts.
+                    promo=[y for x,y,labeltext in rows
+                           if sy<y<bottom and re.search(r"Mach den Deal|Smart Men[üu]",labeltext,re.I)]
+                    if promo:
+                        bottom=min(bottom,min(promo)-2)
                     if bottom<=sy+4:continue
                     # Volle PDF-Textzeilen verwenden statt get_text(clip=...):
                     # Clipping schneidet am Spaltenrand Wörter ab und mischt Nachbarzellen.
