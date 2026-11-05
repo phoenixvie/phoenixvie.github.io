@@ -16,6 +16,8 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(period("02.11.2026 - 06.11.2026"), (MONDAY, MONDAY+timedelta(days=4)))
         self.assertEqual(period("2. Nov. 2026 – 6. Nov. 2026"), (MONDAY, MONDAY+timedelta(days=4)))
         self.assertNotEqual(period("26.10.2026 - 30.10.2026"), (MONDAY, MONDAY+timedelta(days=4)))
+        self.assertEqual(period("03.08 bis 07.08.2026"), (date(2026,8,3),date(2026,8,7)))
+        self.assertEqual(period("2. Nov - 6. Nov 2026"),(MONDAY,MONDAY+timedelta(days=4)))
 
     def test_campus_week(self):
         text='<h1>MITTAGSMENÜS</h1><p>02.11.2026 - 05.11.2026</p>'
