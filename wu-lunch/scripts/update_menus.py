@@ -615,6 +615,8 @@ def run(today):
     operations={}
     previous=state.get("sources",{})
     apply_result(data,"omakueche",buffet_days(monday),"recurring")
+    operations["omakueche"]={"state":"recurring","last_success":now,"consecutive_failures":0,
+                             "note":"Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"}
     for ident in ("mensa","glashaus","campus","baschly","losteria","topfdeckel","gruenehuette","lia"):
         meta=previous.get(ident,{})
         prev_success=meta.get("last_success")
