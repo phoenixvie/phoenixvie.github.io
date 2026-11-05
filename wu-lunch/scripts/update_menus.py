@@ -32,8 +32,8 @@ URLS = {
     "mensa":"https://www.wumensa.at/menuplan-deutsch/",
     "campus":"https://www.dascampus.at/dc-mittagsmenues",
     "glashaus":"https://www.dasglashaus.at/menues",
-    "baschly_veg":"https://shop.baschly.com/products/lunch-special-veggie",
-    "baschly_meat":"https://shop.baschly.com/products/lunch-special-mit-fleisch",
+    "baschly_veg":"https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie",
+    "baschly_meat":"https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch",
     "losteria":"https://losteria.net/at/menue/menu-della-casa/",
 }
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -182,22 +182,30 @@ def parse_glashaus(raw,monday):
     return result,p
 
 def parse_baschly(raw,monday,meat=False):
+    """Auch neue Produktseiten mit 'Tagessuppe:' und 'Hauptgericht:' korrekt lesen."""
     lines=html_lines(raw); txt="\n".join(lines)
-    m=re.search(r"Das Angebot (?:dieser|der) Woche",txt,re.I)
-    if not m: raise ValueError("Baschly: Wochenabschnitt fehlt")
+    m=re.search(r"(?:Das\s+)?Angebot (?:dieser|der) Woche",txt,re.I)
+    if not m: raise ValueError("Baschly: Wochenabschnitt fehlt – möglicherweise Seitendesign geändert")
     blocks=day_blocks(txt[m.end():].splitlines())
     result=blank_days(monday)
-    cost=euros(txt[:600]) or 9.5
+    cost=euros(txt[:600])
+    if cost is None: raise ValueError("Baschly: Produktpreis fehlt")
     for d,w in weekday_dates(monday):
-        candidates=[]
-        for line in blocks.get(w,[]):
-            line=tidy(line)
-            if len(line)<12 or re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line,re.I):continue
-            if re.search(r"^(beilage|mit kleinem salat|mit suppe|take away|in den warenkorb|ändern|zum hier)",line,re.I):break
-            candidates.append(line)
-        if candidates:
-            result[d.isoformat()]=[make_item(candidates[0],cost,"Fleisch" if meat else "Veggie",
-                                                  "meat" if meat else "veggie","Mit Tagessuppe oder kleinem Salat")]
+        options=[]
+        for raw_line in blocks.get(w,[]):
+            line=tidy(raw_line)
+            if re.search(r"^(beilage|mit kleinem salat|mit suppe|take away|in den warenkorb|ändern|zum hier)",line,re.I):
+                break
+            if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line,re.I):continue
+            if line.lower().startswith("tagessuppe:"):continue
+            if line.lower().startswith("hauptgericht:"):
+                line=tidy(line.split(":",1)[1])
+                if line:options.insert(0,line)
+            elif len(line)>=12 and not line.lower().startswith(("täglich neue suppe","glutenfrei","vegan")):
+                options.append(line)
+        if options:
+            result[d.isoformat()]=[make_item(options[0],cost,"Fleisch" if meat else "Veggie",
+                                             "meat" if meat else "veggie","Mit Tagessuppe oder kleinem Salat")]
     if sum(len(v) for v in result.values())<4: raise ValueError("Baschly: weniger als vier Wochentage")
     return result
 
