@@ -63,7 +63,7 @@
       "id": "topfdeckel",
       "name": "Topf & Deckel",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "empty",
+      "status": "daily",
       "note": "Täglich wechselnde Karte; kleine und große Portionen, Kombis separat.",
       "validFrom": null,
       "validUntil": null
@@ -737,15 +737,97 @@
       "name": "Topf & Deckel",
       "monogram": "T",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "empty",
+      "status": "daily",
       "note": "Täglich wechselnde Karte; kleine und große Portionen, Kombis separat.",
       "validFrom": null,
       "validUntil": null,
       "days": {
         "2026-11-02": [],
         "2026-11-03": [],
-        "2026-11-04": [],
-        "2026-11-05": [],
+        "2026-11-04": [
+          {
+            "name": "Quesadillas mit Paprika-Faschiertem Fleisch",
+            "category": "Hauptgericht klein",
+            "price": 7.5,
+            "diet": "unknown",
+            "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Indisches Butter Chicken in cremiger Cashewsauce mit Joghurt-Dip",
+            "category": "Hauptgericht klein",
+            "price": 7.5,
+            "diet": "unknown",
+            "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Creamy Mac & Cheese mit geschmolzenem Cheddar",
+            "category": "Hauptgericht klein",
+            "price": 7.5,
+            "diet": "veggie",
+            "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Kichererbsen-Tofu-Curry mit asiatischem Gemüse und Sesam",
+            "category": "Hauptgericht klein",
+            "price": 7.5,
+            "diet": "veggie",
+            "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-05": [
+          {
+            "name": "Garnelen-Zitronen-Pasta mit Zucchini und gehobeltem Parmesan",
+            "category": "Hauptgericht klein",
+            "price": 7.5,
+            "diet": "unknown",
+            "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Ofenfrische Burritos mit Chili con Carne, geschmolzenem Käse und Guacamole",
+            "category": "Hauptgericht klein",
+            "price": 7.5,
+            "diet": "unknown",
+            "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Cremiges Brokkoli-Kokoscurry mit gerösteten Erdnüssen",
+            "category": "Hauptgericht klein",
+            "price": 7.5,
+            "diet": "veggie",
+            "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Kürbis-Feta-Pfanne mit Couscous",
+            "category": "Hauptgericht klein",
+            "price": 7.5,
+            "diet": "veggie",
+            "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
         "2026-11-06": []
       }
     },
