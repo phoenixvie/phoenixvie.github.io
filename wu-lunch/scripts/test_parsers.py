@@ -66,10 +66,10 @@ class ParserTests(unittest.TestCase):
                         ("Global & Grill",385),("Pizza & Co",495)]:
             p.insert_text((25,y),label,fontsize=11)
         for x in xs:
-            p.insert_text((x,143),"Klare Gemuesesuppe mit Einlage",fontsize=9)
-            p.insert_text((x,210),"Linsen Dal mit Basmatireis",fontsize=9)
+            p.insert_text((x,143),"Klare Gemuesesuppe",fontsize=9)
+            p.insert_text((x,210),"Linsen Dal mit Reis",fontsize=9)
             p.insert_text((x,230),"€ 5,80",fontsize=9)
-            p.insert_text((x,320),"Gebackenes Huehnerschnitzel",fontsize=9)
+            p.insert_text((x,320),"Huehnerfleisch mit Reis",fontsize=9)
             p.insert_text((x,340),"€ 6,20",fontsize=9)
         raw=doc.tobytes();doc.close()
         return raw
@@ -79,6 +79,7 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(valid[0],MONDAY)
         self.assertEqual(len(data["2026-11-05"]),3)
         self.assertEqual(data["2026-11-05"][1]["category"],"Powered by plants / Veggie")
+        self.assertTrue(data["2026-11-05"][0]["name"].startswith("Klare"))
         broken_start,valid = parse_mensa(self.make_pdf("02..2026 - 06.11.2026"),MONDAY)
         self.assertEqual(valid[0],MONDAY)
         self.assertGreaterEqual(sum(len(v) for v in broken_start.values()),10)
