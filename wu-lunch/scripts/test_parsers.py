@@ -4,7 +4,7 @@ from datetime import date, timedelta
 import fitz
 from update_menus import (
     period, parse_campus, parse_glashaus, parse_baschly, parse_mensa,
-    blank_days, make_item, weekly_cache_valid, compare_verified_week, pdf_cell_word_lines
+    blank_days, make_item, weekly_cache_valid, compare_verified_week, menu_fingerprint, candidate_quality_gate, pdf_cell_word_lines
 )
 
 MONDAY = date(2026, 11, 2)
@@ -134,6 +134,30 @@ class ParserTests(unittest.TestCase):
                         make_item("tter Chicken Erdäpfel Würstl",6.4,"Meaty")]
         with self.assertRaises(ValueError):
             compare_verified_week(trusted,corrupt)
+
+    def test_content_change_detection_ignores_script_attributes(self):
+        x=b'<html><script>timestamp=1</script><main>Montag Gulasch mit Reis</main></html>'
+        y=b'<html><script>timestamp=2</script><main>Montag Gulasch mit Reis</main></html>'
+        z=b'<html><script>timestamp=2</script><main>Montag Gemuesecurry mit Reis</main></html>'
+        self.assertEqual(menu_fingerprint(x),menu_fingerprint(y))
+        self.assertNotEqual(menu_fingerprint(x),menu_fingerprint(z))
+
+    def test_candidate_protects_cached_week_against_missing_dishes(self):
+        good=blank_days(MONDAY)
+        bad=blank_days(MONDAY)
+        for d in good:
+            good[d]=[make_item('Saftiges Curry mit Reis',12.9,'Fleisch'),
+                     make_item('Gemueselasagne mit Sauce',12.9,'Veggie')]
+        bad['2026-11-02']=[make_item('Curry mit Reis',12.9,'Fleisch')]
+        with self.assertRaisesRegex(ValueError,'weniger Gerichte'):
+            candidate_quality_gate('glashaus',good,bad)
+        self.assertTrue(candidate_quality_gate('glashaus',good,good))
+
+    def test_candidate_rejects_malformed_price_and_text(self):
+        valid=blank_days(MONDAY)
+        valid['2026-11-02']=[make_item('Erdäpfel mit Gemüse',500,'Veggie')]
+        with self.assertRaisesRegex(ValueError,'Preis'):
+            candidate_quality_gate('lia',blank_days(MONDAY),valid)
 
     def test_weekly_cache(self):
         dates=blank_days(MONDAY)
