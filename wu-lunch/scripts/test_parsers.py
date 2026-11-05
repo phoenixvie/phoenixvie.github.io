@@ -4,7 +4,7 @@ from datetime import date, timedelta
 import fitz
 from update_menus import (
     period, parse_campus, parse_glashaus, parse_baschly, parse_mensa,
-    blank_days, make_item, weekly_cache_valid, compare_verified_week
+    blank_days, make_item, weekly_cache_valid, compare_verified_week, pdf_cell_word_lines
 )
 
 MONDAY = date(2026, 11, 2)
@@ -98,6 +98,18 @@ class ParserTests(unittest.TestCase):
             p.insert_text((x,340),"€ 6,20",fontsize=9)
         raw=doc.tobytes();doc.close()
         return raw
+
+    def test_pdf_word_cell_does_not_mix_neighboring_days(self):
+        doc=fitz.open()
+        page=doc.new_page(width=720,height=200)
+        page.insert_text((125,82),"Klare Gemuese Suppe",fontsize=10)
+        page.insert_text((325,82),"Tomatencremesuppe",fontsize=10)
+        monday_cell=pdf_cell_word_lines(page,100,300,65,110)
+        tuesday_cell=pdf_cell_word_lines(page,300,510,65,110)
+        self.assertIn("Klare", " ".join(x[2] for x in monday_cell))
+        self.assertNotIn("Tomaten", " ".join(x[2] for x in monday_cell))
+        self.assertIn("Tomaten", " ".join(x[2] for x in tuesday_cell))
+        doc.close()
 
     def test_pdf_columns_and_week_validation(self):
         data,valid=parse_mensa(self.make_pdf(),MONDAY)
