@@ -42,6 +42,15 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(len(data["2026-11-05"]),1)
         self.assertEqual(data["2026-11-02"][0]["price"],9.5)
 
+    def test_baschly_product_new_format_soup_and_main(self):
+        text='<h2>Lunch Special mit Fleisch</h2><p>€ 9,50</p><h3>Angebot der Woche</h3>'
+        for d in DAYS:
+            text+=f'<h3>{d}</h3><p>Tagessuppe: Gemüse-Cremesuppe</p><p>Hauptgericht: Gebratener Eierreis mit Crispy Chicken</p>'
+        text+='<h3>Beilage</h3><p>mit kleinem Salat</p>'
+        data=parse_baschly(text.encode(),MONDAY,meat=True)
+        self.assertEqual(len(data["2026-11-05"]),1)
+        self.assertEqual(data["2026-11-05"][0]["name"],"Gebratener Eierreis mit Crispy Chicken")
+
     @staticmethod
     def make_pdf(valid="02.11.2026 - 06.11.2026"):
         doc=fitz.open();p=doc.new_page(width=1050,height=590)
