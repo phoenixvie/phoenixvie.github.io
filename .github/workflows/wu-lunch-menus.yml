@@ -49,6 +49,9 @@ jobs:
       - name: Offline-Tests
         if: steps.guard.outputs.skip == 'false'
         run: python wu-lunch/scripts/update_menus.py --smoke-test
+      - name: Parser-Regressionstests
+        if: steps.guard.outputs.skip == 'false'
+        run: python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v
       - id: importer
         name: Speisepläne prüfen und extrahieren
         if: steps.guard.outputs.skip == 'false'
