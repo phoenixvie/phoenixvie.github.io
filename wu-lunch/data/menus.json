@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-05T15:28:19+01:00",
+  "checkedAt": "2026-11-05T15:40:32+01:00",
   "origin": "Quellseiten und PDF / redaktionell geprüft 05.11.2026",
   "sources": [
     {
@@ -243,7 +243,9 @@
             "category": "Menü 1",
             "diet": "unknown",
             "description": "",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           },
           {
             "name": "Gebackenes Sellerieschnitzel mit Wildpreiselbeeren und hausgemachter Sauce Tartare",
@@ -251,7 +253,9 @@
             "category": "Menü 2",
             "diet": "unknown",
             "description": "",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           }
         ],
         "2026-11-03": [
@@ -261,7 +265,9 @@
             "category": "Menü 1",
             "diet": "unknown",
             "description": "",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           },
           {
             "name": "Linseneintopf mit Sauerrahm, Wurzelgemüse und Serviettenknödel",
@@ -269,7 +275,9 @@
             "category": "Menü 2",
             "diet": "unknown",
             "description": "",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           }
         ],
         "2026-11-04": [
@@ -279,7 +287,9 @@
             "category": "Menü 1",
             "diet": "unknown",
             "description": "",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           },
           {
             "name": "Rote-Rüben Risotto mit Rucola, Feta und Ofentomaten",
@@ -287,7 +297,9 @@
             "category": "Menü 2",
             "diet": "unknown",
             "description": "",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           }
         ],
         "2026-11-05": [
@@ -297,7 +309,9 @@
             "category": "Menü 1",
             "diet": "unknown",
             "description": "",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           },
           {
             "name": "Kartoffelgratin mit Duett von geschmolzenen Karotten und Kräuteröl",
@@ -305,7 +319,9 @@
             "category": "Menü 2",
             "diet": "unknown",
             "description": "",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           }
         ],
         "2026-11-06": []
@@ -430,7 +446,12 @@
             "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           },
           {
             "name": "Tandoori-Masala-Chicken-Curry mit Basmatireis Allergene: Glutenfrei",
@@ -438,7 +459,12 @@
             "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           }
         ],
         "2026-11-03": [
@@ -448,7 +474,12 @@
             "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           },
           {
             "name": "Hühnerschnitzel mit Bratkartoffeln",
@@ -456,7 +487,12 @@
             "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           }
         ],
         "2026-11-04": [
@@ -466,7 +502,12 @@
             "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           },
           {
             "name": "Teriyaki-Crispy-Chicken mit würzigem Eierreis",
@@ -474,7 +515,12 @@
             "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           }
         ],
         "2026-11-05": [
@@ -484,7 +530,12 @@
             "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           },
           {
             "name": "Natur-Hühnerbrust mit Mozzarella gefüllt, auf Kartoffel-Rote-Rüben-Püree",
@@ -492,7 +543,12 @@
             "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           }
         ],
         "2026-11-06": [
@@ -502,7 +558,12 @@
             "category": "Veggie",
             "diet": "veggie",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           },
           {
             "name": "Thai-Kokos-Chicken-Curry mit Basmatireis",
@@ -510,7 +571,12 @@
             "category": "Fleisch",
             "diet": "meat",
             "description": "Mit Tagessuppe oder kleinem Salat",
-            "allergens": []
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [
+              "Tagessuppe",
+              "kleiner Salat"
+            ]
           }
         ]
       }
