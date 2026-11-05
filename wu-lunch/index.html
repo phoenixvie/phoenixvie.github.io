@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WU Campus Mittagsmenüs</title>
+  <meta name="description" content="Mittagsmenüs rund um den WU Campus mit Tagesansicht und Wochenübersicht." />
+  <style>
+    :root{
+      --blue:#3e87ea;
+      --blue-dark:#2f79df;
+      --line:#d9d9d9;
+      --text:#444;
+      --muted:#777;
+      --bg:#efefef;
+      --panel:#f8f8f8;
+      --white:#fff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+    a{color:inherit;text-decoration:none}
+    .page{max-width:1660px;margin:0 auto 32px;padding:0 18px}
+    .hero{position:relative;width:100%;height:220px;overflow:hidden;border-radius:0 0 2px 2px;background:#dfe6ef}
+    .hero img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .toolbar{display:flex;flex-direction:column;align-items:center;margin-top:12px;gap:14px}
+    .day-tabs,.view-tabs{display:flex;align-items:center;justify-content:center;flex-wrap:wrap}
+    .day-tabs{width:min(1140px,100%)}
+    .day-tab{
+      min-width:92px;
+      padding:9px 10px;
+      border:1px solid #bfc6cf;
+      border-right:0;
+      background:#f5f5f5;
+      color:#555;
+      font-size:16px;
+      line-height:1;
+      cursor:pointer;
+      text-align:center;
+      position:relative;
+    }
+    .day-tab:first-child{border-radius:4px 0 0 4px}
+    .day-tab:last-child{border-right:1px solid #bfc6cf;border-radius:0 4px 4px 0}
+    .day-tab.active{background:var(--blue);color:#fff;border-color:#6c95d5;z-index:1}
+    .day-tab .small-date{display:block;font-size:10px;margin-top:4px;opacity:.95;letter-spacing:.02em}
+    .day-tab:not(.active) .small-date{color:#888}
+
+    .view-tabs{gap:0}
+    .view-tab{
+      padding:8px 24px;
+      font-size:15px;
+      border:1px solid #a9b9d2;
+      background:#fff;
+      color:#5c6a75;
+      cursor:pointer;
+      min-width:98px;
+      text-align:center;
+    }
+    .view-tab:first-child{border-radius:4px 0 0 4px;border-right:0}
+    .view-tab:last-child{border-radius:0 4px 4px 0}
+    .view-tab.active{background:var(--blue);border-color:#6c95d5;color:#fff}
+
+    .date-label{margin-top:2px;font-size:13px;color:#707070;text-align:center}
+
+    .content-wrap{width:min(1240px,100%);margin:16px auto 0;background:transparent}
+    .legend{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 2px 12px;color:#666;font-size:13px}
+    .legend strong{color:#3a3a3a}
+    .legend .hint{font-size:12px;color:#888}
+
+    .list-view,.map-view{display:none}
+    .list-view.active,.map-view.active{display:block}
+
+    .list{
+      background:transparent;
+      border-radius:6px;
+      overflow:hidden;
+    }
+    .row{
+      display:grid;
+      grid-template-columns:110px 1fr 92px;
+      gap:16px;
+      align-items:start;
+      padding:16px 6px 16px 0;
+      border-bottom:1px solid #ddd;
+    }
+    .row:last-child{border-bottom:0}
+    .logo-cell{display:flex;justify-content:center;padding-top:2px}
+    .logo-box{
+      width:84px;height:84px;border-radius:2px;display:flex;align-items:center;justify-content:center;
+      text-align:center;font-weight:bold;color:#fff;padding:8px;line-height:1.05;font-size:24px;letter-spacing:-.02em;
+      box-shadow:0 0 0 1px rgba(0,0,0,.06) inset;
+    }
+    .logo-box small{display:block;font-size:12px;font-weight:normal;letter-spacing:0}
+    .logo-mensa{background:#e30613;font-size:22px;text-transform:lowercase}
+    .logo-campus{background:#c46c2a;font-size:16px}
+    .logo-baschly{background:#222;font-size:18px}
+    .logo-glashaus{background:#aacd61;color:#173a17;font-size:16px}
+    .logo-losteria{background:#e9e4d8;color:#222;font-size:14px}
+
+    .menu-cell{min-width:0}
+    .restaurant-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+    .restaurant-title h3{margin:0;font-size:18px;color:#333;font-weight:bold}
+    .status-pill{font-size:11px;padding:2px 7px;border-radius:999px;background:#ececec;color:#666}
+    .status-pill.verified{background:#e7f3e5;color:#477a3d}
+    .status-pill.undated{background:#fff4dd;color:#9a7423}
+    .status-pill.seasonal{background:#e8efff;color:#566aa0}
+
+    .menu-lines{display:flex;flex-direction:column;gap:4px}
+    .menu-line{font-size:14px;line-height:1.35;color:#4b4b4b}
+    .menu-line .category{font-weight:normal;color:#595959}
+    .menu-line .separator{color:#999;padding:0 6px}
+    .menu-line .extra{color:#888;font-size:12px}
+    .source-note{margin-top:7px;font-size:12px;color:#8a8a8a}
+    .source-link{display:inline-block;margin-top:4px;font-size:12px;color:#5b86c7}
+
+    .price-cell{display:flex;flex-direction:column;align-items:flex-end;gap:7px;padding-top:31px}
+    .price{font-size:18px;color:#4a4a4a;white-space:nowrap}
+    .price.empty{color:#bbb}
+
+    .empty-row{padding:10px 0;color:#9a9a9a;font-size:13px}
+
+    .map-view{background:#fff;border:1px solid #ddd;border-radius:6px;padding:18px}
+    .map-stage{position:relative;height:430px;border-radius:4px;overflow:hidden;background:#e9eef3;margin-bottom:16px}
+    .map-stage::before{content:"";position:absolute;inset:0;background:url('assets/background-campus.png') center/cover no-repeat;opacity:.22}
+    .map-stage::after{content:"WU CAMPUS OVERVIEW";position:absolute;top:10px;left:14px;font-size:12px;font-weight:bold;color:#5f6670;letter-spacing:.12em}
+    .marker{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
+    .pin{width:20px;height:20px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.18)}
+    .marker-label{background:rgba(255,255,255,.95);border:1px solid #d7dde7;border-radius:20px;padding:5px 10px;font-size:12px;color:#3f4d5d;white-space:nowrap}
+    .map-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .map-card{border:1px solid #ddd;border-radius:6px;padding:12px;background:#fafafa}
+    .map-card h4{margin:0 0 7px;font-size:15px;color:#333}
+    .map-card p{margin:0;font-size:13px;color:#666;line-height:1.45}
+
+    .footer-note{width:min(1240px,100%);margin:18px auto 0;font-size:12px;color:#7a7a7a;line-height:1.5;text-align:left}
+
+    @media (max-width: 980px){
+      .row{grid-template-columns:96px 1fr;gap:12px}
+      .price-cell{grid-column:2;align-items:flex-start;padding-top:8px;gap:3px}
+      .price{font-size:15px}
+      .price-cell::before{content:"Preise";font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px}
+      .map-list{grid-template-columns:1fr}
+    }
+    @media (max-width: 720px){
+      .hero{height:145px}
+      .page{padding:0 10px 24px}
+      .day-tab{min-width:calc(25% - 1px);font-size:14px;padding:8px 6px}
+      .view-tab{font-size:14px;padding:8px 18px}
+      .row{grid-template-columns:1fr;padding:14px 0}
+      .logo-cell{justify-content:flex-start}
+      .logo-box{width:74px;height:74px}
+      .legend{flex-direction:column;align-items:flex-start}
+    }
+  
+.logo-image{width:92px;height:76px;object-fit:contain;max-width:100%}.logo-box:has(.logo-image){background:white;box-shadow:none}.map-stage{height:420px;background:#e7edf2}.map-stage:before,.map-stage:after{display:none}.map-error{padding:24px;color:#555;font-size:14px}
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxCjy3Q/MP9q+7jLhSqcI+zM=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <img src="assets/campus-panorama.jpg" alt="WU Campus Wien" />
+    </header>
+
+    <section class="toolbar" aria-label="Navigation">
+      <div class="day-tabs" id="dayTabs"></div>
+      <div class="view-tabs" role="tablist" aria-label="Ansicht wählen">
+        <button class="view-tab active" data-view="list" aria-selected="true">Listview</button>
+        <button class="view-tab" data-view="map" aria-selected="false">Mapview</button>
+      </div>
+      <div class="date-label" id="dateLabel"></div>
+    </section>
+
+    <main class="content-wrap">
+      <div class="legend">
+        <div><strong id="legendTitle">Mittagsmenüs</strong> <span class="hint">inklusive vergangener Tage dieser Woche</span></div>
+        <div id="legendRight" class="hint"></div>
+      </div>
+
+      <section class="list-view active" id="listView"></section>
+
+      <section class="map-view" id="mapView">
+        <div class="map-stage" id="mapStage"></div>
+        <div class="map-list" id="mapList"></div>
+      </section>
+    </main>
+
+    <div class="footer-note" id="footerNote"></div>
+  </div>
+
+  <script src="data.js?v=1"></script>
+  <script>
+    const DATA = window.CAMPUS_LUNCH_DATA;
+    const WEEKDAY_NAMES = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    const SHORT_WEEKDAY = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    const MONDAY_FIRST = [1,2,3,4,5,6,0];
+    const tabContainer = document.getElementById('dayTabs');
+    const listView = document.getElementById('listView');
+    const mapView = document.getElementById('mapView');
+    const mapStage = document.getElementById('mapStage');
+    const mapList = document.getElementById('mapList');
+    const legendTitle = document.getElementById('legendTitle');
+    const legendRight = document.getElementById('legendRight');
+    const dateLabel = document.getElementById('dateLabel');
+    const footerNote = document.getElementById('footerNote');
+
+    const brandClasses = {
+      mensa:'logo-mensa', campus:'logo-campus', baschly:'logo-baschly', glashaus:'logo-glashaus', losteria:'logo-losteria'
+    };
+    const logoUrls = {"mensa":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Mensa.jpg","campus":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Das_Campus.jpg","baschly":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Baschly.jpg","losteria":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Losteria.jpg","glashaus":"https://www.dasglashaus.at/favicon.ico"};
+    const brandLabels = {
+      mensa:'mensa', campus:'das campus', baschly:'BASCHLY', glashaus:'DAS\nGLASHAUS', losteria:"L'Osteria"
+    };
+    const markerPositions = {
+      mensa:{left:'31%', top:'70%'},
+      campus:{left:'47%', top:'57%'},
+      baschly:{left:'67%', top:'60%'},
+      glashaus:{left:'58%', top:'35%'},
+      losteria:{left:'18%', top:'56%'}
+    };
+
+    function formatDate(dateStr){
+      const d = new Date(dateStr + 'T12:00:00');
+      return d.toLocaleDateString('de-AT',{weekday:'long', day:'numeric', month:'long'});
+    }
+    function formatShortDate(dateStr){
+      const d = new Date(dateStr + 'T12:00:00');
+      return d.toLocaleDateString('de-AT',{day:'2-digit', month:'2-digit'});
+    }
+    function formatPrice(value){
+      return value == null ? '' : value.toLocaleString('de-AT',{minimumFractionDigits:1, maximumFractionDigits:2}) + ' €';
+    }
+    function getStatusLabel(status){
+      if(status==='verified') return 'bestätigt';
+      if(status==='undated') return 'ohne Datum';
+      if(status==='seasonal') return 'Saisonkarte';
+      return status;
+    }
+    function getStatusClass(status){ return status || ''; }
+
+    function getWeekDates(){
+      const start = new Date(DATA.weekStart + 'T12:00:00');
+      return Array.from({length:7}, (_,i)=>{
+        const d = new Date(start); d.setDate(start.getDate()+i);
+        const iso = d.toISOString().slice(0,10);
+        return {iso, date:d};
+      });
+    }
+
+    const weekDates = getWeekDates();
+    function defaultSelectedDate(){
+      const today = new Date();
+      const day = today.getDay();
+      const mondayIndex = MONDAY_FIRST.indexOf(day);
+      if(mondayIndex >= 0 && weekDates[mondayIndex]) return weekDates[mondayIndex].iso;
+      return weekDates.find(d=>d.iso === DATA.checkedAt?.slice(0,10))?.iso || weekDates[0].iso;
+    }
+
+    let selectedDate = defaultSelectedDate();
+    let currentView = 'list';
+
+    function renderTabs(){
+      tabContainer.innerHTML = '';
+      weekDates.forEach(({iso,date})=>{
+        const weekday = date.getDay();
+        const btn = document.createElement('button');
+        btn.className = 'day-tab' + (iso === selectedDate ? ' active' : '');
+        btn.innerHTML = `${SHORT_WEEKDAY[weekday]}<span class="small-date">${formatShortDate(iso)}</span>`;
+        btn.addEventListener('click',()=>{selectedDate = iso; update();});
+        tabContainer.appendChild(btn);
+      });
+    }
+
+    function dishesForRestaurant(restaurant){
+      const items = restaurant.days?.[selectedDate] || [];
+      if (items.length) return items;
+      if (restaurant.status === 'seasonal' && Array.isArray(restaurant.seasonal)) return restaurant.seasonal;
+      return [];
+    }
+
+    function renderRow(restaurant){
+      const items = dishesForRestaurant(restaurant);
+      const row = document.createElement('article');
+      row.className = 'row';
+
+      const logoText = brandLabels[restaurant.id] || restaurant.name;
+      const prices = items.map(item => formatPrice(item.price)).filter(Boolean);
+
+      row.innerHTML = `
+        <div class="logo-cell">
+          <div class="logo-box ${brandClasses[restaurant.id] || ''}">${logoUrls[restaurant.id] ? `<img class="logo-image" src="${logoUrls[restaurant.id]}" alt="${restaurant.name} Logo" loading="lazy" onerror="this.remove();this.parentElement.textContent=\'${restaurant.monogram}\'">` : logoText.replace(/\n/g,'<br>')}</div>
+        </div>
+        <div class="menu-cell">
+          <div class="restaurant-title">
+            <h3>${restaurant.name}</h3>
+            <span class="status-pill ${getStatusClass(restaurant.status)}">${getStatusLabel(restaurant.status)}</span>
+          </div>
+          <div class="menu-lines">
+            ${items.length ? items.map(item => `
+              <div class="menu-line"><span class="category">${item.category}</span><span class="separator">|</span>${item.name}${item.description ? `<span class="extra"> · ${item.description}</span>`:''}${item.allergens && item.allergens.length ? `<span class="extra"> · Allergene: ${item.allergens.join(', ')}</span>`:''}</div>
+            `).join('') : `<div class="empty-row">Für diesen Tag liegt derzeit kein bestätigtes Mittagsmenü vor.</div>`}
+          </div>
+          <div class="source-note">${restaurant.note || ''}</div>
+          <a class="source-link" href="${restaurant.url}" target="_blank" rel="noopener noreferrer">Quelle öffnen ↗</a>
+        </div>
+        <div class="price-cell">
+          ${items.length ? items.map(item => `<div class="price ${item.price == null ? 'empty' : ''}">${item.price == null ? '—' : formatPrice(item.price)}</div>`).join('') : `<div class="price empty">—</div>`}
+        </div>
+      `;
+      return row;
+    }
+
+    function renderList(){
+      listView.innerHTML = '<div class="list"></div>';
+      const list = listView.querySelector('.list');
+      DATA.restaurants.forEach(r => list.appendChild(renderRow(r)));
+    }
+
+
+    let realMap=null, loadedPins=false;
+    const locationInfo={
+      mensa:{address:'Welthandelsplatz 1, Gebäude D1, 1020 Wien',building:'D1'},
+      campus:{address:'Welthandelsplatz 1, Gebäude D2, 1020 Wien',building:'D2'},
+      baschly:{address:'Welthandelsplatz 1, Gebäude D4, 1020 Wien',building:'D4'},
+      glashaus:{address:'Welthandelsplatz 1, 1020 Wien, das Glashaus',building:'Campus WU'},
+      losteria:{address:'Freudplatz 2, 1020 Wien',building:'D5'}
+    };
+    async function loadRealMap(){
+      if(!window.L){mapStage.innerHTML='<div class="map-error">Kartenbibliothek nicht erreichbar. Adresslinks stehen unten bereit.</div>';return;}
+      if(!realMap){
+        mapStage.replaceChildren();
+        realMap=L.map(mapStage,{scrollWheelZoom:false}).setView([48.2131,16.4094],16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+          attribution:'&copy; OpenStreetMap-Mitwirkende',maxZoom:19
+        }).addTo(realMap);
+      }
+      setTimeout(()=>realMap.invalidateSize(),60);
+      if(loadedPins) return;
+      loadedPins=true;
+      const bounds=[];
+      for(const restaurant of DATA.restaurants){
+        const info=locationInfo[restaurant.id];
+        try{
+          const q=restaurant.name+', '+info.address+', Wien, Österreich';
+          const response=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q),{headers:{Accept:'application/json'}});
+          if(response.ok){
+            const results=await response.json();
+            if(results.length){
+              const lat=Number(results[0].lat),lon=Number(results[0].lon);
+              const pop=document.createElement('div');
+              const heading=document.createElement('strong');heading.textContent=restaurant.name;
+              const line=document.createElement('p');line.textContent=info.address;
+              const link=document.createElement('a');link.href='https://www.openstreetmap.org/directions?to='+lat+'%2C'+lon;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Route anzeigen';
+              pop.append(heading,line,link);
+              L.marker([lat,lon],{title:restaurant.name}).addTo(realMap).bindPopup(pop);
+              bounds.push([lat,lon]);
+            }
+          }
+        }catch(err){console.warn('Standort nicht verfügbar',restaurant.name);}
+        await new Promise(resolve=>setTimeout(resolve,1200));
+      }
+      if(bounds.length)realMap.fitBounds(bounds,{padding:[38,38],maxZoom:17});
+    }
+    function renderMap(){
+      mapList.replaceChildren();
+      DATA.restaurants.forEach(r=>{
+        const info=locationInfo[r.id];
+        const card=document.createElement('div');card.className='map-card';
+        const title=document.createElement('h4');title.textContent=r.name+' · '+info.building;
+        const location=document.createElement('p');location.textContent=info.address;
+        const link=document.createElement('a');link.textContent='Auf OpenStreetMap suchen ↗';link.href='https://www.openstreetmap.org/search?query='+encodeURIComponent(r.name+' '+info.address);link.target='_blank';link.rel='noopener noreferrer';
+        card.append(title,location,link);mapList.append(card);
+      });
+    }
+    function updateMeta(){
+      legendTitle.textContent = formatDate(selectedDate);
+      const totalOffers = DATA.restaurants.reduce((sum,r)=>sum + dishesForRestaurant(r).length,0);
+      legendRight.textContent = `${DATA.restaurants.length} Restaurants · ${totalOffers} Einträge`;
+      dateLabel.textContent = `Aktiver Tag: ${formatDate(selectedDate)}`;
+      footerNote.innerHTML = `Datenstand: ${new Date(DATA.checkedAt).toLocaleString('de-AT')} · Quellen: WU Mensa, Das Campus, Das Glashaus, Baschly, L'Osteria. Bei der Mensa werden nur Tagessuppe, Powered by plants / Veggie, Meaty und Global & Grill angezeigt. Undatierte Wochenpläne und Saisonkarten sind klar gekennzeichnet.`;
+    }
+
+    function update(){
+      renderTabs();
+      updateMeta();
+      renderList();
+      renderMap();
+      document.querySelectorAll('.view-tab').forEach(btn=>{
+        const active = btn.dataset.view === currentView;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      listView.classList.toggle('active', currentView === 'list');
+      mapView.classList.toggle('active', currentView === 'map'); if(currentView === 'map') loadRealMap();
+    }
+
+    document.querySelectorAll('.view-tab').forEach(btn=>{
+      btn.addEventListener('click',()=>{currentView = btn.dataset.view; update();});
+    });
+
+    update();
+  </script>
+</body>
+</html>
