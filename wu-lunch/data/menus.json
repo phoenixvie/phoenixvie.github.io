@@ -9,8 +9,8 @@
       "id": "mensa",
       "name": "WU Mensa",
       "url": "https://www.wumensa.at/menuplan-deutsch/",
-      "status": "verified",
-      "note": "PDF-Wochenplan KW 45 · nur die vier gewünschten Bereiche",
+      "status": "unverified",
+      "note": "Woche manuell geprüft; neue PDF-Extraktion wird nochmals validiert",
       "validFrom": "2026-11-02",
       "validUntil": "2026-11-06"
     },
@@ -57,169 +57,169 @@
       "name": "WU Mensa",
       "monogram": "WU",
       "url": "https://www.wumensa.at/menuplan-deutsch/",
-      "status": "verified",
-      "note": "PDF-Wochenplan KW 45 · nur die vier gewünschten Bereiche",
+      "status": "unverified",
+      "note": "Woche manuell geprüft; neue PDF-Extraktion wird nochmals validiert",
       "validFrom": "2026-11-02",
       "validUntil": "2026-11-06",
       "days": {
         "2026-11-02": [
           {
-            "name": "esuppe | Einlage Selleriecreme",
-            "price": null,
             "category": "Tagessuppe",
+            "name": "Klare Gemüsesuppe mit Einlage",
+            "price": null,
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "name": "ne | leichte Kichererbsen ahmsauce Curry | Bulgur",
-            "price": 5.8,
             "category": "Powered by plants / Veggie",
+            "name": "Spinat-Lasagne mit leichter Knoblauch-Rahmsauce",
+            "price": 5.8,
             "diet": "veggie",
             "description": "",
             "allergens": []
           },
           {
-            "name": "tter Chicken | Erdäpfel-Würs Gebäck (Schw Mach den Deal des Tages je",
-            "price": 6.4,
             "category": "Meaty",
+            "name": "Indisches Butter Chicken mit Gewürzreis",
+            "price": 6.4,
             "diet": "meat",
             "description": "",
             "allergens": []
           },
           {
-            "name": "Lachs Teppan cola, Jasminreis s",
-            "price": 9.8,
             "category": "Global & Grill",
-            "diet": "unknown",
+            "name": "Ciabatta Club Sandwich mit Hühnerbrust, Mozzarella, Tomaten, Rucola, Cocktailsauce und Kartoffelchips",
+            "price": 9.8,
+            "diet": "meat",
             "description": "",
             "allergens": []
           }
         ],
         "2026-11-03": [
           {
-            "name": "suppe Klare Gemüs",
-            "price": null,
             "category": "Tagessuppe",
+            "name": "Selleriecremesuppe",
+            "price": null,
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "name": "Gemüse Champignon r (vegan) Serviettenkn G b k",
-            "price": 6.3,
             "category": "Powered by plants / Veggie",
-            "diet": "veggie",
-            "description": "",
+            "name": "Kichererbsen-Gemüse-Curry mit Bulgur",
+            "price": 6.3,
+            "diet": "vegan",
+            "description": "Auf der Karte ausdrücklich als vegan bezeichnet",
             "allergens": []
           },
           {
-            "name": "Gebackenes stelgulasch Hühnerschn wein) Petersilkarto etzt zum Smart Menü! +",
-            "price": 5.8,
             "category": "Meaty",
+            "name": "Erdäpfel-Würstelgulasch mit Gebäck",
+            "price": 5.8,
             "diet": "meat",
-            "description": "",
+            "description": "Schwein",
             "allergens": []
           },
           {
-            "name": "nyaki | Gemüse Pulled Pork Teriyakisauce Planted Pull",
-            "price": 9.8,
             "category": "Global & Grill",
-            "diet": "unknown",
+            "name": "Lachs-Teppanyaki mit Gemüse, Jasminreis und Teriyakisauce",
+            "price": 9.8,
+            "diet": "fish",
             "description": "",
             "allergens": []
           }
         ],
         "2026-11-04": [
           {
-            "name": "sesuppe | Einlage Paprikacrem",
-            "price": null,
             "category": "Tagessuppe",
+            "name": "Klare Gemüsesuppe mit Einlage",
+            "price": null,
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "name": "nsauce | Rotes Linse nödel Spinat | Du Überbacke",
-            "price": 6.3,
             "category": "Powered by plants / Veggie",
+            "name": "Champignonsauce mit Serviettenknödel",
+            "price": 6.3,
             "diet": "veggie",
             "description": "",
             "allergens": []
           },
           {
-            "name": "s mit Chili-Fü itzel mexikanisc Sour Cream Suppe + Beilagensalat um n",
-            "price": 5.8,
             "category": "Meaty",
+            "name": "Gebackenes Hühnerschnitzel mit Petersilkartoffeln",
+            "price": 5.8,
             "diet": "meat",
             "description": "",
             "allergens": []
           },
           {
-            "name": "Beef A,C,G od oder Planted 'Cr ed BBQ style' A",
-            "price": 9.8,
             "category": "Global & Grill",
+            "name": "Bao Buns mit Pulled Pork oder Planted Pulled BBQ",
+            "price": 9.8,
             "diet": "unknown",
-            "description": "",
+            "description": "Fleisch- oder pflanzliche Variante zur Auswahl",
             "allergens": []
           }
         ],
         "2026-11-05": [
           {
-            "name": "mesuppe Klare Gemüse",
-            "price": null,
             "category": "Tagessuppe",
+            "name": "Paprikacremesuppe",
+            "price": null,
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "name": "en Dal & Spaghetti | So ftreis Bolognese | O ne Enchiladas G b k S",
-            "price": 5.8,
             "category": "Powered by plants / Veggie",
+            "name": "Rotes Linsen-Dal mit Spinat und Duftreis",
+            "price": 5.8,
             "diet": "veggie",
             "description": "",
             "allergens": []
           },
           {
-            "name": "Gebackener S ülle Petersil-Erdäp cher Bulgur Tartare nur",
-            "price": 6.4,
             "category": "Meaty",
-            "diet": "meat",
+            "name": "Überbackene Enchiladas mit Chili-Fülle, mexikanischem Bulgur und Sour Cream",
+            "price": 6.4,
+            "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "name": "ispy Chicken",
-            "price": 9.8,
             "category": "Global & Grill",
+            "name": "Mensa Burger mit Pommes – Beef oder Planted 'Crispy Chicken style'",
+            "price": 9.8,
             "diet": "unknown",
-            "description": "",
+            "description": "Fleisch- oder pflanzliche Variante zur Auswahl",
             "allergens": []
           }
         ],
         "2026-11-06": [
           {
-            "name": "esuppe | Einlage",
-            "price": null,
             "category": "Tagessuppe",
+            "name": "Klare Gemüsesuppe mit Einlage",
+            "price": null,
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "name": "oja-Gemüse Oliven S l h",
-            "price": 5.8,
             "category": "Powered by plants / Veggie",
+            "name": "Spaghetti mit Soja-Gemüse-Bolognese und Oliven",
+            "price": 5.8,
             "diet": "veggie",
             "description": "",
             "allergens": []
           },
           {
-            "name": "Seelachs pfel | Sc.",
-            "price": 6.4,
             "category": "Meaty",
-            "diet": "meat",
+            "name": "Gebackener Seelachs mit Petersil-Erdäpfeln und Sauce Tartare",
+            "price": 6.4,
+            "diet": "fish",
             "description": "",
             "allergens": []
           }
