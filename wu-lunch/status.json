@@ -2,12 +2,13 @@
   "checked_at": "2026-11-05T15:25:33+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
-  "health": "healthy",
+  "health": "degraded",
   "sources": {
     "mensa": {
-      "state": "cached",
-      "last_success": "2026-11-05T15:18:32+01:00",
-      "consecutive_failures": 0
+      "state": "needs_revalidation",
+      "last_success": null,
+      "consecutive_failures": 1,
+      "error": "Vorherige PDF-Tabellenausgabe verworfen; korrekter Wochenplan wiederhergestellt, Live-Prüfung ausstehend"
     },
     "glashaus": {
       "state": "cached",
@@ -30,7 +31,9 @@
       "consecutive_failures": 0
     }
   },
-  "problems": [],
+  "problems": [
+    "mensa: Live-PDF-Verifikation wird nach Korrektur erneut durchgeführt; manuell geprüfte Woche bleibt sichtbar"
+  ],
   "next_run": "next business day ~08:15 Europe/Vienna",
   "format_version": 1
 }
