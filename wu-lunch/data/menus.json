@@ -784,6 +784,26 @@
             "allergens": [],
             "included_soup": null,
             "included_choices": []
+          },
+          {
+            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+            "price": 9.5,
+            "category": "Menükombo",
+            "diet": "unknown",
+            "description": "Eine Option zum Hauptgericht wählbar",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+            "price": 13.9,
+            "category": "Menükombo",
+            "diet": "unknown",
+            "description": "Eine Option zum Hauptgericht wählbar",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           }
         ],
         "2026-11-05": [
@@ -823,6 +843,26 @@
             "price": 7.5,
             "diet": "veggie",
             "description": "Groß regulär 11,90 €. Light Lunch Kombo mit Vorspeise/Drink/Dessert ab 9,50 €. Angebote können abweichen.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+            "price": 9.5,
+            "category": "Menükombo",
+            "diet": "unknown",
+            "description": "Eine Option zum Hauptgericht wählbar",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+            "price": 13.9,
+            "category": "Menükombo",
+            "diet": "unknown",
+            "description": "Eine Option zum Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
             "included_choices": []
