@@ -34,6 +34,7 @@ class ParserTests(unittest.TestCase):
             text += f'<h2>{d}</h2><p>FEIERTAG</p><p>Gemüse-Curry mit Basmatireis</p><p>AGLO</p><p>Hühner-Piccata mit Tomatenspaghetti</p><p>ACGLO</p>'
         data,_=parse_glashaus(text.encode(),MONDAY)
         self.assertEqual(data["2026-11-05"][0]["price"],14.9)
+        self.assertEqual(data["2026-11-05"][0]["included_choices"],["Suppe","Salat"])
         self.assertEqual(len(data["2026-11-03"]),2)
 
     def test_baschly_keeps_undated_separate(self):
@@ -53,6 +54,30 @@ class ParserTests(unittest.TestCase):
         data=parse_baschly(text.encode(),MONDAY,meat=True)
         self.assertEqual(len(data["2026-11-05"]),1)
         self.assertEqual(data["2026-11-05"][0]["name"],"Gebratener Eierreis mit Crispy Chicken")
+        self.assertEqual(data["2026-11-05"][0]["included_soup"],"Gemüse-Cremesuppe")
+        self.assertEqual(data["2026-11-05"][0]["included_choices"],["Tagessuppe","kleiner Salat"])
+        self.assertTrue(all(x[0]["included_soup"] for x in data.values()))
+
+    def test_baschly_real_source_layout_preserves_named_soup_and_choice(self):
+        text='<h2>Lunch Special Veggie</h2><p>€9,50</p><h2>Das Angebot dieser Woche</h2>'
+        soups=["Thai-Tomatensuppe","Fenchelsuppe","Französische Zwiebelsuppe",
+               "Karotten-Orangen-Suppe","Gemüse-Cremesuppe"]
+        for d,soup in zip(DAYS,soups):
+            text+=f'<h3>{d}</h3><p>Tagessuppe: {soup}</p><p>Hauptgericht: Thai-Kokos-Gemüse-Curry mit Reis</p>'
+        text+='<h2>Beilage</h2><p>mit kleinem Salat</p><p>mit Suppe des Tages</p>'
+        data=parse_baschly(text.encode(),MONDAY)
+        self.assertEqual(data["2026-11-02"][0]["included_soup"],"Thai-Tomatensuppe")
+        self.assertEqual(data["2026-11-04"][0]["included_soup"],"Französische Zwiebelsuppe")
+        self.assertEqual(data["2026-11-05"][0]["included_choices"],["Tagessuppe","kleiner Salat"])
+
+    def test_baschly_missing_one_named_soup_rejected(self):
+        text='<h2>Lunch Special Veggie</h2><p>€9,50</p><h3>Angebot der Woche</h3>'
+        for d in DAYS:
+            text+=f'<h3>{d}</h3>'
+            if d!='Mittwoch': text+='<p>Tagessuppe: Gemüsesuppe</p>'
+            text+='<p>Hauptgericht: Hausgemachte Falafel mit Hummus und Reis</p>'
+        with self.assertRaisesRegex(ValueError,"Tagessuppen fehlen"):
+            parse_baschly(text.encode(),MONDAY)
 
     @staticmethod
     def make_pdf(valid="02.11.2026 - 06.11.2026"):
