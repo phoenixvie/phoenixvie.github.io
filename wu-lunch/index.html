@@ -250,6 +250,8 @@ html,body,.page { background:#fff; }
  .logo-box{font-size:27px!important}
  .map-stage{height:350px;min-height:320px}
 }
+.weekend-hint{max-width:1110px;margin:13px auto 0;padding:10px 14px;border:1px solid #e4e7ea;border-radius:5px;background:#f7f9fc;color:#586577;font-size:14px;line-height:1.5}
+@media(max-width:750px){.weekend-hint{margin:12px 0 0;font-size:13px;padding:10px 12px}}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxCjy3Q/MP9q+7jLhSqcI+zM=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head>
 <body>
@@ -268,7 +270,7 @@ html,body,.page { background:#fff; }
     </section>
 
     <main class="content-wrap">
-      <section class="list-view active" id="listView"></section>
+      <div class="weekend-hint" id="weekendHint" hidden>Vorschau auf Montag: Die neuen Mittagsmenüs sind voraussichtlich erst am Montag veröffentlicht. Bereits verfügbare Angebote werden automatisch ergänzt.</div><section class="list-view active" id="listView"></section>
 
       <section class="map-view" id="mapView">
         <div class="map-stage" id="mapStage"></div>
@@ -301,6 +303,7 @@ html,body,.page { background:#fff; }
     const MONDAY_FIRST = [1,2,3,4,5,6,0];
     const tabContainer = document.getElementById('dayTabs');
     const listView = document.getElementById('listView');
+    const weekendHint=document.getElementById('weekendHint');
     const mapView = document.getElementById('mapView');
     const mapStage = document.getElementById('mapStage');
     const mapList = document.getElementById('mapList');
@@ -343,20 +346,31 @@ html,body,.page { background:#fff; }
     }
     function getStatusClass(status){ return status || ''; }
 
+    function viennaTodayIso(){
+      return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Vienna',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+    }
+    const todayIso=viennaTodayIso();
+    const todayDate=new Date(todayIso+'T12:00:00Z');
+    const weekend=todayDate.getUTCDay()===0||todayDate.getUTCDay()===6;
+    const nextMonday= new Date(todayDate);
+    nextMonday.setUTCDate(todayDate.getUTCDate()+(8-todayDate.getUTCDay())%7);
+    // Ausserhalb der aktuellen Woche darf kein altes Speiseangebot als neu erscheinen.
+    // Am Wochenende zeigt die Navigation immer die kommende Arbeitswoche.
+    const displayMondayIso=weekend
+      ? nextMonday.toISOString().slice(0,10)
+      : DATA.weekStart;
     function getWeekDates(){
-      const start = new Date(DATA.weekStart + 'T12:00:00');
-      return Array.from({length:7}, (_,i)=>{
-        const d = new Date(start); d.setDate(start.getDate()+i);
-        const iso = d.toISOString().slice(0,10);
-        return {iso, date:d};
+      const monday=new Date(displayMondayIso+'T12:00:00Z');
+      return Array.from({length:5},(_,i)=>{
+        const d=new Date(monday);
+        d.setUTCDate(monday.getUTCDate()+i);
+        return {iso:d.toISOString().slice(0,10),date:d};
       });
     }
-
-    const weekDates = getWeekDates();
+    const weekDates=getWeekDates();
     function defaultSelectedDate(){
-      const todayIso=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Vienna',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-      if(weekDates.some(d=>d.iso===todayIso))return todayIso;
-      return weekDates.find(d=>d.iso===DATA.checkedAt?.slice(0,10))?.iso || weekDates[0].iso;
+      if(weekend)return displayMondayIso;
+      return weekDates.some(d=>d.iso===todayIso)?todayIso:weekDates[0].iso;
     }
 
     let selectedDate = defaultSelectedDate();
@@ -375,9 +389,16 @@ html,body,.page { background:#fff; }
     }
 
     function dishesForRestaurant(restaurant){
-      const items = restaurant.days?.[selectedDate] || [];
-      if (items.length) return items;
-      if (restaurant.status === 'seasonal' && Array.isArray(restaurant.seasonal)) return restaurant.seasonal;
+      const isCurrentWeek=DATA.weekStart===displayMondayIso;
+      const validTo=restaurant.validUntil||'';
+      const validFrom=restaurant.validFrom||'';
+      // Kein Übertragen eines Wochengerichts in die Folgewoche.
+      if(!isCurrentWeek){
+        return restaurant.id==='losteria' && Array.isArray(restaurant.seasonal) ? restaurant.seasonal : [];
+      }
+      const items=restaurant.days?.[selectedDate]||[];
+      if(items.length && (!validFrom || (selectedDate>=validFrom && selectedDate<=validTo)))return items;
+      if(restaurant.status==='seasonal' && Array.isArray(restaurant.seasonal))return restaurant.seasonal;
       return [];
     }
 
@@ -421,7 +442,7 @@ html,body,.page { background:#fff; }
       const label=initials[restaurant.id]||restaurant.name.charAt(0).toUpperCase();
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.price==null?'':escapeHtml(formatPrice(item.price)))+'</span></div>'
-      ).join('') : '<div class="empty-row">Kein Mittagsmenü für diesen Tag verfügbar.</div>';
+      ).join('') : '<div class="empty-row">'+(weekend && selectedDate===displayMondayIso ? 'Das Menü für Montag ist vermutlich erst am Montag verfügbar.' : 'Für diesen Tag ist noch kein Menü veröffentlicht.')+'</div>';
       row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+escapeHtml(label)+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
        +'<div class="menu-lines">'+dishRows+'</div>'
@@ -495,6 +516,7 @@ html,body,.page { background:#fff; }
       });
     }
     function update(){
+      weekendHint.hidden=!(weekend&&selectedDate===displayMondayIso);
       renderTabs();
       renderList();
       renderMap();
