@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-05T15:17:27+01:00",
+  "checkedAt": "2026-11-05T15:18:32+01:00",
   "origin": "Quellseiten und PDF / redaktionell geprüft 05.11.2026",
   "sources": [
     {
@@ -64,162 +64,162 @@
       "days": {
         "2026-11-02": [
           {
-            "category": "Tagessuppe",
-            "name": "Klare Gemüsesuppe mit Einlage",
+            "name": "esuppe | Einlage Selleriecreme",
             "price": null,
+            "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Powered by plants / Veggie",
-            "name": "Spinat-Lasagne mit leichter Knoblauch-Rahmsauce",
+            "name": "ne | leichte Kichererbsen ahmsauce Curry | Bulgur",
             "price": 5.8,
+            "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Meaty",
-            "name": "Indisches Butter Chicken mit Gewürzreis",
+            "name": "tter Chicken | Erdäpfel-Würs Gebäck (Schw Mach den Deal des Tages je",
             "price": 6.4,
+            "category": "Meaty",
             "diet": "meat",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Global & Grill",
-            "name": "Ciabatta Club Sandwich mit Hühnerbrust, Mozzarella, Tomaten, Rucola, Cocktailsauce und Kartoffelchips",
+            "name": "Lachs Teppan cola, Jasminreis s",
             "price": 9.8,
-            "diet": "meat",
+            "category": "Global & Grill",
+            "diet": "unknown",
             "description": "",
             "allergens": []
           }
         ],
         "2026-11-03": [
           {
-            "category": "Tagessuppe",
-            "name": "Selleriecremesuppe",
+            "name": "suppe Klare Gemüs",
             "price": null,
+            "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Powered by plants / Veggie",
-            "name": "Kichererbsen-Gemüse-Curry mit Bulgur",
+            "name": "Gemüse Champignon r (vegan) Serviettenkn G b k",
             "price": 6.3,
-            "diet": "vegan",
-            "description": "Auf der Karte ausdrücklich als vegan bezeichnet",
+            "category": "Powered by plants / Veggie",
+            "diet": "veggie",
+            "description": "",
             "allergens": []
           },
           {
-            "category": "Meaty",
-            "name": "Erdäpfel-Würstelgulasch mit Gebäck",
+            "name": "Gebackenes stelgulasch Hühnerschn wein) Petersilkarto etzt zum Smart Menü! +",
             "price": 5.8,
+            "category": "Meaty",
             "diet": "meat",
-            "description": "Schwein",
+            "description": "",
             "allergens": []
           },
           {
-            "category": "Global & Grill",
-            "name": "Lachs-Teppanyaki mit Gemüse, Jasminreis und Teriyakisauce",
+            "name": "nyaki | Gemüse Pulled Pork Teriyakisauce Planted Pull",
             "price": 9.8,
-            "diet": "fish",
+            "category": "Global & Grill",
+            "diet": "unknown",
             "description": "",
             "allergens": []
           }
         ],
         "2026-11-04": [
           {
-            "category": "Tagessuppe",
-            "name": "Klare Gemüsesuppe mit Einlage",
+            "name": "sesuppe | Einlage Paprikacrem",
             "price": null,
+            "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Powered by plants / Veggie",
-            "name": "Champignonsauce mit Serviettenknödel",
+            "name": "nsauce | Rotes Linse nödel Spinat | Du Überbacke",
             "price": 6.3,
+            "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Meaty",
-            "name": "Gebackenes Hühnerschnitzel mit Petersilkartoffeln",
+            "name": "s mit Chili-Fü itzel mexikanisc Sour Cream Suppe + Beilagensalat um n",
             "price": 5.8,
+            "category": "Meaty",
             "diet": "meat",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Global & Grill",
-            "name": "Bao Buns mit Pulled Pork oder Planted Pulled BBQ",
+            "name": "Beef A,C,G od oder Planted 'Cr ed BBQ style' A",
             "price": 9.8,
+            "category": "Global & Grill",
             "diet": "unknown",
-            "description": "Fleisch- oder pflanzliche Variante zur Auswahl",
+            "description": "",
             "allergens": []
           }
         ],
         "2026-11-05": [
           {
-            "category": "Tagessuppe",
-            "name": "Paprikacremesuppe",
+            "name": "mesuppe Klare Gemüse",
             "price": null,
+            "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Powered by plants / Veggie",
-            "name": "Rotes Linsen-Dal mit Spinat und Duftreis",
+            "name": "en Dal & Spaghetti | So ftreis Bolognese | O ne Enchiladas G b k S",
             "price": 5.8,
+            "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Meaty",
-            "name": "Überbackene Enchiladas mit Chili-Fülle, mexikanischem Bulgur und Sour Cream",
+            "name": "Gebackener S ülle Petersil-Erdäp cher Bulgur Tartare nur",
             "price": 6.4,
-            "diet": "unknown",
+            "category": "Meaty",
+            "diet": "meat",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Global & Grill",
-            "name": "Mensa Burger mit Pommes – Beef oder Planted 'Crispy Chicken style'",
+            "name": "ispy Chicken",
             "price": 9.8,
+            "category": "Global & Grill",
             "diet": "unknown",
-            "description": "Fleisch- oder pflanzliche Variante zur Auswahl",
+            "description": "",
             "allergens": []
           }
         ],
         "2026-11-06": [
           {
-            "category": "Tagessuppe",
-            "name": "Klare Gemüsesuppe mit Einlage",
+            "name": "esuppe | Einlage",
             "price": null,
+            "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Powered by plants / Veggie",
-            "name": "Spaghetti mit Soja-Gemüse-Bolognese und Oliven",
+            "name": "oja-Gemüse Oliven S l h",
             "price": 5.8,
+            "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": []
           },
           {
-            "category": "Meaty",
-            "name": "Gebackener Seelachs mit Petersil-Erdäpfeln und Sauce Tartare",
+            "name": "Seelachs pfel | Sc.",
             "price": 6.4,
-            "diet": "fish",
+            "category": "Meaty",
+            "diet": "meat",
             "description": "",
             "allergens": []
           }
@@ -323,91 +323,91 @@
       "days": {
         "2026-11-02": [
           {
-            "category": "Vegetarisch",
             "name": "Kürbisfleckerl mit Röstzwiebel",
             "price": 14.9,
+            "category": "Vegetarisch",
             "diet": "veggie",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           },
           {
-            "category": "Fisch / Fleisch",
-            "name": "Chili con Carne mit Basmatireis",
+            "name": "Chili con Carne mit Basmati-Reis",
             "price": 15.9,
+            "category": "Fisch / Fleisch",
             "diet": "meat",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           }
         ],
         "2026-11-03": [
           {
-            "category": "Vegetarisch",
-            "name": "Gemüse-Curry mit Basmatireis",
+            "name": "Gemüse-Curry mit Basmati-Reis",
             "price": 14.9,
+            "category": "Vegetarisch",
             "diet": "veggie",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           },
           {
-            "category": "Fisch / Fleisch",
             "name": "Hühner-Piccata mit Tomatenspaghetti",
             "price": 15.9,
+            "category": "Fisch / Fleisch",
             "diet": "meat",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           }
         ],
         "2026-11-04": [
           {
-            "category": "Vegetarisch",
             "name": "Gnocchi al forno",
             "price": 14.9,
+            "category": "Vegetarisch",
             "diet": "veggie",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           },
           {
-            "category": "Fisch / Fleisch",
-            "name": "Cordon Bleu mit Petersilienerdäpfeln",
+            "name": "Cordon Bleu mit Petersilienerdäpfel",
             "price": 15.9,
+            "category": "Fisch / Fleisch",
             "diet": "meat",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           }
         ],
         "2026-11-05": [
           {
-            "category": "Vegetarisch",
-            "name": "Veggie-Masala mit Basmatireis",
+            "name": "Veggie-Masala mit Basmati-Reis",
             "price": 14.9,
+            "category": "Vegetarisch",
             "diet": "veggie",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           },
           {
-            "category": "Fisch / Fleisch",
             "name": "Kalbsragout mit Kräuterspätzle",
             "price": 15.9,
+            "category": "Fisch / Fleisch",
             "diet": "meat",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           }
         ],
         "2026-11-06": [
           {
-            "category": "Vegetarisch",
             "name": "Serbischer Bohneneintopf",
             "price": 14.9,
+            "category": "Vegetarisch",
             "diet": "veggie",
-            "description": "Inklusive Suppe oder Salat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           },
           {
-            "category": "Fisch / Fleisch",
             "name": "Gebackenes Seelachsfilet mit Erdäpfel-Mayo-Salat",
             "price": 15.9,
-            "diet": "fish",
-            "description": "Inklusive Suppe oder Salat",
+            "category": "Fisch / Fleisch",
+            "diet": "meat",
+            "description": "Mit Suppe oder Salat",
             "allergens": []
           }
         ]
