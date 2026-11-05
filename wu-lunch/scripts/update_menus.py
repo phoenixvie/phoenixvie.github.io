@@ -356,7 +356,7 @@ def run(today):
         should_check=True
         if today.weekday()>=5:
             should_check=False
-        elif ident in ("mensa","glashaus") and weekly_cache_valid(data,ident,monday):
+        elif ident in ("mensa","glashaus") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat():
             should_check=False
         elif ident=="losteria" and restaurant(data,ident).get("seasonal") and prev_success:
             try:should_check=(today-date.fromisoformat(prev_success[:10])).days>=14
@@ -367,18 +367,31 @@ def run(today):
             continue
         try:
             if ident=="mensa":
-                raw=safe_get(URLS["mensa"],12_000_000)
-                if not raw.startswith(b"%PDF-"):
+                # Stale WordPress-PDFs können trotz HTTP 200 geliefert werden:
+                # Direktlink, Cache-Busting und offizielle Homepage-Links probieren.
+                candidates=[URLS["mensa"], URLS["mensa"]+"?week="+monday.isoformat()]
+                try:
                     homepage=safe_get("https://www.wumensa.at/")
                     soup=BeautifulSoup(homepage,"html.parser")
-                    urls=[urljoin("https://www.wumensa.at/",a.get("href","")) for a in soup.find_all("a",href=True)
-                          if "menuplan-deutsch" in a.get("href","") or a.get("href","").lower().endswith(".pdf")]
-                    for candidate in urls[:5]:
-                        try:
-                            raw=safe_get(candidate,12_000_000)
-                            if raw.startswith(b"%PDF-"):break
-                        except Exception:continue
-                days,validity=parse_mensa(raw,monday);apply_result(data,"mensa",days,"verified",validity)
+                    for a in soup.find_all("a",href=True):
+                        href=a.get("href","")
+                        if "menuplan-deutsch" in href or href.lower().endswith(".pdf"):
+                            candidates.append(urljoin("https://www.wumensa.at/",href))
+                except Exception as discovery_error:
+                    logging.info("Mensa PDF-Link-Discovery nicht verfügbar: %s",discovery_error)
+                errors=[]
+                parsed=None
+                for candidate in list(dict.fromkeys(candidates))[:8]:
+                    try:
+                        raw=safe_get(candidate,12_000_000)
+                        parsed=parse_mensa(raw,monday)
+                        break
+                    except (ValueError,RuntimeError,requests.RequestException) as exc:
+                        errors.append(str(exc)[:130])
+                if parsed is None:
+                    raise ValueError("Mensa: aktuelle PDF-Woche nicht verifizierbar: "+" | ".join(errors[:3]))
+                days,validity=parsed
+                apply_result(data,"mensa",days,"verified",validity)
             elif ident=="glashaus":
                 days,validity=parse_glashaus(safe_get(URLS["glashaus"]),monday)
                 apply_result(data,"glashaus",days,"verified",validity)
