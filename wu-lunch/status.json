@@ -1,12 +1,12 @@
 {
-  "checked_at": "2026-11-05T17:46:04+01:00",
+  "checked_at": "2026-11-05T18:14:33+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
   "health": "degraded",
   "sources": {
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-05T17:46:04+01:00",
+      "last_success": "2026-11-05T18:14:33+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -14,49 +14,57 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
-      "consecutive_failures": 11
+      "consecutive_failures": 12,
+      "content_sha256": null
     },
     "glashaus": {
-      "state": "cached",
-      "last_success": "2026-11-05T15:18:32+01:00",
+      "state": "ok",
+      "last_success": "2026-11-05T18:14:33+01:00",
       "consecutive_failures": 0,
-      "parser_version": null
+      "parser_version": null,
+      "content_sha256": "d5a4ab6258906a17bffc2ed49dbdffe7d7284d125adc32220133424bcd871243"
     },
     "campus": {
       "state": "ok",
-      "last_success": "2026-11-05T17:46:04+01:00",
+      "last_success": "2026-11-05T18:14:33+01:00",
       "consecutive_failures": 0,
-      "parser_version": null
+      "parser_version": null,
+      "content_sha256": null
     },
     "baschly": {
       "state": "ok",
-      "last_success": "2026-11-05T17:46:04+01:00",
+      "last_success": "2026-11-05T18:14:33+01:00",
       "consecutive_failures": 0,
-      "parser_version": null
+      "parser_version": null,
+      "content_sha256": null
     },
     "losteria": {
       "state": "cached",
       "last_success": "2026-11-05T15:09:02+01:00",
       "consecutive_failures": 0,
-      "parser_version": null
+      "parser_version": null,
+      "content_sha256": null
     },
     "topfdeckel": {
       "state": "ok",
-      "last_success": "2026-11-05T17:46:04+01:00",
+      "last_success": "2026-11-05T18:14:33+01:00",
       "consecutive_failures": 0,
-      "parser_version": null
+      "parser_version": null,
+      "content_sha256": null
     },
     "gruenehuette": {
-      "state": "cached",
-      "last_success": "2026-11-05T17:43:21+01:00",
+      "state": "ok",
+      "last_success": "2026-11-05T18:14:33+01:00",
       "consecutive_failures": 0,
-      "parser_version": null
+      "parser_version": null,
+      "content_sha256": "7d89e2a67d78ff1f3aac6d776c103a8182e16061e206d3fd52a0e035706be653"
     },
     "lia": {
       "state": "ok",
-      "last_success": "2026-11-05T17:46:04+01:00",
+      "last_success": "2026-11-05T18:14:33+01:00",
       "consecutive_failures": 0,
-      "parser_version": 2
+      "parser_version": 2,
+      "content_sha256": "405a3658ad0a455cb7733d4dcceb49b806b745a0c0646ba8387de7071e318c83"
     }
   },
   "problems": [
