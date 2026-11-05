@@ -53,6 +53,20 @@ class NewRestaurantTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"nicht von aktueller Woche"):
             parse_gruenehuette(text.encode(),MON)
 
+    def test_gruenehuette_split_weekday_labels_and_menu_names(self):
+        # Original-HTML kann Tageskürzel und Gericht in getrennten Elementen ausliefern.
+        text="""<h2>TAGESTELLER / LUNCH SPECIAL 2. 11. 2026</h2>
+        <p>MO:</p><p>Hühnerschnitzel mit Reis</p><b>Veggie:</b><p>Gebratene Erdäpfel mit Gemüse</p>
+        <p>DI:</p><p>Faschierter Braten mit Püree</p>
+        <p>MI:</p><p>Gebratene Hühnerkeule mit Gemüse</p>
+        <p>DO:</p><p>Gebackener Fisch mit Salat</p>
+        <p>FR:</p><p>Kabeljau mit Petersilerdäpfeln</p>"""
+        data,_=parse_gruenehuette(text.encode(),MON)
+        self.assertEqual(data["2026-11-02"][0]["name"],"Hühnerschnitzel mit Reis")
+        self.assertEqual(data["2026-11-02"][1]["name"],"Gebratene Erdäpfel mit Gemüse")
+        self.assertTrue(all(item["name"] for dishes in data.values() for item in dishes))
+        self.assertEqual(len(data["2026-11-06"]),1)
+
     def test_lia_weekly_wu_section_dated_items_and_other_location_rejected(self):
         html="""<h2>Tagesmenü Lia Coffee am WU Campus</h2>
         <p>Hauptgericht € 10,00</p>
