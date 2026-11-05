@@ -279,19 +279,30 @@ def parse_mensa(raw,monday):
               ("Bowls",r"^Bowls\s*&\s*Co$"),("Pasta",r"^Pasta\s*&\s*Co$")]
         for page in doc:
             rows=pdf_lines(page)
-            headers=[(x,y,t) for x,y,t in rows if t.upper() in (w.upper() for w in WEEKDAYS)]
-            # Manche PDFs haben zwei Zeilen pro Wochentag: nur den Kopf oberhalb der Speisen auswählen.
-            headers=sorted(headers,key=lambda v:v[0])
+            headers=[]
+            for b in page.get_text("dict")["blocks"]:
+                if b.get("type")!=0:continue
+                for line in b.get("lines",[]):
+                    spans=line.get("spans",[])
+                    label=tidy(" ".join(s["text"] for s in spans))
+                    if not spans or label.upper() not in (w.upper() for w in WEEKDAYS):continue
+                    left=min(s["bbox"][0] for s in spans)
+                    right=max(s["bbox"][2] for s in spans)
+                    cy=min(s["bbox"][1] for s in spans)
+                    headers.append(((left+right)/2,cy,label))
+            # Tabellenspalten sind um die Mitte der Überschrift zentriert.
+            # Am linken Textrand zu schneiden vermischt die Nachbarspalten.
+            headers.sort(key=lambda v:v[0])
             if len(headers)<5:continue
             unique=[]
             for h in headers:
                 if not any(abs(h[0]-k[0])<8 for k in unique):unique.append(h)
             headers=unique[:5]
             if len(headers)<5:continue
-            xs=[v[0] for v in headers]
+            centers=[v[0] for v in headers]
             boundary=[]
             for x,y,t in rows:
-                if x>=xs[0]:continue
+                if x >= centers[0]-(centers[1]-centers[0])/2:continue
                 for label,pat in cats:
                     if re.search(pat,t,re.I) and not any(v[1]==label for v in boundary):
                         boundary.append((y,label))
@@ -300,8 +311,8 @@ def parse_mensa(raw,monday):
             for d,w in weekday_dates(monday):
                 matching=next((i for i,entry in enumerate(headers) if entry[2].upper()==w.upper()),None)
                 if matching is None:continue
-                left=xs[matching]
-                right=xs[matching+1] if matching<4 else min(page.rect.width,xs[4]+(xs[4]-xs[3]))
+                left=(centers[matching-1]+centers[matching])/2 if matching else max(0,centers[0]-(centers[1]-centers[0])/2)
+                right=(centers[matching]+centers[matching+1])/2 if matching<4 else min(page.rect.width,centers[4]+(centers[4]-centers[3])/2)
                 for j,(sy,label) in enumerate(boundary):
                     if label not in {"Tagessuppe","Powered by plants / Veggie","Meaty","Global & Grill"}:continue
                     bottom=boundary[j+1][0] if j+1<len(boundary) else page.rect.height
@@ -319,6 +330,15 @@ def parse_mensa(raw,monday):
                     if len(title)<8 or len(title)>180:continue
                     diet="veggie" if label=="Powered by plants / Veggie" else "meat" if label=="Meaty" else "unknown"
                     result[d.isoformat()].append(make_item(title,cost,label,diet))
+    # Qualitäts-Gate: PDF-Zell-Schnittfehler erzeugen abgeschnittene Namen
+    # ("esuppe", "tter Chicken") – niemals ungeprüft als Menü veröffentlichen.
+    for day_items in result.values():
+        for item in day_items:
+            title=item["name"]
+            if not title or not title[0].isupper() or len(title)>160:
+                raise ValueError(f"Mensa: verstümmelter Tabellenzelltext erkannt ({title[:55]!r})")
+            if item["category"]=="Tagessuppe" and "suppe" not in title.casefold():
+                raise ValueError(f"Mensa: verdächtige Suppe ({title[:55]!r})")
     coverage=sum(1 for v in result.values() if sum(x["category"]=="Meaty" for x in v)>0)
     if coverage<3: raise ValueError(f"Mensa: nur {coverage}/5 Tage Meaty erkannt; PDF-Tabelle prüfen")
     if sum(len(v) for v in result.values())<10:raise ValueError("Mensa: PDF-Extraktion unvollständig")
