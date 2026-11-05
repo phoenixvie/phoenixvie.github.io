@@ -382,17 +382,33 @@ html,body,.page { background:#fff; }
     }
 
 
+    // Menüleistungen ausschließlich aus strukturierten Daten zusammensetzen.
+    // Für importierte Altwochen bleibt eine kontrollierte Kompatibilität bestehen.
+    function includedPrefix(item, restaurantId){
+      const options=item.included_choices||[];
+      const soup=item.included_soup;
+      if(options.length){
+        const normalized=options.map(x=>x.toLocaleLowerCase('de-AT'));
+        if(normalized.some(x=>x.includes('suppe')) && normalized.some(x=>x.includes('salat'))){
+          return (soup||'Suppe')+' oder '+(restaurantId==='baschly'?'kleiner Salat':'Salat')+' + ';
+        }
+        return options.join(' oder ')+' + ';
+      }
+      if(restaurantId==='glashaus')return 'Suppe oder Salat + ';
+      if(restaurantId==='baschly')return 'Tagessuppe oder kleiner Salat + ';
+      return '';
+    }
     function visibleDishes(restaurant){
       const raw=dishesForRestaurant(restaurant);
-      if(restaurant.id==='glashaus'){
-        return raw.map(item=>({name:'Suppe + '+item.name,price:item.price}));
-      }
       if(restaurant.id==='mensa'){
         const soup=raw.find(item=>item.category==='Tagessuppe');
         const mains=raw.filter(item=>item.category!=='Tagessuppe');
         return mains.map(item=>({name:(soup?soup.name+' + ':'')+item.name,price:item.price}));
       }
-      return raw.map(item=>({name:item.name,price:item.price}));
+      return raw.map(item=>({
+        name:includedPrefix(item,restaurant.id)+item.name,
+        price:item.price
+      }));
     }
     function escapeHtml(value){
       return String(value??'').replace(/[&<>"']/g,chr=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[chr]));
