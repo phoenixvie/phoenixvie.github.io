@@ -158,9 +158,15 @@ def weekday_dates(monday):
 def blank_days(monday):
     return {(monday+timedelta(days=i)).isoformat():[] for i in range(5)}
 
-def make_item(name, price, category, diet="unknown", description="", allergens=None):
+def make_item(name, price, category, diet="unknown", description="", allergens=None,
+              included_soup=None, included_choices=None):
+    """Behalte Hauptgericht, Suppe und Menüoptionen als getrennte Daten.
+    Die Anzeige darf kein Bestandteil eines Menüs stillschweigend ausblenden.
+    """
     return {"name":tidy(name),"price":price,"category":category,"diet":diet,
-            "description":description,"allergens":allergens or []}
+            "description":description,"allergens":allergens or [],
+            "included_soup":tidy(included_soup) if included_soup else None,
+            "included_choices":included_choices or []}
 
 def parse_campus(raw,monday):
     lines=html_lines(raw)
@@ -204,7 +210,8 @@ def parse_glashaus(raw,monday):
             if ln not in picks:picks.append(ln)
         result[d.isoformat()]=[
             make_item(t,costs[i],"Vegetarisch" if i==0 else "Fisch / Fleisch",
-                      "veggie" if i==0 else "meat", "Mit Suppe oder Salat") for i,t in enumerate(picks[:2])
+                      "veggie" if i==0 else "meat", "Mit Suppe oder Salat",
+                      included_choices=["Suppe", "Salat"]) for i,t in enumerate(picks[:2])
         ]
     if sum(len(v) for v in result.values())<6:
         raise ValueError("Glashaus: zu wenige Speisen erkannt")
@@ -222,12 +229,15 @@ def parse_baschly(raw,monday,meat=False):
     if cost is None: raise ValueError("Baschly: Produktpreis fehlt")
     for d,w in weekday_dates(monday):
         options=[]
+        soup_name=None
         for raw_line in blocks.get(w,[]):
             line=tidy(raw_line)
             if re.search(r"^(beilage|mit kleinem salat|mit suppe|take away|in den warenkorb|ändern|zum hier)",line,re.I):
                 break
             if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line,re.I):continue
-            if line.lower().startswith("tagessuppe:"):continue
+            if line.lower().startswith(("tagessuppe:", "tagessuppe :")):
+                soup_name=tidy(line.split(":",1)[1])
+                continue
             if line.lower().startswith("hauptgericht:"):
                 line=tidy(line.split(":",1)[1])
                 if line:options.insert(0,line)
@@ -235,8 +245,13 @@ def parse_baschly(raw,monday,meat=False):
                 options.append(line)
         if options:
             result[d.isoformat()]=[make_item(options[0],cost,"Fleisch" if meat else "Veggie",
-                                             "meat" if meat else "veggie","Mit Tagessuppe oder kleinem Salat")]
+                "meat" if meat else "veggie","Mit Tagessuppe oder kleinem Salat",
+                included_soup=soup_name, included_choices=["Tagessuppe","kleiner Salat"])]
     if sum(len(v) for v in result.values())<4: raise ValueError("Baschly: weniger als vier Wochentage")
+    # Wenn die Quelle Tagessuppen nennt, müssen sie vollständig ankommen.
+    if re.search(r"Tagessuppe\s*:",txt,re.I):
+        missing=[d for d,items in result.items() if items and not items[0].get("included_soup")]
+        if missing: raise ValueError(f"Baschly: Tagessuppen fehlen für {missing}")
     return result
 
 def pdf_lines(page):
@@ -409,6 +424,24 @@ def apply_result(data,identifier,days,status,validity=None):
         r["validFrom"]=s["validFrom"]=None
         r["validUntil"]=s["validUntil"]=None
 
+def validate_meal_components(data):
+    """Gegen versehentlich verlorene Inklusivleistungen – auch für neue Restaurants."""
+    for r in data.get("restaurants",[]):
+        for day,items in r.get("days",{}).items():
+            for item in items:
+                if not isinstance(item.get("name"),str) or not item["name"].strip():
+                    raise ValueError(f"{r['id']} {day}: Hauptgericht ohne Namen")
+                choices=item.get("included_choices") or []
+                if choices and (not isinstance(choices,list) or not all(isinstance(x,str) and x.strip() for x in choices)):
+                    raise ValueError(f"{r['id']} {day}: fehlerhafte inkludierte Optionen")
+                if item.get("included_soup") and "suppe" not in " ".join(choices).lower():
+                    raise ValueError(f"{r['id']} {day}: benannte Suppe ohne ausgewiesene Menüoption")
+                # Kompatibilitätsregel für frühere Daten und neue Restaurant-Parser
+                desc=(item.get("description") or "").lower()
+                if ("mit suppe oder salat" in desc or "suppe oder kleinem salat" in desc):
+                    if not choices and r["id"] not in ("glashaus","baschly"):
+                        raise ValueError(f"{r['id']} {day}: Inklusivleistung nicht strukturiert erfasst")
+
 def reset_week(data,monday):
     if data.get("weekStart")==monday.isoformat():return
     data["weekStart"]=monday.isoformat()
@@ -514,6 +547,7 @@ def run(today):
         "next_run":"next business day ~08:15 Europe/Vienna",
         "format_version":1,
     }
+    validate_meal_components(data)
     JSON_PATH.parent.mkdir(parents=True,exist_ok=True)
     JSON_PATH.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     DATA_PATH.write_text("window.CAMPUS_LUNCH_DATA = "+json.dumps(data,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
