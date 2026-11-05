@@ -469,9 +469,15 @@ html,body,.page { background:#fff; }
       glashaus:{address:'Am Grünen Prater 11, 1020 Wien',building:'Am Grünen Prater 11',lat:48.2118847,lon:16.4120651,letter:'G',color:'#6f9e39'},
       losteria:{address:'Freudplatz 2, 1020 Wien',building:'D5/Freudplatz',lat:48.21468,lon:16.4052,letter:'L',color:'#bc7837'}
     };
+    // Google Maps Suche mit Restaurantname, WU-Standort und Adresse.
+    // Keine erfundenen Place-IDs; Google Maps kann das passende Profil auflösen.
+    function googleMapsUrl(restaurant, info){
+      return 'https://www.google.com/maps/search/?api=1&query='+
+        encodeURIComponent(restaurant.name+', '+info.address+', Wien, Österreich');
+    }
     function loadRealMap(){
       if(!window.L){
-        mapStage.innerHTML='<div class="map-error">Die interaktive Karte ist derzeit nicht verfügbar. Über die unten stehenden Links lassen sich die Standorte auf OpenStreetMap öffnen.</div>';
+        mapStage.innerHTML='<div class="map-error">Die interaktive Karte ist derzeit nicht verfügbar. Über die unten stehenden Links lassen sich die Standorte auf Google Maps öffnen.</div>';
         return;
       }
       if(!realMap){
@@ -495,8 +501,8 @@ html,body,.page { background:#fff; }
           const title=document.createElement('strong');title.textContent=restaurant.name;
           const address=document.createElement('p');address.textContent=info.address;
           const directions=document.createElement('a');
-          directions.textContent='Route öffnen';
-          directions.href='https://www.openstreetmap.org/directions?to='+info.lat+'%2C'+info.lon;
+          directions.textContent='Auf Google Maps öffnen';
+          directions.href=googleMapsUrl(restaurant, info);
           directions.target='_blank';directions.rel='noopener noreferrer';
           content.append(title,address,directions);
           marker.bindPopup(content);
@@ -514,7 +520,7 @@ html,body,.page { background:#fff; }
         const card=document.createElement('div');card.className='map-card';
         const title=document.createElement('h4');title.textContent=r.name+' · '+info.building;
         const location=document.createElement('p');location.textContent=info.address;
-        const link=document.createElement('a');link.textContent='Auf OpenStreetMap suchen ↗';link.href='https://www.openstreetmap.org/search?query='+encodeURIComponent(r.name+' '+info.address);link.target='_blank';link.rel='noopener noreferrer';
+        const link=document.createElement('a');link.textContent='Auf Google Maps öffnen ↗';link.href=googleMapsUrl(r,info);link.target='_blank';link.rel='noopener noreferrer';
         card.append(title,location,link);mapList.append(card);
       });
     }
