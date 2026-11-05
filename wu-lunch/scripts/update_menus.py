@@ -78,6 +78,17 @@ def period(text):
             start=date(int(y)-(1 if MONTHS[ma.lower()[:3]]>end.month else 0),MONTHS[ma.lower()[:3]],int(a))
             return (start,end) if 0 <= (end-start).days <=14 else None
         except (ValueError,KeyError): pass
+    # Wix stellt die beiden Gültigkeitsdaten teils ohne sichtbaren Bindestrich dar.
+    # Nur eng benachbarte Daten derselben Woche akzeptieren.
+    dates=list(re.finditer(r"(\d{1,2})\.\s*([a-zäöü]{3,})\.?\s*(\d{4})",text,re.I))
+    for i in range(len(dates)-1):
+        a,b=dates[i],dates[i+1]
+        if b.start()-a.end()>35:continue
+        try:
+            x=date(int(a.group(3)),MONTHS[a.group(2).lower()[:3]],int(a.group(1)))
+            y=date(int(b.group(3)),MONTHS[b.group(2).lower()[:3]],int(b.group(1)))
+            if 0 <= (y-x).days <=7:return x,y
+        except (ValueError,KeyError):pass
     return None
 
 def load_data():
@@ -246,6 +257,19 @@ def parse_mensa(raw,monday):
         if not 1<=len(doc)<=4: raise ValueError("Mensa: unerwartete Seitenanzahl")
         text="\n".join(p.get_text("text") for p in doc)
         p=period(text)
+        if p is None:
+            # PDF-Schriftarten können das Startdatum als "02..2026" extrahieren.
+            # Fallback nur, wenn Kalenderwoche UND vollständig lesbares Enddatum passen.
+            kw=re.search(r"(?:SPEISEPLAN|MENÜPLAN)?\s*KW\s*(\d{1,2})",text,re.I)
+            ends=re.findall(r"\b(\d{1,2})\.(\d{1,2})\.(\d{4})\b",text)
+            if kw and int(kw.group(1))==monday.isocalendar().week:
+                for dd,mm,yyyy in ends[:6]:
+                    try:
+                        end=date(int(yyyy),int(mm),int(dd))
+                        if end in (monday+timedelta(days=4), monday+timedelta(days=3)):
+                            p=(monday,end)
+                            break
+                    except ValueError:pass
         if p is None or p[0]!=monday or p[1] not in (monday+timedelta(days=4),monday+timedelta(days=3)):
             raise ValueError(f"Mensa: PDF ist nicht aus aktueller Woche: {p}; Textlänge={len(text)}, Textanfang={text[:165]!r}")
         cats=[("Tagessuppe",r"^Tagess?uppe$"),
