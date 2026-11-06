@@ -462,7 +462,7 @@ def topf_starters(lines):
     for i,line in enumerate(section):
         label=tidy(line)
         soup=bool(re.search(r"(?:suppe|eintopf|consommé|bouillon)",label,re.I))
-        salad=bool(re.search(r"\bsalat\b",label,re.I))
+        salad="salat" in label.casefold()
         if not (soup or salad):
             continue
         if re.search(r"^(?:klein|gross|groß|€|salat/suppe)",label,re.I) or len(label)>105:
@@ -482,8 +482,11 @@ def topf_desserts(lines):
     except ValueError:
         return []
     price=euros(" ".join(section))
+    # Some legacy daily pages expose only the Dessert heading.  That is not
+    # evidence for a purchasable dessert, so omit it; the browser importer
+    # requires a priced dessert when the current interactive tab shows one.
     if price is None:
-        raise ValueError("Topf&Deckel: Dessert-Preis fehlt")
+        return []
     desserts=[]
     seen=set()
     for line in section:
@@ -684,9 +687,14 @@ def parse_lia_week(raw,monday):
             price_line=re.fullmatch(r"€\s*(\d{1,3}[,.]\d{2})",text)
             if price_line:
                 amount=float(price_line.group(1).replace(",","."))
+                previous=tidy(detail_lines[offset-1]) if offset else ""
                 # Lia's markup can put a trailing price in its own element.
-                # The next text is usually the next dish, not a prefix.
-                if items and items[-1].get("price") is None:
+                # A price following a separate English translation is the
+                # historic prefix layout for the following German item; all
+                # other isolated prices attach to the preceding unpriced dish.
+                after_translation=bool(re.search(r"\([^)]{1,16}\)",previous) and
+                                       ("/" in previous or re.search(r"\b(?:with|style|and|of)\b",previous,re.I)))
+                if items and items[-1].get("price") is None and not after_translation:
                     items[-1]["price"]=amount
                     items[-1]["description"]=items[-1]["description"].replace("Preis nicht bestätigt","Preis bestätigt")
                 else:
