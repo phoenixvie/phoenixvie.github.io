@@ -766,6 +766,32 @@ def validate_meal_components(data):
                     if not choices and r["id"] not in ("glashaus","baschly"):
                         raise ValueError(f"{r['id']} {day}: Inklusivleistung nicht strukturiert erfasst")
 
+def quality_warnings(data, today):
+    """Independent checks: no silent missing prices or silently empty weekdays."""
+    warnings=[]
+    for r in data.get("restaurants",[]):
+        ident=r["id"]
+        if ident=="omakueche":
+            continue
+        for day,items in r.get("days",{}).items():
+            if day>today.isoformat():
+                continue
+            if not items and ident not in ("losteria",):
+                warnings.append(f"{ident} {day}: kein Menü vorhanden")
+            for item in items:
+                cat=(item.get("category") or "").casefold()
+                if item.get("price") is None and cat not in ("tagessuppe",):
+                    warnings.append(f"{ident} {day}: Preis fehlt: {item.get('name','')[:80]}")
+                if ident=="topfdeckel" and cat in ("hauptgericht","suppe"):
+                    if item.get("price_small") is None or item.get("price_large") is None:
+                        warnings.append(f"{ident} {day}: kleine/große Portion nicht vollständig")
+                if ident=="gruenehuette" and "suppe" in cat and item.get("price") not in (2.0,):
+                    warnings.append(f"{ident} {day}: Suppen-Aufpreis nicht 2,00 EUR")
+                if ident=="mensa" and cat=="global & grill" and item.get("included_soup"):
+                    warnings.append(f"{ident} {day}: Global & Grill darf keine inkludierte Suppe enthalten")
+    return warnings
+
+
 def reset_week(data,monday):
     if data.get("weekStart")==monday.isoformat():return
     data["weekStart"]=monday.isoformat()
@@ -936,6 +962,11 @@ def run(today):
         "format_version":1,
     }
     validate_meal_components(data)
+    warnings=quality_warnings(data,today)
+    status["quality_warnings"]=warnings
+    status["quality_warning_count"]=len(warnings)
+    if warnings and status["health"]=="healthy":
+        status["health"]="degraded"
     JSON_PATH.parent.mkdir(parents=True,exist_ok=True)
     JSON_PATH.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     DATA_PATH.write_text("window.CAMPUS_LUNCH_DATA = "+json.dumps(data,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
