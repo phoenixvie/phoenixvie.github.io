@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-06T18:28:08+01:00",
+  "checkedAt": "2026-11-06T18:36:11+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -1375,7 +1375,7 @@
           }
         ]
       },
-      "browser_verified_at": "2026-11-06T18:28:40+01:00"
+      "browser_verified_at": "2026-11-06T18:36:42+01:00"
     },
     {
       "id": "gruenehuette",
