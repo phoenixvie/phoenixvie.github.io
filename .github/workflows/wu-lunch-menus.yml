@@ -94,8 +94,10 @@ jobs:
           set -euo pipefail
           # Geplante Quellenanalyse werktags um 11:15 Wien nach der Publikation.
           # Bei Code-Änderungen sofort als Integrationstest ausführen.
-          if [[ "${{ github.event_name }}" == "schedule" && "$(TZ=Europe/Vienna date +%H)" != "11" ]]; then
-            echo "Topf-Browserlauf für 11:15 Wien vorgesehen; regulärer Import läuft weiter."
+          hour="$(TZ=Europe/Vienna date +%H)"
+          day="$(TZ=Europe/Vienna date +%u)"
+          if [[ "${{ github.event_name }}" == "schedule" && "$hour" != "11" && ! ( "$day" == "1" && "$hour" == "07" ) ]]; then
+            echo "Topf Browser regulär Mo 07:15 und 11:15, Di–Fr 11:15."
             exit 0
           fi
           pip install 'playwright>=1.50,<2'
@@ -109,8 +111,10 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$(TZ=Europe/Vienna date +%H)" != "11" ]]; then
-            echo "Mensa-KI läuft regulär um 11:15 Wien."
+          hour="$(TZ=Europe/Vienna date +%H)"
+          day="$(TZ=Europe/Vienna date +%u)"
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$hour" != "11" && ! ( "$day" == "1" && "$hour" == "07" ) ]]; then
+            echo "Mensa-KI läuft Mo 07:15 und 11:15, Di–Fr 11:15 Wien."
             exit 0
           fi
           python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
@@ -122,8 +126,10 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$(TZ=Europe/Vienna date +%H)" != "11" ]]; then
-            echo "Luna-Reparatur läuft regulär um 11:15 Wien."
+          hour="$(TZ=Europe/Vienna date +%H)"
+          day="$(TZ=Europe/Vienna date +%u)"
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$hour" != "11" && ! ( "$day" == "1" && "$hour" == "07" ) ]]; then
+            echo "Luna-Reparatur läuft Mo 07:15 und 11:15, Di–Fr 11:15 Wien."
             exit 0
           fi
           python wu-lunch/scripts/repair_menus_ai.py --max-calls 2
