@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-05T18:15:58+01:00",
+  "checkedAt": "2026-11-06T10:26:59+01:00",
   "origin": "Quellseiten und PDF / redaktionell geprüft 05.11.2026",
   "sources": [
     {
@@ -918,7 +918,58 @@
             "included_choices": []
           }
         ],
-        "2026-11-06": []
+        "2026-11-06": [
+          {
+            "name": "Indisches Cashew Beef in cremiger Kormasauce",
+            "price": 7.5,
+            "category": "Hauptgericht klein",
+            "diet": "unknown",
+            "description": "Große Portion regulär 11,90 €; Beilage bei Gerichten separat ausgewiesen",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Thai Larb-Salat mit Faschiertem, Kräutermix & Limetten-Dressing",
+            "price": 7.5,
+            "category": "Hauptgericht klein",
+            "diet": "veggie",
+            "description": "Große Portion regulär 11,90 €; Beilage bei Gerichten separat ausgewiesen",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen",
+            "price": 7.5,
+            "category": "Hauptgericht klein",
+            "diet": "unknown",
+            "description": "Große Portion regulär 11,90 €; Beilage bei Gerichten separat ausgewiesen",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+            "price": 9.5,
+            "category": "Menükombo",
+            "diet": "unknown",
+            "description": "Eine Option zum Hauptgericht wählbar",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+            "price": 13.9,
+            "category": "Menükombo",
+            "diet": "unknown",
+            "description": "Eine Option zum Hauptgericht wählbar",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ]
       }
     },
     {
