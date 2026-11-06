@@ -459,18 +459,17 @@ def parse_topfdeckel(raw,today,monday):
         if line in [x["name"] for x in result]:continue
         if len(result)>=6:break
         if len(line)>155:continue
-        is_veg=any("veggie" in item.lower() for item in section[i+1:i+3])
+        # Kein Veggie-Label aus dem übernächsten Gericht übernehmen.
+        is_veg="veggie" in line.lower() or (i+1<len(section) and tidy(section[i+1]).lower()=="veggie")
         special=line.lower().startswith("special")
         if special:
             price=euros(" ".join(section[i+1:i+5]))
             if price is None:raise ValueError("Topf&Deckel: Special-Preis fehlt")
-            note="Nur als große Portion; kein regulärer Kleinpreis"
+            result.append(make_item(line,price,"Special groß","veggie" if is_veg else "unknown","Nur als große Portion"))
         else:
-            price=7.50
-            note="Große Portion regulär 11,90 €; Beilage bei Gerichten separat ausgewiesen"
-        result.append(make_item(line,price,"Hauptgericht" if special else "Hauptgericht klein",
-                                "veggie" if is_veg else "unknown",note))
-    if len(result)<2:raise ValueError("Topf&Deckel: zu wenige Hauptgerichte")
+            result.append(make_item(line+" (klein)",7.50,"Hauptgericht klein","veggie" if is_veg else "unknown"))
+            result.append(make_item(line+" (groß)",11.90,"Hauptgericht groß","veggie" if is_veg else "unknown"))
+    if len(result)<4:raise ValueError("Topf&Deckel: zu wenige Hauptgerichte")
     result += [
        make_item("Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
                  9.50,"Menükombo","unknown","Eine Option zum Hauptgericht wählbar"),
