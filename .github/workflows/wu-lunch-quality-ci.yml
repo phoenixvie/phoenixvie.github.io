@@ -36,3 +36,24 @@ jobs:
           python -m py_compile wu-lunch/ai-pilot/ai_direct.py
       - name: Regression tests (no network, no model calls)
         run: python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v
+      - name: Live Karma menu source / PDF smoke check (no model calls)
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        shell: bash
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          from pathlib import Path
+          filename=Path("wu-lunch/scripts/update_new_restaurants.py")
+          spec=importlib.util.spec_from_file_location("karma_live_check",filename)
+          script=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(script)
+          today=datetime.now(ZoneInfo("Europe/Vienna")).date()
+          monday=today-timedelta(days=today.weekday())
+          days,digest,pdf=script.fetch_karma(monday)
+          assert len(days)==5 and all(len(items)>=2 for items in days.values())
+          print("Karma live menu confirmed:",{d:len(items) for d,items in days.items()})
+          print("Official price PDF:",pdf)
+          PY
