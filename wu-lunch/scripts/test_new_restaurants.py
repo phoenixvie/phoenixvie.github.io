@@ -46,11 +46,8 @@ class NewRestaurantTests(unittest.TestCase):
         <h3>Garnelen Zitronen Pasta mit Zucchini</h3>
         <h3>Ofenfrische Burritos mit Chili con Carne</h3>
         <h2>Dessert</h2></main>"""
-        items=parse_topfdeckel_week(html.encode(),date(2026,11,6),MON)
-        self.assertEqual(len(items),3)
-        self.assertEqual(items[0]["category"],"Suppe")
-        self.assertEqual(items[0]["price_small"],3.90)
-        self.assertEqual(items[1]["price_large"],11.90)
+        with self.assertRaisesRegex(ValueError,"aktiver Wochentag nicht verifizierbar"):
+            parse_topfdeckel_week(html.encode(),date(2026,11,6),MON)
         with self.assertRaises(ValueError):
             parse_topfdeckel_week(html.encode(),date(2026,11,9),date(2026,11,9))
 
