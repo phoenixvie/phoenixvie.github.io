@@ -1,12 +1,12 @@
 {
-  "checked_at": "2026-11-06T18:02:50+01:00",
+  "checked_at": "2026-11-06T18:03:43+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
   "health": "degraded",
   "sources": {
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-06T18:02:50+01:00",
+      "last_success": "2026-11-06T18:03:43+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -14,7 +14,7 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
-      "consecutive_failures": 7,
+      "consecutive_failures": 8,
       "content_sha256": null
     },
     "glashaus": {
@@ -28,7 +28,7 @@
       "state": "error",
       "error": "ValueError: Campus: Plan nicht für KW 2026-11-02: (datetime.date(2026, 11, 9), datetime.date(2026, 11, 12))",
       "last_success": "2026-11-06T10:40:36+01:00",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "content_sha256": "bb226678fe348d1b0a46cce678175c65676aa94cec9f64a2f5c8afa76a43f0ec"
     },
     "baschly": {
@@ -47,7 +47,7 @@
     },
     "topfdeckel": {
       "state": "ok",
-      "last_success": "2026-11-06T18:02:50+01:00",
+      "last_success": "2026-11-06T18:03:43+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": null
@@ -60,7 +60,7 @@
       "content_sha256": "7d89e2a67d78ff1f3aac6d776c103a8182e16061e206d3fd52a0e035706be653"
     },
     "lia": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-06T18:02:50+01:00",
       "consecutive_failures": 0,
       "parser_version": 3,
