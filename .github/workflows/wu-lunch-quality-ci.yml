@@ -52,6 +52,17 @@ jobs:
           spec.loader.exec_module(script)
           today=datetime.now(ZoneInfo("Europe/Vienna")).date()
           monday=today-timedelta(days=today.weekday())
+          import re
+          from bs4 import BeautifulSoup
+          from urllib.parse import urlencode
+          for index,url in enumerate([
+            script.KARMA_URL,
+            script.KARMA_URL+"?wu_lunch_week="+monday.isoformat(),
+            script.KARMA_URL+"?wu_lunch_nocache="+str(int(datetime.now().timestamp())),
+          ]):
+            raw=script.legacy.safe_get(url)
+            match=re.search(r"Karma\\s+Food\\s+\\d{1,2}\\.\\d{1,2}\\.\\s*[-–]\\s*\\d{1,2}\\.\\d{1,2}\\.",BeautifulSoup(raw,"html.parser").get_text(" ",strip=True),re.I)
+            print("Karma candidate",index,"bytes",len(raw),"range",match.group(0) if match else "NOT FOUND",flush=True)
           days,digest,pdf=script.fetch_karma(monday)
           assert len(days)==5 and all(len(items)>=2 for items in days.values())
           print("Karma live menu confirmed:",{d:len(items) for d,items in days.items()})
