@@ -41,6 +41,27 @@ class SideAndPriceTests(unittest.TestCase):
         days,_=menus.parse_lia_week(raw,WEEK)
         self.assertAlmostEqual(days["2026-11-05"][0]["price"],10)
 
+    def test_lia_isolated_prices_stay_with_preceding_dish(self):
+        raw=('<html><body>Tagesmenü Lia Coffee am WU Campus'
+             '<div>Donnerstag 05.11.</div>'
+             '<p>Lasagne klassisch – mit Schwein &amp; Rind (A,G)</p><b>€ 10,00</b>'
+             '<p>Gemüselasagne (A,G) Veggie</p><b>€ 10,00</b>'
+             '<div>Tagesmenü Lia Bistro</div></body></html>').encode()
+        days,_=menus.parse_lia_week(raw,WEEK)
+        self.assertEqual([(x["name"],x["price"]) for x in days["2026-11-05"]], [
+            ("Lasagne klassisch – mit Schwein & Rind",10.0), ("Gemüselasagne",10.0)])
+
+    def test_topf_publishes_salad_and_dessert_with_source_prices(self):
+        lines=["Vorspeisen","Klein €3.90 / Groß €5.90","Kürbiscremesuppe","Haussalat",
+               "Hauptspeisen","Linsen-Curry mit Reis und Gemüse","Gemüsepfanne mit Couscous",
+               "Dessert","Dessert des Tages","€ 2.90"]
+        starters=menus.topf_starters(lines)
+        desserts=menus.topf_desserts(lines)
+        self.assertEqual([(x["name"],x["category"],x["price_small"],x["price_large"]) for x in starters], [
+            ("Kürbiscremesuppe","Suppe",3.9,5.9), ("Haussalat","Salat",3.9,5.9)])
+        self.assertEqual([(x["name"],x["price"],x["category"]) for x in desserts],
+                         [("Dessert des Tages",2.9,"Nachspeise")])
+
     def test_finn_verified_sides_and_combo(self):
         first={"status":"found","warnings":[],"items":[
             ai_side("Tagessuppe oder Salat","Suppe/Salat",3.5),

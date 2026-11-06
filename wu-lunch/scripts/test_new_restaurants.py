@@ -25,13 +25,15 @@ class NewRestaurantTests(unittest.TestCase):
         <h3>Cremiges Brokkoli Kokoscurry mit Erdnüssen</h3>
         <h2>Dessert</h2></main>"""
         items=parse_topfdeckel(html.encode(),THU,MON)
-        self.assertEqual(len(items),6)  # 1 Suppe, 3 Hauptgerichte, 2 Kombis
+        self.assertEqual(len(items),7)  # Suppe, Salat, 3 Hauptgerichte, 2 Kombis
         self.assertEqual(items[0]["name"],"Erdäpfelcremesuppe")
         self.assertEqual(items[0]["price_small"],3.90)
         self.assertEqual(items[0]["price_large"],5.90)
-        self.assertEqual(items[1]["name"],"Garnelen Zitronen Pasta mit Zucchini")
-        self.assertEqual(items[1]["price_small"],7.50)
-        self.assertEqual(items[1]["price_large"],11.90)
+        self.assertEqual(items[1]["name"],"Haussalat")
+        self.assertEqual(items[1]["category"],"Salat")
+        self.assertEqual(items[2]["name"],"Garnelen Zitronen Pasta mit Zucchini")
+        self.assertEqual(items[2]["price_small"],7.50)
+        self.assertEqual(items[2]["price_large"],11.90)
         self.assertEqual(items[-2]["price"],9.50)
         self.assertEqual(items[-1]["price"],13.90)
         with self.assertRaises(ValueError):
