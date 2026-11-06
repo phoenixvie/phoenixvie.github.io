@@ -32,6 +32,8 @@ on:
       - '.github/workflows/wu-lunch-ai-pilot.yml'
       - 'wu-lunch/ai-pilot/ai_direct.py'
       - 'wu-lunch/ai-pilot/test_ai_direct.py'
+      - 'wu-lunch/ai-pilot/publish_ai.py'
+      - 'wu-lunch/ai-pilot/test_publish_ai.py'
 
 permissions:
   contents: write
@@ -53,7 +55,7 @@ jobs:
         run: pip install 'requests>=2.31,<3' 'beautifulsoup4>=4.12,<5'
       - name: Syntax und unabhängige Offline-Tests
         run: |
-          python -m py_compile wu-lunch/ai-pilot/ai_direct.py
+          python -m py_compile wu-lunch/ai-pilot/ai_direct.py wu-lunch/ai-pilot/publish_ai.py
           python -m unittest discover -s wu-lunch/ai-pilot -p 'test_*.py' -v
 
 
