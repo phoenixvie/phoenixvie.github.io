@@ -870,60 +870,11 @@
       "monogram": "T",
       "url": "https://topfdeckel.at/wochenmenu",
       "status": "daily",
-      "note": "",
+      "note": "Nur exakt datierte Tageskarten übernehmen; Wochenüberschrift reicht zur Zuordnung der interaktiven Tabs nicht aus. Mo–Do dieser Testwoche nicht vollständig gespeichert.",
       "validFrom": null,
       "validUntil": null,
       "days": {
-        "2026-11-02": [
-          {
-            "name": "Süßkartoffel-Ingwercremesuppe",
-            "price": 3.9,
-            "category": "Suppe",
-            "diet": "unknown",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9
-          },
-          {
-            "name": "Indisches Cashew Beef in cremiger Kormasauce",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9
-          },
-          {
-            "name": "Thai Larb-Salat mit Faschiertem, Kräutermix & Limetten-Dressing",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9
-          },
-          {
-            "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9
-          }
-        ],
+        "2026-11-02": [],
         "2026-11-03": [],
         "2026-11-04": [],
         "2026-11-05": [],
@@ -1156,7 +1107,7 @@
           },
           {
             "name": "Gebackenes Gemüse mit Pommes",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1178,7 +1129,7 @@
           },
           {
             "name": "Pizza mit Salami",
-            "price": 6.0,
+            "price": 6,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1188,7 +1139,7 @@
           },
           {
             "name": "Kürbis-Reis-Pfanne mit Salat",
-            "price": 11.0,
+            "price": 11,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1210,7 +1161,7 @@
           },
           {
             "name": "Gemüselasagne",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1232,7 +1183,7 @@
           },
           {
             "name": "Tempeh-Bowl mit Hummus, Karotten & Kraut",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
