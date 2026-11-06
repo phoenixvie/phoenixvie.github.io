@@ -457,7 +457,7 @@ def parse_topfdeckel(raw,today,monday):
         if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line,re.I):continue
         if line.lower().startswith(("image:","salat", "mit ", "main dish")):continue
         if line in [x["name"] for x in result]:continue
-        if len(result)>=6:break
+        if len(result)>=12:break
         if len(line)>155:continue
         # Kein Veggie-Label aus dem übernächsten Gericht übernehmen.
         is_veg="veggie" in line.lower() or (i+1<len(section) and tidy(section[i+1]).lower()=="veggie")
@@ -702,6 +702,17 @@ def validate_meal_components(data):
     """Gegen versehentlich verlorene Inklusivleistungen – auch für neue Restaurants."""
     for r in data.get("restaurants",[]):
         for day,items in r.get("days",{}).items():
+            # Bei identischen Gerichten muss die kleine Portion günstiger sein.
+            portion_prices={}
+            for item in items:
+                name=item.get("name","")
+                match=re.search(r"\s*\((klein|groß)\)$",name,re.I)
+                if match and item.get("price") is not None:
+                    base=name[:match.start()].casefold().strip()
+                    portion_prices.setdefault(base,{})[match.group(1).lower()]=item["price"]
+            for base,prices in portion_prices.items():
+                if "klein" in prices and "groß" in prices and prices["klein"]>=prices["groß"]:
+                    raise ValueError(f"{r['id']} {day}: kleine Portion nicht günstiger als große Portion: {base}")
             for item in items:
                 if not isinstance(item.get("name"),str) or not item["name"].strip():
                     raise ValueError(f"{r['id']} {day}: Hauptgericht ohne Namen")
