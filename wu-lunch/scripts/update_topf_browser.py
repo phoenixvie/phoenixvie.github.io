@@ -6,6 +6,8 @@ tabs because requests fetches only the default HTML. Do not invent missing days.
 """
 from __future__ import annotations
 import hashlib
+import importlib.util
+import os
 import json
 import re
 import sys
@@ -32,9 +34,10 @@ def verify_week(text,monday):
     if start!=monday or end!=monday+timedelta(days=4):
         raise ValueError(f"Topf-Browser: Wochenquelle {start} bis {end} ist nicht aktuelle Woche {monday}")
 
-def collect_week(monday):
+def collect_week(monday, *, with_snapshots=False):
     days={}
     hashes={}
+    snapshots={}
     with sync_playwright() as p:
         browser=p.chromium.launch(headless=True)
         try:
@@ -67,6 +70,7 @@ def collect_week(monday):
                 day_key=(monday+timedelta(days=index)).isoformat()
                 digest=hashlib.sha256(html.encode("utf-8")).hexdigest()
                 hashes[day_key]=digest
+                snapshots[day_key]=html
                 for item in items:
                     item["source_url"]=URL
                     item["source_day"]=day_key
@@ -79,12 +83,57 @@ def collect_week(monday):
                 raise ValueError("Topf-Browser: Tab-Wechsel nicht glaubwürdig, Gerichte mehrfach identisch")
         finally:
             browser.close()
-    return days,hashes
+    return (days,hashes,snapshots) if with_snapshots else (days,hashes)
+
+def audit_with_luna(monday, days, hashes, snapshots, prior, key):
+    """Check all five actual browser tabs using Luna, not static initial HTML.
+
+    AI is a second reader: uncertain/missing menu rows are logged for
+    investigation; it cannot silently overwrite proven browser tab prices.
+    """
+    digest=hashlib.sha256(json.dumps(hashes,sort_keys=True).encode()).hexdigest()
+    if prior.get("fingerprint")==digest and prior.get("model")=="gpt-6-luna":
+        return prior
+    if not key:
+        return {"state":"skipped_no_key","fingerprint":digest,
+                "note":"OPENAI_API_KEY fehlt"}
+    spec=importlib.util.spec_from_file_location("topf_luna",ROOT/"ai-pilot"/"ai_direct.py")
+    ai=importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ai)
+    content=[{"type":"input_text","text":(
+        "Prüfe diese fünf browsergerenderten Tages-Tabs. Erfasse ALLE Suppen, "
+        "Hauptgerichte, klein/groß-Preise und Menükombinationen. "
+        "Die Tabdaten sind bereits auf die Woche verifiziert. "
+        f"Quelle für jedes Item: {URL}. Keine kostenlosen Suppen erfinden. "
+        f"Kalenderwoche: {monday.isoformat()} bis {(monday+timedelta(days=4)).isoformat()}. "
+        "Melde Unklarheiten in warnings, nicht als erfundenen Inhalt.")}]
+    for day,html in sorted(snapshots.items()):
+        content.append({"type":"input_text","text":f"DATUM {day} (sichtbarer Browser-Tab):\\n{html[:45000]}"})
+    result,usage=ai.call_model(key,"gpt-6-luna",[{"role":"user","content":content}])
+    issues=ai.validate(result,[{"url":URL,"fetched":True}],monday,"topfdeckel")
+    parser_names={day:{re.sub(r"\\W+"," ",x["name"].casefold()).strip() for x in items}
+                  for day,items in days.items()}
+    ai_names={day:set() for day in days}
+    for item in result.get("items",[]):
+        if item.get("date") in ai_names:
+            ai_names[item["date"]].add(re.sub(r"\\W+"," ",item.get("name","").casefold()).strip())
+    missing={}
+    for day in days:
+        if ai_names[day]:
+            absent=[n for n in ai_names[day] if n not in parser_names[day]]
+            if absent:
+                missing[day]=absent[:5]
+    return {"state":"review_needed" if issues or missing or result.get("warnings") else "ok",
+            "model":"gpt-6-luna","fingerprint":digest,
+            "checked_at":datetime.now(ZoneInfo("Europe/Vienna")).isoformat(timespec="seconds"),
+            "validation_issues":issues[:5],"ai_only_examples":missing,
+            "warnings":(result.get("warnings") or [])[:5],"usage":usage}
+
 
 def main():
     today=datetime.now(ZoneInfo("Europe/Vienna")).date()
     monday=today-timedelta(days=today.weekday())
-    days,hashes=collect_week(monday)
+    days,hashes,snapshots=collect_week(monday,with_snapshots=True)
     data=json.loads(DATA.read_text(encoding="utf-8"))
     if data.get("weekStart")!=monday.isoformat():
         raise ValueError("Topf-Browser: Datenbank-Woche stimmt nicht überein")
@@ -101,6 +150,13 @@ def main():
     DATA.write_text(json.dumps(data,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     FRONTEND.write_text("window.CAMPUS_LUNCH_DATA = "+json.dumps(data,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
     status=json.loads(STATUS.read_text(encoding="utf-8"))
+    try:
+        status["topf_luna_audit"]=audit_with_luna(
+            monday,days,hashes,snapshots,status.get("topf_luna_audit",{}),
+            os.environ.get("OPENAI_API_KEY","").strip())
+    except Exception as error:
+        status["topf_luna_audit"]={"state":"error","note":str(error)[:220]}
+        print("::warning::Topf Luna Kontrollanalyse nicht verfügbar:",str(error)[:180],flush=True)
     status["sources"]["topfdeckel"]={"state":"ok_browser","last_success":r["browser_verified_at"],
         "consecutive_failures":0,"day_sha256":hashes}
     warnings=quality_warnings(data,today)

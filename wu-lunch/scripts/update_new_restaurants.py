@@ -288,6 +288,62 @@ def resolve_finn_three_reads(first, second, third, monday, image_url):
     raise ValueError("Finn: drei Bildanalysen widersprechen sich; keine Veröffentlichung")
 
 
+def verify_finn_weekly_extras(first, second, image_url):
+    """Validate a separate image scan for menu sides and combo prices."""
+    aliases = {
+        "suppe/salat": "Tagessuppe oder Salat",
+        "tagessuppe oder salat": "Tagessuppe oder Salat",
+        "menüoption": "Hauptgericht mit Suppe",
+        "hauptgericht mit suppe": "Hauptgericht mit Suppe",
+        "dessert": "Nachspeise",
+        "nachspeise": "Nachspeise",
+    }
+    def extract(result):
+        if result.get("status") != "found" or result.get("warnings"):
+            raise ValueError("Finn: Zusatzpreise nicht klar lesbar")
+        prices={}
+        for row in result.get("items") or []:
+            if row.get("date") is not None or row.get("source_url") != image_url or row.get("confidence") != "high":
+                raise ValueError("Finn: Zusatzpreis nicht aus aktuellem Originalbild")
+            name=aliases.get(normal(row.get("category"))) or aliases.get(normal(row.get("name")))
+            if name is None:
+                raise ValueError("Finn: unbekannte oder spekulative Menüoption")
+            amount=row.get("price_eur")
+            if isinstance(amount, bool) or not isinstance(amount,(int,float)) or not 0.5 <= amount <= 30:
+                raise ValueError("Finn: fehlender Zusatzpreis")
+            if name in prices or len(row.get("evidence_excerpt") or "") < 8 or row.get("included_items"):
+                raise ValueError("Finn: doppelter/unbelegter Menüpreis")
+            prices[name]=round(float(amount),2)
+        if not prices:
+            raise ValueError("Finn: keine Zusatzangebote erkannt")
+        return prices
+    prices=extract(first)
+    if prices != extract(second):
+        raise ValueError("Finn: Zusatzpreise widersprechen sich")
+    return prices
+
+
+def attach_finn_weekly_extras(days, prices, image_url):
+    """Keep standalone sides distinct from included sides and combos."""
+    for day, rows in days.items():
+        for label in ("Tagessuppe oder Salat", "Nachspeise"):
+            if label not in prices:continue
+            rows.insert(0, {
+                "name":label,"price":prices[label],
+                "category":"Suppe/Salat" if label.startswith("Tagessuppe") else "Nachspeise",
+                "diet":"unknown","description":"Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
+                "allergens":[],"included_soup":None,"included_choices":[],
+                "source_url":image_url,"ai_confidence":"two-model-price-agreement",
+            })
+        if "Hauptgericht mit Suppe" in prices:
+            combo=prices["Hauptgericht mit Suppe"]
+            for item in rows:
+                if item["category"] in ("Suppe/Salat","Nachspeise"):continue
+                if item.get("price") is not None and combo > item["price"]:
+                    item["menu_options"]=[{"label":"Hauptgericht mit Suppe", "total_price":combo}]
+    return days
+
+
 def fetch_finn(monday, *, key, previous):
     raw = legacy.safe_get(FINN_URL)
     image_url = select_finn_image(raw, monday)
@@ -355,6 +411,37 @@ def fetch_finn(monday, *, key, previous):
         if issues:
             raise ValueError("Finn: dritte KI-Validierung fehlgeschlagen: "+"; ".join(issues[:3]))
         days = resolve_finn_three_reads(first, second, third, monday, image_url)
+    # Independently scan the SAME image for sides and full menu prices.
+    # This is separate from the mains-only model extraction and is required
+    # to avoid dropping the soup/salad section of a valid weekly board.
+    extras_prompt=(
+        f"Prüfe ausschließlich separat bestellbare Suppen, Salate, Nachspeisen "
+        f"und ausdrücklich gedruckte Menü-Kombipreise auf DIESEM Wochenbild. "
+        f"Quelle exakt {image_url}. Verwende JSON-Schema. "
+        "Für einen einheitlichen Preis 'TAGESSUPPE ODER SALAT' genau EIN Objekt "
+        "mit date=null, name='Tagessuppe oder Salat', category='Suppe/Salat', "
+        "price_eur=gedruckter Einzelpreis. "
+        "Für 'HAUPTGERICHT MIT SUPPE' genau EIN Objekt mit date=null, "
+        "name='Hauptgericht mit Suppe', category='Menüoption', "
+        "price_eur=gedruckter GESAMTPREIS. "
+        "Nachspeisen nur wenn konkret mit Preis auf dem Wochenbild beworben. "
+        "Keine erfundenen Sorten; keine kostenlosen Inklusivleistungen. "
+        "Jeder Eintrag braucht ein kurzes wörtliches evidence_excerpt aus dem Bild. "
+        "Bei fehlenden/unklaren Zusatzpreisen status=unclear, nie raten."
+    )
+    extras_payload=[{"role":"user","content":[
+        {"type":"input_text","text":extras_prompt},
+        {"type":"input_image","image_url":"data:image/jpeg;base64,"+base64.b64encode(image).decode()},
+    ]}]
+    try:
+        a,_=ai.call_model(key,"gpt-6-luna",extras_payload)
+        b,_=ai.call_model(key,"gpt-6.1-terra",extras_payload)
+        extras=verify_finn_weekly_extras(a,b,image_url)
+        days=attach_finn_weekly_extras(days,extras,image_url)
+        print("Finn: bestätigte Zusatzangebote",extras,flush=True)
+    except Exception as exc:
+        # A missing/unclear side offer must never delete confirmed main courses.
+        print("::warning::Finn Zusatzangebote nicht freigegeben: "+str(exc)[:180],flush=True)
     return days, sha, image_url
 
 

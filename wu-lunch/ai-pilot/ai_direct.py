@@ -61,7 +61,18 @@ noch Preise, Portionen, Zeiträume oder enthaltene Beilagen. Erfasse:
 - jeden Wochentag Montag bis Freitag, falls explizit zur gesuchten Woche zuordenbar;
 - unterschiedliche Preise für klein/groß/halbe/ganze Portion getrennt;
 - Preisanzeigen nur dann, wenn sie dem konkreten Gericht oder eindeutigem Tarif zuordenbar sind;
+- ALLE datierten Mittagsspeisen vollständig erfassen, einschließlich einzeln bestellbarer
+  Tagessuppen, Salate, Nachspeisen, vegetarischer und Fleischgerichte;
 - Menü-Kombinationen, Suppen, Salate, Beilagen, Extra-Aufpreise getrennt;
+- für separat bestellbare Suppe/Salat/Nachspeise einen eigenen Eintrag mit
+  Kategorie 'Suppe', 'Salat' oder 'Nachspeise' und nur ausdrücklich belegtem
+  Einzelpreis erfassen; kein Preis bedeutet price_eur=null;
+- für Kombinationsangebote den Gesamtpreis eindeutig im extra_costs der
+  Hauptspeise ausweisen, niemals als kostenlose Inklusivleistung missdeuten;
+- wenn eine Wochenkarte einen gültigen täglichen Standardtarif für alle
+  Hauptgerichte ausweist, diesen nur bei belegbarer eindeutiger Gültigkeit verwenden;
+- kein Gericht weglassen, nur weil der Preis nach Name/Allergenen oder in einem
+  getrennten HTML-Element steht; zugeordnete Preise ausdrücklich vergleichen;
 - ausschließlich die Lia-Filiale AM WU-Campus, nicht andere Lia-Standorte;
 - Oma Küche nur, wenn die Webseite ein Angebot belegt; nutze kein bekanntes Foto;
 - L'Osteria als Saisonkarte (date=null), nicht als erfundenes Tagesmenü;
@@ -188,8 +199,13 @@ def build_inputs(restaurant, now, week_start):
     until=week_start+timedelta(days=4)
     intro=(f"Restaurant: {restaurant}. Heute in Wien: {now.date().isoformat()}. "
            f"Zu prüfende Woche: {week_start.isoformat()} bis {until.isoformat()}. "
-           "Extrahiere sämtliche mit Quellen belegten Gerichte dieser Woche; "
-           "nur bei Saisonkarten darf date=null sein. "
+           "Extrahiere sämtliche mit Quellen belegten Gerichte dieser Woche, "
+           "inklusive separat angebotener Tagessuppen, Salate, Nachspeisen "
+           "und Hauptgericht-Menükombinationen. Verwechsle einen Menügesamtpreis "
+           "niemals mit dem Hauptgericht-Einzelpreis. "
+           "Ordne Preise auch hinter Gerichten und Allergenen korrekt zu. "
+           "Nur bei Saisonkarten darf date=null sein; undatierte Wochenbeilagen "
+           "nur auf belegbare Tage verteilen. "
            "Falls Quelle ältere Woche zeigt, nicht als aktuelle Woche übernehmen. "
            "Für mehrere Speisen mit derselben Pauschale je separate Einträge. "
            "Bei nicht bestätigter Preiszuordnung price_eur=null. "

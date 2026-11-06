@@ -639,7 +639,8 @@ def parse_lia_week(raw,monday):
         items=[]
         pending_price=None
         skip_english=False
-        for line in region[idx+1:limit]:
+        detail_lines=region[idx+1:limit]
+        for offset,line in enumerate(detail_lines):
             if re.search(r"(?:Verfügbar von|Änderungen vorbehalten|Alle Preise inkl)",line,re.I):break
             text=tidy(line)
             if not text or text.lower().startswith(("hauptgericht","tagesmenü","suppe zum","salat zum")):continue
@@ -648,11 +649,35 @@ def parse_lia_week(raw,monday):
                 if vegetarian and items:items[-1]["diet"]="veggie"
                 skip_english=False
                 continue
+            # Lia prints its EUR price after the translated dish and allergens.
+            # An isolated amount also belongs to the preceding main course.
+            price_line=re.fullmatch(r"€\s*(\d{1,3}[,.]\d{2})",text)
+            if price_line:
+                amount=float(price_line.group(1).replace(",","."))
+                upcoming=next((tidy(x) for x in detail_lines[offset+1:]
+                               if tidy(x) and not re.match(r"^€\\s*\\d",tidy(x))),"")
+                # Isolated price BEFORE another bilingual dish is a prefix,
+                # not a trailing price of the preceding dish. Only attach
+                # backwards when no following dish is present.
+                next_dish=bool(upcoming and len(upcoming)>=13 and
+                               not re.match(r"^(?:Hauptgericht|Verfügbar|Änderungen)",upcoming,re.I))
+                if next_dish:
+                    pending_price=amount
+                elif items and items[-1].get("price") is None:
+                    items[-1]["price"]=amount
+                    items[-1]["description"]=items[-1]["description"].replace("Preis nicht bestätigt","Preis bestätigt")
+                else:
+                    pending_price=amount
+                continue
             pref=re.match(r"^€\s*(\d+[,\.]\d{2})",text)
             if pref:
                 pending_price=float(pref.group(1).replace(",","."))
                 text=tidy(text[pref.end():])
                 if not text:continue
+            # Strip only a trailing explicit price, never an allergen or date.
+            suffix=re.search(r"(?:\s|\))€\s*(\d{1,3}[,.]\d{2})\s*$",text)
+            explicit_price=float(suffix.group(1).replace(",",".")) if suffix else None
+            if suffix:text=tidy(text[:suffix.start()])
             # Deutsch und Englisch stehen bei Lia teils in getrennten HTML-Spans;
             # ein abschließender Slash kündigt den englischen Teil an.
             english_after=bool(re.search(r"\s+/\s*$",text))
@@ -663,7 +688,7 @@ def parse_lia_week(raw,monday):
                 continue
             # Nur bestätigte WU-Basispreise anwenden, sonst Preis unbekannt.
             general=re.search(r"Hauptgericht\s*(?:main\s*dish)?\s*€\s*(\d+[,\.]\d{2})"," ".join(region[:headings[0][0]]),re.I)
-            price=pending_price if pending_price is not None else (float(general.group(1).replace(",",".")) if general else None)
+            price=explicit_price if explicit_price is not None else (pending_price if pending_price is not None else (float(general.group(1).replace(",",".")) if general else None))
             pending_price=None
             diet="veggie" if vegetarian else "unknown"
             # Doppelte deutsche Einträge im WU-Menü ebenfalls nicht duplizieren.
@@ -863,7 +888,7 @@ def run(today):
             except Exception as exc:
                 problems.append(f"{ident}: Änderungsprüfung fehlgeschlagen: {str(exc)[:145]}")
                 should_check=False
-        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==3):
+        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==4):
             if ident=="mensa":
                 should_check=False
             else:
@@ -956,7 +981,7 @@ def run(today):
                 restaurant(data,"losteria")["status"]="seasonal"
                 source(data,"losteria")["status"]="seasonal"
             operations[ident]={"state":"ok","last_success":now,"consecutive_failures":0,
-                               "parser_version":3 if ident=="lia" else meta.get("parser_version"),
+                               "parser_version":4 if ident=="lia" else meta.get("parser_version"),
                                "content_sha256":observed_digest}
         except Exception as exc:
             desc=f"{type(exc).__name__}: {str(exc)[:220]}"
@@ -996,6 +1021,8 @@ def run(today):
     # otherwise per-day API rate limiting would be lost.
     if isinstance(state.get("ai_repair"),dict):
         status["ai_repair"]=state["ai_repair"]
+    if isinstance(state.get("topf_luna_audit"),dict):
+        status["topf_luna_audit"]=state["topf_luna_audit"]
     validate_meal_components(data)
     warnings=quality_warnings(data,today)
     status["quality_warnings"]=warnings
