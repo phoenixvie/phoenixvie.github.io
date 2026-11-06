@@ -15,7 +15,16 @@
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
       "consecutive_failures": 1,
-      "content_sha256": null
+      "content_sha256": null,
+      "manual_document_review": {
+        "at": "2026-11-06T11:46:46+01:00",
+        "week_start": "2026-11-02",
+        "week_end": "2026-11-06",
+        "source": "https://www.wumensa.at/menuplan-deutsch/",
+        "sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9",
+        "published": true,
+        "note": "19 Gerichte/Suppen aus Original-PDF direkt dokumentiert; automatischer PDF-Parser weiterhin fehlerhaft."
+      }
     },
     "glashaus": {
       "state": "ok",
