@@ -419,7 +419,7 @@ def parse_losteria(raw):
             if len(" ".join(paragraphs))>450:break
         desc=tidy(" ".join(paragraphs)); cost=euros(desc)
         if cost is not None and len(desc)<450:
-            items.append(make_item(heading,cost,"Saisonkarte","unknown",desc[:180]))
+            items.append(make_item(heading.lower().title(),cost,"Saisonkarte","unknown",desc[:180]))
         if len(items)>=12:break
     if len(items)<2:raise ValueError("L'Osteria: Saisonkarte nicht lesbar")
     return items
@@ -578,6 +578,27 @@ def parse_gruenehuette(raw,monday):
         pending=None
     if sum(len(v) for v in out.values())<5 or sum(bool(v) for v in out.values())<4:
         raise ValueError("Grüne Hütte: unvollständiger Wochenplan; keine leeren Gerichte veröffentlichen")
+    # Die vier Suppenarten stehen oberhalb der Wochentage. Sie sind gegen
+    # Aufpreis wählbar, NICHT automatisch im Hauptgericht enthalten.
+    soup_marker=next((i for i,line in enumerate(lines)
+                     if "suppen zur auswahl" in line.casefold()),None)
+    soup_options=[]
+    if soup_marker is not None:
+        for line in lines[soup_marker+1:soup_marker+5]:
+            text=tidy(line)
+            if re.search(r"^(unsere speisen|mo\s*:|montag)",text,re.I):
+                break
+            # Auflistungen können über zwei getrennte HTML-Elemente laufen.
+            for part in re.split(r"\s*,\s*|\s+oder\s+",text,flags=re.I):
+                part=tidy(part)
+                if re.search(r"(suppe|creme|consommé|bouillon)",part,re.I) and 5<len(part)<75:
+                    soup_options.append(part)
+    soup_options=list(dict.fromkeys(soup_options))
+    soup_label="Suppen zur Auswahl: "+", ".join(soup_options) if soup_options else "Suppe nach Wahl zum Tagesteller"
+    for day,items in out.items():
+        if items:
+            items.append(make_item(soup_label,2.0,"Suppe (Aufpreis)","unknown",
+                "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis"))
     return out,(monday,monday+timedelta(days=4))
 
 def parse_lia_week(raw,monday):
