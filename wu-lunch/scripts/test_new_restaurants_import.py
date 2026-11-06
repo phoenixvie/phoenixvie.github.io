@@ -129,6 +129,18 @@ class NewRestaurantTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"nicht eindeutig"):
             module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
 
+    def test_finn_third_reader_resolves_only_with_confirming_majority(self):
+        first=fin_result(10.0)
+        second=fin_result(11.0)
+        third=fin_result(10.0)
+        days=module.resolve_finn_three_reads(first,second,third,MON,
+                                             first["items"][0]["source_url"])
+        self.assertEqual(days["2026-11-02"][0]["price"],10.0)
+        third=fin_result(12.0)
+        with self.assertRaisesRegex(ValueError,"drei Bildanalysen"):
+            module.resolve_finn_three_reads(first,second,third,MON,
+                                            first["items"][0]["source_url"])
+
     def test_finn_pair_accepts_two_matching_models(self):
         first=fin_result();second=fin_result()
         days=module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
