@@ -169,8 +169,7 @@ def build_inputs(restaurant, now, week_start):
                 if len(raw)>7_000_000:raise ValueError("PDF für direkten API-Eingang zu groß")
                 content.append({"type":"input_text","text":f"ORIGINAL-PDF-QUELLE: {url}\nSHA256: {sha}"})
                 content.append({"type":"input_file","filename":"wu-mensa-menu.pdf",
-                                "file_data":"data:application/pdf;base64,"+base64.b64encode(raw).decode(),
-                                "detail":"high"})
+                                "file_data":"data:application/pdf;base64,"+base64.b64encode(raw).decode()})
                 src_type="pdf"; truncated=False
             else:
                 html,truncated=generic_html_for_model(raw)
