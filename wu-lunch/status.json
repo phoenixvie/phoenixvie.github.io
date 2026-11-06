@@ -1,65 +1,75 @@
 {
-  "checked_at": null,
+  "checked_at": "2026-11-06T10:40:36+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
-  "health": "reset_pending",
+  "health": "degraded",
   "sources": {
-    "mensa": {
-      "state": "reset_pending",
-      "last_success": null,
+    "omakueche": {
+      "state": "recurring",
+      "last_success": "2026-11-06T10:40:36+01:00",
       "consecutive_failures": 0,
-      "content_sha256": null
+      "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
-    "campus": {
-      "state": "reset_pending",
+    "mensa": {
+      "state": "error",
+      "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
-      "consecutive_failures": 0,
+      "consecutive_failures": 1,
       "content_sha256": null
     },
     "glashaus": {
-      "state": "reset_pending",
-      "last_success": null,
+      "state": "ok",
+      "last_success": "2026-11-06T10:40:36+01:00",
       "consecutive_failures": 0,
+      "parser_version": null,
       "content_sha256": null
+    },
+    "campus": {
+      "state": "ok",
+      "last_success": "2026-11-06T10:40:36+01:00",
+      "consecutive_failures": 0,
+      "parser_version": null,
+      "content_sha256": "bb226678fe348d1b0a46cce678175c65676aa94cec9f64a2f5c8afa76a43f0ec"
     },
     "baschly": {
-      "state": "reset_pending",
-      "last_success": null,
+      "state": "ok",
+      "last_success": "2026-11-06T10:40:36+01:00",
       "consecutive_failures": 0,
-      "content_sha256": null
+      "parser_version": null,
+      "content_sha256": "45af11f756853109dd58468e1835eb5564edf15e810c6e19ae047691e429c2e3"
     },
     "losteria": {
-      "state": "reset_pending",
-      "last_success": null,
+      "state": "ok",
+      "last_success": "2026-11-06T10:40:36+01:00",
       "consecutive_failures": 0,
-      "content_sha256": null
-    },
-    "omakueche": {
-      "state": "reset_pending",
-      "last_success": null,
-      "consecutive_failures": 0,
+      "parser_version": null,
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "reset_pending",
-      "last_success": null,
+      "state": "ok",
+      "last_success": "2026-11-06T10:40:36+01:00",
       "consecutive_failures": 0,
+      "parser_version": null,
       "content_sha256": null
     },
     "gruenehuette": {
-      "state": "reset_pending",
-      "last_success": null,
+      "state": "ok",
+      "last_success": "2026-11-06T10:40:36+01:00",
       "consecutive_failures": 0,
-      "content_sha256": null
+      "parser_version": null,
+      "content_sha256": "7d89e2a67d78ff1f3aac6d776c103a8182e16061e206d3fd52a0e035706be653"
     },
     "lia": {
-      "state": "reset_pending",
-      "last_success": null,
+      "state": "ok",
+      "last_success": "2026-11-06T10:40:36+01:00",
       "consecutive_failures": 0,
+      "parser_version": 2,
       "content_sha256": null
     }
   },
-  "problems": [],
-  "next_run": "Clean rebuild triggered by GitHub workflow push",
+  "problems": [
+    "mensa: ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis"
+  ],
+  "next_run": "weekdays 08:15, 09:15, 10:15, 11:15, 12:15 Europe/Vienna",
   "format_version": 1
 }
