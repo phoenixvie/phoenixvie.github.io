@@ -68,8 +68,16 @@ jobs:
             print("Karma page opening",text[at:at+130] if at>=0 else text[:130],flush=True)
             at=text.find("WOCHENMENÜ")
             print("Karma weekly heading",text[max(0,at-90):at+80],flush=True)
-          days,digest,pdf=script.fetch_karma(monday)
+          # The operator can publish next week's menu on Friday; verify that
+          # separately without mislabeling the current week's menu.
+          latest=script.legacy.safe_get(script.KARMA_URL)
+          parsed=BeautifulSoup(latest,"html.parser").get_text(" ",strip=True)
+          found=re.search(r"Karma\s+Food\s+(\d{1,2})\.(\d{1,2})\.\s*[-–]\s*(\d{1,2})\.(\d{1,2})\.",parsed,re.I)
+          assert found, "Karma: datierter Wochenkopf fehlt"
+          start=datetime(monday.year,int(found.group(2)),int(found.group(1))).date()
+          assert start in (monday,monday+timedelta(days=7)), "Karma: unerwartete Wochenquelle"
+          days,digest,pdf=script.fetch_karma(start)
           assert len(days)==5 and all(len(items)>=2 for items in days.values())
-          print("Karma live menu confirmed:",{d:len(items) for d,items in days.items()})
+          print("Karma verified week:",start,"menus:",{d:len(items) for d,items in days.items()})
           print("Official price PDF:",pdf)
           PY
