@@ -129,7 +129,7 @@ def needs_ai_review(ident, status, today):
     # Model prompt/parser revisions invalidate a previous review.
     if prior.get("review_version") != "complete-v4-row-evidence":
         return True
-    current_week=(today-timedelta(days=today.weekday())).isoformat()
+    current_week=legacy.target_week_monday(today).isoformat()
     if prior.get("review_week_start") != current_week:
         return True
     if digest and prior.get("source_fingerprint") == digest and prior.get("last_checked"):
@@ -380,7 +380,7 @@ def analyze_one(ident, data, status, monday, today, key, model):
 
 
 def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
-    monday = today - timedelta(days=today.weekday())
+    monday = legacy.target_week_monday(today)
     data = json.loads(DATA.read_text(encoding="utf-8"))
     status = json.loads(STATUS.read_text(encoding="utf-8"))
     if data.get("weekStart") != monday.isoformat():

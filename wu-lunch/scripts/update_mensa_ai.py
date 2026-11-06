@@ -208,7 +208,7 @@ def apply_candidate(data, status, days, monday, pdf_source, usage, model):
 
 
 def run(today, model):
-    monday = today - timedelta(days=today.weekday())
+    monday = legacy.target_week_monday(today)
     data = json.loads(DATA.read_text(encoding="utf-8"))
     status = json.loads(STATUS.read_text(encoding="utf-8"))
     if data.get("weekStart") != monday.isoformat():

@@ -904,9 +904,15 @@ def reset_week(data,monday):
         if s["id"] not in ("losteria","omakueche"):
             s["status"]="empty";s["validFrom"]=s["validUntil"]=None
 
+def target_week_monday(today):
+    """Show and import the coming week as soon as the weekend starts."""
+    if today.weekday() >= 5:
+        return today + timedelta(days=7-today.weekday())
+    return today-timedelta(days=today.weekday())
+
 def run(today):
     now=datetime.now(TZ).isoformat(timespec="seconds")
-    monday=today-timedelta(days=today.weekday())
+    monday=target_week_monday(today)
     data=load_data()
     state=load_status()
     old_week=data.get("weekStart")
@@ -927,7 +933,9 @@ def run(today):
         should_check=True
         prefetched_raw=None
         observed_digest=meta.get('content_sha256')
-        if today.weekday()>=5:
+        # Topf's interactive tabs are a weekday-only daily menu. The browser
+        # importer below handles its next published weekly plan separately.
+        if ident=="topfdeckel" and today.weekday()>=5:
             should_check=False
         elif ident in ("campus","baschly") and data.get("weekStart")==monday.isoformat() and sum(len(v) for v in restaurant(data,ident).get("days",{}).values())>0 and meta.get("content_sha256"):
             # Nur eine günstige Inhaltsprüfung; unveränderte Menüs nicht erneut parsen.

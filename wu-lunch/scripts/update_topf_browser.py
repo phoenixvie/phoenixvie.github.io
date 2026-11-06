@@ -16,7 +16,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from playwright.sync_api import sync_playwright
-from update_menus import ROOT, topf_starters,topf_main_items,topf_desserts,topf_combo_items,html_lines,quality_warnings,validate_meal_components
+from update_menus import ROOT, target_week_monday, topf_starters, topf_main_items, topf_desserts, topf_combo_items, html_lines, quality_warnings, validate_meal_components
 
 URL="https://topfdeckel.at/wochenmenu"
 DAY_NAMES=("Montag","Dienstag","Mittwoch","Donnerstag","Freitag")
@@ -78,7 +78,7 @@ def collect_week(monday, *, with_snapshots=False):
                     item["source_day"]=day_key
                     item["source_sha256"]=digest
                 days[day_key]=items
-                print(f"{day}: {len(soups)} Suppe(n), {len(mains)} Hauptgerichte, {len(items)} gesamt",flush=True)
+                print(f"{day}: {len(starters)} Vorspeise(n), {len(mains)} Hauptgerichte, {len(items)} gesamt",flush=True)
             # Guard against 5 buttons selecting one identical default panel.
             fingerprints=[tuple(x["name"] for x in v if x["category"]=="Hauptgericht") for v in days.values()]
             if len(set(fingerprints))<4:
@@ -134,7 +134,7 @@ def audit_with_luna(monday, days, hashes, snapshots, prior, key):
 
 def main():
     today=datetime.now(ZoneInfo("Europe/Vienna")).date()
-    monday=today-timedelta(days=today.weekday())
+    monday=target_week_monday(today)
     days,hashes,snapshots=collect_week(monday,with_snapshots=True)
     data=json.loads(DATA.read_text(encoding="utf-8"))
     if data.get("weekStart")!=monday.isoformat():

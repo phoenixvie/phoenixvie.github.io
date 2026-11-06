@@ -12,6 +12,12 @@ DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 
 
 class ParserTests(unittest.TestCase):
+    def test_saturday_targets_following_menu_week(self):
+        from update_menus import target_week_monday
+        self.assertEqual(target_week_monday(date(2026,11,7)),date(2026,11,9))
+        self.assertEqual(target_week_monday(date(2026,11,8)),date(2026,11,9))
+        self.assertEqual(target_week_monday(date(2026,11,6)),MONDAY)
+
     def test_date_range_and_old_week(self):
         self.assertEqual(period("02.11.2026 - 06.11.2026"), (MONDAY, MONDAY+timedelta(days=4)))
         self.assertEqual(period("2. Nov. 2026 – 6. Nov. 2026"), (MONDAY, MONDAY+timedelta(days=4)))
