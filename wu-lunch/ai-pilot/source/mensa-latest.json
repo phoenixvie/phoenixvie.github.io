@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-11-06T11:46:46.171856+01:00",
+  "fetched_at": "2026-11-06T11:50:17.654540+01:00",
   "source": "https://www.wumensa.at/menuplan-deutsch/",
   "http_status": 200,
   "sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9",
@@ -8,6 +8,6 @@
   "detected_dates": [
     "06.11.2026"
   ],
-  "current_week_monday": "2026-11-06",
+  "current_week_monday": "2026-11-02",
   "verification": "Snapshot only: PDF date MUST be checked by AI before publishing"
 }
