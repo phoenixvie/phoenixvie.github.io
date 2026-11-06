@@ -643,6 +643,17 @@ def parse_lia_week(raw,monday):
     Lia-Standort ist kein WU-Menü.
     """
     lines=html_lines(raw)
+    # Keep the source element boundaries as a second, stricter price signal.
+    # Lia renders German text, an English translation and the price in one
+    # ``li``.  ``stripped_strings`` deliberately flattens that structure and
+    # can otherwise make the price look like a prefix for the next dish.
+    soup=BeautifulSoup(raw,"html.parser")
+    li_prices=[]
+    for element in soup.find_all("li"):
+        text=tidy(element.get_text(" ",strip=True))
+        amount=euros(text)
+        if amount is not None:
+            li_prices.append((text.casefold(),amount))
     head=next((i for i,t in enumerate(lines) if "Tagesmenü Lia Coffee am WU Campus" in t),None)
     if head is None:
         raise ValueError("Lia WU: Menüabschnitt fehlt auf der Startseite")
@@ -727,6 +738,16 @@ def parse_lia_week(raw,monday):
                 items.append(make_item(text,price,"Hauptgericht",diet,
                     "Suppe oder Salat auf Wunsch; "+("Preis bestätigt" if price is not None else "Preis nicht bestätigt")+"; AG-Sticker -1,00 €"))
             if english_after:skip_english=True
+        # A named dish and exactly one explicit price in its own original list
+        # element is stronger evidence than the flattened-line heuristic.
+        # Never set a price from a generic tariff or another restaurant's row.
+        for item in items:
+            dish=item["name"].casefold()
+            candidates={amount for source_text,amount in li_prices
+                        if dish in source_text and "€" in source_text}
+            if len(candidates)==1:
+                item["price"]=candidates.pop()
+                item["description"]=item["description"].replace("Preis nicht bestätigt","Preis bestätigt")
         if items:
             result[expected.isoformat()]=items[:4]
     if sum(len(v) for v in result.values())<1:

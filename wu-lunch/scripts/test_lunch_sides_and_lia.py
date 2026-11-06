@@ -51,6 +51,16 @@ class SideAndPriceTests(unittest.TestCase):
         self.assertEqual([(x["name"],x["price"]) for x in days["2026-11-05"]], [
             ("Lasagne klassisch – mit Schwein & Rind",10.0), ("Gemüselasagne",10.0)])
 
+    def test_lia_li_price_overrides_flattened_translation_ambiguity(self):
+        raw=('<html><body>Tagesmenü Lia Coffee am WU Campus'
+             '<div>Donnerstag 05.11.</div>'
+             '<ul><li>Lasagne klassisch – mit Schwein &amp; Rind / '
+             '<em>Lasagne classic style with beef and pork (A,G)</em> <b>€ 10,00</b></li>'
+             '<li>Gemüselasagne / <em>Vegetable lasagna (A,G)</em> Veggie <b>€ 10,00</b></li></ul>'
+             '<div>Tagesmenü Lia Bistro</div></body></html>').encode()
+        days,_=menus.parse_lia_week(raw,WEEK)
+        self.assertEqual([x["price"] for x in days["2026-11-05"]],[10.0,10.0])
+
     def test_topf_publishes_salad_and_dessert_with_source_prices(self):
         lines=["Vorspeisen","Klein €3.90 / Groß €5.90","Kürbiscremesuppe","Haussalat",
                "Hauptspeisen","Linsen-Curry mit Reis und Gemüse","Gemüsepfanne mit Couscous",
