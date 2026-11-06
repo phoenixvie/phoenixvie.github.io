@@ -36,10 +36,10 @@ spec2.loader.exec_module(legacy)
 
 VALID_CATEGORIES = {
     "tagessuppe": "Tagessuppe",
-    "powered by plants / veggie": "Powered by plants / Veggie",
+    "powered by plants veggie": "Powered by plants / Veggie",
     "veggie": "Powered by plants / Veggie",
     "meaty": "Meaty",
-    "global & grill": "Global & Grill",
+    "global grill": "Global & Grill",
     "soup deal": "Soup Deal",
     "pizza": "Pizza",
     "bowls": "Bowls",
