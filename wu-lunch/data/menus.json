@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-06T18:18:18+01:00",
+  "checkedAt": "2026-11-06T18:21:07+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -63,7 +63,7 @@
       "id": "topfdeckel",
       "name": "Topf & Deckel",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "verified",
+      "status": "daily",
       "note": "",
       "validFrom": "2026-11-02",
       "validUntil": "2026-11-06"
@@ -869,7 +869,7 @@
       "name": "Topf & Deckel",
       "monogram": "T",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "verified",
+      "status": "daily",
       "note": "Alle fünf Wochentage über echte Browser-Tabs der offiziellen Wochenmenü-Seite geprüft.",
       "validFrom": "2026-11-02",
       "validUntil": "2026-11-06",
@@ -1297,10 +1297,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-06",
-            "source_sha256": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
+            "price_large": 5.9
           },
           {
             "name": "Indisches Cashew Beef in cremiger Kormasauce",
@@ -1312,10 +1309,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-06",
-            "source_sha256": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
+            "price_large": 11.9
           },
           {
             "name": "Thai Larb-Salat mit Faschiertem, Kräutermix & Limetten-Dressing",
@@ -1327,10 +1321,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-06",
-            "source_sha256": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
+            "price_large": 11.9
           },
           {
             "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen",
@@ -1342,10 +1333,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-06",
-            "source_sha256": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
+            "price_large": 11.9
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -1355,10 +1343,7 @@
             "description": "Eine Option zum kleinen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-06",
-            "source_sha256": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
+            "included_choices": []
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -1368,10 +1353,7 @@
             "description": "Eine Option zum großen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-06",
-            "source_sha256": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
+            "included_choices": []
           }
         ]
       },
