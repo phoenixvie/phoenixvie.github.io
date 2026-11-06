@@ -9,6 +9,7 @@ import argparse
 import base64
 from datetime import date, datetime, timedelta, timezone
 import hashlib
+from difflib import SequenceMatcher
 import importlib.util
 import json
 import re
@@ -216,12 +217,30 @@ def validate_finn_pair(first, second, monday, img_url):
             raise ValueError("Finn: zu viele Einträge")
     x = sorted((_norm_item(i) for i in first["items"]), key=str)
     y = sorted((_norm_item(i) for i in second["items"]), key=str)
-    if x != y:
-        print("Finn comparison Luna:", json.dumps(x, ensure_ascii=False), flush=True)
-        print("Finn comparison Terra:", json.dumps(y, ensure_ascii=False), flush=True)
-        raise ValueError("Finn: Zwei KI-Bildanalysen widersprechen sich")
+    if len(x) != len(y):
+        raise ValueError("Finn: unterschiedliche Anzahl an Hauptgerichten")
+    # Accept only tiny spelling variants, never different menus, prices,
+    # categories or dates. Prefer the stronger second reading for typos.
+    for lhs, rhs in zip(x, y):
+        d1, name1, cat1, portion1, price1 = lhs
+        d2, name2, cat2, portion2, price2 = rhs
+        if (d1, cat1, portion1, price1) != (d2, cat2, portion2, price2):
+            raise ValueError("Finn: Zwei KI-Bildanalysen widersprechen sich")
+        if SequenceMatcher(None, name1, name2, autojunk=False).ratio() < 0.96:
+            raise ValueError("Finn: Gerichtnamen unterscheiden sich zu stark")
+        if name1 != name2:
+            print("Finn: minimaler Schreibunterschied, verwende zweiten Bildabgleich:",
+                  name1, "->", name2, flush=True)
     days = data_days(monday)
-    for item in first["items"]:
+    for item in second["items"]:
+        # Neither reader may assert free soup/included extras.
+        other = next((x for x in first["items"]
+                      if x.get("date") == item.get("date")
+                      and normal(x.get("category")) == normal(item.get("category"))
+                      and SequenceMatcher(None, normal(x.get("name")),
+                                          normal(item.get("name"))).ratio() >= 0.96), None)
+        if other is None or other.get("included_items"):
+            raise ValueError("Finn: Inklusivleistungen oder Zeilenzuordnung widersprüchlich")
         d = item.get("date")
         if d not in days:
             raise ValueError("Finn: Gerichte außerhalb der aktuellen Woche")
