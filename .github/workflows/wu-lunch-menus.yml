@@ -78,6 +78,25 @@ jobs:
           pip install 'playwright>=1.50,<2'
           python -m playwright install --with-deps chromium
           python wu-lunch/scripts/update_topf_browser.py
+      - name: Mensa-PDF mit Luna prüfen (Fallback bei Parserfehler)
+        if: steps.guard.outputs.skip == 'false'
+        continue-on-error: true
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Kein kostenpflichtiger KI-Aufruf bei Pushes oder zusätzlichen
+          # Morgenläufen. Bei manuellen Starts und 11 Uhr Wiener Zeit prüfen.
+          if [[ "${{ github.event_name }}" == "schedule" && "$(TZ=Europe/Vienna date +%H)" != "11" ]]; then
+            echo "Mensa-KI läuft regulär um 11:15 Wien."
+            exit 0
+          fi
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "Push testet ausschließlich Offline-Parser, keine KI-Kosten."
+            exit 0
+          fi
+          python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
       - name: Änderungen nur bei Bedarf veröffentlichen
         if: steps.guard.outputs.skip == 'false'
         shell: bash
