@@ -648,11 +648,22 @@ def parse_lia_week(raw,monday):
                 if vegetarian and items:items[-1]["diet"]="veggie"
                 skip_english=False
                 continue
+            # Lia prints its EUR price after the translated dish and allergens.
+            # An isolated amount also belongs to the preceding main course.
+            price_line=re.fullmatch(r"€\s*(\d{1,3}[,.]\d{2})",text)
+            if price_line and items and items[-1].get("price") is None:
+                items[-1]["price"]=float(price_line.group(1).replace(",","."))
+                items[-1]["description"]=items[-1]["description"].replace("Preis nicht bestätigt","Preis bestätigt")
+                continue
             pref=re.match(r"^€\s*(\d+[,\.]\d{2})",text)
             if pref:
                 pending_price=float(pref.group(1).replace(",","."))
                 text=tidy(text[pref.end():])
                 if not text:continue
+            # Strip only a trailing explicit price, never an allergen or date.
+            suffix=re.search(r"(?:\s|\))€\s*(\d{1,3}[,.]\d{2})\s*$",text)
+            explicit_price=float(suffix.group(1).replace(",",".")) if suffix else None
+            if suffix:text=tidy(text[:suffix.start()])
             # Deutsch und Englisch stehen bei Lia teils in getrennten HTML-Spans;
             # ein abschließender Slash kündigt den englischen Teil an.
             english_after=bool(re.search(r"\s+/\s*$",text))
@@ -663,7 +674,7 @@ def parse_lia_week(raw,monday):
                 continue
             # Nur bestätigte WU-Basispreise anwenden, sonst Preis unbekannt.
             general=re.search(r"Hauptgericht\s*(?:main\s*dish)?\s*€\s*(\d+[,\.]\d{2})"," ".join(region[:headings[0][0]]),re.I)
-            price=pending_price if pending_price is not None else (float(general.group(1).replace(",",".")) if general else None)
+            price=explicit_price if explicit_price is not None else (pending_price if pending_price is not None else (float(general.group(1).replace(",",".")) if general else None))
             pending_price=None
             diet="veggie" if vegetarian else "unknown"
             # Doppelte deutsche Einträge im WU-Menü ebenfalls nicht duplizieren.
@@ -863,7 +874,7 @@ def run(today):
             except Exception as exc:
                 problems.append(f"{ident}: Änderungsprüfung fehlgeschlagen: {str(exc)[:145]}")
                 should_check=False
-        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==3):
+        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==4):
             if ident=="mensa":
                 should_check=False
             else:
@@ -956,7 +967,7 @@ def run(today):
                 restaurant(data,"losteria")["status"]="seasonal"
                 source(data,"losteria")["status"]="seasonal"
             operations[ident]={"state":"ok","last_success":now,"consecutive_failures":0,
-                               "parser_version":3 if ident=="lia" else meta.get("parser_version"),
+                               "parser_version":4 if ident=="lia" else meta.get("parser_version"),
                                "content_sha256":observed_digest}
         except Exception as exc:
             desc=f"{type(exc).__name__}: {str(exc)[:220]}"
