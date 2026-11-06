@@ -55,7 +55,7 @@ class RepairTests(unittest.TestCase):
 
     def test_new_source_or_new_week_triggers_luna_even_if_parser_says_ok(self):
         state={"sources":{"lia":{"state":"ok","content_sha256":"new"}},
-               "ai_repair":{"lia":{"action":"review_only","review_version":"complete-v2",
+               "ai_repair":{"lia":{"action":"review_only","review_version":"complete-v3-live-evidence",
                    "review_week_start":"2026-11-02","last_checked":"2026-11-05T10:00:00",
                    "source_fingerprint":"old"}}}
         self.assertTrue(repair.needs_ai_review("lia",state,date(2026,11,6)))
@@ -77,6 +77,18 @@ class RepairTests(unittest.TestCase):
         self.assertEqual(meals[0]["name"],"Tagessuppe mit Gemüse")
         self.assertEqual(meals[0]["price"],3.50)
         self.assertFalse(meals[0]["included_choices"])
+
+    def test_luna_can_publish_a_missing_source_anchored_main_dish(self):
+        data=current_data()
+        row=candidate(price=12.50,quote="Kartoffel-Curry mit Gemüse 12,50 €",
+                      name="Kartoffel-Curry mit Gemüse")
+        row["category"]="Hauptgericht"
+        snapshot=evidence("Kartoffel-Curry mit Gemüse 12,50 €")
+        with patch.object(repair,"documented_current_week",return_value=True):
+            fixes=repair.add_verified_missing_sides(
+                "lia",{"items":[row]},data,source(),snapshot,WEEK,date(2026,11,6))
+        self.assertEqual(fixes,[{"date":DAY,"name":"Kartoffel-Curry mit Gemüse","price":12.5}])
+        self.assertEqual(next(r for r in data["restaurants"] if r["id"]=="lia")["days"][DAY][0]["category"],"Hauptgericht")
 
     def test_unproven_side_is_not_added(self):
         data=current_data()
