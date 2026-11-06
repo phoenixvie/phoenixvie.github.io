@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""WU Lunch: bounded AI quality audit and *evidence-anchored* data repair.
+"""WU Lunch: Luna extraction with evidence-anchored live-data repair.
 
-Luna never edits code or replaces a restaurant menu. Only fills a null price
-on an existing exact same-day dish after checking the original source, its
-date, the literal price and surrounding dish words. All other findings are
-review-only; existing restaurant-specific importers remain authoritative.
+Luna never edits code and never publishes an unverified menu.  A newly found
+item is added to live data only when its original source, week, exact quoted
+dish words and any displayed price are independently verified in this module.
 """
 from __future__ import annotations
 
@@ -40,6 +39,10 @@ IDS = tuple(ai.SOURCES)
 # No silent model replacement of dynamically selected tabs, seasonal boards,
 # photo-based pricing or PDF cells: those require their own acquisition checks.
 AUTO_PRICE_IDS = {"lia", "campus", "glashaus", "gruenehuette", "baschly"}
+# Sources with dated HTML menus.  Luna is the complete second extractor for
+# these sources; it may add an independently proven item that the parser did
+# not recognise, rather than only reporting it as ``review_only``.
+AUTO_FULL_MENU_IDS = {"lia", "campus", "glashaus", "gruenehuette", "baschly", "karmafood"}
 URGENT = ("campus", "lia", "mensa", "topfdeckel", "gruenehuette", "glashaus", "baschly", "losteria", "omakueche", "karmafood", "finn")
 
 
@@ -124,7 +127,7 @@ def needs_ai_review(ident, status, today):
         return prior.get("last_checked","")[:10] != today.isoformat()
     # Only skip an unchanged, already audited version of the ORIGINAL source.
     # Model prompt/parser revisions invalidate a previous review.
-    if prior.get("review_version") != "complete-v2":
+    if prior.get("review_version") != "complete-v3-live-evidence":
         return True
     current_week=(today-timedelta(days=today.weekday())).isoformat()
     if prior.get("review_week_start") != current_week:
@@ -264,22 +267,23 @@ def apply_safe_price_fixes(ident, model_result, data, sources, snapshots, monday
 
 
 def add_verified_missing_sides(ident, result, data, sources, snapshots, monday, today):
-    """Append only independently anchored standalone side dishes.
+    """Publish independently proven, standalone Luna discoveries.
 
-    Source text must explicitly contain the SAME name and one EUR price.
-    Dates are authenticated independently, and the model is not trusted to
-    infer that a soup is included or free. Other missing dishes stay review-only.
+    The historical name is kept for callers/tests.  This now covers every
+    category, so a complete Luna extraction can fix a missed main dish as
+    well as soup, salad and dessert.  It deliberately does *not* infer menu
+    inclusions: entries carrying included_items remain diagnostics until a
+    restaurant-specific importer can prove the relationship.
     """
-    allowed={"suppe","tagessuppe","salat","nachspeise","dessert"}
-    if ident not in AUTO_PRICE_IDS:
+    if ident not in AUTO_FULL_MENU_IDS:
         return []
     restaurant=next(r for r in data["restaurants"] if r["id"]==ident)
     cache={}
     added=[]
     for row in result.get("items",[]):
         day=row.get("date")
-        category=normalized(row.get("category"))
-        if category not in allowed or day not in restaurant.get("days",{}) or day>today.isoformat():
+        category=(row.get("category") or "").strip()
+        if not category or len(category)>60 or day not in restaurant.get("days",{}) or day>today.isoformat():
             continue
         name=row.get("name") or ""
         if not 5 <= len(name) <= 150 or row.get("confidence")!="high" or row.get("included_items"):
@@ -296,26 +300,32 @@ def add_verified_missing_sides(ident, result, data, sources, snapshots, monday, 
         words=[w for w in normalized(name).split() if len(w)>=4]
         if len(nq)<12 or nq not in snap["text"] or not words or not all(w in nq.split() for w in words):
             continue
-        try:
-            amount=Decimal(str(row.get("price_eur")))
-            if not (Decimal("0")<amount<=Decimal("150")) or money_values(quote)!={amount}:
+        amount=None
+        if row.get("price_eur") is not None:
+            try:
+                amount=Decimal(str(row["price_eur"]))
+                if not (Decimal("0")<amount<=Decimal("150")) or money_values(quote)!={amount}:
+                    continue
+            except (InvalidOperation, TypeError):
                 continue
-        except (InvalidOperation, TypeError):
+        elif money_values(quote):
+            # A quote containing a price while the model emits null is
+            # ambiguous; do not publish it as an unpriced dish.
             continue
         if not documented_current_week((url,source),ident,monday,cache):
             continue
-        if "suppe" in category and "suppe" not in normalized(name):
+        if "suppe" in normalized(category) and "suppe" not in normalized(name):
             continue
         restaurant["days"][day].insert(0,{
-            "name":name.strip(),"price":float(amount),
-            "category":row["category"],"diet":"unknown",
-            "description":"Separat erhältlich; nicht im Hauptgericht inkludiert.",
+            "name":name.strip(),"price":float(amount) if amount is not None else None,
+            "category":category,"diet":"unknown",
+            "description":"Luna-Vollabgleich; separat belegt, nicht als Inklusivleistung interpretiert.",
             "allergens":[],"included_soup":None,"included_choices":[],
             "source_url":url,"price_evidence":quote,
             "price_source_sha256":snap["sha256"],
             "price_verification":"ai-exact-source-quote-and-independent-week",
         })
-        added.append({"date":day,"name":name,"price":float(amount)})
+        added.append({"date":day,"name":name,"price":float(amount) if amount is not None else None})
     return added
 
 
@@ -354,7 +364,7 @@ def analyze_one(ident, data, status, monday, today, key, model):
     missing = list(ai_keys - existing)
     absent = list(existing - ai_keys)
     return {
-        "restaurant": ident, "issues": issues, "action": "price_repaired" if repaired else "review_only",
+        "restaurant": ident, "issues": issues, "action": "live_repaired" if repaired else "review_only",
         "repairs": repaired, "validation_issues": result_issues[:20],
         "ai_only_items": len(missing), "parser_only_items": len(absent),
         "ai_only_examples": [f"{day}: {name}" for day, name in sorted(missing)[:5]],
@@ -414,7 +424,7 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
         report["results"].append(entry)
         status.setdefault("ai_repair", {})[ident] = {
             "last_checked": report["checked_at"],
-            "review_version":"complete-v2",
+            "review_version":"complete-v3-live-evidence",
             "review_week_start":monday.isoformat(),
             "source_fingerprint":status.get("sources",{}).get(ident,{}).get("content_sha256"),
             "model": model,
