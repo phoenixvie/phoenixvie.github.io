@@ -79,13 +79,10 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          # On code pushes, bootstrap only Karma (no paid model calls).
-          # Scheduled/manual: Karma HTML+PDF and Finn weekly image with two models.
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            python wu-lunch/scripts/update_new_restaurants.py --karma-only
-          else
-            python wu-lunch/scripts/update_new_restaurants.py
-          fi
+          # On first merge also import Finn's current menu once.
+          # A verified unchanged image is cached; failed images are capped
+          # to one paid attempt per image/day.
+          python wu-lunch/scripts/update_new_restaurants.py
       - name: Topf Wochenkarte – alle fünf Tabs im Browser auslesen
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
