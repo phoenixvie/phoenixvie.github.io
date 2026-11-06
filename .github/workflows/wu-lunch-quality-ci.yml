@@ -66,6 +66,8 @@ jobs:
             text=BeautifulSoup(raw,"html.parser").get_text(" ",strip=True)
             at=text.find("Karma Food")
             print("Karma page opening",text[at:at+130] if at>=0 else text[:130],flush=True)
+            at=text.find("WOCHENMENÜ")
+            print("Karma weekly heading",text[max(0,at-90):at+80],flush=True)
           days,digest,pdf=script.fetch_karma(monday)
           assert len(days)==5 and all(len(items)>=2 for items in days.values())
           print("Karma live menu confirmed:",{d:len(items) for d,items in days.items()})
