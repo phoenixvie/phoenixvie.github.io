@@ -111,8 +111,9 @@
     .menu-line .separator{color:#999;padding:0 6px}
     .menu-line .extra{color:#888;font-size:12px}
     .source-note{margin-top:7px;font-size:12px;color:#8a8a8a}
-    .restaurant-links{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:6px}
-    .restaurant-links .source-link{display:inline-block;margin:0;font-size:12px;color:#5b86c7}
+    .restaurant-links{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:5px}
+    .restaurant-links .source-link{display:inline-block;margin:0;font-size:12px;color:#737373;text-decoration:none}
+    .restaurant-links .source-link:hover,.restaurant-links .source-link:focus-visible{color:#454545;text-decoration:underline}
 
     .price-cell{display:flex;flex-direction:column;align-items:flex-end;gap:7px;padding-top:31px}
     .price{font-size:18px;color:#4a4a4a;white-space:nowrap}
@@ -159,17 +160,18 @@
 html,body,.page { background:#fff; }
 .page { max-width:none; padding:0 22px 28px; }
 .hero { height: clamp(138px, 22vw, 250px); border-radius:0; margin:0 -22px; width:calc(100% + 44px); }
-.hero img { object-fit:cover; object-position:center center; }
+.hero img { object-fit:cover; object-position:center bottom; }
 .toolbar { gap:9px; margin-top:12px; }
 .date-label,.legend,.footer-note,.source-note,.status-pill,.price-cell,.menu-line .category,.menu-line .separator,.menu-line .extra { display:none !important; }
-.content-wrap { max-width:1110px; margin:18px auto 0; }
-.row { grid-template-columns:100px minmax(0,1fr); gap:14px; padding:17px 4px 19px 0; border-bottom:1px solid #e8e8e8; }
+.content-wrap { max-width:1110px; margin:14px auto 0; }
+.list-view {max-width:1030px;margin:0 auto;}
+.row { grid-template-columns:94px minmax(0,1fr); gap:12px; padding:12px 4px 13px 0; border-bottom:1px solid #e8e8e8; }
 .logo-cell { justify-content:center; padding-top:0 }
 .logo-box { width:76px; height:76px; font-size:18px }
 .logo-image { width:76px; height:70px; }
-.restaurant-title { margin:0 0 7px }
+.restaurant-title { margin:0 0 5px }
 .restaurant-title h3 { font-size:15px; letter-spacing:0; font-weight:700 }
-.menu-lines { gap:7px; }
+.menu-lines { gap:5px; }
 .menu-line { display:flex; gap:16px; justify-content:space-between; align-items:baseline; font-size:13px; line-height:1.46; }
 .dish-text { flex:1; min-width:0; overflow-wrap:break-word; }
 .dish-price { flex:none; color:#444; font-size:13px; white-space:nowrap; font-weight:600; text-align:right; }
@@ -185,7 +187,7 @@ html,body,.page { background:#fff; }
  .day-tab .small-date {font-size:clamp(9px,2.35vw,11px);letter-spacing:0;}
  .view-tabs { align-self:center }
  .content-wrap { margin:10px auto 0; }
- .row { grid-template-columns:70px minmax(0,1fr); gap:10px; padding:14px 0; }
+ .row { grid-template-columns:70px minmax(0,1fr); gap:10px; padding:11px 0; }
  .logo-box {width:65px;height:65px;font-size:14px}
  .logo-image {width:64px;height:58px}
  .menu-line { font-size:12.5px; gap:8px }
@@ -237,7 +239,7 @@ html,body,.page { background:#fff; }
 .leaflet-popup-close-button{position:absolute;right:6px;top:4px;font-size:18px;color:#444;z-index:5}
 .leaflet-div-icon{background:transparent;border:0}
 .map-pin{display:grid;place-items:center;width:38px;height:38px;border:3px solid #fff;border-radius:50%;color:#fff;font-size:18px;font-weight:800;box-shadow:0 3px 9px #0004}
-.logo-box{font-size:34px!important;font-weight:800!important;letter-spacing:0!important;color:#fff!important;border-radius:9px!important;box-shadow:none!important}
+.logo-box{font-size:34px!important;font-weight:800!important;letter-spacing:0!important;color:#fff!important;border-radius:9px!important;box-shadow:none!important;text-transform:uppercase!important}
 .logo-mensa{background:#e30613!important}
 .logo-campus{background:#387dda!important}
 .logo-glashaus{background:#6f9e39!important}
@@ -450,7 +452,7 @@ html,body,.page { background:#fff; }
       const row=document.createElement('article');
       row.className='row';
       const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L',omakueche:'O',topfdeckel:'T',gruenehuette:'H',lia:'L'};
-      const label=initials[restaurant.id]||restaurant.name.charAt(0).toUpperCase();
+      const label=(initials[restaurant.id]||restaurant.name.charAt(0)).toLocaleUpperCase('de-AT');
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
       ).join('') : '<div class="empty-row">'+(weekend && selectedDate===displayMondayIso ? 'Das Menü für Montag ist vermutlich erst am Montag verfügbar.' : 'Für diesen Tag ist noch kein Menü veröffentlicht.')+'</div>';
@@ -479,7 +481,7 @@ html,body,.page { background:#fff; }
       losteria:{address:'Freudplatz 2, 1020 Wien',building:'D5/Freudplatz',lat:48.21468,lon:16.4052,letter:'L',color:'#bc7837'},
       omakueche:{address:'Vorgartenstraße 206B/1, 1020 Wien',building:'Vorgartenstraße 206B',letter:'O',color:'#b82c31'},
       topfdeckel:{address:'Vorgartenstraße 206B, 1020 Wien',building:'BIZ ZWEI',letter:'T',color:'#d48d29'},
-      gruenehuette:{address:'Prater 196, 1020 Wien',building:'Prater 196',letter:'H',color:'#448b54'},
+      gruenehuette:{address:'Prater 196, 1020 Wien',building:'Prater 196',lat:48.21758,lon:16.40406,letter:'H',color:'#448b54'},
       lia:{address:'Welthandelsplatz 1, LC, 1020 Wien',building:'Library & Learning Center',letter:'L',color:'#8558a7'}
     };
     // Google Maps Suche mit Restaurantname, WU-Standort und Adresse.
