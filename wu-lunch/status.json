@@ -1,12 +1,12 @@
 {
-  "checked_at": "2026-11-06T18:00:06+01:00",
+  "checked_at": "2026-11-06T18:02:50+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
   "health": "degraded",
   "sources": {
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-06T18:00:06+01:00",
+      "last_success": "2026-11-06T18:02:50+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -14,7 +14,7 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
-      "consecutive_failures": 6,
+      "consecutive_failures": 7,
       "content_sha256": null
     },
     "glashaus": {
@@ -28,7 +28,7 @@
       "state": "error",
       "error": "ValueError: Campus: Plan nicht für KW 2026-11-02: (datetime.date(2026, 11, 9), datetime.date(2026, 11, 12))",
       "last_success": "2026-11-06T10:40:36+01:00",
-      "consecutive_failures": 3,
+      "consecutive_failures": 4,
       "content_sha256": "bb226678fe348d1b0a46cce678175c65676aa94cec9f64a2f5c8afa76a43f0ec"
     },
     "baschly": {
@@ -46,16 +46,11 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "ok_browser",
-      "last_success": "2026-11-06T18:00:33+01:00",
+      "state": "ok",
+      "last_success": "2026-11-06T18:02:50+01:00",
       "consecutive_failures": 0,
-      "day_sha256": {
-        "2026-11-02": "7e077d88b925efefea4a5e41a464d28abfd0db932802926198f3e54d5ba598c6",
-        "2026-11-03": "eb2ab8b7750cdfd25396cbae30d8ba57aa65d75b434e124aef3c65f0200890b7",
-        "2026-11-04": "857e28b18b3317161f8fa9b26b521e2004b0b68ae8e95d082169dadba8f3f9bd",
-        "2026-11-05": "c170909cb5e1b3297af8c39965f72702c063cdcd838395799c372c519a7bae15",
-        "2026-11-06": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
-      }
+      "parser_version": null,
+      "content_sha256": null
     },
     "gruenehuette": {
       "state": "cached",
@@ -65,10 +60,10 @@
       "content_sha256": "7d89e2a67d78ff1f3aac6d776c103a8182e16061e206d3fd52a0e035706be653"
     },
     "lia": {
-      "state": "cached",
-      "last_success": "2026-11-06T12:05:26+01:00",
+      "state": "ok",
+      "last_success": "2026-11-06T18:02:50+01:00",
       "consecutive_failures": 0,
-      "parser_version": 2,
+      "parser_version": 3,
       "content_sha256": "405a3658ad0a455cb7733d4dcceb49b806b745a0c0646ba8387de7071e318c83"
     }
   },
@@ -92,7 +87,8 @@
     "lia 2026-11-02: Preis fehlt: Champignon-Buchweizenbraten auf Haselnuss-Karottenragout",
     "lia 2026-11-03: Preis fehlt: Wiener Schnitzel mit Pommes",
     "lia 2026-11-04: Preis fehlt: 1/2 Pizza mit Salami",
-    "lia 2026-11-05: Preis fehlt: Lasagne klassisch – mit Schwein & Rind"
+    "lia 2026-11-05: Preis fehlt: Lasagne klassisch – mit Schwein & Rind",
+    "lia 2026-11-06: Preis fehlt: Lachs-Teriyaki-Bowl mit Edamame, Avocado & Karotten"
   ],
-  "quality_warning_count": 14
+  "quality_warning_count": 15
 }
