@@ -18,6 +18,18 @@ class PriceAndFallbackTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             parse_topfdeckel_week(raw,date(2026,11,9),date(2026,11,16))
 
+    def test_independently_verified_price_cannot_be_erased(self):
+        from update_menus import preserve_verified_prices
+        old={"2026-11-06":[{"name":"Lachs-Teriyaki-Bowl","price":10.0,
+                              "price_source":"https://mittagsteller.at/l/lia-cafeteria-wien"}]}
+        new={"2026-11-06":[{"name":"Lachs-Teriyaki-Bowl","price":None,
+                             "description":"Preis nicht bestätigt"}],
+             "2026-11-05":[{"name":"Lachs-Teriyaki-Bowl","price":None}]}
+        result=preserve_verified_prices(old,new)
+        self.assertEqual(result["2026-11-06"][0]["price"],10.0)
+        self.assertIsNone(result["2026-11-05"][0]["price"])
+        self.assertIn("bestätigt",result["2026-11-06"][0]["description"])
+
     def test_lia_no_imaginary_default_price(self):
         html="""<html><body><h2>Tagesmenü Lia Coffee am WU Campus</h2>
         <h4>Montag, 9.11.</h4><p>Ofengemüse mit Salzkartoffeln und Sauce</p>
