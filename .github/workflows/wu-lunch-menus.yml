@@ -73,15 +73,19 @@ jobs:
           echo "exit_code=$result" >> "$GITHUB_OUTPUT"
           exit 0
       - name: Karma Food und Finn – Originalquelle sicher aktualisieren
-        if: steps.guard.outputs.skip == 'false' && github.event_name != 'push'
+        if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          # Karma: HTML + offizielle Preis-PDF. Finn: nur neu datierte
-          # Speisekartenbilder mit übereinstimmender Doppel-KI-Prüfung.
-          python wu-lunch/scripts/update_new_restaurants.py
+          # On code pushes, bootstrap only Karma (no paid model calls).
+          # Scheduled/manual: Karma HTML+PDF and Finn weekly image with two models.
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            python wu-lunch/scripts/update_new_restaurants.py --karma-only
+          else
+            python wu-lunch/scripts/update_new_restaurants.py
+          fi
       - name: Topf Wochenkarte – alle fünf Tabs im Browser auslesen
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
