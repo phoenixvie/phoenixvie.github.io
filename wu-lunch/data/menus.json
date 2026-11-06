@@ -1566,7 +1566,7 @@
           },
           {
             "name": "Gebackenes Gemüse mit Pommes",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -1588,7 +1588,7 @@
           },
           {
             "name": "Pizza mit Salami",
-            "price": 6.0,
+            "price": 6,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -1598,7 +1598,7 @@
           },
           {
             "name": "Kürbis-Reis-Pfanne mit Salat",
-            "price": 11.0,
+            "price": 11,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -1620,7 +1620,7 @@
           },
           {
             "name": "Gemüselasagne",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -1632,17 +1632,18 @@
         "2026-11-06": [
           {
             "name": "Lachs-Teriyaki-Bowl mit Edamame, Avocado & Karotten",
-            "price": null,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis nicht bestätigt; AG-Sticker -1,00 €",
+            "description": "Hauptgericht; Preis 10,00 € für diesen Tag und dieses Gericht durch aktuelle Speiseplanquelle bestätigt; AG-Sticker -1,00 €",
             "allergens": [],
             "included_soup": null,
-            "included_choices": []
+            "included_choices": [],
+            "price_source": "https://mittagsteller.at/l/lia-cafeteria-wien"
           },
           {
             "name": "Tempeh-Bowl mit Hummus, Karotten & Kraut",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
