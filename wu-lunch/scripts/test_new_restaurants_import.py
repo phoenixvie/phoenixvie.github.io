@@ -80,7 +80,7 @@ class NewRestaurantTests(unittest.TestCase):
         from datetime import timedelta
         today=datetime.now(module.TZ).date()
         monday=today-timedelta(days=today.weekday())
-        image=b"\\xff\\xd8\\xff"+(b"X"*9000)
+        image=bytes([255,216,255])+(b"X"*9000)
         previous={
             "last_attempt_at":today.isoformat()+"T07:00:00+01:00",
             "last_attempt_sha256":hashlib.sha256(image).hexdigest(),
