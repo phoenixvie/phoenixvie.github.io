@@ -1,4 +1,4 @@
-name: WU Lunch – KI-Direktimport (separat)
+name: WU Lunch – KI-Direktanalyse (nur Vergleich)
 
 on:
   workflow_dispatch:
@@ -27,11 +27,6 @@ on:
         options:
           - gpt-6.1-terra
           - gpt-6-luna
-      publish:
-        description: 'Geprüfte KI-Menüs auf der Webseite veröffentlichen'
-        required: true
-        default: true
-        type: boolean
   push:
     paths:
       - '.github/workflows/wu-lunch-ai-pilot.yml'
@@ -63,7 +58,7 @@ jobs:
 
   analyze:
     needs: offline-tests
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -79,8 +74,8 @@ jobs:
       - name: API-Schlüssel prüfen und Originalquellen direkt analysieren
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          SELECTED_RESTAURANT: ${{ inputs.restaurant || 'all' }}
-          SELECTED_MODEL: ${{ inputs.model || 'gpt-6.1-terra' }}
+          SELECTED_RESTAURANT: ${{ inputs.restaurant }}
+          SELECTED_MODEL: ${{ inputs.model }}
         shell: bash
         run: |
           if [[ -z "$OPENAI_API_KEY" ]]; then
@@ -88,9 +83,6 @@ jobs:
             exit 2
           fi
           python wu-lunch/ai-pilot/ai_direct.py --restaurant "$SELECTED_RESTAURANT" --model "$SELECTED_MODEL"
-      - name: Nur valide, belegte KI-Menüs auf der Webseite veröffentlichen
-        if: ${{ github.event_name == 'push' || inputs.publish == true }}
-        run: python wu-lunch/ai-pilot/publish_ai.py
       - name: Bericht als herunterladbares GitHub-Artefakt bereitstellen
         if: always()
         uses: actions/upload-artifact@v4
@@ -101,7 +93,7 @@ jobs:
             wu-lunch/ai-pilot/results/latest.html
           retention-days: 30
           if-no-files-found: warn
-      - name: KI-Bericht und geprüfte Produktivdaten veröffentlichen
+      - name: Ausschließlich isolierten KI-Vergleichsbericht speichern
         if: always()
         shell: bash
         run: |
@@ -113,7 +105,7 @@ jobs:
           git config user.name "wu-lunch-ai-pilot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           branch="${{ github.event.repository.default_branch }}"
-          git add wu-lunch/ai-pilot/results/latest.json wu-lunch/ai-pilot/results/latest.html wu-lunch/ai-pilot/results/publication-audit.json wu-lunch/data/menus.json wu-lunch/data.js
+          git add wu-lunch/ai-pilot/results/latest.json wu-lunch/ai-pilot/results/latest.html
           if git diff --cached --quiet; then
             echo "Unveränderter Ergebnisbericht."
             exit 0
