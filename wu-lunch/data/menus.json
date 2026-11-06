@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-06T11:46:46+01:00",
+  "checkedAt": "2026-11-06T12:05:26+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -874,77 +874,114 @@
       "validFrom": null,
       "validUntil": null,
       "days": {
-        "2026-11-02": [],
+        "2026-11-02": [
+          {
+            "name": "Süßkartoffel-Ingwercremesuppe",
+            "price": 3.9,
+            "category": "Suppe",
+            "diet": "unknown",
+            "description": "Vorspeise, separat erhältlich; klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 3.9,
+            "price_large": 5.9
+          },
+          {
+            "name": "Indisches Cashew Beef in cremiger Kormasauce",
+            "price": 7.5,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Preis klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
+          },
+          {
+            "name": "Thai Larb-Salat mit Faschiertem, Kräutermix & Limetten-Dressing",
+            "price": 7.5,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Preis klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
+          },
+          {
+            "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen",
+            "price": 7.5,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Preis klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
+          }
+        ],
         "2026-11-03": [],
         "2026-11-04": [],
         "2026-11-05": [],
         "2026-11-06": [
           {
-            "name": "Indisches Cashew Beef in cremiger Kormasauce (klein)",
+            "name": "Süßkartoffel-Ingwercremesuppe",
+            "price": 3.9,
+            "category": "Suppe",
+            "diet": "unknown",
+            "description": "Vorspeise, separat erhältlich; klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 3.9,
+            "price_large": 5.9
+          },
+          {
+            "name": "Indisches Cashew Beef in cremiger Kormasauce",
             "price": 7.5,
-            "category": "Hauptgericht klein",
+            "category": "Hauptgericht",
             "diet": "unknown",
-            "description": "",
+            "description": "Preis klein / groß",
             "allergens": [],
             "included_soup": null,
-            "included_choices": []
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
           },
           {
-            "name": "Indisches Cashew Beef in cremiger Kormasauce (groß)",
-            "price": 11.9,
-            "category": "Hauptgericht groß",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Thai Larb-Salat mit Faschiertem, Kräutermix & Limetten-Dressing (klein)",
+            "name": "Thai Larb-Salat mit Faschiertem, Kräutermix & Limetten-Dressing",
             "price": 7.5,
-            "category": "Hauptgericht klein",
+            "category": "Hauptgericht",
             "diet": "unknown",
-            "description": "",
+            "description": "Preis klein / groß",
             "allergens": [],
             "included_soup": null,
-            "included_choices": []
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
           },
           {
-            "name": "Thai Larb-Salat mit Faschiertem, Kräutermix & Limetten-Dressing (groß)",
-            "price": 11.9,
-            "category": "Hauptgericht groß",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen (klein)",
+            "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen",
             "price": 7.5,
-            "category": "Hauptgericht klein",
+            "category": "Hauptgericht",
             "diet": "unknown",
-            "description": "",
+            "description": "Preis klein / groß",
             "allergens": [],
             "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen (groß)",
-            "price": 11.9,
-            "category": "Hauptgericht groß",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
             "price": 9.5,
             "category": "Menükombo",
             "diet": "unknown",
-            "description": "Eine Option zum Hauptgericht wählbar",
+            "description": "Eine Option zum kleinen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
             "included_choices": []
@@ -954,7 +991,7 @@
             "price": 13.9,
             "category": "Menükombo",
             "diet": "unknown",
-            "description": "Eine Option zum Hauptgericht wählbar",
+            "description": "Eine Option zum großen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
             "included_choices": []
@@ -1119,7 +1156,7 @@
           },
           {
             "name": "Gebackenes Gemüse mit Pommes",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1141,7 +1178,7 @@
           },
           {
             "name": "Pizza mit Salami",
-            "price": 6,
+            "price": 6.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1151,7 +1188,7 @@
           },
           {
             "name": "Kürbis-Reis-Pfanne mit Salat",
-            "price": 11,
+            "price": 11.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1173,7 +1210,7 @@
           },
           {
             "name": "Gemüselasagne",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -1195,7 +1232,7 @@
           },
           {
             "name": "Tempeh-Bowl mit Hummus, Karotten & Kraut",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
