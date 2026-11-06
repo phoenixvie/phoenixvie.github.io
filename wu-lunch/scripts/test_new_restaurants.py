@@ -63,9 +63,28 @@ class NewRestaurantTests(unittest.TestCase):
         self.assertEqual(days["2026-11-02"][0]["price"],13.5)
         self.assertEqual(days["2026-11-06"][0]["price"],14.5)
         self.assertIn("Suppe optional +2",days["2026-11-02"][0]["description"])
-        self.assertEqual(len(days["2026-11-02"]),2)
+        self.assertEqual(len(days["2026-11-02"]),3)
+        self.assertEqual(days["2026-11-02"][-1]["category"],"Suppe (Aufpreis)")
+        self.assertEqual(days["2026-11-02"][-1]["price"],2.0)
         with self.assertRaises(ValueError):
             parse_gruenehuette(text.encode(),date(2026,11,9))
+
+    def test_gruenehuette_soup_names_from_original_source(self):
+        html="""<h2>TAGESTELLER / LUNCH SPECIAL 2. 11. 2026</h2>
+        <p>von Mo-Do 13,5 + Suppe 2,-</p>
+        <p>Suppen zur Auswahl:</p>
+        <p>Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder</p>
+        <p>Kohlrabicremesuppe</p>
+        <p>Unsere Speisen werden frisch zubereitet</p>
+        <p>MO: Schnitzel mit Reis</p><p>DI: Huhn mit Reis</p>
+        <p>MI: Gulasch mit Knödel</p><p>DO: Spinatstrudel mit Sauce</p>
+        <p>FR: Fisch mit Salat</p>"""
+        data,_=parse_gruenehuette(html.encode(),MON)
+        soup=data["2026-11-02"][-1]
+        self.assertEqual(soup["category"],"Suppe (Aufpreis)")
+        self.assertEqual(soup["price"],2.0)
+        self.assertIn("Frittatensuppe",soup["name"])
+        self.assertIn("Kohlrabicremesuppe",soup["name"])
 
     def test_gruenehuette_spaces_in_date_and_stale_week(self):
         text="""<h2>TAGESTELLER / LUNCH SPECIAL 5.10. 2026</h2>
@@ -87,7 +106,8 @@ class NewRestaurantTests(unittest.TestCase):
         self.assertEqual(data["2026-11-02"][0]["name"],"Hühnerschnitzel mit Reis")
         self.assertEqual(data["2026-11-02"][1]["name"],"Gebratene Erdäpfel mit Gemüse")
         self.assertTrue(all(item["name"] for dishes in data.values() for item in dishes))
-        self.assertEqual(len(data["2026-11-06"]),1)
+        self.assertEqual(len(data["2026-11-06"]),2)
+        self.assertEqual(data["2026-11-06"][-1]["price"],2.0)
 
     def test_lia_weekly_wu_section_dated_items_and_other_location_rejected(self):
         html="""<h2>Tagesmenü Lia Coffee am WU Campus</h2>
