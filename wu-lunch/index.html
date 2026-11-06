@@ -442,7 +442,7 @@ html,body,.page { background:#fff; }
         name:includedPrefix(item,restaurant.id)+item.name,
         price:item.price,
         priceDisplay:restaurant.id==='topfdeckel' && (item.price_small!=null || item.price_large!=null)
-          ? [item.price_small,item.price_large].map(v=>v==null?'–':formatPrice(v)).join(' / ')
+          ? [item.price_small,item.price_large].map(v=>v==null?'–':v.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €').join(' / ')
           : null
       }));
     }
