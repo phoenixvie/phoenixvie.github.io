@@ -440,7 +440,10 @@ html,body,.page { background:#fff; }
       }
       return raw.map(item=>({
         name:includedPrefix(item,restaurant.id)+item.name,
-        price:item.price
+        price:item.price,
+        priceDisplay:restaurant.id==='topfdeckel' && (item.price_small!=null || item.price_large!=null)
+          ? [item.price_small,item.price_large].map(v=>v==null?'–':formatPrice(v)).join(' / ')
+          : null
       }));
     }
     function escapeHtml(value){
@@ -453,7 +456,7 @@ html,body,.page { background:#fff; }
       const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L',omakueche:'O',topfdeckel:'T',gruenehuette:'H',lia:'L'};
       const label=initials[restaurant.id]||restaurant.name.charAt(0).toUpperCase();
       const dishRows=items.length ? items.map(item=>
-        '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.price==null?'':escapeHtml(formatPrice(item.price)))+'</span></div>'
+        '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
       ).join('') : '<div class="empty-row">'+(weekend && selectedDate===displayMondayIso ? 'Das Menü für Montag ist vermutlich erst am Montag verfügbar.' : 'Für diesen Tag ist noch kein Menü veröffentlicht.')+'</div>';
       row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+escapeHtml(label)+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
