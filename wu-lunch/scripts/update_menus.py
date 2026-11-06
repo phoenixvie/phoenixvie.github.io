@@ -479,6 +479,43 @@ def parse_topfdeckel(raw,today,monday):
     ]
     return result
 
+def parse_topfdeckel_week(raw,today,monday):
+    """Only the dated Monday tab is visible in server-rendered weekly HTML."""
+    soup=BeautifulSoup(raw,"html.parser")
+    for tag in soup(["script","style","nav","footer","header","noscript"]):
+        tag.decompose()
+    content=" ".join(soup.stripped_strings)
+    m=re.search(r"(\d{1,2})\.\s*(Jänner|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*[–-]\s*(\d{1,2})\.\s*(Jänner|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*(\d{4})",content,re.I)
+    if not m:raise ValueError("Topf&Deckel Wochenmenü: Datumsbereich fehlt")
+    months={"jänner":1,"januar":1,"februar":2,"märz":3,"april":4,"mai":5,"juni":6,"juli":7,"august":8,"september":9,"oktober":10,"november":11,"dezember":12}
+    first=date(int(m.group(5)),months[m.group(2).lower()],int(m.group(1)))
+    last=date(int(m.group(5)),months[m.group(4).lower()],int(m.group(3)))
+    if first!=monday or last!=monday+timedelta(days=4):raise ValueError("Topf&Deckel Wochenmenü: nicht aktuelle Woche")
+    if today!=monday:raise ValueError("Topf&Deckel Wochenmenü: nur Montag serverseitig verifizierbar")
+    lines=html_lines(raw)
+    start=next((i for i,line in enumerate(lines) if tidy(line).lower()=="hauptspeisen"),None)
+    if start is None:raise ValueError("Topf&Deckel Wochenmenü: Hauptspeisen fehlen")
+    end=next((i for i in range(start+1,len(lines)) if tidy(lines[i]).lower()=="dessert"),len(lines))
+    section=lines[start+1:end]
+    result=[]
+    for i,line in enumerate(section):
+        name=tidy(line)
+        if not (18<=len(name)<=170) or "€" in name or name.lower().startswith(("klein","gross","groß","allergene","nur in","image:")):
+            continue
+        if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,40}",name,re.I):continue
+        if name in {x["name"] for x in result}:continue
+        if name.lower().startswith("special"):
+            special_price=euros(" ".join(section[i+1:i+4]))
+            if special_price is None:raise ValueError("Topf&Deckel: Special-Preis nicht bestätigt")
+            result.append(make_item(name,special_price,"Special groß","unknown","Nur als große Portion"))
+        else:
+            result.append(make_item(name+" (klein)",7.50,"Hauptgericht klein"))
+            result.append(make_item(name+" (groß)",11.90,"Hauptgericht groß"))
+        if len(result)>=12:break
+    if len(result)<4:raise ValueError("Topf&Deckel Wochenmenü: zu wenige Gerichte")
+    return result
+
+
 def parse_gruenehuette(raw,monday):
     """Wochenteller inkl. getrenntem HTML von Tageskürzel und Gerichtstext.
 
@@ -584,7 +621,9 @@ def parse_lia_week(raw,monday):
             if len(text)<13 or len(text)>175:
                 if english_after:skip_english=True
                 continue
-            price=pending_price if pending_price is not None else 10.00
+            # Nur bestätigte WU-Basispreise anwenden, sonst Preis unbekannt.
+            general=re.search(r"Hauptgericht(?:main dish)?\s*€\s*(\d+[,\.]\d{2})"," ".join(region[:headings[0][0]]),re.I)
+            price=pending_price if pending_price is not None else (float(general.group(1).replace(",",".")) if general else None)
             pending_price=None
             diet="veggie" if vegetarian else "unknown"
             # Doppelte deutsche Einträge im WU-Menü ebenfalls nicht duplizieren.
@@ -772,17 +811,19 @@ def run(today):
                 days={d:veg[d]+meat[d] for d in veg}
                 apply_result(data,"baschly",days,"undated")
             elif ident=="topfdeckel":
-                items=parse_topfdeckel(safe_get(URLS["topfdeckel"]),today,monday)
+                try:
+                    items=parse_topfdeckel(safe_get(URLS["topfdeckel"]),today,monday)
+                except ValueError as primary_error:
+                    try:
+                        items=parse_topfdeckel_week(safe_get("https://topfdeckel.at/wochenmenu"),today,monday)
+                    except ValueError:
+                        raise primary_error
                 restaurant(data,ident)["days"][today.isoformat()]=items
                 restaurant(data,ident)["status"]=source(data,ident)["status"]="daily"
             elif ident=="gruenehuette":
                 days,validity=parse_gruenehuette(prefetched_raw if prefetched_raw is not None else safe_get(URLS["gruenehuette"]),monday)
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
-                candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
-                candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
                 apply_result(data,ident,days,"verified",validity)
-                observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
-                observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
                 observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
             elif ident=="lia":
                 days,validity=parse_lia_week(prefetched_raw if prefetched_raw is not None else safe_get(URLS["lia"]),monday)
