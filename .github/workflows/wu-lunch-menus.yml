@@ -83,10 +83,12 @@ jobs:
           # A verified unchanged image is cached; failed images are capped
           # to one paid attempt per image/day.
           python wu-lunch/scripts/update_new_restaurants.py
-      - name: Topf Wochenkarte – alle fünf Tabs im Browser auslesen
+      - name: Topf Wochenkarte – Browser plus Luna-Kontrolle aller Tabs
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
         shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
           # Geplante Quellenanalyse werktags um 11:15 Wien nach der Publikation.
@@ -127,7 +129,7 @@ jobs:
           # complete Luna audit; unchanged successful audits are cached.
           # Dedicated Finn image, Mensa PDF and Topf browser workflows stay
           # separate. No artificial two-restaurants-per-day bottleneck.
-          python wu-lunch/scripts/repair_menus_ai.py --max-calls 6
+          python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
       - name: Änderungen nur bei Bedarf veröffentlichen
         if: steps.guard.outputs.skip == 'false'
         shell: bash
