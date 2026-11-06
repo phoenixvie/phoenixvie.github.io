@@ -27,7 +27,7 @@ jobs:
     # A feature-branch push must NEVER run the production importer or publish to master.
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -115,21 +115,19 @@ jobs:
             exit 0
           fi
           python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
-      - name: Luna-Qualitätskontrolle und sichere Nachbearbeitung
-        if: steps.guard.outputs.skip == 'false' && github.event_name != 'push'
+      - name: Luna prüft jede neue/geänderte Mittagsspeisekarte
+        if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          hour="$(TZ=Europe/Vienna date +%H)"
-          day="$(TZ=Europe/Vienna date +%u)"
-          if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$hour" != "11" && ! ( "$day" == "1" && "$hour" == "07" ) ]]; then
-            echo "Luna-Reparatur läuft Mo 07:15 und 11:15, Di–Fr 11:15 Wien."
-            exit 0
-          fi
-          python wu-lunch/scripts/repair_menus_ai.py --max-calls 2
+          # On every source scan, changed/new source fingerprints trigger a
+          # complete Luna audit; unchanged successful audits are cached.
+          # Dedicated Finn image, Mensa PDF and Topf browser workflows stay
+          # separate. No artificial two-restaurants-per-day bottleneck.
+          python wu-lunch/scripts/repair_menus_ai.py --max-calls 6
       - name: Änderungen nur bei Bedarf veröffentlichen
         if: steps.guard.outputs.skip == 'false'
         shell: bash
