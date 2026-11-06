@@ -74,6 +74,22 @@ class NewRestaurantTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             module.select_finn_image(finn_fixture(45,date(2025,11,2)),MON)
 
+    def test_finn_failed_same_image_not_retried_each_hour(self):
+        import hashlib
+        from unittest.mock import patch
+        from datetime import timedelta
+        today=datetime.now(module.TZ).date()
+        monday=today-timedelta(days=today.weekday())
+        image=b"\\xff\\xd8\\xff"+(b"X"*9000)
+        previous={
+            "last_attempt_at":today.isoformat()+"T07:00:00+01:00",
+            "last_attempt_sha256":hashlib.sha256(image).hexdigest(),
+        }
+        html=finn_fixture(monday.isocalendar().week,monday)
+        with patch.object(module.legacy,"safe_get",side_effect=lambda url,*args: html if url==module.FINN_URL else image):
+            with self.assertRaisesRegex(ValueError,"bereits mit KI geprüft"):
+                module.fetch_finn(monday,key="fake-key",previous=previous)
+
     def test_finn_pair_rejects_price_mismatch(self):
         first=fin_result(10.0); second=fin_result(11.0)
         with self.assertRaisesRegex(ValueError,"widersprechen"):
