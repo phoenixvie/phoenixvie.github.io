@@ -49,7 +49,7 @@ def source():
 class RepairTests(unittest.TestCase):
     def test_all_eleven_restaurants_have_coverage(self):
         self.assertEqual(len(repair.IDS), 11)
-        self.assertEqual(len(set(repair.IDS)), 9)
+        self.assertEqual(len(set(repair.IDS)), 11)
         self.assertIn("topfdeckel", repair.IDS)
         self.assertIn("mensa", repair.IDS)
 
