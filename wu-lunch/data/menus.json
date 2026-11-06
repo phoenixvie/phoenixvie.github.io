@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-06T20:15:57+01:00",
+  "checkedAt": "2026-11-06T20:31:39+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -821,13 +821,17 @@
         "2026-11-03": [
           {
             "name": "Wiener Schnitzel mit Pommes",
-            "price": null,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis nicht bestätigt; AG-Sticker -1,00 €",
             "allergens": [],
             "included_soup": null,
-            "included_choices": []
+            "included_choices": [],
+            "price_source": "https://lia.coffee/",
+            "price_evidence": "Wiener Schnitzel mit Pommes / Viennese schnitzel with fries (AC) € 10,00",
+            "price_source_sha256": "c32ea017421aeddbd1d55b897f81c909f9261eade126e252b737c298cac8fb30",
+            "price_verification": "exact-source-quote-and-week"
           },
           {
             "name": "Gebackenes Gemüse mit Pommes",
@@ -841,6 +845,20 @@
           }
         ],
         "2026-11-04": [
+          {
+            "name": "Pizza mit Salami / Schinken",
+            "price": 6.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Luna-Vollabgleich; separat belegt, nicht als Inklusivleistung interpretiert.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://lia.coffee/",
+            "price_evidence": "1/2 Pizza mit Salami / Schinken / Pizza with salami / ham (AG) € 6,00",
+            "price_source_sha256": "c32ea017421aeddbd1d55b897f81c909f9261eade126e252b737c298cac8fb30",
+            "price_verification": "ai-exact-source-quote-and-independent-week"
+          },
           {
             "name": "1/2 Pizza mit Salami",
             "price": null,
@@ -875,13 +893,17 @@
         "2026-11-05": [
           {
             "name": "Lasagne klassisch – mit Schwein & Rind",
-            "price": null,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis nicht bestätigt; AG-Sticker -1,00 €",
             "allergens": [],
             "included_soup": null,
-            "included_choices": []
+            "included_choices": [],
+            "price_source": "https://lia.coffee/",
+            "price_evidence": "Lasagne klassisch – mit Schwein & Rind / Lasagne – classic style with beef & pork (AG) € 10,00",
+            "price_source_sha256": "c32ea017421aeddbd1d55b897f81c909f9261eade126e252b737c298cac8fb30",
+            "price_verification": "exact-source-quote-and-week"
           },
           {
             "name": "Gemüselasagne",

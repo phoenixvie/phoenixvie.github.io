@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T20:16:31+01:00",
+  "checked_at": "2026-11-06T20:32:11+01:00",
   "week_start": "2026-11-02",
   "model": "gpt-6-luna",
   "api_calls": 7,
@@ -9,20 +9,39 @@
       "issues": [
         "missing_price"
       ],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Quelle nennt einen Rabatt von € 1,00 für Studierende mit AG-Sticker sowie € 0,50 für To-Go-Container; diese Angaben sind keine Gerichtspreise.",
-        "Die angebotene Suppe und/oder der Salat sind nicht als im Hauptgerichtspreis enthalten belegt."
+      "action": "live_repaired",
+      "repairs": [
+        {
+          "date": "2026-11-03",
+          "name": "Wiener Schnitzel mit Pommes",
+          "price": 10.0
+        },
+        {
+          "date": "2026-11-05",
+          "name": "Lasagne klassisch – mit Schwein & Rind",
+          "price": 10.0
+        },
+        {
+          "date": "2026-11-04",
+          "name": "Pizza mit Salami / Schinken",
+          "price": 6.0
+        }
       ],
-      "ai_only_items": 1,
-      "parser_only_items": 2,
+      "validation_issues": [
+        "Für die beiden Montagshauptgerichte ist im WU-Campus-Menü kein Preis angegeben.",
+        "Für optionale Suppe und/oder Salat ist kein Preis angegeben."
+      ],
+      "ai_only_items": 2,
+      "parser_only_items": 4,
       "ai_only_examples": [
-        "2026-11-04: pizza mit salami schinken"
+        "2026-11-06: lachs teriyaki bowl",
+        "2026-11-06: tempeh bowl"
       ],
       "parser_only_examples": [
         "2026-11-04: 1 2 pizza mit salami",
-        "2026-11-04: pizza mit salami"
+        "2026-11-04: pizza mit salami",
+        "2026-11-06: lachs teriyaki bowl mit edamame avocado karotten",
+        "2026-11-06: tempeh bowl mit hummus karotten kraut"
       ],
       "source_hashes": {
         "https://lia.coffee/": "c32ea017421aeddbd1d55b897f81c909f9261eade126e252b737c298cac8fb30"
@@ -33,11 +52,11 @@
           "cache_write_tokens": 7469,
           "cached_tokens": 0
         },
-        "output_tokens": 1729,
+        "output_tokens": 1976,
         "output_tokens_details": {
-          "reasoning_tokens": 263
+          "reasoning_tokens": 412
         },
-        "total_tokens": 9201
+        "total_tokens": 9448
       }
     },
     {
@@ -50,8 +69,7 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die angezeigte Menüwoche liegt außerhalb des angefragten Zeitraums.",
-        "Für den 06.11.2026 ist in der Quelle kein Menü ausgewiesen.",
+        "Für den 02.11.26–06.11.26 ist in der übergebenen Quelle kein Menü belegt.",
         "Keine eindeutig veröffentlichte aktuelle Karte"
       ],
       "ai_only_items": 0,
@@ -73,11 +91,11 @@
           "cache_write_tokens": 2108,
           "cached_tokens": 0
         },
-        "output_tokens": 294,
+        "output_tokens": 244,
         "output_tokens_details": {
-          "reasoning_tokens": 156
+          "reasoning_tokens": 135
         },
-        "total_tokens": 2405
+        "total_tokens": 2355
       }
     },
     {
@@ -86,7 +104,9 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Bei jedem Wochentag steht in der Quelle zusätzlich „FEIERTAG“; zugleich sind für alle fünf Tage Gerichte aufgeführt."
+        "Unter jedem Wochentag steht zusätzlich „FEIERTAG“, obwohl darunter Gerichte aufgeführt sind; die Gerichte wurden deshalb nicht als gestrichen behandelt.",
+        "Beim Serbischen Bohneneintopf ist aus dem Namen allein nicht eindeutig feststellbar, ob er in die vegetarische oder Fisch-&-Fleisch-Preiskategorie fällt; dafür ist kein Preis zugeordnet.",
+        "Die Quelle nennt Suppe oder Salat als Menüwahl, aber keine separat bestellbaren Tagessuppen, Salate oder Nachspeisen mit Einzelpreis."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
@@ -101,11 +121,11 @@
           "cache_write_tokens": 2567,
           "cached_tokens": 0
         },
-        "output_tokens": 2090,
+        "output_tokens": 2809,
         "output_tokens_details": {
-          "reasoning_tokens": 516
+          "reasoning_tokens": 1315
         },
-        "total_tokens": 4660
+        "total_tokens": 5379
       }
     },
     {
@@ -131,19 +151,19 @@
         "2026-11-06: suppe nach wahl zum tagesteller"
       ],
       "source_hashes": {
-        "https://www.zurgruenenhuette.com/mittags-menu": "2e5a5203bcbbabf19ee2e58bda927b62a387676566fd88b58103ff3350d3c658"
+        "https://www.zurgruenenhuette.com/mittags-menu": "44fa1d987fc0dc8b699e025a55a3df64c86ca2ef420fb51ff79d510d1a01acc0"
       },
       "usage": {
-        "input_tokens": 2074,
+        "input_tokens": 2075,
         "input_tokens_details": {
-          "cache_write_tokens": 2071,
+          "cache_write_tokens": 2072,
           "cached_tokens": 0
         },
-        "output_tokens": 4742,
+        "output_tokens": 4094,
         "output_tokens_details": {
-          "reasoning_tokens": 1005
+          "reasoning_tokens": 793
         },
-        "total_tokens": 6816
+        "total_tokens": 6169
       }
     },
     {
@@ -152,8 +172,8 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Produktseiten belegen kein konkretes Angebot für die Woche 2026-11-02 bis 2026-11-06.",
-        "Keine Gerichte oder Preise aus den nicht lesbaren Bildern abgeleitet.",
+        "Die Bildinhalte sind aus dem übergebenen HTML nicht lesbar; daraus wurden keine Gerichte oder Preise abgeleitet.",
+        "Die Seiten bestätigen kein Mittagsangebot für die Woche 2026-11-02 bis 2026-11-06.",
         "Keine eindeutig veröffentlichte aktuelle Karte"
       ],
       "ai_only_items": 0,
@@ -167,20 +187,20 @@
         "2026-11-04: linsen spinat gemüse curry mit basmatireis"
       ],
       "source_hashes": {
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "fd236251e878815a1f5447dbb395bcb844074d9b6b359da237edfebad1dff1e1",
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "87629d49a27476b384dc61b231764071aea57e9195291ba69d8e109a6d89d433"
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "43ba3545413a39358e592d94d49095a54e22dcce877b8d897ed84db6f8259255",
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "3aad7fa5a482a8a9e397dd5ad423d8442e16428772f649e599bbeadf53224519"
       },
       "usage": {
-        "input_tokens": 2550,
+        "input_tokens": 2551,
         "input_tokens_details": {
-          "cache_write_tokens": 2547,
+          "cache_write_tokens": 2548,
           "cached_tokens": 0
         },
-        "output_tokens": 308,
+        "output_tokens": 252,
         "output_tokens_details": {
-          "reasoning_tokens": 116
+          "reasoning_tokens": 117
         },
-        "total_tokens": 2858
+        "total_tokens": 2803
       }
     },
     {
@@ -189,8 +209,7 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Quelle bestätigt nicht, dass diese Saisonkarte in der Woche 02.–06.11.2026 gültig war.",
-        "Keine Tagesgerichte oder datierten Wochenbeilagen ausgewiesen."
+        "Die Quelle enthält keine Zuordnung zu einzelnen Wochentagen oder zur geprüften Woche."
       ],
       "ai_only_items": 4,
       "parser_only_items": 0,
@@ -210,11 +229,11 @@
           "cache_write_tokens": 1776,
           "cached_tokens": 0
         },
-        "output_tokens": 946,
+        "output_tokens": 816,
         "output_tokens_details": {
-          "reasoning_tokens": 236
+          "reasoning_tokens": 133
         },
-        "total_tokens": 2725
+        "total_tokens": 2595
       }
     },
     {
@@ -226,7 +245,7 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die Woche 2026-11-02 bis 2026-11-06 ist in der übergebenen Quelle kein Menü belegt.",
+        "Die Quelle zeigt eine andere Woche als die angefragte; für 2026-11-02 bis 2026-11-06 ist hier kein Menü belegt.",
         "Keine eindeutig veröffentlichte aktuelle Karte"
       ],
       "ai_only_items": 0,
@@ -234,19 +253,19 @@
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "116f2e77875b7aa577a33769c676f1261047a9d3148f287e5a10bfceb3c3c0c9"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "4785d94b8875fb0b9725b5af40f85344140b3412a13617f986b3978a5820299e"
       },
       "usage": {
-        "input_tokens": 2459,
+        "input_tokens": 2456,
         "input_tokens_details": {
-          "cache_write_tokens": 2456,
+          "cache_write_tokens": 2453,
           "cached_tokens": 0
         },
-        "output_tokens": 200,
+        "output_tokens": 270,
         "output_tokens_details": {
-          "reasoning_tokens": 88
+          "reasoning_tokens": 153
         },
-        "total_tokens": 2659
+        "total_tokens": 2726
       }
     },
     {
