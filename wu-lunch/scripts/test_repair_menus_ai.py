@@ -53,6 +53,42 @@ class RepairTests(unittest.TestCase):
         self.assertIn("topfdeckel", repair.IDS)
         self.assertIn("mensa", repair.IDS)
 
+    def test_new_source_or_new_week_triggers_luna_even_if_parser_says_ok(self):
+        state={"sources":{"lia":{"state":"ok","content_sha256":"new"}},
+               "ai_repair":{"lia":{"action":"review_only","review_version":"complete-v2",
+                   "review_week_start":"2026-11-02","last_checked":"2026-11-05T10:00:00",
+                   "source_fingerprint":"old"}}}
+        self.assertTrue(repair.needs_ai_review("lia",state,date(2026,11,6)))
+        state["ai_repair"]["lia"]["source_fingerprint"]="new"
+        self.assertFalse(repair.needs_ai_review("lia",state,date(2026,11,6)))
+        self.assertTrue(repair.needs_ai_review("lia",state,date(2026,11,9)))
+
+    def test_only_explicit_separately_sold_soup_can_be_added(self):
+        data=current_data()
+        row=candidate(price=3.50,quote="Tagessuppe mit Gemüse 3,50 €",
+                      name="Tagessuppe mit Gemüse")
+        row["category"]="Suppe"
+        snapshot=evidence("Tagessuppe mit Gemüse 3,50 €")
+        with patch.object(repair,"documented_current_week",return_value=True):
+            fixes=repair.add_verified_missing_sides(
+                "lia",{"items":[row]},data,source(),snapshot,WEEK,date(2026,11,6))
+        self.assertEqual(len(fixes),1)
+        meals=next(r for r in data["restaurants"] if r["id"]=="lia")["days"][DAY]
+        self.assertEqual(meals[0]["name"],"Tagessuppe mit Gemüse")
+        self.assertEqual(meals[0]["price"],3.50)
+        self.assertFalse(meals[0]["included_choices"])
+
+    def test_unproven_side_is_not_added(self):
+        data=current_data()
+        row=candidate(price=3.50,quote="Anderes Gericht 3,50 €",
+                      name="Tagessuppe mit Gemüse")
+        row["category"]="Suppe"
+        with patch.object(repair,"documented_current_week",return_value=True):
+            fixes=repair.add_verified_missing_sides(
+                "lia",{"items":[row]},data,source(),
+                evidence("Anderes Gericht 3,50 €"),WEEK,date(2026,11,6))
+        self.assertEqual(fixes,[])
+
     def test_prices_must_be_explicit_not_guessed(self):
         self.assertEqual(repair.money_values(QUOTE), {repair.Decimal("10.00")})
         self.assertEqual(repair.money_values("Stand 06.11.2026"), set())
