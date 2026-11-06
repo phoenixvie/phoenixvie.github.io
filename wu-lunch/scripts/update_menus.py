@@ -639,7 +639,8 @@ def parse_lia_week(raw,monday):
         items=[]
         pending_price=None
         skip_english=False
-        for line in region[idx+1:limit]:
+        detail_lines=region[idx+1:limit]
+        for offset,line in enumerate(detail_lines):
             if re.search(r"(?:Verfügbar von|Änderungen vorbehalten|Alle Preise inkl)",line,re.I):break
             text=tidy(line)
             if not text or text.lower().startswith(("hauptgericht","tagesmenü","suppe zum","salat zum")):continue
@@ -651,9 +652,22 @@ def parse_lia_week(raw,monday):
             # Lia prints its EUR price after the translated dish and allergens.
             # An isolated amount also belongs to the preceding main course.
             price_line=re.fullmatch(r"€\s*(\d{1,3}[,.]\d{2})",text)
-            if price_line and items and items[-1].get("price") is None:
-                items[-1]["price"]=float(price_line.group(1).replace(",","."))
-                items[-1]["description"]=items[-1]["description"].replace("Preis nicht bestätigt","Preis bestätigt")
+            if price_line:
+                amount=float(price_line.group(1).replace(",","."))
+                upcoming=next((tidy(x) for x in detail_lines[offset+1:]
+                               if tidy(x) and not re.match(r"^€\\s*\\d",tidy(x))),"")
+                # Isolated price BEFORE another bilingual dish is a prefix,
+                # not a trailing price of the preceding dish. Only attach
+                # backwards when no following dish is present.
+                next_dish=bool(upcoming and len(upcoming)>=13 and
+                               not re.match(r"^(?:Hauptgericht|Verfügbar|Änderungen)",upcoming,re.I))
+                if next_dish:
+                    pending_price=amount
+                elif items and items[-1].get("price") is None:
+                    items[-1]["price"]=amount
+                    items[-1]["description"]=items[-1]["description"].replace("Preis nicht bestätigt","Preis bestätigt")
+                else:
+                    pending_price=amount
                 continue
             pref=re.match(r"^€\s*(\d+[,\.]\d{2})",text)
             if pref:
