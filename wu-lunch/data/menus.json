@@ -85,6 +85,24 @@
       "note": "",
       "validFrom": "2026-11-02",
       "validUntil": "2026-11-06"
+    },
+    {
+      "id": "karmafood",
+      "name": "Karma Food Messe/Prater",
+      "url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+      "status": "not_published",
+      "note": "Wochenmenü der Wiener Standorte; Messe/Prater, Ausstellungsstraße 63",
+      "validFrom": null,
+      "validUntil": null
+    },
+    {
+      "id": "finn",
+      "name": "Finn",
+      "url": "https://finn.wien/blogs/news/mittagsmenu",
+      "status": "not_published",
+      "note": "Original-Wochenkarte als Bild; automatischer Bildimport nur nach aktueller Wochenprüfung",
+      "validFrom": null,
+      "validUntil": null
     }
   ],
   "restaurants": [
@@ -1671,6 +1689,42 @@
           }
         ]
       }
+    },
+    {
+      "id": "karmafood",
+      "name": "Karma Food Messe/Prater",
+      "monogram": "KF",
+      "url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+      "note": "Wochenmenü der Wiener Standorte; Messe/Prater, Ausstellungsstraße 63",
+      "status": "not_published",
+      "days": {
+        "2026-11-02": [],
+        "2026-11-03": [],
+        "2026-11-04": [],
+        "2026-11-05": [],
+        "2026-11-06": []
+      },
+      "seasonal": [],
+      "validFrom": null,
+      "validUntil": null
+    },
+    {
+      "id": "finn",
+      "name": "Finn",
+      "monogram": "FI",
+      "url": "https://finn.wien/blogs/news/mittagsmenu",
+      "note": "Original-Wochenkarte als Bild; automatischer Bildimport nur nach aktueller Wochenprüfung",
+      "status": "not_published",
+      "days": {
+        "2026-11-02": [],
+        "2026-11-03": [],
+        "2026-11-04": [],
+        "2026-11-05": [],
+        "2026-11-06": []
+      },
+      "seasonal": [],
+      "validFrom": null,
+      "validUntil": null
     }
   ]
 }
