@@ -1,6 +1,6 @@
 # WU Lunch – automatisierte Qualitätskontrolle und KI-Reparatur
 
-## Betriebsmodus (Stand: 6. November 2026)
+## Betriebsmodus (Stand: 6. November 2026; 11 Restaurants)
 
 Das werktägliche GitHub Actions-Importverfahren bleibt Hauptdatenquelle. Nach den
 bestehenden Parsern und dem **Playwright-Import aller Topf-&-Deckel-Tabs** wird
@@ -13,7 +13,7 @@ heruntergeladenen Originalquellen auf. Er verwendet die GitHub-Actions-Secret
 `OPENAI_API_KEY` und standardmäßig `gpt-6-luna`. **Ohne Secret werden
 keine KI-Anfragen durchgeführt**; der reguläre Import bleibt bestehen.
 
-### Behandlung aller neun Restaurants
+### Behandlung aller elf Restaurants
 
 | Restaurant | Primärer Abruf | KI und Repair |
 | --- | --- | --- |
@@ -26,10 +26,12 @@ keine KI-Anfragen durchgeführt**; der reguläre Import bleibt bestehen.
 | Baschly | Zwei Produktseiten | Luna prüft; nur bestätigte Preise automatisch ergänzbar |
 | L’Osteria | Saisonkarte | Luna-Vergleich; keine automatische Umschreibung der Saisonkarte |
 | Oma Küche | Wiederkehrendes Angebot/Foto | Datenqualität überwachen; Foto-/Aushangpreise erfordern manuellen Beleg |
+| Karma Food (Messe/Prater) | Datierte HTML-Tage und offizielle Preis-PDF | HTML/PDF-Abgleich, getrennte Hauptgericht-/Special-/Lunch-Combo-Preise; keine Veröffentlichung für falsche Woche |
+| Finn | Offizielle Shopify-Wochenkarte als Bild | Erst richtige ISO-KW, Bildversion und Datum prüfen; dann zwei unabhängige Bildanalysen mit kompletter Übereinstimmung, sonst keine Veröffentlichung |
 
 Pro normalem Lauf werden höchstens **zwei** HTML-Restaurants mit Luna analysiert.
 Dringende Fehler werden priorisiert, wiederkehrende Fehler rotiert, übrige Quellen
-stichprobenartig geprüft. Mensa und Topf folgen ihren dedizierten Abläufen;
+stichprobenartig geprüft. Mensa, Topf & Deckel, Karma Food und Finn folgen ihren dedizierten Abläufen;
 die kostenpflichtigen Mensa-PDF-Aufrufe sind zusätzlich begrenzt auf die
 noch nicht erfolgreich verifizierte Woche.
 
@@ -88,7 +90,7 @@ Ein bestimmtes Restaurant prüfen (kostet bei HTML eine Modellanfrage):
 OPENAI_API_KEY=... python wu-lunch/scripts/repair_menus_ai.py --restaurant lia --max-calls 1
 ```
 
-Alle neun im Bericht prüfen (höchstens sechs reguläre HTML-KI-Analysen,
+Alle elf im Bericht prüfen (höchstens sechs reguläre HTML-KI-Analysen,
 die anderen folgen dem PDF-/Browser-/Aushangpfad):
 
 ```bash
@@ -100,3 +102,11 @@ Tabellen- oder Preiszuordnung. Deshalb veröffentlicht der Agent nicht
 ungeprüft vollständige Menükarten. Unabhängige stichprobenartige Sichtkontrollen
 bleiben sinnvoll. Kosten/Qualität anhand realer Läufe kontrollieren,
 bevor der Einsatz ausgeweitet wird.
+
+### Häufigere Montagsprüfungen
+
+- Montag stündlich **06:15–18:15 Uhr** Wiener Zeit (13 Prüfungen), auch früh vor 08:00 Uhr.
+- Dienstag bis Freitag weiterhin stündlich **08:15–12:15 Uhr** (fünf Prüfungen).
+- GitHub-Actions-Zeitpläne sind Best-Effort und können sich aufgrund von Auslastung verspäten.
+- Die Quellen werden mehrfach abgefragt, **KI nicht automatisch in jedem Lauf**: Finn nur bei neuem eindeutig aktuellem Bild; HTML-Reparatur und Mensa-KI regulär um 11:15 Uhr.
+- Vorab veröffentlichte Menüs der *Folgewoche* werden nicht der laufenden Woche zugewiesen. Das ist bei Karma Food am Freitag, 06.11.2026 bereits vorgekommen (09.–13.11.2026).

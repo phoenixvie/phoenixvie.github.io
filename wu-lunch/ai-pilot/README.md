@@ -25,7 +25,7 @@ BeautifulSoup entfernt lediglich Navigation, Skripte und unsichtbare Elemente;
    einen Schlüssel mit Namen **OPENAI_API_KEY** hinzufügen. **Niemals hier, im Chat,
    im Quellcode oder in den GitHub-Issues eintragen.**
 3. Auf GitHub unter **Actions → WU Lunch – KI-Direktanalyse (getrennter Test)**
-   → **Run workflow** die Auswahl **all** (alle neun Restaurants) und
+   → **Run workflow** die Auswahl **all** (alle elf Restaurants) und
    **gpt-6.1-terra** (gründlicher) oder **gpt-6-luna** (günstiger) treffen.
 4. Nach erfolgreichem Lauf den eigenen Ergebnisbericht öffnen. Pro Restaurant
    werden KI-Vorschlag, Originalbelege, Quellen, Warnungen, Preis- und
@@ -35,7 +35,7 @@ BeautifulSoup entfernt lediglich Navigation, Skripte und unsichtbare Elemente;
 
 - **Kein automatischer KI-Zeitplan:** Ein Lauf wird ausschließlich manuell gestartet.
   Bei einem Push werden nur Offline-Tests ausgeführt, **keine API-Aufrufe**.
-- Maximal **9 Modellaufrufe** bei restaurant=all (je ein Aufruf pro Restaurant).
+- Maximal **11 Modellaufrufe** bei restaurant=all (je ein Aufruf pro Restaurant).
   Quell-HTML ist auf 70.000 Zeichen je URL begrenzt. Mensa-PDF als Original.
 - Preis- und Gerichtsbelege sind KI-Vorschläge, nicht automatisch korrekt.
   Unbekannte Preise bleiben null; verdächtige Preise, Daten und Quellen werden
@@ -61,3 +61,14 @@ Offline-Tests im GitHub-Workflow (und manuell per unittest discover im ai-pilot-
 
 Nach der Auswertung kann entschieden werden, ob einzelne Restaurant-Parser
 durch KI-Direktextraktion ersetzt oder nur ergänzt werden sollen.
+
+## Karma Food und Finn (neu)
+
+Der Produktionsworkflow verwendet für Karma Food den datierten HTML-Wochenplan
+**und** die offiziell verlinkte PDF zur Kontrolle der Standard-/Specialpreise.
+Für Finn werden die Original-JPEG-Bilder über
+`scripts/update_new_restaurants.py` geprüft: aktuelle ISO-KW, plausibler
+Shopify-Uploadzeitpunkt, Abgleich durch Luna und Terra, nötigenfalls ein
+dritter Kontrolllauf. Der isolierte `ai_direct.py`-Pilot liest Finn-Bilder
+nicht automatisch aus; die produktive Bildanalyse erfolgt ausschließlich
+über den gesonderten, geprüften Importpfad.

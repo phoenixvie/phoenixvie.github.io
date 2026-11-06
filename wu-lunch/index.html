@@ -256,7 +256,7 @@ html,body,.page { background:#fff; }
 }
 .weekend-hint{max-width:1110px;margin:13px auto 0;padding:10px 14px;border:1px solid #e4e7ea;border-radius:5px;background:#f7f9fc;color:#586577;font-size:14px;line-height:1.5}
 @media(max-width:750px){.weekend-hint{margin:12px 0 0;font-size:13px;padding:10px 12px}}
-.logo-omakueche{background:#b82c31;color:#fff}.logo-topfdeckel{background:#d48d29;color:#fff}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#8558a7;color:#fff}
+.logo-omakueche{background:#b82c31;color:#fff}.logo-topfdeckel{background:#d48d29;color:#fff}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#8558a7;color:#fff}.logo-karmafood{background:#c65b40;color:#fff}.logo-finn{background:#49654e;color:#fff}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxCjy3Q/MP9q+7jLhSqcI+zM=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head>
 <body>
@@ -291,7 +291,7 @@ html,body,.page { background:#fff; }
       const reply = await fetch('./data/menus.json?fresh=' + Date.now(), {cache:'no-store'});
       if (!reply.ok) throw new Error('HTTP '+reply.status);
       const candidate = await reply.json();
-      if (!candidate?.weekStart || !Array.isArray(candidate?.restaurants) || candidate.restaurants.length<9)
+      if (!candidate?.weekStart || !Array.isArray(candidate?.restaurants) || candidate.restaurants.length<11)
         throw new Error('Ungültiges Menüformat');
       freshData = candidate;
     } catch(error) {
@@ -313,7 +313,7 @@ html,body,.page { background:#fff; }
     const footerNote = null;
 
     const brandClasses = {
-      mensa:'logo-mensa', campus:'logo-campus', baschly:'logo-baschly', glashaus:'logo-glashaus', losteria:'logo-losteria', omakueche:'logo-omakueche', topfdeckel:'logo-topfdeckel', gruenehuette:'logo-gruenehuette', lia:'logo-lia'
+      mensa:'logo-mensa', campus:'logo-campus', baschly:'logo-baschly', glashaus:'logo-glashaus', losteria:'logo-losteria', omakueche:'logo-omakueche', topfdeckel:'logo-topfdeckel', gruenehuette:'logo-gruenehuette', lia:'logo-lia', karmafood:'logo-karmafood', finn:'logo-finn'
     };
     const logoUrls = {"mensa":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Mensa.jpg","campus":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Das_Campus.jpg","baschly":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Baschly.jpg","losteria":"https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Losteria.jpg","glashaus":"https://www.dasglashaus.at/favicon.ico"};
     const brandLabels = {
@@ -342,6 +342,8 @@ html,body,.page { background:#fff; }
       if(status==='verified') return 'bestätigt';
       if(status==='undated') return 'ohne Datum';
       if(status==='seasonal') return 'Saisonkarte';
+      if(status==='ai_crosschecked') return 'KI-geprüft';
+      if(status==='not_published') return 'noch nicht veröffentlicht';
       return status;
     }
     function getStatusClass(status){ return status || ''; }
@@ -459,7 +461,7 @@ html,body,.page { background:#fff; }
       const items=visibleDishes(restaurant);
       const row=document.createElement('article');
       row.className='row';
-      const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L',omakueche:'O',topfdeckel:'T',gruenehuette:'H',lia:'L'};
+      const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L',omakueche:'O',topfdeckel:'T',gruenehuette:'H',lia:'L',karmafood:'K',finn:'F'};
       const label=(initials[restaurant.id]||restaurant.name.charAt(0)).toLocaleUpperCase('de-AT');
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
@@ -490,7 +492,9 @@ html,body,.page { background:#fff; }
       omakueche:{address:'Vorgartenstraße 206B/1, 1020 Wien',building:'Vorgartenstraße 206B',letter:'O',color:'#b82c31'},
       topfdeckel:{address:'Vorgartenstraße 206B, 1020 Wien',building:'BIZ ZWEI',letter:'T',color:'#d48d29'},
       gruenehuette:{address:'Prater 196, 1020 Wien',building:'Prater 196',lat:48.21758,lon:16.40406,letter:'H',color:'#448b54'},
-      lia:{address:'Welthandelsplatz 1, LC, 1020 Wien',building:'Library & Learning Center',letter:'L',color:'#8558a7'}
+      lia:{address:'Welthandelsplatz 1, LC, 1020 Wien',building:'Library & Learning Center',letter:'L',color:'#8558a7'},
+      karmafood:{address:'Ausstellungsstraße 63, 1020 Wien',building:'Messe/Prater',letter:'K',color:'#c65b40'},
+      finn:{address:'Welthandelsplatz 1, Gebäude EA, 1020 Wien',building:'EA',letter:'F',color:'#49654e'}
     };
     // Google Maps Suche mit Restaurantname, WU-Standort und Adresse.
     // Keine erfundenen Place-IDs; Google Maps kann das passende Profil auflösen.

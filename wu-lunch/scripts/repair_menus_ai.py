@@ -40,7 +40,7 @@ IDS = tuple(ai.SOURCES)
 # No silent model replacement of dynamically selected tabs, seasonal boards,
 # photo-based pricing or PDF cells: those require their own acquisition checks.
 AUTO_PRICE_IDS = {"lia", "campus", "glashaus", "gruenehuette", "baschly"}
-URGENT = ("campus", "lia", "mensa", "topfdeckel", "gruenehuette", "glashaus", "baschly", "losteria", "omakueche")
+URGENT = ("campus", "lia", "mensa", "topfdeckel", "gruenehuette", "glashaus", "baschly", "losteria", "omakueche", "karmafood", "finn")
 
 
 def normalized(text):
@@ -99,7 +99,7 @@ def choose_restaurants(data, status, today, limit=2, all_restaurants=False):
         return list(IDS)[:limit]
     findings = {ident: issue_codes(data, status, ident, today) for ident in IDS}
     # Dedicated PDF/browser/photo paths do not consume Luna HTML-call budget.
-    specialized = [ident for ident in ("mensa", "topfdeckel", "omakueche") if findings[ident]]
+    specialized = [ident for ident in ("mensa", "topfdeckel", "omakueche", "karmafood", "finn") if findings[ident]]
     flagged = [ident for ident in URGENT if findings[ident] and ident not in specialized]
     # Rotate persistent failures: no single broken restaurant can starve the rest.
     checked = status.get("ai_repair", {})
@@ -251,6 +251,10 @@ def analyze_one(ident, data, status, monday, today, key, model):
         return {"restaurant": ident, "issues": issues, "action": "dedicated_pdf_ai", "repairs": []}
     if ident == "omakueche":
         return {"restaurant": ident, "issues": issues, "action": "check_price_photo_manually", "repairs": []}
+    if ident == "karmafood":
+        return {"restaurant": ident, "issues": issues, "action": "dedicated_html_pdf", "repairs": []}
+    if ident == "finn":
+        return {"restaurant": ident, "issues": issues, "action": "dedicated_image_ai", "repairs": []}
     now = datetime.now(TZ)
     inputs, sources = ai.build_inputs(ident, now, monday)
     result, usage = ai.call_model(key, model, inputs)
@@ -302,7 +306,7 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
               "api_calls": 0, "results": []}
     remaining = max_calls
     for ident in targets:
-        if ident in ("topfdeckel", "mensa", "omakueche"):
+        if ident in ("topfdeckel", "mensa", "omakueche", "karmafood", "finn"):
             report["results"].append(analyze_one(ident, data, status, monday, today, "", model))
             continue
         if not key:
