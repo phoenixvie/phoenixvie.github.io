@@ -518,142 +518,267 @@
       "days": {
         "2026-11-02": [
           {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; Sorte der Tagessuppe nicht angegeben.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "SUPPE/SALAT: € 3,50",
+            "price_verification": "visuell mit Originalbild KW45 abgeglichen"
+          },
+          {
             "name": "Ratatouille auf cremiger Polenta mit Salat",
             "price": 10,
             "category": "Veggie",
             "diet": "veggie",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "VEGGIE Ratatouille auf cremiger Polenta mit Salat; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           },
           {
             "name": "Gebratenes Zanderfilet mit Dillfisolen und Salzeräpfel",
             "price": 10,
             "category": "Fisch",
             "diet": "meat",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "FISCH Gebratenes Zanderfilet mit Dillfisolen und Salzeräpfel; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           }
         ],
         "2026-11-03": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; Sorte der Tagessuppe nicht angegeben.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "SUPPE/SALAT: € 3,50",
+            "price_verification": "visuell mit Originalbild KW45 abgeglichen"
+          },
           {
             "name": "Pflanzliches Schnitzel mit Pommes & veganem Dip",
             "price": 10,
             "category": "Vegan",
             "diet": "vegan",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "VEGAN Pflanzliches Schnitzel mit Pommes & veganem Dip; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           },
           {
             "name": "Wiener Schnitzel mit Pommes",
             "price": 10,
             "category": "Fleisch",
             "diet": "meat",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "FLEISCH Wiener Schnitzel mit Pommes; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           }
         ],
         "2026-11-04": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; Sorte der Tagessuppe nicht angegeben.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "SUPPE/SALAT: € 3,50",
+            "price_verification": "visuell mit Originalbild KW45 abgeglichen"
+          },
           {
             "name": "Wok Nudeln mit Gemüse und Tofu",
             "price": 10,
             "category": "Vegan",
             "diet": "vegan",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "VEGAN Wok Nudeln mit Gemüse und Tofu; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           },
           {
             "name": "Wok Nudeln mit Huhn",
             "price": 10,
             "category": "Fleisch",
             "diet": "meat",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "FLEISCH Wok Nudeln mit Huhn; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           }
         ],
         "2026-11-05": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; Sorte der Tagessuppe nicht angegeben.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "SUPPE/SALAT: € 3,50",
+            "price_verification": "visuell mit Originalbild KW45 abgeglichen"
+          },
           {
             "name": "Pflanzlicher Burger mit gegrilltem Ziegenkäse & Pommes",
             "price": 10,
             "category": "Veggie",
             "diet": "veggie",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "VEGGIE Pflanzlicher Burger mit gegrilltem Ziegenkäse & Pommes; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           },
           {
             "name": "Pulled Turkey Burger mit Pommes",
             "price": 10,
             "category": "Fleisch",
             "diet": "meat",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "FLEISCH Pulled Turkey Burger mit Pommes; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           }
         ],
         "2026-11-06": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; Sorte der Tagessuppe nicht angegeben.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "SUPPE/SALAT: € 3,50",
+            "price_verification": "visuell mit Originalbild KW45 abgeglichen"
+          },
           {
             "name": "Wok mit Tempeh & Basmatireis",
             "price": 10,
             "category": "Vegan",
             "diet": "vegan",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "VEGAN Wok mit Tempeh & Basmatireis; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           },
           {
             "name": "Wok mit Lachs & Basmatireis",
             "price": 10,
             "category": "Fisch",
             "diet": "meat",
-            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "description": "Hauptgericht 10,00 €; optional als Menü mit Suppe 11,00 €. Suppe/Salat separat 3,50 €.",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
             "evidence_excerpt": "FISCH Wok mit Lachs & Basmatireis; HAUPTGERICHT: € 10,00",
-            "ai_confidence": "two-model-agreement"
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11
+              }
+            ]
           }
         ]
       },
