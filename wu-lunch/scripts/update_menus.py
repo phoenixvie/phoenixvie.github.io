@@ -455,7 +455,7 @@ def topf_starters(lines):
     seen=set()
     for i,line in enumerate(section):
         label=tidy(line)
-        if not re.search(r"\b(?:suppe|suppen|eintopf|consommé|bouillon)\b",label,re.I):
+        if not re.search(r"(?:suppe|eintopf|consommé|bouillon)",label,re.I):
             continue
         if re.search(r"^(?:klein|gross|groß|€|salat/suppe)",label,re.I) or len(label)>105:
             continue
