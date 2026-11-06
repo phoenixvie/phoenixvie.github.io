@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - '.github/workflows/wu-lunch-topf-browser-diagnostic.yml'
+      - 'wu-lunch/ai-pilot/topf_browser_probe.py'
 
 permissions:
   contents: read
