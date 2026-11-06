@@ -766,6 +766,25 @@ def validate_meal_components(data):
                     if not choices and r["id"] not in ("glashaus","baschly"):
                         raise ValueError(f"{r['id']} {day}: Inklusivleistung nicht strukturiert erfasst")
 
+def preserve_verified_prices(previous_days, new_days):
+    """Never replace an independently documented same-day price with null.
+    Both the dish name and ISO date must match exactly; no general price guesses.
+    """
+    for day,items in new_days.items():
+        known={r.get("name","").strip().casefold():r for r in previous_days.get(day,[])}
+        for item in items:
+            if item.get("price") is not None:
+                continue
+            old=known.get(item.get("name","").strip().casefold())
+            if not old or old.get("price") is None or not old.get("price_source"):
+                continue
+            item["price"]=old["price"]
+            item["price_source"]=old["price_source"]
+            item["description"]=(item.get("description") or "").replace(
+                "Preis nicht bestätigt","Preis anhand belegter Quelle bestätigt")
+    return new_days
+
+
 def quality_warnings(data, today):
     """Independent checks: no silent missing prices or silently empty weekdays."""
     warnings=[]
@@ -919,6 +938,7 @@ def run(today):
                 observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
             elif ident=="lia":
                 days,validity=parse_lia_week(prefetched_raw if prefetched_raw is not None else safe_get(URLS["lia"]),monday)
+                preserve_verified_prices(restaurant(data,ident).get("days",{}),days)
                 apply_result(data,ident,days,"verified",validity)
             else:
                 items=parse_losteria(safe_get(URLS["losteria"]))
