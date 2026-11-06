@@ -54,5 +54,5 @@ def main():
     print("Found controls:",len(result["controls"]))
     for day,x in result["days"].items():
         print(day,"clicked:",x["click"],"text_length:",len(x["content"]),
-              "text_start:",repr(x["content"][:180]))
+              "full_text:",repr(x["content"]))
 if __name__=="__main__":main()
