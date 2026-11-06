@@ -131,6 +131,8 @@ def needs_ai_review(ident, status, today):
         return True
     if digest and prior.get("source_fingerprint") == digest and prior.get("last_checked"):
         return False
+    if not digest and prior.get("last_checked","")[:10] == today.isoformat():
+        return False
     return True
 
 
@@ -326,8 +328,6 @@ def analyze_one(ident, data, status, monday, today, key, model):
         return {"restaurant": ident, "issues": issues, "action": "dedicated_pdf_ai", "repairs": []}
     if ident == "omakueche":
         return {"restaurant": ident, "issues": issues, "action": "check_price_photo_manually", "repairs": []}
-    if ident == "karmafood":
-        return {"restaurant": ident, "issues": issues, "action": "dedicated_html_pdf", "repairs": []}
     if ident == "finn":
         return {"restaurant": ident, "issues": issues, "action": "dedicated_image_ai", "repairs": []}
     now = datetime.now(TZ)
@@ -378,7 +378,7 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
     targets = list(IDS) if selected == "all" else (
         [selected] if selected else [
             ident for ident in ("lia","campus","glashaus","gruenehuette","baschly","losteria",
-                               "mensa","topfdeckel","finn","karmafood","omakueche")
+                               "karmafood","mensa","topfdeckel","finn","omakueche")
             if needs_ai_review(ident,status,today)
         ])
     if any(x not in IDS for x in targets):
@@ -389,7 +389,7 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
               "api_calls": 0, "results": []}
     remaining = max_calls
     for ident in targets:
-        if ident in ("topfdeckel", "mensa", "omakueche", "karmafood", "finn"):
+        if ident in ("topfdeckel", "mensa", "omakueche", "finn"):
             report["results"].append(analyze_one(ident, data, status, monday, today, "", model))
             continue
         if not key:
@@ -450,10 +450,10 @@ def main():
     p.add_argument("--date", help="YYYY-MM-DD Europe/Vienna")
     p.add_argument("--restaurant", choices=["all", *IDS])
     p.add_argument("--model", choices=sorted(ai.ALLOWED_MODELS), default="gpt-6-luna")
-    p.add_argument("--max-calls", type=int, default=6)
+    p.add_argument("--max-calls", type=int, default=7)
     args = p.parse_args()
-    if not 0 <= args.max_calls <= 9:
-        p.error("--max-calls muss zwischen 0 und 9 liegen")
+    if not 0 <= args.max_calls <= 11:
+        p.error("--max-calls muss zwischen 0 und 11 liegen")
     today = date.fromisoformat(args.date) if args.date else datetime.now(TZ).date()
     run(today, model=args.model, max_calls=args.max_calls, selected=args.restaurant)
 
