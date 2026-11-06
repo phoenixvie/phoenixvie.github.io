@@ -126,6 +126,9 @@ def needs_ai_review(ident, status, today):
     # Model prompt/parser revisions invalidate a previous review.
     if prior.get("review_version") != "complete-v2":
         return True
+    current_week=(today-timedelta(days=today.weekday())).isoformat()
+    if prior.get("review_week_start") != current_week:
+        return True
     if digest and prior.get("source_fingerprint") == digest and prior.get("last_checked"):
         return False
     return True
@@ -412,6 +415,7 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
         status.setdefault("ai_repair", {})[ident] = {
             "last_checked": report["checked_at"],
             "review_version":"complete-v2",
+            "review_week_start":monday.isoformat(),
             "source_fingerprint":status.get("sources",{}).get(ident,{}).get("content_sha256"),
             "model": model,
             "action": entry["action"],
