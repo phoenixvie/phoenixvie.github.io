@@ -16,21 +16,43 @@ class NewRestaurantTests(unittest.TestCase):
 
     def test_topf_dated_daily_menu(self):
         html="""<main><h2>Was heute auf den Teller kommt</h2>
-        <p>Donnerstag, 5. November 2026</p><h2>Main Dish</h2>
-        <p>€ 7,50</p><h3>Garnelen Zitronen Pasta mit Zucchini</h3>
+        <p>Donnerstag, 5. November 2026</p>
+        <h2>Starters</h2><p>Klein €3.90/Gross €5.90</p>
+        <h3>Erdäpfelcremesuppe</h3><p>VEGGIE</p><h3>Haussalat</h3>
+        <h2>Main Dish</h2><p>Klein €7.50/Gross €11.90</p>
+        <h3>Garnelen Zitronen Pasta mit Zucchini</h3>
         <h3>Ofenfrische Burritos mit Chili con Carne</h3>
         <h3>Cremiges Brokkoli Kokoscurry mit Erdnüssen</h3>
         <h2>Dessert</h2></main>"""
         items=parse_topfdeckel(html.encode(),THU,MON)
-        self.assertEqual(len(items),8)  # 3 Hauptgerichte je klein/groß plus 2 Kombis
-        self.assertEqual(items[0]["price"],7.50)
-        self.assertEqual(items[1]["price"],11.90)
-        self.assertEqual(items[0]["category"],"Hauptgericht klein")
-        self.assertEqual(items[1]["category"],"Hauptgericht groß")
+        self.assertEqual(len(items),6)  # 1 Suppe, 3 Hauptgerichte, 2 Kombis
+        self.assertEqual(items[0]["name"],"Erdäpfelcremesuppe")
+        self.assertEqual(items[0]["price_small"],3.90)
+        self.assertEqual(items[0]["price_large"],5.90)
+        self.assertEqual(items[1]["name"],"Garnelen Zitronen Pasta mit Zucchini")
+        self.assertEqual(items[1]["price_small"],7.50)
+        self.assertEqual(items[1]["price_large"],11.90)
         self.assertEqual(items[-2]["price"],9.50)
         self.assertEqual(items[-1]["price"],13.90)
         with self.assertRaises(ValueError):
             parse_topfdeckel(html.encode(),date(2026,11,6),MON)
+
+    def test_topf_weekly_monday_even_if_import_runs_friday(self):
+        from update_menus import parse_topfdeckel_week
+        html="""<main><h1>Wochenmenü</h1><p>2. November – 6. November 2026</p>
+        <h2>Vorspeisen</h2><p>KLEIN €3.90 / GROSS €5.90</p>
+        <h3>Erdäpfelcremsuppe</h3><p>VEGGIE</p><h3>Haussalat</h3>
+        <h2>Hauptspeisen</h2><p>KLEIN €7.50 / GROSS €11.90</p>
+        <h3>Garnelen Zitronen Pasta mit Zucchini</h3>
+        <h3>Ofenfrische Burritos mit Chili con Carne</h3>
+        <h2>Dessert</h2></main>"""
+        items=parse_topfdeckel_week(html.encode(),date(2026,11,6),MON)
+        self.assertEqual(len(items),3)
+        self.assertEqual(items[0]["category"],"Suppe")
+        self.assertEqual(items[0]["price_small"],3.90)
+        self.assertEqual(items[1]["price_large"],11.90)
+        with self.assertRaises(ValueError):
+            parse_topfdeckel_week(html.encode(),date(2026,11,9),date(2026,11,9))
 
     def test_gruenehuette_week_and_optional_paid_soup(self):
         text="""<h2>TAGESTELLER / LUNCH SPECIAL 2.11.2026</h2>
