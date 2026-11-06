@@ -56,6 +56,44 @@ jobs:
           python -m py_compile wu-lunch/ai-pilot/ai_direct.py
           python -m unittest discover -s wu-lunch/ai-pilot -p 'test_*.py' -v
 
+
+  api-connection-check:
+    # Sicherer, kostenloser Verbindungstest bei Änderung dieser Workflow-Datei.
+    if: github.event_name == 'push'
+    needs: offline-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: OpenAI API-Authentifizierung ohne Menüdaten testen
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os, sys, urllib.request, urllib.error
+          key=os.environ.get("OPENAI_API_KEY","").strip()
+          if not key:
+              print("::error::Repository Secret OPENAI_API_KEY fehlt oder ist leer.")
+              sys.exit(1)
+          request=urllib.request.Request(
+              "https://api.openai.com/v1/models",
+              headers={"Authorization":"Bearer "+key,
+                       "User-Agent":"WU-Lunch-AI-Connection-Check/1.0"})
+          try:
+              with urllib.request.urlopen(request,timeout=20) as response:
+                  payload=json.load(response)
+              models={m.get("id") for m in payload.get("data",[])}
+              print("OpenAI-API: Authentifizierung erfolgreich (HTTP 200).")
+              for model in ("gpt-6.1-terra","gpt-6-luna"):
+                  print(f"Im Konto sichtbares Modell {model}: "+("ja" if model in models else "nein"))
+          except urllib.error.HTTPError as exc:
+              print(f"::error::OpenAI API HTTP {exc.code} – Authentifizierung/Berechtigungen prüfen.")
+              sys.exit(1)
+          except (OSError,ValueError) as exc:
+              print("::error::OpenAI API nicht erreichbar oder Antwort ungültig: "+str(exc)[:150])
+              sys.exit(1)
+          PY
+
   analyze:
     needs: offline-tests
     if: github.event_name == 'workflow_dispatch'
