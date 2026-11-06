@@ -120,6 +120,15 @@ class NewRestaurantTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Gerichtnamen"):
             module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
 
+    def test_finn_missing_year_warning_allowed_but_incomplete_prices_blocked(self):
+        first=fin_result(); second=fin_result()
+        second["warnings"]=["Die Jahreszahl ist im Bild nicht angegeben."]
+        days=module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
+        self.assertEqual(len(days),5)
+        second["warnings"]=["Der Preis für Montag ist unklar."]
+        with self.assertRaisesRegex(ValueError,"nicht eindeutig"):
+            module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
+
     def test_finn_pair_accepts_two_matching_models(self):
         first=fin_result();second=fin_result()
         days=module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
