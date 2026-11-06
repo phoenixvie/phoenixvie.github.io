@@ -434,85 +434,101 @@ def buffet_days(monday):
             "Mo–Fr 11:00–15:00; Buffet to go 10,90 €")]
     return days
 
-def parse_topfdeckel(raw,today,monday):
-    """Nur tagesaktuelle Hauptgerichte übernehmen; keine Kombi als gratis Beilage."""
-    lines=html_lines(raw); whole="\n".join(lines)
-    month_names={"jänner":1,"januar":1,"februar":2,"märz":3,"april":4,"mai":5,"juni":6,
-                 "juli":7,"august":8,"september":9,"oktober":10,"november":11,"dezember":12}
-    # Homepage nennt den aktuellen Tag explizit, die allgemeine Tageskarte nicht immer.
-    m=re.search(r"(Montag|Dienstag|Mittwoch|Donnerstag|Freitag),?\s+(\d{1,2})\.\s*(\w+)\s+(\d{4})",whole,re.I)
-    if not m: raise ValueError("Topf&Deckel: datierter Tagesplan fehlt")
-    mo=month_names.get(m.group(3).lower())
-    if mo is None or date(int(m.group(4)),mo,int(m.group(2)))!=today or m.group(1).lower()!=WEEKDAYS[today.weekday()].lower():
-        raise ValueError("Topf&Deckel: kein datierter Plan für heute")
-    idx=next((i for i,t in enumerate(lines) if t.lower().strip()=="main dish"),None)
-    if idx is None: raise ValueError("Topf&Deckel: Main Dish-Bereich fehlt")
-    end=next((i for i in range(idx+1,len(lines)) if lines[i].lower().strip()=="dessert"),len(lines))
-    section=lines[idx+1:end]
-    result=[]
-    stop_terms=("beilage:","allergene","veggie","veg","klein","gross","groß")
-    for i,t in enumerate(section):
-        line=tidy(t)
-        if len(line)<18 or line.lower().startswith(stop_terms) or "€" in line:continue
-        if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line,re.I):continue
-        if line.lower().startswith(("image:","salat", "mit ", "main dish")):continue
-        if line in [x["name"] for x in result]:continue
-        if len(result)>=12:break
-        if len(line)>155:continue
-        # Kein Veggie-Label aus dem übernächsten Gericht übernehmen.
-        is_veg="veggie" in line.lower() or (i+1<len(section) and tidy(section[i+1]).lower()=="veggie")
-        special=line.lower().startswith("special")
-        if special:
+def topf_portion_item(name, category, small, large, diet="unknown", description=""):
+    """One restaurant dish, with explicit portion prices for one display row."""
+    item=make_item(name,small,category,diet,description)
+    item["price_small"]=small
+    item["price_large"]=large
+    return item
+
+def topf_section(lines, names, following):
+    begin=next((i for i,line in enumerate(lines) if tidy(line).casefold() in names),None)
+    if begin is None:raise ValueError("Topf&Deckel: Menübereich fehlt: "+str(names))
+    end=next((i for i in range(begin+1,len(lines)) if tidy(lines[i]).casefold() in following),len(lines))
+    return lines[begin+1:end]
+
+def topf_starters(lines):
+    """Read actual soup/salad labels from original Starters/Vorspeisen section."""
+    section=topf_section(lines,{"starters","vorspeisen","suppen & vorspeisen"},
+                         {"main dish","hauptspeisen","hauptgerichte"})
+    soups=[]
+    seen=set()
+    for i,line in enumerate(section):
+        label=tidy(line)
+        if not re.search(r"\b(?:suppe|suppen|eintopf|consommé|bouillon)\b",label,re.I):
+            continue
+        if re.search(r"^(?:klein|gross|groß|€|salat/suppe)",label,re.I) or len(label)>105:
+            continue
+        if label.casefold() in seen:continue
+        seen.add(label.casefold())
+        soups.append(topf_portion_item(label,"Suppe",3.90,5.90,"unknown",
+                         "Vorspeise, separat erhältlich; klein / groß"))
+        if len(soups)>=3:break
+    return soups
+
+def topf_main_items(lines):
+    section=topf_section(lines,{"main dish","hauptspeisen","hauptgerichte"},
+                         {"dessert","desserts","nachspeisen"})
+    items=[]
+    seen=set()
+    stop_terms=("beilage:","allergene","veggie","veg","klein","gross","groß",
+                "image:","salat/suppe","mit ","nur in","€","kleine portion")
+    for i,text in enumerate(section):
+        label=tidy(text)
+        if not (18<=len(label)<=155) or label.casefold().startswith(stop_terms):
+            continue
+        if "€" in label or re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,40}",label,re.I):
+            continue
+        if label.casefold() in seen:continue
+        seen.add(label.casefold())
+        is_veg="veggie" in label.casefold() or (i+1<len(section) and tidy(section[i+1]).casefold()=="veggie")
+        if label.casefold().startswith("special"):
             price=euros(" ".join(section[i+1:i+5]))
             if price is None:raise ValueError("Topf&Deckel: Special-Preis fehlt")
-            result.append(make_item(line,price,"Special groß","veggie" if is_veg else "unknown","Nur als große Portion"))
+            item=topf_portion_item(label,"Special",None,price,"veggie" if is_veg else "unknown",
+                                   "Nur groß erhältlich")
         else:
-            result.append(make_item(line+" (klein)",7.50,"Hauptgericht klein","veggie" if is_veg else "unknown"))
-            result.append(make_item(line+" (groß)",11.90,"Hauptgericht groß","veggie" if is_veg else "unknown"))
-    if len(result)<4:raise ValueError("Topf&Deckel: zu wenige Hauptgerichte")
-    result += [
-       make_item("Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-                 9.50,"Menükombo","unknown","Eine Option zum Hauptgericht wählbar"),
-       make_item("Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-                 13.90,"Menükombo","unknown","Eine Option zum Hauptgericht wählbar")
+            item=topf_portion_item(label,"Hauptgericht",7.50,11.90,"veggie" if is_veg else "unknown",
+                                   "Preis klein / groß")
+        items.append(item)
+        if len(items)>=8:break
+    if len(items)<2:raise ValueError("Topf&Deckel: zu wenige Hauptgerichte")
+    return items
+
+def topf_combo_items():
+    return [
+        make_item("Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+                  9.50,"Menükombo","unknown","Eine Option zum kleinen Hauptgericht wählbar"),
+        make_item("Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+                  13.90,"Menükombo","unknown","Eine Option zum großen Hauptgericht wählbar"),
     ]
-    return result
+
+def parse_topfdeckel(raw,today,monday):
+    """Read dated daily HTML including starters. Does not borrow other days."""
+    lines=html_lines(raw)
+    whole="\n".join(lines)
+    months={"jänner":1,"januar":1,"februar":2,"märz":3,"april":4,"mai":5,"juni":6,
+            "juli":7,"august":8,"september":9,"oktober":10,"november":11,"dezember":12}
+    m=re.search(r"(Montag|Dienstag|Mittwoch|Donnerstag|Freitag),?\s+(\d{1,2})\.\s*(\w+)\s+(\d{4})",whole,re.I)
+    if not m:raise ValueError("Topf&Deckel: datierter Tagesplan fehlt")
+    mo=months.get(m.group(3).casefold())
+    if mo is None or date(int(m.group(4)),mo,int(m.group(2)))!=today or m.group(1).casefold()!=WEEKDAYS[today.weekday()].casefold():
+        raise ValueError("Topf&Deckel: kein datierter Plan für heute")
+    return topf_starters(lines)+topf_main_items(lines)+topf_combo_items()
 
 def parse_topfdeckel_week(raw,today,monday):
-    """Only the dated Monday tab is visible in server-rendered weekly HTML."""
-    soup=BeautifulSoup(raw,"html.parser")
-    for tag in soup(["script","style","nav","footer","header","noscript"]):
-        tag.decompose()
-    content=" ".join(soup.stripped_strings)
-    m=re.search(r"(\d{1,2})\.\s*(Jänner|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*[–-]\s*(\d{1,2})\.\s*(Jänner|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*(\d{4})",content,re.I)
+    """Use current dated weekly page's SSR Monday tab even on later weekdays."""
+    lines=html_lines(raw)
+    whole=" ".join(lines)
+    m=re.search(r"(\d{1,2})\.\s*(Jänner|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*[–-]\s*(\d{1,2})\.\s*(Jänner|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*(\d{4})",whole,re.I)
     if not m:raise ValueError("Topf&Deckel Wochenmenü: Datumsbereich fehlt")
     months={"jänner":1,"januar":1,"februar":2,"märz":3,"april":4,"mai":5,"juni":6,"juli":7,"august":8,"september":9,"oktober":10,"november":11,"dezember":12}
-    first=date(int(m.group(5)),months[m.group(2).lower()],int(m.group(1)))
-    last=date(int(m.group(5)),months[m.group(4).lower()],int(m.group(3)))
-    if first!=monday or last!=monday+timedelta(days=4):raise ValueError("Topf&Deckel Wochenmenü: nicht aktuelle Woche")
-    if today!=monday:raise ValueError("Topf&Deckel Wochenmenü: nur Montag serverseitig verifizierbar")
-    lines=html_lines(raw)
-    start=next((i for i,line in enumerate(lines) if tidy(line).lower()=="hauptspeisen"),None)
-    if start is None:raise ValueError("Topf&Deckel Wochenmenü: Hauptspeisen fehlen")
-    end=next((i for i in range(start+1,len(lines)) if tidy(lines[i]).lower()=="dessert"),len(lines))
-    section=lines[start+1:end]
-    result=[]
-    for i,line in enumerate(section):
-        name=tidy(line)
-        if not (18<=len(name)<=170) or "€" in name or name.lower().startswith(("klein","gross","groß","allergene","nur in","image:")):
-            continue
-        if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,40}",name,re.I):continue
-        if name in {x["name"] for x in result}:continue
-        if name.lower().startswith("special"):
-            special_price=euros(" ".join(section[i+1:i+4]))
-            if special_price is None:raise ValueError("Topf&Deckel: Special-Preis nicht bestätigt")
-            result.append(make_item(name,special_price,"Special groß","unknown","Nur als große Portion"))
-        else:
-            result.append(make_item(name+" (klein)",7.50,"Hauptgericht klein"))
-            result.append(make_item(name+" (groß)",11.90,"Hauptgericht groß"))
-        if len(result)>=12:break
-    if len(result)<4:raise ValueError("Topf&Deckel Wochenmenü: zu wenige Gerichte")
-    return result
+    first=date(int(m.group(5)),months[m.group(2).casefold()],int(m.group(1)))
+    last=date(int(m.group(5)),months[m.group(4).casefold()],int(m.group(3)))
+    if first!=monday or last!=monday+timedelta(days=4):
+        raise ValueError("Topf&Deckel Wochenmenü: nicht aktuelle Woche")
+    # The HTML initially contains Monday only; do not fabricate Tue-Fri.
+    return topf_starters(lines)+topf_main_items(lines)
 
 
 def parse_gruenehuette(raw,monday):
@@ -840,14 +856,22 @@ def run(today):
                 apply_result(data,"baschly",days,"undated")
                 observed_digest=hashlib.sha256((menu_fingerprint(raws[0])+menu_fingerprint(raws[1])).encode()).hexdigest()
             elif ident=="topfdeckel":
+                weekly_items=None
                 try:
-                    items=parse_topfdeckel(safe_get(URLS["topfdeckel"]),today,monday)
-                except ValueError as primary_error:
-                    try:
-                        items=parse_topfdeckel_week(safe_get("https://topfdeckel.at/wochenmenu"),today,monday)
-                    except ValueError:
-                        raise primary_error
-                restaurant(data,ident)["days"][today.isoformat()]=items
+                    weekly_items=parse_topfdeckel_week(safe_get("https://topfdeckel.at/wochenmenu"),today,monday)
+                except (ValueError,requests.RequestException) as week_error:
+                    logging.info("Topf&Deckel: aktueller Montagsplan nicht verfügbar: %s",week_error)
+                if weekly_items:
+                    restaurant(data,ident)["days"][monday.isoformat()]=weekly_items
+                try:
+                    daily_items=parse_topfdeckel(safe_get(URLS["topfdeckel"]),today,monday)
+                except (ValueError,requests.RequestException) as daily_error:
+                    daily_items=None
+                    logging.info("Topf&Deckel: Tagesmenü nicht veröffentlicht: %s",daily_error)
+                if daily_items:
+                    restaurant(data,ident)["days"][today.isoformat()]=daily_items
+                if not weekly_items and not daily_items:
+                    raise ValueError("Topf&Deckel: kein datierter Plan für heute oder aktuelle Woche")
                 restaurant(data,ident)["status"]=source(data,ident)["status"]="daily"
             elif ident=="gruenehuette":
                 days,validity=parse_gruenehuette(prefetched_raw if prefetched_raw is not None else safe_get(URLS["gruenehuette"]),monday)
