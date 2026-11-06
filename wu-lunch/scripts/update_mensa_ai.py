@@ -220,10 +220,9 @@ def run(today, model):
         all(mensa.get("days", {}).get((monday + timedelta(days=i)).isoformat()) for i in range(5))):
         print("Mensa-KI: aktuelle Woche bereits analysiert; kein weiterer API-Aufruf")
         return False
-    if prior.get("state") == "ok" and all(mensa.get("days", {}).get(
-        (monday + timedelta(days=i)).isoformat()) for i in range(5)):
-        print("Mensa: bestehende Wochenkarte vollständig; kein KI-Aufruf nötig")
-        return False
+    # Always audit the first independently verified PDF of a new week.
+    # A parser reporting 'ok' does not prove that all PDF columns and
+    # included side dishes were interpreted correctly.
     key = os.environ.get("OPENAI_API_KEY", "").strip()
     if not key:
         print("::warning::Mensa-KI übersprungen: OPENAI_API_KEY fehlt")
