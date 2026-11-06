@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-06T18:36:11+01:00",
+  "checkedAt": "2026-11-06T19:12:18+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -99,10 +99,10 @@
       "id": "finn",
       "name": "Finn",
       "url": "https://finn.wien/blogs/news/mittagsmenu",
-      "status": "not_published",
+      "status": "ai_crosschecked",
       "note": "Original-Wochenkarte als Bild; automatischer Bildimport nur nach aktueller Wochenprüfung",
-      "validFrom": null,
-      "validUntil": null
+      "validFrom": "2026-11-02",
+      "validUntil": "2026-11-06"
     }
   ],
   "restaurants": [
@@ -1393,7 +1393,7 @@
           }
         ]
       },
-      "browser_verified_at": "2026-11-06T18:36:42+01:00"
+      "browser_verified_at": "2026-11-06T19:13:23+01:00"
     },
     {
       "id": "gruenehuette",
@@ -1713,18 +1713,153 @@
       "name": "Finn",
       "monogram": "FI",
       "url": "https://finn.wien/blogs/news/mittagsmenu",
-      "note": "Original-Wochenkarte als Bild; automatischer Bildimport nur nach aktueller Wochenprüfung",
-      "status": "not_published",
+      "note": "Wochenbild, Wochenkennzeichnung und zwei KI-Modellprüfungen",
+      "status": "ai_crosschecked",
       "days": {
-        "2026-11-02": [],
-        "2026-11-03": [],
-        "2026-11-04": [],
-        "2026-11-05": [],
-        "2026-11-06": []
+        "2026-11-02": [
+          {
+            "name": "Ratatouille auf cremiger Polenta mit Salat",
+            "price": 10.0,
+            "category": "Veggie",
+            "diet": "veggie",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "VEGGIE Ratatouille auf cremiger Polenta mit Salat; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          },
+          {
+            "name": "Gebratenes Zanderfilet mit Dillfisolen und Salzeräpfel",
+            "price": 10.0,
+            "category": "Fisch",
+            "diet": "meat",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "FISCH Gebratenes Zanderfilet mit Dillfisolen und Salzeräpfel; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          }
+        ],
+        "2026-11-03": [
+          {
+            "name": "Pflanzliches Schnitzel mit Pommes & veganem Dip",
+            "price": 10.0,
+            "category": "Vegan",
+            "diet": "vegan",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "VEGAN Pflanzliches Schnitzel mit Pommes & veganem Dip; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          },
+          {
+            "name": "Wiener Schnitzel mit Pommes",
+            "price": 10.0,
+            "category": "Fleisch",
+            "diet": "meat",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "FLEISCH Wiener Schnitzel mit Pommes; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          }
+        ],
+        "2026-11-04": [
+          {
+            "name": "Wok Nudeln mit Gemüse und Tofu",
+            "price": 10.0,
+            "category": "Vegan",
+            "diet": "vegan",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "VEGAN Wok Nudeln mit Gemüse und Tofu; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          },
+          {
+            "name": "Wok Nudeln mit Huhn",
+            "price": 10.0,
+            "category": "Fleisch",
+            "diet": "meat",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "FLEISCH Wok Nudeln mit Huhn; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          }
+        ],
+        "2026-11-05": [
+          {
+            "name": "Pflanzlicher Burger mit gegrilltem Ziegenkäse & Pommes",
+            "price": 10.0,
+            "category": "Veggie",
+            "diet": "veggie",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "VEGGIE Pflanzlicher Burger mit gegrilltem Ziegenkäse & Pommes; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          },
+          {
+            "name": "Pulled Turkey Burger mit Pommes",
+            "price": 10.0,
+            "category": "Fleisch",
+            "diet": "meat",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "FLEISCH Pulled Turkey Burger mit Pommes; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          }
+        ],
+        "2026-11-06": [
+          {
+            "name": "Wok mit Tempeh & Basmatireis",
+            "price": 10.0,
+            "category": "Vegan",
+            "diet": "vegan",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "VEGAN Wok mit Tempeh & Basmatireis; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          },
+          {
+            "name": "Wok mit Lachs & Basmatireis",
+            "price": 10.0,
+            "category": "Fisch",
+            "diet": "meat",
+            "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
+            "evidence_excerpt": "FISCH Wok mit Lachs & Basmatireis; HAUPTGERICHT: € 10,00",
+            "ai_confidence": "two-model-agreement"
+          }
+        ]
       },
       "seasonal": [],
-      "validFrom": null,
-      "validUntil": null
+      "validFrom": "2026-11-02",
+      "validUntil": "2026-11-06"
     }
   ]
 }
