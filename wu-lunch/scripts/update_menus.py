@@ -660,7 +660,7 @@ def parse_lia_week(raw,monday):
                 if english_after:skip_english=True
                 continue
             # Nur bestätigte WU-Basispreise anwenden, sonst Preis unbekannt.
-            general=re.search(r"Hauptgericht(?:main dish)?\s*€\s*(\d+[,\.]\d{2})"," ".join(region[:headings[0][0]]),re.I)
+            general=re.search(r"Hauptgericht\s*(?:main\s*dish)?\s*€\s*(\d+[,\.]\d{2})"," ".join(region[:headings[0][0]]),re.I)
             price=pending_price if pending_price is not None else (float(general.group(1).replace(",",".")) if general else None)
             pending_price=None
             diet="veggie" if vegetarian else "unknown"
