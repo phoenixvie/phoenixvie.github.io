@@ -908,11 +908,13 @@ def run(today):
                 apply_result(data,"mensa",days,"verified",validity)
             elif ident=="glashaus":
                 days,validity=parse_glashaus(prefetched_raw if prefetched_raw is not None else safe_get(URLS["glashaus"]),monday)
+                preserve_verified_prices(restaurant(data,"glashaus").get("days",{}),days)
                 apply_result(data,"glashaus",days,"verified",validity)
             elif ident=="campus":
                 raw=prefetched_raw if prefetched_raw is not None else safe_get(URLS["campus"])
                 days,validity=parse_campus(raw,monday)
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
+                preserve_verified_prices(restaurant(data,"campus").get("days",{}),days)
                 apply_result(data,"campus",days,"verified",validity)
                 observed_digest=menu_fingerprint(raw)
             elif ident=="baschly":
@@ -921,6 +923,7 @@ def run(today):
                 meat=parse_baschly(raws[1],monday,True)
                 days={d:veg[d]+meat[d] for d in veg}
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
+                preserve_verified_prices(restaurant(data,"baschly").get("days",{}),days)
                 apply_result(data,"baschly",days,"undated")
                 observed_digest=hashlib.sha256((menu_fingerprint(raws[0])+menu_fingerprint(raws[1])).encode()).hexdigest()
             elif ident=="topfdeckel":
@@ -934,6 +937,7 @@ def run(today):
             elif ident=="gruenehuette":
                 days,validity=parse_gruenehuette(prefetched_raw if prefetched_raw is not None else safe_get(URLS["gruenehuette"]),monday)
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
+                preserve_verified_prices(restaurant(data,ident).get("days",{}),days)
                 apply_result(data,ident,days,"verified",validity)
                 observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
             elif ident=="lia":
