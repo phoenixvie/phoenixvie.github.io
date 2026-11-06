@@ -6,8 +6,8 @@ from unittest.mock import patch
 import ai_direct as ai
 
 class DirectAITests(unittest.TestCase):
-    def test_nine_restaurants_have_explicit_original_sources(self):
-        self.assertEqual(len(ai.SOURCES),9)
+    def test_eleven_restaurants_have_explicit_original_sources(self):
+        self.assertEqual(len(ai.SOURCES),11)
         self.assertEqual(len(ai.SOURCES["baschly"]),2)
         self.assertIn("wochenmenu",ai.SOURCES["topfdeckel"][1])
         self.assertTrue(all(url.startswith("https://") for urls in ai.SOURCES.values() for url in urls))
