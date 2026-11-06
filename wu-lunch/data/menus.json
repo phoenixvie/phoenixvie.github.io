@@ -1223,13 +1223,14 @@
         "2026-11-06": [
           {
             "name": "Lachs-Teriyaki-Bowl mit Edamame, Avocado & Karotten",
-            "price": null,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
+            "description": "Hauptgericht; 10,00 € anhand veröffentlichter aktueller Lia-Wochenspeiseplan-Darstellung bestätigt; AG-Sticker -1,00 €",
             "allergens": [],
             "included_soup": null,
-            "included_choices": []
+            "included_choices": [],
+            "price_source": "https://mittagsteller.at/l/lia-cafeteria-wien"
           },
           {
             "name": "Tempeh-Bowl mit Hummus, Karotten & Kraut",
