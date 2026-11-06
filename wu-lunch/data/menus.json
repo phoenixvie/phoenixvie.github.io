@@ -761,7 +761,7 @@
       },
       "seasonal": [
         {
-          "name": "CREMA DI PATATE CON TARTUFO",
+          "name": "Crema Di Patate Con Tartufo",
           "price": 7.9,
           "category": "Saisonkarte",
           "diet": "unknown",
@@ -771,7 +771,7 @@
           "included_choices": []
         },
         {
-          "name": "PIZZA BIANCA TACCHINO E CIPOLLETARTUFO DI CIELO",
+          "name": "Pizza Bianca Tacchino E Cipolletartufo Di Cielo",
           "price": 21.95,
           "category": "Saisonkarte",
           "diet": "unknown",
@@ -781,7 +781,7 @@
           "included_choices": []
         },
         {
-          "name": "TAGLIATELLE TARTUFO E FUNGHI",
+          "name": "Tagliatelle Tartufo E Funghi",
           "price": 17.9,
           "category": "Saisonkarte",
           "diet": "unknown",
@@ -980,6 +980,16 @@
             "allergens": [],
             "included_soup": null,
             "included_choices": []
+          },
+          {
+            "name": "Suppe nach Wahl zum Tagesteller",
+            "price": 2,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optionaler Aufpreis zum Tagesteller; die konkreten Suppensorten dieser Woche sind nicht bestätigt",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           }
         ],
         "2026-11-03": [
@@ -999,6 +1009,16 @@
             "category": "Vegetarisch",
             "diet": "veggie",
             "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Suppe nach Wahl zum Tagesteller",
+            "price": 2,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optionaler Aufpreis zum Tagesteller; die konkreten Suppensorten dieser Woche sind nicht bestätigt",
             "allergens": [],
             "included_soup": null,
             "included_choices": []
@@ -1024,6 +1044,16 @@
             "allergens": [],
             "included_soup": null,
             "included_choices": []
+          },
+          {
+            "name": "Suppe nach Wahl zum Tagesteller",
+            "price": 2,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optionaler Aufpreis zum Tagesteller; die konkreten Suppensorten dieser Woche sind nicht bestätigt",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           }
         ],
         "2026-11-05": [
@@ -1046,6 +1076,16 @@
             "allergens": [],
             "included_soup": null,
             "included_choices": []
+          },
+          {
+            "name": "Suppe nach Wahl zum Tagesteller",
+            "price": 2,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optionaler Aufpreis zum Tagesteller; die konkreten Suppensorten dieser Woche sind nicht bestätigt",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
           }
         ],
         "2026-11-06": [
@@ -1055,6 +1095,16 @@
             "category": "Tagesteller",
             "diet": "unknown",
             "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Suppe nach Wahl zum Tagesteller",
+            "price": 2,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optionaler Aufpreis zum Tagesteller; die konkreten Suppensorten dieser Woche sind nicht bestätigt",
             "allergens": [],
             "included_soup": null,
             "included_choices": []
