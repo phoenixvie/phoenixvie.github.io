@@ -61,6 +61,15 @@ class SideAndPriceTests(unittest.TestCase):
         days,_=menus.parse_lia_week(raw,WEEK)
         self.assertEqual([x["price"] for x in days["2026-11-05"]],[10.0,10.0])
 
+    def test_lia_li_price_normalizes_html_entities(self):
+        raw=('<html><body>Tagesmenü Lia Coffee am WU Campus'
+             '<div>Donnerstag 05.11.</div><ul>'
+             '<li>Lasagne klassisch – mit Schwein &#038; Rind / '
+             '<em>Lasagne classic (A,G)</em> <b>€ 10,00</b></li></ul>'
+             '<div>Tagesmenü Lia Bistro</div></body></html>').encode()
+        days,_=menus.parse_lia_week(raw,WEEK)
+        self.assertEqual(days["2026-11-05"][0]["price"],10.0)
+
     def test_topf_publishes_salad_and_dessert_with_source_prices(self):
         lines=["Vorspeisen","Klein €3.90 / Groß €5.90","Kürbiscremesuppe","Haussalat",
                "Hauptspeisen","Linsen-Curry mit Reis und Gemüse","Gemüsepfanne mit Couscous",

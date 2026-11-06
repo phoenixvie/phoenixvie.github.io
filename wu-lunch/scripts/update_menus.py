@@ -649,11 +649,13 @@ def parse_lia_week(raw,monday):
     # can otherwise make the price look like a prefix for the next dish.
     soup=BeautifulSoup(raw,"html.parser")
     li_prices=[]
+    def lia_key(value):
+        return re.sub(r"[^\w]+"," ",value.casefold(),flags=re.UNICODE).strip()
     for element in soup.find_all("li"):
         text=tidy(element.get_text(" ",strip=True))
         amount=euros(text)
         if amount is not None:
-            li_prices.append((text.casefold(),amount))
+            li_prices.append((lia_key(text),amount))
     head=next((i for i,t in enumerate(lines) if "Tagesmenü Lia Coffee am WU Campus" in t),None)
     if head is None:
         raise ValueError("Lia WU: Menüabschnitt fehlt auf der Startseite")
@@ -742,9 +744,9 @@ def parse_lia_week(raw,monday):
         # element is stronger evidence than the flattened-line heuristic.
         # Never set a price from a generic tariff or another restaurant's row.
         for item in items:
-            dish=item["name"].casefold()
+            dish=lia_key(item["name"])
             candidates={amount for source_text,amount in li_prices
-                        if dish in source_text and "€" in source_text}
+                        if dish in source_text}
             if len(candidates)==1:
                 item["price"]=candidates.pop()
                 item["description"]=item["description"].replace("Preis nicht bestätigt","Preis bestätigt")
