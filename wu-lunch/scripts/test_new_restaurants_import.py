@@ -90,6 +90,20 @@ class NewRestaurantTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"Inklusiv"):
             module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
 
+    def test_finn_tiny_spelling_variant_keeps_second_model_reading(self):
+        first=fin_result(); second=fin_result()
+        first["items"][0]["name"]="Zanderfilet mit Salzeräpfel und Dillfisolen"
+        second["items"][0]["name"]="Zanderfilet mit Salzerdäpfel und Dillfisolen"
+        days=module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
+        self.assertTrue(any("Salzerdäpfel" in meal["name"] for meal in days["2026-11-02"]))
+
+    def test_finn_different_dish_names_still_block(self):
+        first=fin_result(); second=fin_result()
+        first["items"][0]["name"]="Zanderfilet mit Kartoffeln"
+        second["items"][0]["name"]="Schweinsbraten mit Knödel"
+        with self.assertRaisesRegex(ValueError,"Gerichtnamen"):
+            module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
+
     def test_finn_pair_accepts_two_matching_models(self):
         first=fin_result();second=fin_result()
         days=module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
