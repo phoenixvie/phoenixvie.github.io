@@ -684,7 +684,7 @@ def source(data,identifier):
 
 def weekly_cache_valid(data,identifier,monday):
     r=restaurant(data,identifier)
-    if r.get("status") not in ("verified","current"):return False
+    if r.get("status") not in ("verified","current","ai_checked"):return False
     if data.get("weekStart")!=monday.isoformat():return False
     if r.get("validFrom") and not (r["validFrom"]<=monday.isoformat()<=r.get("validUntil","")):return False
     return sum(len(v) for v in r.get("days",{}).values())>= (10 if identifier=="mensa" else 6)
