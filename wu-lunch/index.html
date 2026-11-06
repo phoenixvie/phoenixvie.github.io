@@ -258,7 +258,7 @@ html,body,.page { background:#fff; }
 @media(max-width:750px){.weekend-hint{margin:12px 0 0;font-size:13px;padding:10px 12px}}
 .logo-omakueche{background:#b82c31;color:#fff}.logo-topfdeckel{background:#d48d29;color:#fff}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#8558a7;color:#fff}.logo-karmafood{background:#c65b40;color:#fff}.logo-finn{background:#49654e;color:#fff}
 </style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxCjy3Q/MP9q+7jLhSqcI+zM=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script></head>
+</head>
 <body>
   <div class="page">
     <header class="hero">
@@ -281,7 +281,7 @@ html,body,.page { background:#fff; }
     
   </div>
 
-  <script src="data.js?v=3"></script>
+  <script src="data.js?v=5"></script>
   <script>
   (async function initializeLunchPage() {
     // Lädt täglich aktualisierte JSON-Daten direkt aus dem GitHub-Actions-Import.
@@ -298,6 +298,17 @@ html,body,.page { background:#fff; }
       console.warn('Live-Menüs nicht abrufbar; statisches Fallback verwendet:', error);
     }
     const DATA = freshData;
+    // Keep the user's preferred order even when JSON or cached fallback has
+    // an older order. Unknown future restaurants appear after this shortlist.
+    const RESTAURANT_ORDER = [
+      'mensa', 'baschly', 'finn', 'lia', 'campus', 'karmafood',
+      'topfdeckel', 'omakueche', 'gruenehuette', 'glashaus', 'losteria'
+    ];
+    const rank = id => {
+      const index = RESTAURANT_ORDER.indexOf(id);
+      return index < 0 ? RESTAURANT_ORDER.length : index;
+    };
+    DATA.restaurants.sort((a,b) => rank(a.id) - rank(b.id));
     const WEEKDAY_NAMES = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const SHORT_WEEKDAY = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const MONDAY_FIRST = [1,2,3,4,5,6,0];
@@ -579,8 +590,45 @@ html,body,.page { background:#fff; }
     }
 
     update();
-    // Die Karte bleibt unter der Menü-Liste immer sichtbar und wird nur einmal initialisiert.
-    loadRealMap();
+
+    // Render all menus first. Load Leaflet and map tiles only after the whole
+    // page, fonts and images have loaded; do not block the initial restaurant
+    // list with third-party map code or HTTP requests.
+    let mapRequested = false;
+    function requestMapAfterPageLoad(){
+      if(mapRequested)return;
+      mapRequested=true;
+      function loadLeafletAssets(){
+        if(window.L){ loadRealMap(); return; }
+        const css=document.createElement('link');
+        css.rel='stylesheet';
+        css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        css.integrity='sha256-p4NxAoJBhIIN+hmNHrzxCjy3Q/MP9q+7jLhSqcI+zM=';
+        css.crossOrigin='anonymous';
+        document.head.append(css);
+        const js=document.createElement('script');
+        js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        js.integrity='sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+        js.crossOrigin='anonymous';
+        js.async=true;
+        js.onload=()=>loadRealMap();
+        js.onerror=()=>{
+          mapStage.textContent='Karte konnte nicht geladen werden. Die Restaurantlinks bleiben verfügbar.';
+        };
+        document.body.append(js);
+      }
+      // Idle callback prevents the map from competing with initial rendering.
+      if('requestIdleCallback' in window){
+        window.requestIdleCallback(loadLeafletAssets,{timeout:3500});
+      }else{
+        window.setTimeout(loadLeafletAssets,250);
+      }
+    }
+    if(document.readyState==='complete'){
+      requestMapAfterPageLoad();
+    }else{
+      window.addEventListener('load',requestMapAfterPageLoad,{once:true});
+    }
   })();
   </script>
 </body>
