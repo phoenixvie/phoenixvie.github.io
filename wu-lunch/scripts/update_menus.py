@@ -667,7 +667,7 @@ def parse_lia_week(raw,monday):
             # Doppelte deutsche Einträge im WU-Menü ebenfalls nicht duplizieren.
             if not any(x["name"].casefold()==text.casefold() for x in items):
                 items.append(make_item(text,price,"Hauptgericht",diet,
-                    "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €"))
+                    "Suppe oder Salat auf Wunsch; "+("Preis bestätigt" if price is not None else "Preis nicht bestätigt")+"; AG-Sticker -1,00 €"))
             if english_after:skip_english=True
         if items:
             result[expected.isoformat()]=items[:4]
@@ -838,7 +838,7 @@ def run(today):
             except Exception as exc:
                 problems.append(f"{ident}: Änderungsprüfung fehlgeschlagen: {str(exc)[:145]}")
                 should_check=False
-        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==2):
+        elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==3):
             if ident=="mensa":
                 should_check=False
             else:
@@ -926,7 +926,7 @@ def run(today):
                 restaurant(data,"losteria")["status"]="seasonal"
                 source(data,"losteria")["status"]="seasonal"
             operations[ident]={"state":"ok","last_success":now,"consecutive_failures":0,
-                               "parser_version":2 if ident=="lia" else meta.get("parser_version"),
+                               "parser_version":3 if ident=="lia" else meta.get("parser_version"),
                                "content_sha256":observed_digest}
         except Exception as exc:
             desc=f"{type(exc).__name__}: {str(exc)[:220]}"
