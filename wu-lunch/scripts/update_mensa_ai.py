@@ -101,9 +101,16 @@ def validate_menu(result, original_text, monday, pdf_url):
             raise ValueError("Mensa: beschädigter Gerichtname")
         if not re.match(r"[A-ZÄÖÜ]", name.strip()):
             raise ValueError("Mensa: verdächtiger Gerichtbeginn")
+        category = VALID_CATEGORIES.get(normalize(item.get("category")))
+        if category is None:
+            raise ValueError("Mensa: unbekannte Speisenkategorie")
         price = item.get("price_eur")
-        if (not isinstance(price, (int, float)) or isinstance(price, bool) or
-            not math.isfinite(price) or not 0 < price <= 150):
+        # A separately listed soup can have no stand-alone price in the PDF.
+        # Every other published item must have a source-backed price.
+        if price is None and category == "Tagessuppe":
+            pass
+        elif (not isinstance(price, (int, float)) or isinstance(price, bool) or
+              not math.isfinite(price) or not 0 < price <= 150):
             raise ValueError("Mensa: fehlender oder ungültiger Preis")
         if item.get("source_url") != pdf_url:
             raise ValueError("Mensa: unbekannter Originalbeleg")
@@ -115,9 +122,6 @@ def validate_menu(result, original_text, monday, pdf_url):
         evidence_terms = {x for x in normalize(evidence).split() if len(x) >= 5 and x not in STOPWORDS}
         if len(evidence_terms & pdf_words) < 2:
             raise ValueError("Mensa: Quellenbeleg nicht im extrahierten PDF-Text auffindbar")
-        category = VALID_CATEGORIES.get(normalize(item.get("category")))
-        if category is None:
-            raise ValueError("Mensa: unbekannte Speisenkategorie")
         included = item.get("included_items") or []
         if not isinstance(included, list) or any(not isinstance(x, str) for x in included):
             raise ValueError("Mensa: ungültige inkludierte Leistungen")
