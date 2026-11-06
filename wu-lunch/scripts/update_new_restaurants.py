@@ -256,7 +256,7 @@ def fetch_finn(monday, *, key, previous):
     image_url = select_finn_image(raw, monday)
     # Avoid repeated API calls when the verified current image has not changed.
     if (previous.get("source_image") == image_url and
-        previous.get("state") == "ok" and previous.get("last_success", "")[:10] >= monday.isoformat()):
+        previous.get("state") in ("ok", "cached") and previous.get("last_success", "")[:10] >= monday.isoformat()):
         return None, previous.get("content_sha256"), image_url
     if not key:
         raise ValueError("Finn: OPENAI_API_KEY fehlt für Originalbild-Analyse")
@@ -264,7 +264,7 @@ def fetch_finn(monday, *, key, previous):
     if not image.startswith(b"\xff\xd8\xff") or len(image) < 8_000:
         raise ValueError("Finn: ungültige oder zu kleine Speisekarten-JPEG")
     sha = hashlib.sha256(image).hexdigest()
-    if previous.get("content_sha256") == sha and previous.get("state") == "ok":
+    if previous.get("content_sha256") == sha and previous.get("state") in ("ok", "cached"):
         return None, sha, image_url
     spec = importlib.util.spec_from_file_location("finn_visual_ai", ROOT / "ai-pilot" / "ai_direct.py")
     ai = importlib.util.module_from_spec(spec)
@@ -296,7 +296,7 @@ def fetch_finn(monday, *, key, previous):
     return days, sha, image_url
 
 
-def run(today):
+def run(today, *, karma_only=False):
     monday = today - timedelta(days=today.weekday())
     data = json.loads(DATA.read_text(encoding="utf-8"))
     status = json.loads(STATUS.read_text(encoding="utf-8"))
@@ -308,7 +308,7 @@ def run(today):
     previous_problems = [p for p in status.get("problems", [])
                          if not p.startswith(("karmafood:", "finn:"))]
     errors = []
-    for ident in ("karmafood", "finn"):
+    for ident in (("karmafood",) if karma_only else ("karmafood", "finn")):
         previous = source_states.get(ident, {})
         restaurant = legacy.restaurant(data, ident)
         try:
@@ -372,9 +372,10 @@ def run(today):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", help="YYYY-MM-DD")
+    ap.add_argument("--karma-only", action="store_true", help="No image-model calls on code pushes")
     args = ap.parse_args()
     today = date.fromisoformat(args.date) if args.date else datetime.now(TZ).date()
-    return run(today)
+    return run(today, karma_only=args.karma_only)
 
 
 if __name__ == "__main__":
