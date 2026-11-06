@@ -1007,6 +1007,8 @@ def run(today):
     # otherwise per-day API rate limiting would be lost.
     if isinstance(state.get("ai_repair"),dict):
         status["ai_repair"]=state["ai_repair"]
+    if isinstance(state.get("topf_luna_audit"),dict):
+        status["topf_luna_audit"]=state["topf_luna_audit"]
     validate_meal_components(data)
     warnings=quality_warnings(data,today)
     status["quality_warnings"]=warnings
