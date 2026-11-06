@@ -94,7 +94,7 @@ def issue_codes(data, status, ident, today):
     return sorted(codes)
 
 
-def choose_restaurants(data, status, today, limit=2, all_restaurants=False):
+def choose_restaurants(data, status, today, limit=6, all_restaurants=False):
     if all_restaurants:
         return list(IDS)[:limit]
     findings = {ident: issue_codes(data, status, ident, today) for ident in IDS}
@@ -113,6 +113,22 @@ def choose_restaurants(data, status, today, limit=2, all_restaurants=False):
         selected.extend(ident for ident in flagged if ident not in selected)
         selected = selected[:limit]
     return list(dict.fromkeys(selected + specialized))
+
+
+def needs_ai_review(ident, status, today):
+    """Use Luna on every newly published or changed HTML source, not only errors."""
+    prior=(status.get("ai_repair") or {}).get(ident,{})
+    current=(status.get("sources") or {}).get(ident,{})
+    digest=current.get("content_sha256")
+    if prior.get("action") in ("failed_no_changes","skipped_no_key","budget_exhausted"):
+        return prior.get("last_checked","")[:10] != today.isoformat()
+    # Only skip an unchanged, already audited version of the ORIGINAL source.
+    # Model prompt/parser revisions invalidate a previous review.
+    if prior.get("review_version") != "complete-v2":
+        return True
+    if digest and prior.get("source_fingerprint") == digest and prior.get("last_checked"):
+        return False
+    return True
 
 
 def source_snapshots(inputs, sources):
@@ -242,6 +258,62 @@ def apply_safe_price_fixes(ident, model_result, data, sources, snapshots, monday
     return repaired
 
 
+def add_verified_missing_sides(ident, result, data, sources, snapshots, monday, today):
+    """Append only independently anchored standalone side dishes.
+
+    Source text must explicitly contain the SAME name and one EUR price.
+    Dates are authenticated independently, and the model is not trusted to
+    infer that a soup is included or free. Other missing dishes stay review-only.
+    """
+    allowed={"suppe","tagessuppe","salat","nachspeise","dessert"}
+    if ident not in AUTO_PRICE_IDS:
+        return []
+    restaurant=next(r for r in data["restaurants"] if r["id"]==ident)
+    cache={}
+    added=[]
+    for row in result.get("items",[]):
+        day=row.get("date")
+        category=normalized(row.get("category"))
+        if category not in allowed or day not in restaurant.get("days",{}) or day>today.isoformat():
+            continue
+        name=row.get("name") or ""
+        if not 5 <= len(name) <= 150 or row.get("confidence")!="high" or row.get("included_items"):
+            continue
+        if any(normalized(x.get("name"))==normalized(name) for x in restaurant["days"][day]):
+            continue
+        url=row.get("source_url")
+        source=next((s for s in sources if s.get("url")==url and s.get("fetched")),None)
+        snap=snapshots.get(url)
+        if not source or not snap:
+            continue
+        quote=row.get("evidence_excerpt") or ""
+        nq=normalized(quote)
+        words=[w for w in normalized(name).split() if len(w)>=4]
+        if len(nq)<12 or nq not in snap["text"] or not words or not all(w in nq.split() for w in words):
+            continue
+        try:
+            amount=Decimal(str(row.get("price_eur")))
+            if not (Decimal("0")<amount<=Decimal("150")) or money_values(quote)!={amount}:
+                continue
+        except (InvalidOperation, TypeError):
+            continue
+        if not documented_current_week((url,source),ident,monday,cache):
+            continue
+        if "suppe" in category and "suppe" not in normalized(name):
+            continue
+        restaurant["days"][day].insert(0,{
+            "name":name.strip(),"price":float(amount),
+            "category":row["category"],"diet":"unknown",
+            "description":"Separat erhältlich; nicht im Hauptgericht inkludiert.",
+            "allergens":[],"included_soup":None,"included_choices":[],
+            "source_url":url,"price_evidence":quote,
+            "price_source_sha256":snap["sha256"],
+            "price_verification":"ai-exact-source-quote-and-independent-week",
+        })
+        added.append({"date":day,"name":name,"price":float(amount)})
+    return added
+
+
 def analyze_one(ident, data, status, monday, today, key, model):
     issues = issue_codes(data, status, ident, today)
     # Interactive browser and PDF are handled by their dedicated import paths.
@@ -268,6 +340,7 @@ def analyze_one(ident, data, status, monday, today, key, model):
     repaired = []
     if not result_issues and ident in AUTO_PRICE_IDS:
         repaired = apply_safe_price_fixes(ident, result, draft, sources, snapshots, monday, today)
+        repaired.extend(add_verified_missing_sides(ident, result, draft, sources, snapshots, monday, today))
         if repaired:
             legacy.validate_meal_components(draft)
             data.clear()
@@ -296,8 +369,15 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
         raise ValueError("Datenbankwoche stimmt nicht mit der aktuellen Woche überein")
     if model not in ai.ALLOWED_MODELS:
         raise ValueError("Nicht freigegebenes KI-Modell")
+    # Always audit all six supported text/HTML sources whenever their
+    # original menu fingerprint changes. Dedicated image/PDF/browser paths
+    # already check the remaining five restaurants.
     targets = list(IDS) if selected == "all" else (
-        [selected] if selected else choose_restaurants(data, status, today, max_calls))
+        [selected] if selected else [
+            ident for ident in ("lia","campus","glashaus","gruenehuette","baschly","losteria",
+                               "mensa","topfdeckel","finn","karmafood","omakueche")
+            if needs_ai_review(ident,status,today)
+        ])
     if any(x not in IDS for x in targets):
         raise ValueError("Unbekanntes Restaurant")
     key = os.environ.get("OPENAI_API_KEY", "").strip()
@@ -318,7 +398,7 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
             continue
         # At most one paid call per restaurant/day, regardless of repeated Actions runs.
         prior = (status.get("ai_repair", {}) or {}).get(ident, {})
-        if prior.get("last_checked", "")[:10] == today.isoformat() and selected is None:
+        if not needs_ai_review(ident,status,today) and selected is None:
             report["results"].append({"restaurant": ident, "action": "already_checked_today", "repairs": []})
             continue
         remaining -= 1
@@ -331,6 +411,8 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
         report["results"].append(entry)
         status.setdefault("ai_repair", {})[ident] = {
             "last_checked": report["checked_at"],
+            "review_version":"complete-v2",
+            "source_fingerprint":status.get("sources",{}).get(ident,{}).get("content_sha256"),
             "model": model,
             "action": entry["action"],
             "repairs": len(entry["repairs"]),
@@ -364,7 +446,7 @@ def main():
     p.add_argument("--date", help="YYYY-MM-DD Europe/Vienna")
     p.add_argument("--restaurant", choices=["all", *IDS])
     p.add_argument("--model", choices=sorted(ai.ALLOWED_MODELS), default="gpt-6-luna")
-    p.add_argument("--max-calls", type=int, default=2)
+    p.add_argument("--max-calls", type=int, default=6)
     args = p.parse_args()
     if not 0 <= args.max_calls <= 9:
         p.error("--max-calls muss zwischen 0 und 9 liegen")
