@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T20:03:53+01:00",
+  "checked_at": "2026-11-06T20:08:56+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
   "health": "degraded",
@@ -7,14 +7,14 @@
     "karmafood": {
       "state": "not_published",
       "last_success": null,
-      "checked_at": "2026-11-06T20:04:02+01:00",
+      "checked_at": "2026-11-06T20:09:04+01:00",
       "consecutive_failures": 0,
       "note": "Karma Food: nur ein Plan für eine andere Woche veröffentlicht"
     },
     "finn": {
       "state": "cached",
       "last_success": "2026-11-06T19:12:26+01:00",
-      "checked_at": "2026-11-06T20:04:02+01:00",
+      "checked_at": "2026-11-06T20:09:04+01:00",
       "consecutive_failures": 0,
       "content_sha256": "75c0d6609c32b5f4190be95d414faa054cc76db1b0f43093bb94ba0f52a77797",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
@@ -22,7 +22,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-06T20:03:53+01:00",
+      "last_success": "2026-11-06T20:08:56+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -30,7 +30,7 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
-      "consecutive_failures": 18,
+      "consecutive_failures": 19,
       "content_sha256": null
     },
     "glashaus": {
@@ -44,7 +44,7 @@
       "state": "error",
       "error": "ValueError: Campus: Plan nicht für KW 2026-11-02: (datetime.date(2026, 11, 9), datetime.date(2026, 11, 12))",
       "last_success": "2026-11-06T10:40:36+01:00",
-      "consecutive_failures": 15,
+      "consecutive_failures": 16,
       "content_sha256": "bb226678fe348d1b0a46cce678175c65676aa94cec9f64a2f5c8afa76a43f0ec"
     },
     "baschly": {
@@ -63,7 +63,7 @@
     },
     "topfdeckel": {
       "state": "ok",
-      "last_success": "2026-11-06T20:03:53+01:00",
+      "last_success": "2026-11-06T20:08:56+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": null
