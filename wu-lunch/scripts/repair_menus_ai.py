@@ -52,7 +52,7 @@ def money_values(quote):
     patterns = (
         r"(?:€|EUR)\s*(\d{1,3}(?:[.,]\d{2})?)",
         r"(\d{1,3}(?:[.,]\d{2})?)\s*(?:€|EUR)\b",
-        r"\b(\d{1,3}[.,]\d{2})\b",
+        r"(?<![\d./])(\d{1,3}[.,]\d{2})(?![\d./])",
     )
     values = set()
     for pattern in patterns:
@@ -101,12 +101,18 @@ def choose_restaurants(data, status, today, limit=2, all_restaurants=False):
     # Dedicated PDF/browser/photo paths do not consume Luna HTML-call budget.
     specialized = [ident for ident in ("mensa", "topfdeckel", "omakueche") if findings[ident]]
     flagged = [ident for ident in URGENT if findings[ident] and ident not in specialized]
-    selected = flagged[:limit]
+    # Rotate persistent failures: no single broken restaurant can starve the rest.
+    checked = status.get("ai_repair", {})
+    flagged.sort(key=lambda ident: (checked.get(ident, {}).get("last_checked", ""), URGENT.index(ident)))
     rotation = [ident for ident in IDS if ident not in flagged and ident not in specialized]
-    if rotation and len(selected) < limit:
-        index = today.toordinal() % len(rotation)
-        selected.extend((rotation[index:] + rotation[:index])[:limit - len(selected)])
-    return selected + specialized
+    reserve = 1 if rotation and limit > 1 else 0
+    selected = flagged[:limit - reserve]
+    if reserve:
+        selected.append(rotation[today.toordinal() % len(rotation)])
+    if len(selected) < limit:
+        selected.extend(ident for ident in flagged if ident not in selected)
+        selected = selected[:limit]
+    return list(dict.fromkeys(selected + specialized))
 
 
 def source_snapshots(inputs, sources):
