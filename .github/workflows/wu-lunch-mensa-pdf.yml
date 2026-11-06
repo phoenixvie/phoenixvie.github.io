@@ -1,6 +1,9 @@
 name: WU Lunch – Mensa Original-PDF sichern
 
 on:
+  schedule:
+    # Zweimal pro Werktag, 08:40 und 10:40 Uhr Wien (mit Sommer-/Winterzeit-Guard)
+    - cron: '40 6-10 * * 1-5'
   workflow_dispatch:
   push:
     paths:
@@ -18,13 +21,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 7
     steps:
+      - name: Wiener Uhrzeit prüfen
+        id: guard
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" && ! "$(TZ=Europe/Vienna date +%H)" =~ ^(08|10)$ ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/checkout@v4
+        if: steps.guard.outputs.skip == 'false'
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v5
+        if: steps.guard.outputs.skip == 'false'
         with:
           python-version: '3.12'
       - name: PDF frisch von offizieller Quelle herunterladen und Metadaten erfassen
+        if: steps.guard.outputs.skip == 'false'
         shell: bash
         run: |
           pip install requests PyMuPDF
@@ -47,21 +62,24 @@ jobs:
           now=datetime.now(ZoneInfo("Europe/Vienna"))
           (root/"mensa-latest.pdf").write_bytes(r.content)
           (root/"mensa-latest.txt").write_text(full,encoding="utf-8")
+          monday=(now.date()-__import__("datetime").timedelta(days=now.weekday()))
           meta={"fetched_at":now.isoformat(),"source":r.url,"http_status":r.status_code,
                 "sha256":hashlib.sha256(r.content).hexdigest(),"bytes":len(r.content),
                 "pages":len(doc),"detected_dates":dates[:12],
-                "current_week_monday":(now.date()).isoformat(),
+                "current_week_monday":monday.isoformat(),
                 "verification":"Snapshot only: PDF date MUST be checked by AI before publishing"}
           (root/"mensa-latest.json").write_text(json.dumps(meta,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
           print(json.dumps(meta,ensure_ascii=False))
           PY
       - name: Original-PDF als Testartefakt veröffentlichen
+        if: steps.guard.outputs.skip == 'false'
         uses: actions/upload-artifact@v4
         with:
           name: mensa-original-pdf
           path: wu-lunch/ai-pilot/source/
           retention-days: 14
       - name: Snapshot getrennt von produktiven Menüs in GitHub sichern
+        if: steps.guard.outputs.skip == 'false'
         run: |
           git config user.name "wu-lunch-pdf-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
