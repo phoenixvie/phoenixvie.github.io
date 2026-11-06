@@ -27,7 +27,7 @@ STATUS_PATH = ROOT / "status.json"
 TZ = ZoneInfo("Europe/Vienna")
 WEEKDAYS = ("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
 ALLOWED = {"shop.baschly.com", "www.wumensa.at", "wumensa.at", "www.dascampus.at",
-           "dascampus.at", "www.dasglashaus.at", "dasglashaus.at", "losteria.net", "www.losteria.net", "xn--omakche-q2a.at", "www.xn--omakche-q2a.at", "topfdeckel.at", "www.topfdeckel.at", "www.zurgruenenhuette.com", "zurgruenenhuette.com", "lia.coffee", "www.lia.coffee"}
+           "dascampus.at", "www.dasglashaus.at", "dasglashaus.at", "losteria.net", "www.losteria.net", "xn--omakche-q2a.at", "www.xn--omakche-q2a.at", "topfdeckel.at", "www.topfdeckel.at", "www.zurgruenenhuette.com", "zurgruenenhuette.com", "lia.coffee", "www.lia.coffee", "karmafood.at", "www.karmafood.at", "finn.wien", "www.finn.wien", "cdn.shopify.com"}
 MONTHS = {"jan":1,"jänner":1,"feb":2,"mär":3,"maer":3,"apr":4,"mai":5,"jun":6,"jul":7,
           "aug":8,"sep":9,"okt":10,"nov":11,"dez":12}
 URLS = {
@@ -41,6 +41,8 @@ URLS = {
     "topfdeckel":"https://topfdeckel.at/",
     "gruenehuette":"https://www.zurgruenenhuette.com/mittags-menu",
     "lia":"https://lia.coffee/",
+    "karmafood":"https://karmafood.at/pages/wochenmenu-karma-food-wien",
+    "finn":"https://finn.wien/blogs/news/mittagsmenu",
 }
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
@@ -833,6 +835,10 @@ def run(today):
     problems=[]
     operations={}
     previous=state.get("sources",{})
+    # These sources run in the dedicated HTML/PDF/vision stage after this importer.
+    # Carry their previous hashes/verified run stamps forward for cost control.
+    for new_id in ("karmafood", "finn"):
+        operations[new_id]=previous.get(new_id, {"state":"not_published", "last_success":None})
     apply_result(data,"omakueche",buffet_days(monday),"recurring")
     operations["omakueche"]={"state":"recurring","last_success":now,"consecutive_failures":0,
                              "note":"Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"}
@@ -982,7 +988,7 @@ def run(today):
         "health":"healthy" if not problems else ("failed" if len(problems)==8 else "degraded"),
         "sources":operations,
         "problems":problems,
-        "next_run":"weekdays 08:15, 09:15, 10:15, 11:15, 12:15 Europe/Vienna",
+        "next_run":"Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 Europe/Vienna (GitHub Actions Zeitabweichung möglich)",
         "format_version":1,
     }
     # The repair agent writes its own check history after the parser run.
@@ -1015,8 +1021,8 @@ def main():
         assert period("02. Nov. 2026 - 06. Nov. 2026")== (date(2026,11,2),date(2026,11,6))
         assert period("13.07.2026 - 17.07.2026") != (date(2026,11,2),date(2026,11,6))
         d=load_data()
-        assert len(d["restaurants"])==9 and len(d["sources"])==9
-        assert {x["id"] for x in d["restaurants"]}=={"mensa","campus","glashaus","baschly","losteria","omakueche","topfdeckel","gruenehuette","lia"}
+        assert len(d["restaurants"])==11 and len(d["sources"])==11
+        assert {x["id"] for x in d["restaurants"]}=={"mensa","campus","glashaus","baschly","losteria","omakueche","topfdeckel","gruenehuette","lia","karmafood","finn"}
         assert all(x.get("days") for x in d["restaurants"])
         print("Smoke tests OK")
         return 0
