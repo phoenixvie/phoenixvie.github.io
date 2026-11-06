@@ -7,6 +7,7 @@ on:
     - cron: '15 6-11 * * 1-5'
   workflow_dispatch:
   push:
+    # Clean-room test: menu data and cache cleared on 2026-11-06; run on this push.
     paths:
       - 'wu-lunch/scripts/**'
       - 'wu-lunch/requirements.txt'
