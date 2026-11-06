@@ -22,8 +22,11 @@ class NewRestaurantTests(unittest.TestCase):
         <h3>Cremiges Brokkoli Kokoscurry mit Erdnüssen</h3>
         <h2>Dessert</h2></main>"""
         items=parse_topfdeckel(html.encode(),THU,MON)
-        self.assertEqual(len(items),5)
+        self.assertEqual(len(items),8)  # 3 Hauptgerichte je klein/groß plus 2 Kombis
         self.assertEqual(items[0]["price"],7.50)
+        self.assertEqual(items[1]["price"],11.90)
+        self.assertEqual(items[0]["category"],"Hauptgericht klein")
+        self.assertEqual(items[1]["category"],"Hauptgericht groß")
         self.assertEqual(items[-2]["price"],9.50)
         self.assertEqual(items[-1]["price"],13.90)
         with self.assertRaises(ValueError):
@@ -98,7 +101,7 @@ class NewRestaurantTests(unittest.TestCase):
         days,_=parse_lia_week(html.encode(),MON)
         items=days["2026-11-05"]
         self.assertEqual(len(items),2)
-        self.assertEqual(items[0]["price"],10.00)
+        self.assertIsNone(items[0]["price"])  # Kein unbelegter Default-Preis
         self.assertEqual(items[1]["price"],9.00)
         self.assertEqual(items[1]["diet"],"veggie")
         self.assertEqual(items[1]["name"],"Gemüselasagne")
