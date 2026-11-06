@@ -336,9 +336,11 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
     # source failure history are never altered by an AI observation.
     status["quality_warnings"] = legacy.quality_warnings(data, today)
     status["quality_warning_count"] = len(status["quality_warnings"])
-    if status.get("problems") or status["quality_warning_count"]:
+    if status.get("health") == "failed":
+        pass  # Never downgrade a severe importer incident to merely degraded.
+    elif status.get("problems") or status["quality_warning_count"]:
         status["health"] = "degraded"
-    elif status.get("health") != "failed":
+    else:
         status["health"] = "healthy"
     legacy.validate_meal_components(data)
     if any(row["repairs"] for row in report["results"]):
