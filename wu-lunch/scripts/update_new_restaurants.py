@@ -333,7 +333,27 @@ def fetch_finn(monday, *, key, previous):
         issues = ai.validate(res, [{"url": image_url, "fetched": True}], monday, "finn")
         if issues:
             raise ValueError("Finn: KI-Validierung: "+"; ".join(issues[:3]))
-    days = validate_finn_pair(first, second, monday, image_url)
+    try:
+        days = validate_finn_pair(first, second, monday, image_url)
+    except ValueError as initial_error:
+        # One bounded escalation, not repeated hourly retries: stronger
+        # reader independently rescans the original image. Require two
+        # sufficiently agreeing full reads, not a single model's assertion.
+        print("Finn: Widerspruch in der Doppelanalyse, dritte Kontrolle:", str(initial_error)[:120], flush=True)
+        third, _ = ai.call_model(key, "gpt-6.1-terra", payload)
+        issues = ai.validate(third, [{"url": image_url, "fetched": True}], monday, "finn")
+        if issues:
+            raise ValueError("Finn: dritte KI-Validierung fehlgeschlagen: "+"; ".join(issues[:3]))
+        validated = None
+        for original in (first, second):
+            try:
+                validated = validate_finn_pair(original, third, monday, image_url)
+                break
+            except ValueError:
+                continue
+        if validated is None:
+            raise ValueError("Finn: drei Bildanalysen widersprechen sich; keine Veröffentlichung")
+        days = validated
     return days, sha, image_url
 
 
