@@ -7,16 +7,18 @@ class PriceAndFallbackTests(unittest.TestCase):
     def test_topf_weekly_monday_has_distinct_portions(self):
         raw="""<html><body><main><h1>Wochenmenü</h1>
         <p>9. November – 13. November 2026</p>
+        <h2>Vorspeisen</h2><p>Klein €3.90 / Gross €5.90</p>
+        <h3>Gemüsecremesuppe</h3><h3>Haussalat</h3>
         <h2>Hauptspeisen</h2>
         <h3>Süßkartoffel-Risotto mit Pilzen und Parmesan</h3>
         <p>Veggie</p><h3>Curry mit Kichererbsen und Reis</h3>
         <p>Allergene: A, G</p><h2>Dessert</h2></main></body></html>""".encode()
-        items=parse_topfdeckel_week(raw,date(2026,11,9),date(2026,11,9))
-        self.assertEqual(len(items),4)
-        self.assertEqual([x["price"] for x in items],[7.5,11.9,7.5,11.9])
-        self.assertIn("(groß)",items[1]["name"])
-        with self.assertRaises(ValueError):
-            parse_topfdeckel_week(raw,date(2026,11,10),date(2026,11,9))
+        items=parse_topfdeckel_week(raw,date(2026,11,10),date(2026,11,9))
+        self.assertEqual(len(items),3)
+        self.assertEqual([x["price_small"] for x in items],[3.9,7.5,7.5])
+        self.assertEqual([x["price_large"] for x in items],[5.9,11.9,11.9])
+        self.assertEqual(items[0]["name"],"Gemüsecremesuppe")
+        self.assertEqual(items[1]["name"],"Süßkartoffel-Risotto mit Pilzen und Parmesan")
         with self.assertRaises(ValueError):
             parse_topfdeckel_week(raw,date(2026,11,9),date(2026,11,16))
 
