@@ -527,8 +527,10 @@ def parse_topfdeckel_week(raw,today,monday):
     last=date(int(m.group(5)),months[m.group(4).casefold()],int(m.group(3)))
     if first!=monday or last!=monday+timedelta(days=4):
         raise ValueError("Topf&Deckel Wochenmenü: nicht aktuelle Woche")
-    # The HTML initially contains Monday only; do not fabricate Tue-Fri.
-    return topf_starters(lines)+topf_main_items(lines)
+    # A week title does NOT prove which interactive weekday tab is selected.
+    # Reject without an explicit weekday marker. Otherwise Friday meals can
+    # be published under Monday when the site changes its default tab.
+    raise ValueError("Topf&Deckel Wochenmenü: aktiver Wochentag nicht verifizierbar")
 
 
 def parse_gruenehuette(raw,monday):
@@ -856,22 +858,12 @@ def run(today):
                 apply_result(data,"baschly",days,"undated")
                 observed_digest=hashlib.sha256((menu_fingerprint(raws[0])+menu_fingerprint(raws[1])).encode()).hexdigest()
             elif ident=="topfdeckel":
-                weekly_items=None
-                try:
-                    weekly_items=parse_topfdeckel_week(safe_get("https://topfdeckel.at/wochenmenu"),today,monday)
-                except (ValueError,requests.RequestException) as week_error:
-                    logging.info("Topf&Deckel: aktueller Montagsplan nicht verfügbar: %s",week_error)
-                if weekly_items:
-                    restaurant(data,ident)["days"][monday.isoformat()]=weekly_items
-                try:
-                    daily_items=parse_topfdeckel(safe_get(URLS["topfdeckel"]),today,monday)
-                except (ValueError,requests.RequestException) as daily_error:
-                    daily_items=None
-                    logging.info("Topf&Deckel: Tagesmenü nicht veröffentlicht: %s",daily_error)
-                if daily_items:
-                    restaurant(data,ident)["days"][today.isoformat()]=daily_items
-                if not weekly_items and not daily_items:
-                    raise ValueError("Topf&Deckel: kein datierter Plan für heute oder aktuelle Woche")
+                # Wochenüberschrift allein belegt nicht, welcher Tab aktiv ist.
+                # Nur die mit einem eigenen Tagesdatum versehene Tageskarte publizieren.
+                # Frühere Tage derselben Woche bleiben erhalten, werden aber nie
+                # aus einem möglicherweise auf Freitag stehenden Tab überschrieben.
+                daily_items=parse_topfdeckel(safe_get(URLS["topfdeckel"]),today,monday)
+                restaurant(data,ident)["days"][today.isoformat()]=daily_items
                 restaurant(data,ident)["status"]=source(data,ident)["status"]="daily"
             elif ident=="gruenehuette":
                 days,validity=parse_gruenehuette(prefetched_raw if prefetched_raw is not None else safe_get(URLS["gruenehuette"]),monday)
