@@ -217,6 +217,8 @@ def validate_finn_pair(first, second, monday, img_url):
     x = sorted((_norm_item(i) for i in first["items"]), key=str)
     y = sorted((_norm_item(i) for i in second["items"]), key=str)
     if x != y:
+        print("Finn comparison Luna:", json.dumps(x, ensure_ascii=False), flush=True)
+        print("Finn comparison Terra:", json.dumps(y, ensure_ascii=False), flush=True)
         raise ValueError("Finn: Zwei KI-Bildanalysen widersprechen sich")
     days = data_days(monday)
     for item in first["items"]:
@@ -272,7 +274,8 @@ def fetch_finn(monday, *, key, previous):
     prompt = (
         f"Extrahiere ausschließlich die HAUPTGERICHTE des offiziellen Finn-Wochenbilds "
         f"für {monday.isoformat()} bis {(monday+timedelta(days=4)).isoformat()}. "
-        "Lies sichtbare Wochentage und Tagesdaten im Bild. Zwei Hauptgerichte je Tag, "
+        "Lies sichtbare Wochentage und Tagesdaten im Bild. Übernimm die Gerichtsnamen wortgetreu, " 
+        "nicht paraphrasieren oder übersetzen. Zwei Hauptgerichte je Tag, "
         "keine Tagessuppe, keine Getränke, keine Werbung, kein Menü-Upgrade als eigenes Gericht. "
         "Setze price_eur nur auf den regulären ausdrücklich im Bild gedruckten Preis "
         "HAUPTGERICHT, NICHT den Kombipreis mit Suppe. "
