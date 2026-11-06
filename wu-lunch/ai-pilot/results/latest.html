@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WU Lunch – KI-Direktimport im Test</title>
+<style>
+body{margin:0;font:15px/1.55 Arial,Helvetica,sans-serif;color:#293743;background:#f6f7f9}
+main{max-width:780px;margin:48px auto;padding:26px;background:#fff;border:1px solid #e1e5ea;border-radius:12px}
+h1{font-size:25px;margin:0 0 12px}
+a{color:#176caa}ol{padding-left:23px}li{margin:9px 0}
+.note{background:#f3f5f8;border-radius:6px;padding:12px 14px}
+</style>
+</head>
+<body><main>
+<h1>WU Lunch – separater KI-Direktimport</h1>
+<p><strong>Noch kein kostenpflichtiger KI-Testlauf ausgeführt.</strong>
+Die technischen Offline-Tests des neuen GitHub-Workflows waren erfolgreich.
+Echte KI-Ergebnisse erscheinen an dieser Stelle nach dem ersten manuell ausgelösten API-Test.</p>
+<p>Das Experiment verarbeitet Original-HTML oder das Mensa-PDF direkt durch ein multimodales Modell
+und vergleicht die Ergebnisse mit dem bisherigen Import. Die produktiven Speisepläne werden nicht geändert.</p>
+<h2>Ersten Test ausführen</h2>
+<ol>
+<li>Den OpenAI-API-Schlüssel in GitHub unter
+<a href="https://github.com/phoenixvie/phoenixvie.github.io/settings/secrets/actions">Settings → Secrets and variables → Actions</a>
+als <strong>OPENAI_API_KEY</strong> hinterlegen.</li>
+<li><a href="https://github.com/phoenixvie/phoenixvie.github.io/actions/workflows/wu-lunch-ai-pilot.yml">KI-Testworkflow öffnen</a>,
+auf <strong>Run workflow</strong> klicken und <strong>all</strong> sowie <strong>gpt-6.1-terra</strong> auswählen.</li>
+<li>Nach der Ausführung diese Seite erneut öffnen. Sie zeigt dann die KI-Ergebnisse,
+Originalbelege, Preise, Warnungen und die Vergleichswerte der produktiven Daten.</li>
+</ol>
+<p class="note">Der Test hat keinen automatischen Zeitplan und verursacht ohne manuell gestarteten
+API-Lauf keine KI-API-Kosten. Bei Fehlern bleiben die Live-Menüs unverändert.</p>
+<p><a href="../README.md">Technische Beschreibung auf GitHub</a></p>
+</main></body></html>
