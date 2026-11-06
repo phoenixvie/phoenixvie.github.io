@@ -278,6 +278,16 @@ def validate_finn_pair(first, second, monday, img_url):
     return days
 
 
+def resolve_finn_three_reads(first, second, third, monday, image_url):
+    """Allow publication only if the independent third reading agrees with another."""
+    for original in (first, second):
+        try:
+            return validate_finn_pair(original, third, monday, image_url)
+        except ValueError:
+            pass
+    raise ValueError("Finn: drei Bildanalysen widersprechen sich; keine Veröffentlichung")
+
+
 def fetch_finn(monday, *, key, previous):
     raw = legacy.safe_get(FINN_URL)
     image_url = select_finn_image(raw, monday)
@@ -344,16 +354,7 @@ def fetch_finn(monday, *, key, previous):
         issues = ai.validate(third, [{"url": image_url, "fetched": True}], monday, "finn")
         if issues:
             raise ValueError("Finn: dritte KI-Validierung fehlgeschlagen: "+"; ".join(issues[:3]))
-        validated = None
-        for original in (first, second):
-            try:
-                validated = validate_finn_pair(original, third, monday, image_url)
-                break
-            except ValueError:
-                continue
-        if validated is None:
-            raise ValueError("Finn: drei Bildanalysen widersprechen sich; keine Veröffentlichung")
-        days = validated
+        days = resolve_finn_three_reads(first, second, third, monday, image_url)
     return days, sha, image_url
 
 
