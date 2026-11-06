@@ -2,7 +2,7 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-06T19:21:56+01:00",
+  "checkedAt": "2026-11-06T19:43:52+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -831,7 +831,7 @@
           },
           {
             "name": "Gebackenes Gemüse mit Pommes",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -853,7 +853,7 @@
           },
           {
             "name": "Pizza mit Salami",
-            "price": 6,
+            "price": 6.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -863,7 +863,7 @@
           },
           {
             "name": "Kürbis-Reis-Pfanne mit Salat",
-            "price": 11,
+            "price": 11.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -885,7 +885,7 @@
           },
           {
             "name": "Gemüselasagne",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -900,7 +900,7 @@
             "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
-            "description": "Hauptgericht; Preis 10,00 € für diesen Tag und dieses Gericht durch aktuelle Speiseplanquelle bestätigt; AG-Sticker -1,00 €",
+            "description": "Suppe oder Salat auf Wunsch; Preis anhand belegter Quelle bestätigt; AG-Sticker -1,00 €",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
@@ -908,7 +908,7 @@
           },
           {
             "name": "Tempeh-Bowl mit Hummus, Karotten & Kraut",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -1549,7 +1549,7 @@
           }
         ]
       },
-      "browser_verified_at": "2026-11-06T19:22:34+01:00"
+      "browser_verified_at": "2026-11-06T19:44:27+01:00"
     },
     {
       "id": "omakueche",
