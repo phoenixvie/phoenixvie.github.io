@@ -750,6 +750,19 @@ def run(today):
         observed_digest=meta.get('content_sha256')
         if today.weekday()>=5:
             should_check=False
+        elif ident in ("campus","baschly") and data.get("weekStart")==monday.isoformat() and sum(len(v) for v in restaurant(data,ident).get("days",{}).values())>0 and meta.get("content_sha256"):
+            # Nur eine günstige Inhaltsprüfung; unveränderte Menüs nicht erneut parsen.
+            try:
+                if ident=="campus":
+                    prefetched_raw=safe_get(URLS["campus"])
+                    observed_digest=menu_fingerprint(prefetched_raw)
+                else:
+                    prefetched_raw=(safe_get(URLS["baschly_veg"]),safe_get(URLS["baschly_meat"]))
+                    observed_digest=hashlib.sha256((menu_fingerprint(prefetched_raw[0])+menu_fingerprint(prefetched_raw[1])).encode()).hexdigest()
+                should_check=observed_digest!=meta["content_sha256"]
+            except Exception as exc:
+                problems.append(f"{ident}: Änderungsprüfung fehlgeschlagen: {str(exc)[:145]}")
+                should_check=False
         elif ident in ("mensa","glashaus","gruenehuette","lia") and weekly_cache_valid(data,ident,monday) and prev_success and prev_success[:10]>=monday.isoformat() and (ident!="lia" or meta.get("parser_version")==2):
             if ident=="mensa":
                 should_check=False
@@ -803,13 +816,19 @@ def run(today):
                 days,validity=parse_glashaus(prefetched_raw if prefetched_raw is not None else safe_get(URLS["glashaus"]),monday)
                 apply_result(data,"glashaus",days,"verified",validity)
             elif ident=="campus":
-                days,validity=parse_campus(safe_get(URLS["campus"]),monday)
+                raw=prefetched_raw if prefetched_raw is not None else safe_get(URLS["campus"])
+                days,validity=parse_campus(raw,monday)
+                candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
                 apply_result(data,"campus",days,"verified",validity)
+                observed_digest=menu_fingerprint(raw)
             elif ident=="baschly":
-                veg=parse_baschly(safe_get(URLS["baschly_veg"]),monday)
-                meat=parse_baschly(safe_get(URLS["baschly_meat"]),monday,True)
+                raws=prefetched_raw if isinstance(prefetched_raw,tuple) else (safe_get(URLS["baschly_veg"]),safe_get(URLS["baschly_meat"]))
+                veg=parse_baschly(raws[0],monday)
+                meat=parse_baschly(raws[1],monday,True)
                 days={d:veg[d]+meat[d] for d in veg}
+                candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
                 apply_result(data,"baschly",days,"undated")
+                observed_digest=hashlib.sha256((menu_fingerprint(raws[0])+menu_fingerprint(raws[1])).encode()).hexdigest()
             elif ident=="topfdeckel":
                 try:
                     items=parse_topfdeckel(safe_get(URLS["topfdeckel"]),today,monday)
@@ -866,7 +885,7 @@ def run(today):
         "health":"healthy" if not problems else ("failed" if len(problems)==8 else "degraded"),
         "sources":operations,
         "problems":problems,
-        "next_run":"next business day ~08:15 Europe/Vienna",
+        "next_run":"weekdays 08:15, 09:15, 10:15, 11:15, 12:15 Europe/Vienna",
         "format_version":1,
     }
     validate_meal_components(data)
