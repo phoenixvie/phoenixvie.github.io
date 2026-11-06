@@ -16,7 +16,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from playwright.sync_api import sync_playwright
-from update_menus import ROOT, topf_starters,topf_main_items,topf_combo_items,html_lines,quality_warnings,validate_meal_components
+from update_menus import ROOT, topf_starters,topf_main_items,topf_desserts,topf_combo_items,html_lines,quality_warnings,validate_meal_components
 
 URL="https://topfdeckel.at/wochenmenu"
 DAY_NAMES=("Montag","Dienstag","Mittwoch","Donnerstag","Freitag")
@@ -57,12 +57,14 @@ def collect_week(monday, *, with_snapshots=False):
                 html=page.locator("main").inner_html()
                 lines=html_lines(html.encode("utf-8"))
                 verify_week(" ".join(lines),monday)
-                soups=topf_starters(lines)
+                starters=topf_starters(lines)
                 mains=topf_main_items(lines)
-                if not soups or len(mains)<2:
-                    raise ValueError(f"Topf-Browser: {day}: Suppen/Hauptgerichte fehlen")
-                items=soups+mains+topf_combo_items()
-                for x in soups+mains:
+                desserts=topf_desserts(lines)
+                if (not starters or not any(x["category"]=="Suppe" for x in starters)
+                        or len(mains)<2 or not desserts):
+                    raise ValueError(f"Topf-Browser: {day}: Suppen/Salate/Nachspeisen/Hauptgerichte fehlen")
+                items=starters+mains+desserts+topf_combo_items()
+                for x in starters+mains:
                     if x.get("price_small") is None or x.get("price_large") is None:
                         raise ValueError(f"Topf-Browser: {day}: Portionspreis fehlt")
                     if not x["price_small"]<x["price_large"]:

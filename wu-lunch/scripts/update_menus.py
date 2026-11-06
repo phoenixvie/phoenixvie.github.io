@@ -450,23 +450,53 @@ def topf_section(lines, names, following):
     return lines[begin+1:end]
 
 def topf_starters(lines):
-    """Read actual soup/salad labels from original Starters/Vorspeisen section."""
+    """Read every separately purchasable soup and salad from Vorspeisen.
+
+    Topf & Deckel publishes ``Haussalat`` in the same section and with the
+    same small/large tariff as its soups. It is not a garnish of a main dish.
+    """
     section=topf_section(lines,{"starters","vorspeisen","suppen & vorspeisen"},
                          {"main dish","hauptspeisen","hauptgerichte"})
-    soups=[]
+    starters=[]
     seen=set()
     for i,line in enumerate(section):
         label=tidy(line)
-        if not re.search(r"(?:suppe|eintopf|consommé|bouillon)",label,re.I):
+        soup=bool(re.search(r"(?:suppe|eintopf|consommé|bouillon)",label,re.I))
+        salad=bool(re.search(r"\bsalat\b",label,re.I))
+        if not (soup or salad):
             continue
         if re.search(r"^(?:klein|gross|groß|€|salat/suppe)",label,re.I) or len(label)>105:
             continue
         if label.casefold() in seen:continue
         seen.add(label.casefold())
-        soups.append(topf_portion_item(label,"Suppe",3.90,5.90,"unknown",
+        starters.append(topf_portion_item(label,"Suppe" if soup else "Salat",3.90,5.90,
+                         "veggie" if salad else "unknown",
                          "Vorspeise, separat erhältlich; klein / groß"))
-        if len(soups)>=3:break
-    return soups
+        if len(starters)>=5:break
+    return starters
+
+def topf_desserts(lines):
+    """Read the published dessert section with its explicit price."""
+    try:
+        section=topf_section(lines,{"dessert","desserts","nachspeisen"},set())
+    except ValueError:
+        return []
+    price=euros(" ".join(section))
+    if price is None:
+        raise ValueError("Topf&Deckel: Dessert-Preis fehlt")
+    desserts=[]
+    seen=set()
+    for line in section:
+        label=tidy(line)
+        if not (5<=len(label)<=105) or label.casefold() in seen:
+            continue
+        if ("dessert" not in label.casefold() and "nachspeise" not in label.casefold()) or "€" in label:
+            continue
+        seen.add(label.casefold())
+        desserts.append(make_item(label,price,"Nachspeise","unknown","Separat erhältlich"))
+    if not desserts:
+        raise ValueError("Topf&Deckel: Dessert fehlt")
+    return desserts
 
 def topf_main_items(lines):
     section=topf_section(lines,{"main dish","hauptspeisen","hauptgerichte"},
@@ -516,7 +546,7 @@ def parse_topfdeckel(raw,today,monday):
     mo=months.get(m.group(3).casefold())
     if mo is None or date(int(m.group(4)),mo,int(m.group(2)))!=today or m.group(1).casefold()!=WEEKDAYS[today.weekday()].casefold():
         raise ValueError("Topf&Deckel: kein datierter Plan für heute")
-    return topf_starters(lines)+topf_main_items(lines)+topf_combo_items()
+    return topf_starters(lines)+topf_main_items(lines)+topf_desserts(lines)+topf_combo_items()
 
 def parse_topfdeckel_week(raw,today,monday):
     """Use current dated weekly page's SSR Monday tab even on later weekdays."""
@@ -654,16 +684,9 @@ def parse_lia_week(raw,monday):
             price_line=re.fullmatch(r"€\s*(\d{1,3}[,.]\d{2})",text)
             if price_line:
                 amount=float(price_line.group(1).replace(",","."))
-                upcoming=next((tidy(x) for x in detail_lines[offset+1:]
-                               if tidy(x) and not re.match(r"^€\\s*\\d",tidy(x))),"")
-                # Isolated price BEFORE another bilingual dish is a prefix,
-                # not a trailing price of the preceding dish. Only attach
-                # backwards when no following dish is present.
-                next_dish=bool(upcoming and len(upcoming)>=13 and
-                               not re.match(r"^(?:Hauptgericht|Verfügbar|Änderungen)",upcoming,re.I))
-                if next_dish:
-                    pending_price=amount
-                elif items and items[-1].get("price") is None:
+                # Lia's markup can put a trailing price in its own element.
+                # The next text is usually the next dish, not a prefix.
+                if items and items[-1].get("price") is None:
                     items[-1]["price"]=amount
                     items[-1]["description"]=items[-1]["description"].replace("Preis nicht bestätigt","Preis bestätigt")
                 else:
