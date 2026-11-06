@@ -79,3 +79,26 @@ jobs:
           except ValueError as error:
             print("Finn correctly not published for this week:",str(error)[:130])
           PY
+      - name: Finn original JPEG two-model integration (temporary acceptance test)
+        if: github.event_name == 'pull_request' && github.event.pull_request.number == 4
+        continue-on-error: true
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import importlib.util, os
+          from pathlib import Path
+          from datetime import datetime,timedelta
+          from zoneinfo import ZoneInfo
+          p=Path("wu-lunch/scripts/update_new_restaurants.py")
+          spec=importlib.util.spec_from_file_location("finn_acceptance",p)
+          script=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(script)
+          today=datetime.now(ZoneInfo("Europe/Vienna")).date()
+          monday=today-timedelta(days=today.weekday())
+          days,sha,url=script.fetch_finn(monday,key=os.environ["OPENAI_API_KEY"],previous={})
+          print("Finn image URL:",url)
+          print("Finn two-model validation:",{k:len(v) for k,v in days.items()})
+          print("Finn prices:",sorted({x["price"] for v in days.values() for x in v}))
+          PY
