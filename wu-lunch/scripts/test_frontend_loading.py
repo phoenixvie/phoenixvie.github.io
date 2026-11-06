@@ -32,5 +32,14 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertIn("karmafood:'logo-karmafood'",html)
         self.assertIn("finn:'logo-finn'",html)
 
+    def test_weekend_preview_and_mobile_swipe_are_available(self):
+        html=(ROOT/"index.html").read_text(encoding="utf-8")
+        self.assertIn("const displayMondayIso=weekend",html)
+        self.assertIn("Noch nicht veröffentlicht – erscheint automatisch",html)
+        self.assertIn("function moveDay(step)",html)
+        self.assertIn("listView.addEventListener('pointerup'",html)
+        self.assertIn("touch-action:pan-y",html)
+        self.assertIn("day-slide-next",html)
+
 if __name__=="__main__":
     unittest.main()

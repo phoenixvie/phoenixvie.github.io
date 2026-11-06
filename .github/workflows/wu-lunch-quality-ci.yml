@@ -40,6 +40,9 @@ jobs:
         run: |
           python -m py_compile wu-lunch/scripts/repair_menus_ai.py
           python -m py_compile wu-lunch/scripts/update_mensa_ai.py
+          python -m py_compile wu-lunch/scripts/update_menus.py
+          python -m py_compile wu-lunch/scripts/update_new_restaurants.py
+          python -m py_compile wu-lunch/scripts/update_topf_browser.py
           python -m py_compile wu-lunch/ai-pilot/ai_direct.py
       - name: Regression tests (no network, no model calls)
         run: python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v

@@ -255,6 +255,12 @@ html,body,.page { background:#fff; }
  .map-stage{height:350px;min-height:320px}
 }
 .weekend-hint{max-width:1110px;margin:13px auto 0;padding:10px 14px;border:1px solid #e4e7ea;border-radius:5px;background:#f7f9fc;color:#586577;font-size:14px;line-height:1.5}
+.list-view{touch-action:pan-y}
+.list-view.day-slide-next{animation:day-slide-next .22s ease-out}
+.list-view.day-slide-previous{animation:day-slide-previous .22s ease-out}
+@keyframes day-slide-next{from{opacity:.35;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
+@keyframes day-slide-previous{from{opacity:.35;transform:translateX(-22px)}to{opacity:1;transform:translateX(0)}}
+@media (prefers-reduced-motion:reduce){.list-view.day-slide-next,.list-view.day-slide-previous{animation:none}}
 @media(max-width:750px){.weekend-hint{margin:12px 0 0;font-size:13px;padding:10px 12px}}
 .logo-omakueche{background:#b82c31;color:#fff}.logo-topfdeckel{background:#d48d29;color:#fff}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#8558a7;color:#fff}.logo-karmafood{background:#c65b40;color:#fff}.logo-finn{background:#49654e;color:#fff}
 </style>
@@ -272,7 +278,7 @@ html,body,.page { background:#fff; }
     </section>
 
     <main class="content-wrap">
-      <div class="weekend-hint" id="weekendHint" hidden>Vorschau auf Montag: Die neuen Mittagsmenüs sind voraussichtlich erst am Montag veröffentlicht. Bereits verfügbare Angebote werden automatisch ergänzt.</div><section class="list-view" id="listView"></section>
+      <div class="weekend-hint" id="weekendHint" hidden></div><section class="list-view" id="listView"></section>
       <section class="map-view" id="mapView" aria-label="Karte der Restaurants">
         <div class="map-stage" id="mapStage" aria-label="Interaktive Karte der Restaurants rund um den WU Campus"></div>
       </section>
@@ -512,7 +518,7 @@ html,body,.page { background:#fff; }
       const label=(initials[restaurant.id]||restaurant.name.charAt(0)).toLocaleUpperCase('de-AT');
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
-      ).join('') : '<div class="empty-row">'+(weekend && selectedDate===displayMondayIso ? 'Das Menü für Montag ist vermutlich erst am Montag verfügbar.' : 'Für diesen Tag ist noch kein Menü veröffentlicht.')+'</div>';
+      ).join('') : '<div class="empty-row">Noch nicht veröffentlicht – erscheint automatisch, sobald '+escapeHtml(restaurant.name)+' das Menü veröffentlicht.</div>';
       row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+escapeHtml(label)+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
        +'<div class="menu-lines">'+dishRows+'</div>'
@@ -526,6 +532,37 @@ html,body,.page { background:#fff; }
       const list = listView.querySelector('.list');
       DATA.restaurants.forEach(r => list.appendChild(renderRow(r)));
     }
+
+    function renderWeekendHint(){
+      if(!(weekend&&selectedDate===displayMondayIso)){
+        weekendHint.hidden=true;
+        return;
+      }
+      const pending=DATA.restaurants.filter(r=>visibleDishes(r).length===0).map(r=>r.name);
+      weekendHint.textContent=pending.length
+        ? 'Vorschau auf Montag. Noch nicht veröffentlicht: '+pending.join(', ')+'. Erscheint automatisch nach Veröffentlichung.'
+        : 'Vorschau auf Montag.';
+      weekendHint.hidden=false;
+    }
+
+    function moveDay(step){
+      const index=weekDates.findIndex(day=>day.iso===selectedDate);
+      const next=weekDates[index+step];
+      if(next){ selectedDate=next.iso; update(step); }
+    }
+
+    let swipeStart=null;
+    listView.addEventListener('pointerdown',event=>{
+      if(event.pointerType==='mouse')return;
+      swipeStart={x:event.clientX,y:event.clientY};
+    },{passive:true});
+    listView.addEventListener('pointerup',event=>{
+      if(!swipeStart)return;
+      const dx=event.clientX-swipeStart.x,dy=event.clientY-swipeStart.y;
+      swipeStart=null;
+      if(Math.abs(dx)>=56 && Math.abs(dx)>Math.abs(dy)*1.4)moveDay(dx<0?1:-1);
+    },{passive:true});
+    listView.addEventListener('pointercancel',()=>{swipeStart=null;},{passive:true});
 
 
 
@@ -619,10 +656,16 @@ html,body,.page { background:#fff; }
       requestAnimationFrame(()=>realMap.invalidateSize({pan:false}));
       setTimeout(()=>realMap.invalidateSize({pan:false}),250);
     }
-    function update(){
-      weekendHint.hidden=!(weekend&&selectedDate===displayMondayIso);
+    function update(slideDirection=0){
       renderTabs();
       renderList();
+      renderWeekendHint();
+      if(slideDirection){
+        const animation=slideDirection>0?'day-slide-next':'day-slide-previous';
+        listView.classList.remove('day-slide-next','day-slide-previous');
+        void listView.offsetWidth;
+        listView.classList.add(animation);
+      }
     }
 
     update();

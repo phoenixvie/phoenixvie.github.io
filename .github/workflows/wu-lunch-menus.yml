@@ -2,11 +2,13 @@ name: WU Lunch – Speisepläne aktualisieren
 
 on:
   schedule:
-    # Montag 06:15 bis 18:15 Wiener Zeit stündlich: neue Wochenpläne früh erkennen.
+    # Montag 06:15 bis 18:15 sowie Samstag 08:15 bis 18:15 Wiener Zeit:
+    # neue Wochenpläne früh erkennen und die Samstagsvorschau befüllen.
     # Di–Fr weiterhin 08:15 bis 12:15. UTC deckt beide DST-Offsets ab;
     # die Prüfung unten filtert unerwünschte Stunden heraus.
     - cron: '15 4-17 * * 1'
     - cron: '15 6-11 * * 2-5'
+    - cron: '15 6-16 * * 6'
   workflow_dispatch:
   push:
     # Clean-room test: menu data and cache cleared on 2026-11-06; run on this push.
@@ -41,7 +43,8 @@ jobs:
           hour="$(TZ=Europe/Vienna date +%H)"
           if [[ "${{ github.event_name }}" == "schedule" ]] && ! (
             { [[ "$day" == "1" ]] && [[ "$hour" =~ ^(06|07|08|09|10|11|12|13|14|15|16|17|18)$ ]]; } ||
-            { [[ "$day" =~ ^[2-5]$ ]] && [[ "$hour" =~ ^(08|09|10|11|12)$ ]]; }
+            { [[ "$day" =~ ^[2-5]$ ]] && [[ "$hour" =~ ^(08|09|10|11|12)$ ]]; } ||
+            { [[ "$day" == "6" ]] && [[ "$hour" =~ ^(08|09|10|11|12|13|14|15|16|17|18)$ ]]; }
           ); then
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
@@ -91,12 +94,12 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          # Geplante Quellenanalyse werktags um 11:15 Wien nach der Publikation.
+          # Geplante Quellenanalyse Mo 07:15 und 11:15, Di–Sa um 11:15 Wien.
           # Bei Code-Änderungen sofort als Integrationstest ausführen.
           hour="$(TZ=Europe/Vienna date +%H)"
           day="$(TZ=Europe/Vienna date +%u)"
           if [[ "${{ github.event_name }}" == "schedule" && "$hour" != "11" && ! ( "$day" == "1" && "$hour" == "07" ) ]]; then
-            echo "Topf Browser regulär Mo 07:15 und 11:15, Di–Fr 11:15."
+            echo "Topf Browser regulär Mo 07:15 und 11:15, Di–Sa 11:15."
             exit 0
           fi
           pip install 'playwright>=1.50,<2'
@@ -113,7 +116,7 @@ jobs:
           hour="$(TZ=Europe/Vienna date +%H)"
           day="$(TZ=Europe/Vienna date +%u)"
           if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$hour" != "11" && ! ( "$day" == "1" && "$hour" == "07" ) ]]; then
-            echo "Mensa-KI läuft Mo 07:15 und 11:15, Di–Fr 11:15 Wien."
+            echo "Mensa-KI läuft Mo 07:15 und 11:15, Di–Sa 11:15 Wien."
             exit 0
           fi
           python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
