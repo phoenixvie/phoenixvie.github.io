@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-06T19:43:52+01:00",
+  "checked_at": "2026-11-06T20:03:53+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
   "health": "degraded",
@@ -7,14 +7,14 @@
     "karmafood": {
       "state": "not_published",
       "last_success": null,
-      "checked_at": "2026-11-06T19:44:02+01:00",
+      "checked_at": "2026-11-06T20:04:02+01:00",
       "consecutive_failures": 0,
       "note": "Karma Food: nur ein Plan für eine andere Woche veröffentlicht"
     },
     "finn": {
       "state": "cached",
       "last_success": "2026-11-06T19:12:26+01:00",
-      "checked_at": "2026-11-06T19:44:02+01:00",
+      "checked_at": "2026-11-06T20:04:02+01:00",
       "consecutive_failures": 0,
       "content_sha256": "75c0d6609c32b5f4190be95d414faa054cc76db1b0f43093bb94ba0f52a77797",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
@@ -22,7 +22,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-06T19:43:52+01:00",
+      "last_success": "2026-11-06T20:03:53+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -30,7 +30,7 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
-      "consecutive_failures": 17,
+      "consecutive_failures": 18,
       "content_sha256": null
     },
     "glashaus": {
@@ -44,7 +44,7 @@
       "state": "error",
       "error": "ValueError: Campus: Plan nicht für KW 2026-11-02: (datetime.date(2026, 11, 9), datetime.date(2026, 11, 12))",
       "last_success": "2026-11-06T10:40:36+01:00",
-      "consecutive_failures": 14,
+      "consecutive_failures": 15,
       "content_sha256": "bb226678fe348d1b0a46cce678175c65676aa94cec9f64a2f5c8afa76a43f0ec"
     },
     "baschly": {
@@ -62,16 +62,11 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "ok_browser",
-      "last_success": "2026-11-06T19:44:27+01:00",
+      "state": "ok",
+      "last_success": "2026-11-06T20:03:53+01:00",
       "consecutive_failures": 0,
-      "day_sha256": {
-        "2026-11-02": "7e077d88b925efefea4a5e41a464d28abfd0db932802926198f3e54d5ba598c6",
-        "2026-11-03": "eb2ab8b7750cdfd25396cbae30d8ba57aa65d75b434e124aef3c65f0200890b7",
-        "2026-11-04": "857e28b18b3317161f8fa9b26b521e2004b0b68ae8e95d082169dadba8f3f9bd",
-        "2026-11-05": "c170909cb5e1b3297af8c39965f72702c063cdcd838395799c372c519a7bae15",
-        "2026-11-06": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
-      }
+      "parser_version": null,
+      "content_sha256": null
     },
     "gruenehuette": {
       "state": "cached",
@@ -81,7 +76,7 @@
       "content_sha256": "7d89e2a67d78ff1f3aac6d776c103a8182e16061e206d3fd52a0e035706be653"
     },
     "lia": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-06T19:43:52+01:00",
       "consecutive_failures": 0,
       "parser_version": 4,
@@ -94,75 +89,6 @@
   ],
   "next_run": "Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 (Europe/Vienna, GitHub Actions: zeitliche Abweichung möglich)",
   "format_version": 1,
-  "quality_warnings": [
-    "lia 2026-11-02: Preis fehlt: Stroganoff vom Schweinsfilet mit Langkornreis",
-    "lia 2026-11-02: Preis fehlt: Champignon-Buchweizenbraten auf Haselnuss-Karottenragout",
-    "lia 2026-11-03: Preis fehlt: Wiener Schnitzel mit Pommes",
-    "lia 2026-11-04: Preis fehlt: 1/2 Pizza mit Salami",
-    "lia 2026-11-05: Preis fehlt: Lasagne klassisch – mit Schwein & Rind",
-    "campus 2026-11-02: Preis fehlt: Fleischlaibchen à la Metternich mit Koriander, Blattspinat und Erdäpfel-Mousseli",
-    "campus 2026-11-02: Preis fehlt: Gebackenes Sellerieschnitzel mit Wildpreiselbeeren und hausgemachter Sauce Tarta",
-    "campus 2026-11-03: Preis fehlt: Gefüllte Paprika in Tomatensauce mit Salzkartoffeln",
-    "campus 2026-11-03: Preis fehlt: Linseneintopf mit Sauerrahm, Wurzelgemüse und Serviettenknödel",
-    "campus 2026-11-04: Preis fehlt: Spaghetti Carbonara",
-    "campus 2026-11-04: Preis fehlt: Rote-Rüben Risotto mit Rucola, Feta und Ofentomaten",
-    "campus 2026-11-05: Preis fehlt: Schweinsfilet in Pfefferrahmsauce mit Speckbohnen und Kräuternockerln",
-    "campus 2026-11-05: Preis fehlt: Kartoffelgratin mit Duett von geschmolzenen Karotten und Kräuteröl",
-    "campus 2026-11-06: kein Menü vorhanden",
-    "karmafood 2026-11-02: kein Menü vorhanden",
-    "karmafood 2026-11-03: kein Menü vorhanden",
-    "karmafood 2026-11-04: kein Menü vorhanden",
-    "karmafood 2026-11-05: kein Menü vorhanden",
-    "karmafood 2026-11-06: kein Menü vorhanden"
-  ],
-  "quality_warning_count": 19,
-  "topf_luna_audit": {
-    "state": "review_needed",
-    "model": "gpt-6-luna",
-    "fingerprint": "0ca5ee2d89e56b160df2ad51df818633372113e8ec0fc762db60aebd824720a0",
-    "checked_at": "2026-11-06T19:45:34+01:00",
-    "validation_issues": [
-      "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
-    ],
-    "ai_only_examples": {
-      "2026-11-02": [
-        "dessert des tages",
-        "haussalat"
-      ],
-      "2026-11-03": [
-        "haussalat",
-        "dessert des tages"
-      ],
-      "2026-11-04": [
-        "haussalat",
-        "dessert des tages"
-      ],
-      "2026-11-05": [
-        "haussalat",
-        "dessert des tages"
-      ],
-      "2026-11-06": [
-        "haussalat",
-        "dessert des tages"
-      ]
-    },
-    "warnings": [
-      "In den sichtbaren Tabs ist keine Menü-Kombination mit Gesamtpreis ausgewiesen; daher wurde keine Kombination ergänzt.",
-      "Für die Suppen ist kein kostenloser Bezug angegeben. Die Preise folgen dem Vorspeisen-Tarif: klein 3,90 €, groß 5,90 €."
-    ],
-    "usage": {
-      "input_tokens": 51147,
-      "input_tokens_details": {
-        "cache_write_tokens": 51144,
-        "cached_tokens": 0
-      },
-      "output_tokens": 9127,
-      "output_tokens_details": {
-        "reasoning_tokens": 516
-      },
-      "total_tokens": 60274
-    }
-  },
   "ai_repair": {
     "lia": {
       "last_checked": "2026-11-06T19:45:34+01:00",
@@ -234,5 +160,74 @@
       "repairs": 0,
       "error": null
     }
-  }
+  },
+  "topf_luna_audit": {
+    "state": "review_needed",
+    "model": "gpt-6-luna",
+    "fingerprint": "0ca5ee2d89e56b160df2ad51df818633372113e8ec0fc762db60aebd824720a0",
+    "checked_at": "2026-11-06T19:45:34+01:00",
+    "validation_issues": [
+      "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
+    ],
+    "ai_only_examples": {
+      "2026-11-02": [
+        "dessert des tages",
+        "haussalat"
+      ],
+      "2026-11-03": [
+        "haussalat",
+        "dessert des tages"
+      ],
+      "2026-11-04": [
+        "haussalat",
+        "dessert des tages"
+      ],
+      "2026-11-05": [
+        "haussalat",
+        "dessert des tages"
+      ],
+      "2026-11-06": [
+        "haussalat",
+        "dessert des tages"
+      ]
+    },
+    "warnings": [
+      "In den sichtbaren Tabs ist keine Menü-Kombination mit Gesamtpreis ausgewiesen; daher wurde keine Kombination ergänzt.",
+      "Für die Suppen ist kein kostenloser Bezug angegeben. Die Preise folgen dem Vorspeisen-Tarif: klein 3,90 €, groß 5,90 €."
+    ],
+    "usage": {
+      "input_tokens": 51147,
+      "input_tokens_details": {
+        "cache_write_tokens": 51144,
+        "cached_tokens": 0
+      },
+      "output_tokens": 9127,
+      "output_tokens_details": {
+        "reasoning_tokens": 516
+      },
+      "total_tokens": 60274
+    }
+  },
+  "quality_warnings": [
+    "lia 2026-11-02: Preis fehlt: Stroganoff vom Schweinsfilet mit Langkornreis",
+    "lia 2026-11-02: Preis fehlt: Champignon-Buchweizenbraten auf Haselnuss-Karottenragout",
+    "lia 2026-11-03: Preis fehlt: Wiener Schnitzel mit Pommes",
+    "lia 2026-11-04: Preis fehlt: 1/2 Pizza mit Salami",
+    "lia 2026-11-05: Preis fehlt: Lasagne klassisch – mit Schwein & Rind",
+    "campus 2026-11-02: Preis fehlt: Fleischlaibchen à la Metternich mit Koriander, Blattspinat und Erdäpfel-Mousseli",
+    "campus 2026-11-02: Preis fehlt: Gebackenes Sellerieschnitzel mit Wildpreiselbeeren und hausgemachter Sauce Tarta",
+    "campus 2026-11-03: Preis fehlt: Gefüllte Paprika in Tomatensauce mit Salzkartoffeln",
+    "campus 2026-11-03: Preis fehlt: Linseneintopf mit Sauerrahm, Wurzelgemüse und Serviettenknödel",
+    "campus 2026-11-04: Preis fehlt: Spaghetti Carbonara",
+    "campus 2026-11-04: Preis fehlt: Rote-Rüben Risotto mit Rucola, Feta und Ofentomaten",
+    "campus 2026-11-05: Preis fehlt: Schweinsfilet in Pfefferrahmsauce mit Speckbohnen und Kräuternockerln",
+    "campus 2026-11-05: Preis fehlt: Kartoffelgratin mit Duett von geschmolzenen Karotten und Kräuteröl",
+    "campus 2026-11-06: kein Menü vorhanden",
+    "karmafood 2026-11-02: kein Menü vorhanden",
+    "karmafood 2026-11-03: kein Menü vorhanden",
+    "karmafood 2026-11-04: kein Menü vorhanden",
+    "karmafood 2026-11-05: kein Menü vorhanden",
+    "karmafood 2026-11-06: kein Menü vorhanden"
+  ],
+  "quality_warning_count": 19
 }
