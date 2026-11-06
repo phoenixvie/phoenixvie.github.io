@@ -67,8 +67,8 @@
     .legend strong{color:#3a3a3a}
     .legend .hint{font-size:12px;color:#888}
 
-    .list-view,.map-view{display:none}
-    .list-view.active,.map-view.active{display:block}
+    .list-view,.map-view{display:block}
+    .map-view{margin-top:24px}
 
     .list{
       background:transparent;
@@ -111,7 +111,8 @@
     .menu-line .separator{color:#999;padding:0 6px}
     .menu-line .extra{color:#888;font-size:12px}
     .source-note{margin-top:7px;font-size:12px;color:#8a8a8a}
-    .source-link{display:inline-block;margin-top:4px;font-size:12px;color:#5b86c7}
+    .restaurant-links{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:6px}
+    .restaurant-links .source-link{display:inline-block;margin:0;font-size:12px;color:#5b86c7}
 
     .price-cell{display:flex;flex-direction:column;align-items:flex-end;gap:7px;padding-top:31px}
     .price{font-size:18px;color:#4a4a4a;white-space:nowrap}
@@ -120,7 +121,7 @@
     .empty-row{padding:10px 0;color:#9a9a9a;font-size:13px}
 
     .map-view{background:#fff;border:1px solid #ddd;border-radius:6px;padding:18px}
-    .map-stage{position:relative;height:430px;border-radius:4px;overflow:hidden;background:#e9eef3;margin-bottom:16px}
+    .map-stage{position:relative;height:430px;border-radius:4px;overflow:hidden;background:#e9eef3;margin-bottom:0}
     .map-stage::before{content:"";position:absolute;inset:0;background:url('assets/background-campus.png') center/cover no-repeat;opacity:.22}
     .map-stage::after{content:"WU CAMPUS OVERVIEW";position:absolute;top:10px;left:14px;font-size:12px;font-weight:bold;color:#5f6670;letter-spacing:.12em}
     .marker{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -264,19 +265,14 @@ html,body,.page { background:#fff; }
 
     <section class="toolbar" aria-label="Navigation">
       <div class="day-tabs" id="dayTabs"></div>
-      <div class="view-tabs" role="tablist" aria-label="Ansicht wählen">
-        <button class="view-tab active" data-view="list" aria-selected="true">Listview</button>
-        <button class="view-tab" data-view="map" aria-selected="false">Mapview</button>
-      </div>
+
       
     </section>
 
     <main class="content-wrap">
-      <div class="weekend-hint" id="weekendHint" hidden>Vorschau auf Montag: Die neuen Mittagsmenüs sind voraussichtlich erst am Montag veröffentlicht. Bereits verfügbare Angebote werden automatisch ergänzt.</div><section class="list-view active" id="listView"></section>
-
-      <section class="map-view" id="mapView">
-        <div class="map-stage" id="mapStage"></div>
-        <div class="map-list" id="mapList"></div>
+      <div class="weekend-hint" id="weekendHint" hidden>Vorschau auf Montag: Die neuen Mittagsmenüs sind voraussichtlich erst am Montag veröffentlicht. Bereits verfügbare Angebote werden automatisch ergänzt.</div><section class="list-view" id="listView"></section>
+      <section class="map-view" id="mapView" aria-label="Karte der Restaurants">
+        <div class="map-stage" id="mapStage" aria-label="Interaktive Karte der Restaurants rund um den WU Campus"></div>
       </section>
     </main>
 
@@ -308,7 +304,7 @@ html,body,.page { background:#fff; }
     const weekendHint=document.getElementById('weekendHint');
     const mapView = document.getElementById('mapView');
     const mapStage = document.getElementById('mapStage');
-    const mapList = document.getElementById('mapList');
+
     const legendTitle = null;
     const legendRight = null;
     const dateLabel = null;
@@ -378,7 +374,7 @@ html,body,.page { background:#fff; }
     }
 
     let selectedDate = defaultSelectedDate();
-    let currentView = 'list';
+
 
     function renderTabs(){
       tabContainer.innerHTML = '';
@@ -461,7 +457,8 @@ html,body,.page { background:#fff; }
       row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+escapeHtml(label)+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
        +'<div class="menu-lines">'+dishRows+'</div>'
-       +'<a class="source-link" href="'+escapeHtml(restaurant.url)+'" target="_blank" rel="noopener noreferrer">Zum Restaurant</a></div>';
+       +'<div class="restaurant-links"><a class="source-link" href="'+escapeHtml(restaurant.url)+'" target="_blank" rel="noopener noreferrer">Zum Restaurant</a>'
+       +'<a class="source-link" href="'+escapeHtml(googleMapsUrl(restaurant,locationInfo[restaurant.id]))+'" target="_blank" rel="noopener noreferrer">Google Maps</a></div></div>';
       return row;
     }
 
@@ -561,36 +558,15 @@ html,body,.page { background:#fff; }
       requestAnimationFrame(()=>realMap.invalidateSize({pan:false}));
       setTimeout(()=>realMap.invalidateSize({pan:false}),250);
     }
-    function renderMap(){
-      mapList.replaceChildren();
-      DATA.restaurants.forEach(r=>{
-        const info=locationInfo[r.id];
-        const card=document.createElement('div');card.className='map-card';
-        const title=document.createElement('h4');title.textContent=r.name+' · '+info.building;
-        const location=document.createElement('p');location.textContent=info.address;
-        const link=document.createElement('a');link.textContent='Auf Google Maps öffnen ↗';link.href=googleMapsUrl(r,info);link.target='_blank';link.rel='noopener noreferrer';
-        card.append(title,location,link);mapList.append(card);
-      });
-    }
     function update(){
       weekendHint.hidden=!(weekend&&selectedDate===displayMondayIso);
       renderTabs();
       renderList();
-      renderMap();
-      document.querySelectorAll('.view-tab').forEach(btn=>{
-        const active = btn.dataset.view === currentView;
-        btn.classList.toggle('active', active);
-        btn.setAttribute('aria-selected', active ? 'true' : 'false');
-      });
-      listView.classList.toggle('active', currentView === 'list');
-      mapView.classList.toggle('active', currentView === 'map'); if(currentView === 'map') loadRealMap();
     }
 
-    document.querySelectorAll('.view-tab').forEach(btn=>{
-      btn.addEventListener('click',()=>{currentView = btn.dataset.view; update();});
-    });
-
     update();
+    // Die Karte bleibt unter der Menü-Liste immer sichtbar und wird nur einmal initialisiert.
+    loadRealMap();
   })();
   </script>
 </body>
