@@ -442,28 +442,52 @@ html,body,.page { background:#fff; }
       if(restaurantId==='baschly')return 'Tagessuppe oder kleiner Salat + ';
       return '';
     }
+    // Consistent across every restaurant: separately sold soups before mains.
+    // Only source-backed standalone items are listed; included choices stay
+    // with their main course, without implying a separate free portion.
+    function mealPosition(item){
+      const category=(item.category||'').toLocaleLowerCase('de-AT');
+      const name=(item.name||'').toLocaleLowerCase('de-AT');
+      if(category.includes('suppe') || category.includes('soup') ||
+         (name.includes('suppe') && !category.includes('hauptgericht')))return 0;
+      if(category.includes('hauptgericht') || category.includes('fleisch') ||
+         category.includes('veggie') || category.includes('vegan') ||
+         category.includes('fisch') || category.includes('meaty'))return 1;
+      if(category.includes('salat') || category.includes('salad'))return 2;
+      if(category.includes('nachspeise') || category.includes('dessert') ||
+         category.includes('süßspeise'))return 3;
+      if(category.includes('menüoption') || category.includes('kombination'))return 4;
+      return 1;
+    }
     function visibleDishes(restaurant){
       const raw=dishesForRestaurant(restaurant);
-      // Suppe nur für die Mensa-Menülinien, NICHT Global & Grill.
-      if(restaurant.id==='mensa'){
-        const soup=raw.find(item=>item.category==='Tagessuppe');
-        const mains=raw.filter(item=>item.category!=='Tagessuppe');
-        return mains.map(item=>({
-          name:(soup && !['Global & Grill','Pizza & Co','Bowls & Co','Pasta & Co'].includes(item.category)
-            ? soup.name+' + ' : '')+item.name,
-          price:item.price,
-          priceDisplay:item.price==null?'Preis nicht bestätigt':null
-        }));
-      }
-      return raw.map(item=>({
-        name:includedPrefix(item,restaurant.id)+(restaurant.id==='losteria'
-          ? item.name.toLocaleLowerCase('it-IT').replace(/(^|[\s-])([a-zà-ÿ])/g,(_,sep,letter)=>sep+letter.toLocaleUpperCase('it-IT'))
-          : item.name)+(restaurant.id==='topfdeckel' && item.category==='Suppe' ? ' (klein/groß)' : ''),
-        price:item.price,
-        priceDisplay:restaurant.id==='topfdeckel' && (item.price_small!=null || item.price_large!=null)
-          ? [item.price_small,item.price_large].map(v=>v==null?'–':v.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €').join(' / ')
-          : (item.price==null?'Preis nicht bestätigt':null)
-      }));
+      const sorted=[...raw].sort((a,b)=>mealPosition(a)-mealPosition(b));
+      const out=[];
+      sorted.forEach(item=>{
+        const isStandaloneSoup=mealPosition(item)===0;
+        let name=restaurant.id==='losteria'
+          ? item.name.toLocaleLowerCase('it-IT').replace(/(^|[\\s-])([a-zà-ÿ])/g,(_,sep,letter)=>sep+letter.toLocaleUpperCase('it-IT'))
+          : item.name;
+        // A soup with no proven price is never automatically presented as free.
+        if(!isStandaloneSoup)name=includedPrefix(item,restaurant.id)+name;
+        if(restaurant.id==='topfdeckel' && item.category==='Suppe')name+=' (klein/groß)';
+        if(isStandaloneSoup && item.price==null)name+=' (Einzelpreis nicht bestätigt)';
+        out.push({
+          name,price:item.price,
+          priceDisplay:restaurant.id==='topfdeckel' && (item.price_small!=null || item.price_large!=null)
+            ? [item.price_small,item.price_large].map(v=>v==null?'–':v.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €').join(' / ')
+            : (item.price==null?'Preis nicht bestätigt':null)
+        });
+        // Structured menu combinations: show the actual total price and the
+        // explicit optional nature, never add it to the main price by default.
+        for(const option of (item.menu_options||[])){
+          if(option && typeof option.label==='string' && Number.isFinite(option.total_price) &&
+             option.total_price>0 && option.total_price<150){
+            out.push({name:'Optional: '+option.label,price:option.total_price});
+          }
+        }
+      });
+      return out;
     }
     function escapeHtml(value){
       return String(value??'').replace(/[&<>"']/g,chr=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[chr]));
