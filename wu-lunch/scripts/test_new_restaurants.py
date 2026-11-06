@@ -145,6 +145,15 @@ class NewRestaurantTests(unittest.TestCase):
         self.assertEqual(items[1]["diet"],"veggie")
         self.assertEqual(items[1]["name"],"Gemüselasagne")
 
+    def test_lia_whitespace_separated_generic_wu_price(self):
+        html="""<h2>Tagesmenü Lia Coffee am WU Campus</h2>
+        <p>Hauptgericht main dish € 10,00</p>
+        <h3>Donnerstag, 5.11.</h3>
+        <p>Lasagne klassisch mit Schwein und Rind / Lasagne with meat (AGLO)</p>
+        <h2>Tagesmenü Lia Bistro</h2>"""
+        days,_=parse_lia_week(html.encode(),MON)
+        self.assertEqual(days["2026-11-05"][0]["price"],10.00)
+
     def test_lia_stale_month_is_not_current_week(self):
         html="""<h2>Tagesmenü Lia Coffee am WU Campus</h2>
         <h3>Montag, 10.8.</h3>
