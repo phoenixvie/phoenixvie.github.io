@@ -2,17 +2,17 @@
   "weekStart": "2026-11-02",
   "weekEnd": "2026-11-06",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-06T10:40:36+01:00",
-  "origin": "Neuimport nach vollständiger Menüdaten-Löschung; kein Altbestand",
+  "checkedAt": "2026-11-06T11:46:46+01:00",
+  "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
       "id": "mensa",
       "name": "WU Mensa",
       "url": "https://www.wumensa.at/menuplan-deutsch/",
-      "status": "empty",
-      "note": "",
-      "validFrom": null,
-      "validUntil": null
+      "status": "verified",
+      "note": "Original PDF KW45 direkt als Dokument gelesen, SHA256 9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9",
+      "validFrom": "2026-11-02",
+      "validUntil": "2026-11-06"
     },
     {
       "id": "campus",
@@ -93,16 +93,249 @@
       "name": "WU Mensa",
       "monogram": "WU",
       "url": "https://www.wumensa.at/menuplan-deutsch/",
-      "status": "empty",
-      "note": "",
-      "validFrom": null,
-      "validUntil": null,
+      "status": "verified",
+      "note": "KW 45 (02.–06.11.2026): Original-PDF vom 06.11. um 11:46 Uhr frisch heruntergeladen und nach Wochentagsspalten direkt geprüft; automatischer PDF-Parser bleibt reparaturbedürftig.",
+      "validFrom": "2026-11-02",
+      "validUntil": "2026-11-06",
       "days": {
-        "2026-11-02": [],
-        "2026-11-03": [],
-        "2026-11-04": [],
-        "2026-11-05": [],
-        "2026-11-06": []
+        "2026-11-02": [
+          {
+            "name": "Klare Gemüsesuppe mit Einlage",
+            "price": null,
+            "category": "Tagessuppe",
+            "diet": "unknown",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Spinat-Lasagne mit leichter Knoblauch-Rahmsauce",
+            "price": 5.8,
+            "category": "Powered by plants / Veggie",
+            "diet": "veggie",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Indisches Butter Chicken mit Gewürzreis",
+            "price": 6.4,
+            "category": "Meaty",
+            "diet": "meat",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Ciabatta Club Sandwich mit Hühnerbrust, Mozzarella, Tomaten, Rucola, Cocktailsauce und Kartoffelchips",
+            "price": 9.8,
+            "category": "Global & Grill",
+            "diet": "meat",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          }
+        ],
+        "2026-11-03": [
+          {
+            "name": "Selleriecremesuppe",
+            "price": null,
+            "category": "Tagessuppe",
+            "diet": "unknown",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Kichererbsen-Gemüse-Curry mit Bulgur",
+            "price": 6.3,
+            "category": "Powered by plants / Veggie",
+            "diet": "vegan",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Erdäpfel-Würstelgulasch mit Gebäck (Schwein)",
+            "price": 5.8,
+            "category": "Meaty",
+            "diet": "meat",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Lachs-Teppanyaki mit Gemüse, Jasminreis und Teriyakisauce",
+            "price": 9.8,
+            "category": "Global & Grill",
+            "diet": "fish",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          }
+        ],
+        "2026-11-04": [
+          {
+            "name": "Klare Gemüsesuppe mit Einlage",
+            "price": null,
+            "category": "Tagessuppe",
+            "diet": "unknown",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Champignonsauce mit Serviettenknödel",
+            "price": 6.3,
+            "category": "Powered by plants / Veggie",
+            "diet": "veggie",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Gebackenes Hühnerschnitzel mit Petersilkartoffeln",
+            "price": 5.8,
+            "category": "Meaty",
+            "diet": "meat",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Bao Buns mit Pulled Pork oder Planted Pulled BBQ",
+            "price": 9.8,
+            "category": "Global & Grill",
+            "diet": "unknown",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          }
+        ],
+        "2026-11-05": [
+          {
+            "name": "Paprikacremesuppe",
+            "price": null,
+            "category": "Tagessuppe",
+            "diet": "unknown",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Rotes Linsen-Dal mit Spinat und Duftreis",
+            "price": 5.8,
+            "category": "Powered by plants / Veggie",
+            "diet": "vegan",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Überbackene Enchiladas mit Chili-Fülle, mexikanischem Bulgur und Sour Cream",
+            "price": 6.4,
+            "category": "Meaty",
+            "diet": "unknown",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Mensa Burger mit Pommes (Beef oder Planted Crispy Chicken Style)",
+            "price": 9.8,
+            "category": "Global & Grill",
+            "diet": "unknown",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          }
+        ],
+        "2026-11-06": [
+          {
+            "name": "Klare Gemüsesuppe mit Einlage",
+            "price": null,
+            "category": "Tagessuppe",
+            "diet": "unknown",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Spaghetti mit Soja-Gemüse-Bolognese und Oliven",
+            "price": 5.8,
+            "category": "Powered by plants / Veggie",
+            "diet": "vegan",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          },
+          {
+            "name": "Gebackener Seelachs mit Petersil-Erdäpfeln und Sauce Tartare",
+            "price": 6.4,
+            "category": "Meaty",
+            "diet": "fish",
+            "description": "Original-PDF KW 45; direkt anhand Wochentagsspalten geprüft",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+            "source_sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9"
+          }
+        ]
       }
     },
     {
@@ -886,7 +1119,7 @@
           },
           {
             "name": "Gebackenes Gemüse mit Pommes",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -908,7 +1141,7 @@
           },
           {
             "name": "Pizza mit Salami",
-            "price": 6.0,
+            "price": 6,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -918,7 +1151,7 @@
           },
           {
             "name": "Kürbis-Reis-Pfanne mit Salat",
-            "price": 11.0,
+            "price": 11,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -940,7 +1173,7 @@
           },
           {
             "name": "Gemüselasagne",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
@@ -962,7 +1195,7 @@
           },
           {
             "name": "Tempeh-Bowl mit Hummus, Karotten & Kraut",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch, Preis nicht bestätigt; AG-Sticker -1,00 €",
