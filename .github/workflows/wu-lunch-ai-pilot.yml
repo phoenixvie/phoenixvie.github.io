@@ -1,0 +1,116 @@
+name: WU Lunch – KI-Direktanalyse (getrennter Test)
+
+on:
+  workflow_dispatch:
+    inputs:
+      restaurant:
+        description: 'Zu analysierende Quelle (all = alle neun)'
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - mensa
+          - campus
+          - glashaus
+          - baschly
+          - losteria
+          - omakueche
+          - topfdeckel
+          - gruenehuette
+          - lia
+      model:
+        description: 'KI-Modell für den direkten Quellenvergleich'
+        required: true
+        default: gpt-6.1-terra
+        type: choice
+        options:
+          - gpt-6.1-terra
+          - gpt-6-luna
+  push:
+    paths:
+      - '.github/workflows/wu-lunch-ai-pilot.yml'
+      - 'wu-lunch/ai-pilot/ai_direct.py'
+      - 'wu-lunch/ai-pilot/test_ai_direct.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wu-lunch-ai-pilot
+  cancel-in-progress: false
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Abhängigkeiten
+        run: pip install 'requests>=2.31,<3' 'beautifulsoup4>=4.12,<5'
+      - name: Syntax und unabhängige Offline-Tests
+        run: |
+          python -m py_compile wu-lunch/ai-pilot/ai_direct.py
+          python -m unittest discover -s wu-lunch/ai-pilot -p 'test_*.py' -v
+
+  analyze:
+    needs: offline-tests
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Abhängigkeiten
+        run: pip install 'requests>=2.31,<3' 'beautifulsoup4>=4.12,<5'
+      - name: API-Schlüssel prüfen und Originalquellen direkt analysieren
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SELECTED_RESTAURANT: ${{ inputs.restaurant }}
+          SELECTED_MODEL: ${{ inputs.model }}
+        shell: bash
+        run: |
+          if [[ -z "$OPENAI_API_KEY" ]]; then
+            echo "::error::OPENAI_API_KEY fehlt. Unter Settings > Secrets and variables > Actions als Repository Secret hinterlegen."
+            exit 2
+          fi
+          python wu-lunch/ai-pilot/ai_direct.py --restaurant "$SELECTED_RESTAURANT" --model "$SELECTED_MODEL"
+      - name: Bericht als herunterladbares GitHub-Artefakt bereitstellen
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wu-lunch-ai-direktanalyse
+          path: |
+            wu-lunch/ai-pilot/results/latest.json
+            wu-lunch/ai-pilot/results/latest.html
+          retention-days: 30
+          if-no-files-found: warn
+      - name: Separaten Ergebnisbericht veröffentlichen (niemals produktive Menüdaten)
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -s wu-lunch/ai-pilot/results/latest.json ]]; then
+            echo "Kein Modellbericht verfügbar; nichts veröffentlichen."
+            exit 0
+          fi
+          git config user.name "wu-lunch-ai-pilot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="${{ github.event.repository.default_branch }}"
+          git add wu-lunch/ai-pilot/results/latest.json wu-lunch/ai-pilot/results/latest.html
+          if git diff --cached --quiet; then
+            echo "Unveränderter Ergebnisbericht."
+            exit 0
+          fi
+          git commit -m "WU Lunch AI pilot: independent source comparison $(TZ=Europe/Vienna date +%F-%H%M)"
+          git pull --rebase origin "$branch"
+          git push origin HEAD:"$branch"
+          echo "Vergleichsansicht: https://phoenixvie.github.io/wu-lunch/ai-pilot/results/latest.html"
