@@ -985,6 +985,11 @@ def run(today):
         "next_run":"weekdays 08:15, 09:15, 10:15, 11:15, 12:15 Europe/Vienna",
         "format_version":1,
     }
+    # The repair agent writes its own check history after the parser run.
+    # Preserve it across the next morning's status refresh (and manual runs),
+    # otherwise per-day API rate limiting would be lost.
+    if isinstance(state.get("ai_repair"),dict):
+        status["ai_repair"]=state["ai_repair"]
     validate_meal_components(data)
     warnings=quality_warnings(data,today)
     status["quality_warnings"]=warnings
