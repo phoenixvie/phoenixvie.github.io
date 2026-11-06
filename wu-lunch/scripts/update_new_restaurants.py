@@ -268,6 +268,14 @@ def fetch_finn(monday, *, key, previous):
     sha = hashlib.sha256(image).hexdigest()
     if previous.get("content_sha256") == sha and previous.get("state") in ("ok", "cached"):
         return None, sha, image_url
+    now = datetime.now(TZ).isoformat(timespec="seconds")
+    if (previous.get("last_attempt_sha256") == sha and
+        previous.get("last_attempt_at", "")[:10] == now[:10]):
+        raise ValueError("Finn: diese Bildversion heute bereits mit KI geprüft; neuer Versuch erst bei Änderung oder morgen")
+    # Mark an attempt BEFORE the paid model call. The caller retains this
+    # record even if the models disagree or the API returns an error.
+    previous.update({"last_attempt_sha256": sha, "last_attempt_at": now,
+                     "source_image": image_url})
     spec = importlib.util.spec_from_file_location("finn_visual_ai", ROOT / "ai-pilot" / "ai_direct.py")
     ai = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ai)
