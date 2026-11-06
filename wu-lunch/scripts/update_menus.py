@@ -684,7 +684,7 @@ def source(data,identifier):
 
 def weekly_cache_valid(data,identifier,monday):
     r=restaurant(data,identifier)
-    if r.get("status") not in ("verified","current"):return False
+    if r.get("status") not in ("verified","current","ai_checked"):return False
     if data.get("weekStart")!=monday.isoformat():return False
     if r.get("validFrom") and not (r["validFrom"]<=monday.isoformat()<=r.get("validUntil","")):return False
     return sum(len(v) for v in r.get("days",{}).values())>= (10 if identifier=="mensa" else 6)
@@ -908,11 +908,13 @@ def run(today):
                 apply_result(data,"mensa",days,"verified",validity)
             elif ident=="glashaus":
                 days,validity=parse_glashaus(prefetched_raw if prefetched_raw is not None else safe_get(URLS["glashaus"]),monday)
+                preserve_verified_prices(restaurant(data,"glashaus").get("days",{}),days)
                 apply_result(data,"glashaus",days,"verified",validity)
             elif ident=="campus":
                 raw=prefetched_raw if prefetched_raw is not None else safe_get(URLS["campus"])
                 days,validity=parse_campus(raw,monday)
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
+                preserve_verified_prices(restaurant(data,"campus").get("days",{}),days)
                 apply_result(data,"campus",days,"verified",validity)
                 observed_digest=menu_fingerprint(raw)
             elif ident=="baschly":
@@ -921,6 +923,7 @@ def run(today):
                 meat=parse_baschly(raws[1],monday,True)
                 days={d:veg[d]+meat[d] for d in veg}
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
+                preserve_verified_prices(restaurant(data,"baschly").get("days",{}),days)
                 apply_result(data,"baschly",days,"undated")
                 observed_digest=hashlib.sha256((menu_fingerprint(raws[0])+menu_fingerprint(raws[1])).encode()).hexdigest()
             elif ident=="topfdeckel":
@@ -934,6 +937,7 @@ def run(today):
             elif ident=="gruenehuette":
                 days,validity=parse_gruenehuette(prefetched_raw if prefetched_raw is not None else safe_get(URLS["gruenehuette"]),monday)
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
+                preserve_verified_prices(restaurant(data,ident).get("days",{}),days)
                 apply_result(data,ident,days,"verified",validity)
                 observed_digest=menu_fingerprint(prefetched_raw if prefetched_raw is not None else safe_get(URLS[ident]))
             elif ident=="lia":
@@ -981,6 +985,11 @@ def run(today):
         "next_run":"weekdays 08:15, 09:15, 10:15, 11:15, 12:15 Europe/Vienna",
         "format_version":1,
     }
+    # The repair agent writes its own check history after the parser run.
+    # Preserve it across the next morning's status refresh (and manual runs),
+    # otherwise per-day API rate limiting would be lost.
+    if isinstance(state.get("ai_repair"),dict):
+        status["ai_repair"]=state["ai_repair"]
     validate_meal_components(data)
     warnings=quality_warnings(data,today)
     status["quality_warnings"]=warnings

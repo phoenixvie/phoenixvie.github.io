@@ -1,0 +1,38 @@
+name: WU Lunch – KI-Qualität (Offline-Tests)
+
+on:
+  push:
+    paths:
+      - '.github/workflows/wu-lunch-quality-ci.yml'
+      - 'wu-lunch/scripts/repair_menus_ai.py'
+      - 'wu-lunch/scripts/test_repair_menus_ai.py'
+      - 'wu-lunch/scripts/update_mensa_ai.py'
+      - 'wu-lunch/scripts/update_menus.py'
+      - '.github/workflows/wu-lunch-menus.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/wu-lunch-quality-ci.yml'
+      - 'wu-lunch/scripts/**'
+      - '.github/workflows/wu-lunch-menus.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  offline-quality-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        run: pip install -r wu-lunch/requirements.txt
+      - name: Syntax
+        run: |
+          python -m py_compile wu-lunch/scripts/repair_menus_ai.py
+          python -m py_compile wu-lunch/scripts/update_mensa_ai.py
+          python -m py_compile wu-lunch/ai-pilot/ai_direct.py
+      - name: Regression tests (no network, no model calls)
+        run: python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v

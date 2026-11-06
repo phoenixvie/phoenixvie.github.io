@@ -52,7 +52,7 @@ def money_values(quote):
     patterns = (
         r"(?:€|EUR)\s*(\d{1,3}(?:[.,]\d{2})?)",
         r"(\d{1,3}(?:[.,]\d{2})?)\s*(?:€|EUR)\b",
-        r"\b(\d{1,3}[.,]\d{2})\b",
+        r"(?<![\d./])(\d{1,3}[.,]\d{2})(?![\d./])",
     )
     values = set()
     for pattern in patterns:
@@ -98,20 +98,21 @@ def choose_restaurants(data, status, today, limit=2, all_restaurants=False):
     if all_restaurants:
         return list(IDS)[:limit]
     findings = {ident: issue_codes(data, status, ident, today) for ident in IDS}
-    flagged = [ident for ident in URGENT if findings[ident]]
-    # Reserve a daily slot for a rotating proactive audit, even when a source
-    # is persistently broken. Across a fortnight each restaurant is sampled.
-    rotation = [ident for ident in IDS if ident not in flagged]
-    audit = rotation[today.toordinal() % len(rotation)] if rotation else None
-    selected = flagged[:max(0, limit - (1 if audit else 0))]
-    if audit and len(selected) < limit:
-        selected.append(audit)
-    for ident in flagged:
-        if len(selected) >= limit:
-            break
-        if ident not in selected:
-            selected.append(ident)
-    return selected
+    # Dedicated PDF/browser/photo paths do not consume Luna HTML-call budget.
+    specialized = [ident for ident in ("mensa", "topfdeckel", "omakueche") if findings[ident]]
+    flagged = [ident for ident in URGENT if findings[ident] and ident not in specialized]
+    # Rotate persistent failures: no single broken restaurant can starve the rest.
+    checked = status.get("ai_repair", {})
+    flagged.sort(key=lambda ident: (checked.get(ident, {}).get("last_checked", ""), URGENT.index(ident)))
+    rotation = [ident for ident in IDS if ident not in flagged and ident not in specialized]
+    reserve = 1 if rotation and limit > 1 else 0
+    selected = flagged[:limit - reserve]
+    if reserve:
+        selected.append(rotation[today.toordinal() % len(rotation)])
+    if len(selected) < limit:
+        selected.extend(ident for ident in flagged if ident not in selected)
+        selected = selected[:limit]
+    return list(dict.fromkeys(selected + specialized))
 
 
 def source_snapshots(inputs, sources):
@@ -168,7 +169,7 @@ def documented_current_week(source, ident, monday, cache):
         else:
             _, validity = parser(raw, monday)
             cache[url] = validity is not None and validity[0] == monday
-    except (ValueError, KeyError, TypeError, OSError, Exception):
+    except Exception:  # Source or parser failure makes the evidence unusable.
         cache[url] = False
     return cache[url]
 
@@ -177,7 +178,7 @@ def eligible_price_fix(ident, candidate, current, sources, snapshots, monday, fr
     """Fail closed if price, quote, date, source or dish anchor is ambiguous."""
     if ident not in AUTO_PRICE_IDS or current.get("price") is not None:
         return False
-    if candidate.get("confidence") != "high" or candidate.get("date") not in current.get("_date", ""):
+    if candidate.get("confidence") != "high" or candidate.get("date") != current.get("_date"):
         return False
     if normalized(candidate.get("name")) != normalized(current.get("name")):
         return False
@@ -276,6 +277,8 @@ def analyze_one(ident, data, status, monday, today, key, model):
         "restaurant": ident, "issues": issues, "action": "price_repaired" if repaired else "review_only",
         "repairs": repaired, "validation_issues": result_issues[:20],
         "ai_only_items": len(missing), "parser_only_items": len(absent),
+        "ai_only_examples": [f"{day}: {name}" for day, name in sorted(missing)[:5]],
+        "parser_only_examples": [f"{day}: {name}" for day, name in sorted(absent)[:5]],
         "source_hashes": {s["url"]: s.get("sha256") for s in sources if s.get("fetched")},
         "usage": usage,
     }
@@ -333,9 +336,11 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
     # source failure history are never altered by an AI observation.
     status["quality_warnings"] = legacy.quality_warnings(data, today)
     status["quality_warning_count"] = len(status["quality_warnings"])
-    if status.get("problems") or status["quality_warning_count"]:
+    if status.get("health") == "failed":
+        pass  # Never downgrade a severe importer incident to merely degraded.
+    elif status.get("problems") or status["quality_warning_count"]:
         status["health"] = "degraded"
-    elif status.get("health") != "failed":
+    else:
         status["health"] = "healthy"
     legacy.validate_meal_components(data)
     if any(row["repairs"] for row in report["results"]):

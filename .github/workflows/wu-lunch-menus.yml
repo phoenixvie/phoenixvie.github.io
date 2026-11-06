@@ -22,8 +22,10 @@ concurrency:
 
 jobs:
   sync:
+    # A feature-branch push must NEVER run the production importer or publish to master.
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -78,6 +80,32 @@ jobs:
           pip install 'playwright>=1.50,<2'
           python -m playwright install --with-deps chromium
           python wu-lunch/scripts/update_topf_browser.py
+      - name: Mensa-PDF mit Luna reparieren (nur falls nötig)
+        if: steps.guard.outputs.skip == 'false' && github.event_name != 'push'
+        continue-on-error: true
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$(TZ=Europe/Vienna date +%H)" != "11" ]]; then
+            echo "Mensa-KI läuft regulär um 11:15 Wien."
+            exit 0
+          fi
+          python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
+      - name: Luna-Qualitätskontrolle und sichere Nachbearbeitung
+        if: steps.guard.outputs.skip == 'false' && github.event_name != 'push'
+        continue-on-error: true
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$(TZ=Europe/Vienna date +%H)" != "11" ]]; then
+            echo "Luna-Reparatur läuft regulär um 11:15 Wien."
+            exit 0
+          fi
+          python wu-lunch/scripts/repair_menus_ai.py --max-calls 2
       - name: Änderungen nur bei Bedarf veröffentlichen
         if: steps.guard.outputs.skip == 'false'
         shell: bash
@@ -90,6 +118,7 @@ jobs:
           # Nie konflikthafte JSON-Dateien blind zusammenführen oder force-pushen.
           for attempt in 1 2 3; do
             git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
+            if [[ -f wu-lunch/data/repair-report.json ]]; then git add wu-lunch/data/repair-report.json; fi
             if git diff --cached --quiet; then
               echo "Keine Datenänderungen"
               exit 0
