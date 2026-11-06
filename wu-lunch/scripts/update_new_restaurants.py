@@ -211,7 +211,13 @@ def validate_finn_pair(first, second, monday, img_url):
     """Two independent model reads must agree completely on all five days."""
     results = [first, second]
     for result in results:
-        if result.get("status") != "found" or result.get("warnings") or not result.get("items"):
+        warnings = [normal(w) for w in (result.get("warnings") or [])]
+        # Finn images omit a year; validated ISO week AND recent Shopify
+        # version timestamp independently anchor the source year.
+        benign = lambda w: (("jahreszahl" in w or "jahresangabe" in w) and
+                            ("nicht angegeben" in w or "fehlt" in w or "nicht genannt" in w))
+        if (result.get("status") != "found" or
+            any(not benign(w) for w in warnings) or not result.get("items")):
             raise ValueError("Finn: Bildanalyse unvollständig oder nicht eindeutig")
         if len(result["items"]) > 20:
             raise ValueError("Finn: zu viele Einträge")
