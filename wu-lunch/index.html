@@ -456,11 +456,23 @@ html,body,.page { background:#fff; }
       if(category.includes('salat') || category.includes('salad'))return 2;
       if(category.includes('nachspeise') || category.includes('dessert') ||
          category.includes('süßspeise'))return 3;
-      if(category.includes('menüoption') || category.includes('kombination'))return 4;
+      if(category.includes('menüoption') || category.includes('menükombo') || category.includes('kombination'))return 4;
       return 1;
     }
     function visibleDishes(restaurant){
       const raw=dishesForRestaurant(restaurant);
+      // Mensa's weekly soup is included in some menu lines, but an
+      // independent sale/price is NOT documented. Don't invent a standalone
+      // soup offer. Preserve the correct inclusion semantics for this source.
+      if(restaurant.id==='mensa'){
+        const soup=raw.find(x=>x.category==='Tagessuppe');
+        return raw.filter(x=>x.category!=='Tagessuppe').map(item=>({
+          name:(soup && !['Global & Grill','Pizza & Co','Bowls & Co','Pasta & Co'].includes(item.category)
+            ? soup.name+' + ' : '')+item.name,
+          price:item.price,
+          priceDisplay:item.price==null?'Preis nicht bestätigt':null
+        }));
+      }
       const sorted=[...raw].sort((a,b)=>mealPosition(a)-mealPosition(b));
       const out=[];
       sorted.forEach(item=>{
