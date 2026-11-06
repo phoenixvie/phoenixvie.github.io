@@ -1,12 +1,12 @@
 {
-  "checked_at": "2026-11-06T17:51:12+01:00",
+  "checked_at": "2026-11-06T17:59:39+01:00",
   "week_start": "2026-11-02",
   "week_end": "2026-11-06",
   "health": "degraded",
   "sources": {
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-06T17:51:12+01:00",
+      "last_success": "2026-11-06T17:59:39+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -14,7 +14,7 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
       "last_success": null,
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "content_sha256": null
     },
     "glashaus": {
@@ -28,7 +28,7 @@
       "state": "error",
       "error": "ValueError: Campus: Plan nicht für KW 2026-11-02: (datetime.date(2026, 11, 9), datetime.date(2026, 11, 12))",
       "last_success": "2026-11-06T10:40:36+01:00",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "content_sha256": "bb226678fe348d1b0a46cce678175c65676aa94cec9f64a2f5c8afa76a43f0ec"
     },
     "baschly": {
@@ -47,7 +47,7 @@
     },
     "topfdeckel": {
       "state": "ok",
-      "last_success": "2026-11-06T17:51:12+01:00",
+      "last_success": "2026-11-06T17:59:39+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": null
@@ -91,8 +91,7 @@
     "lia 2026-11-02: Preis fehlt: Champignon-Buchweizenbraten auf Haselnuss-Karottenragout",
     "lia 2026-11-03: Preis fehlt: Wiener Schnitzel mit Pommes",
     "lia 2026-11-04: Preis fehlt: 1/2 Pizza mit Salami",
-    "lia 2026-11-05: Preis fehlt: Lasagne klassisch – mit Schwein & Rind",
-    "lia 2026-11-06: Preis fehlt: Lachs-Teriyaki-Bowl mit Edamame, Avocado & Karotten"
+    "lia 2026-11-05: Preis fehlt: Lasagne klassisch – mit Schwein & Rind"
   ],
-  "quality_warning_count": 19
+  "quality_warning_count": 18
 }
