@@ -13,12 +13,8 @@ class PriceAndFallbackTests(unittest.TestCase):
         <h3>Süßkartoffel-Risotto mit Pilzen und Parmesan</h3>
         <p>Veggie</p><h3>Curry mit Kichererbsen und Reis</h3>
         <p>Allergene: A, G</p><h2>Dessert</h2></main></body></html>""".encode()
-        items=parse_topfdeckel_week(raw,date(2026,11,10),date(2026,11,9))
-        self.assertEqual(len(items),3)
-        self.assertEqual([x["price_small"] for x in items],[3.9,7.5,7.5])
-        self.assertEqual([x["price_large"] for x in items],[5.9,11.9,11.9])
-        self.assertEqual(items[0]["name"],"Gemüsecremesuppe")
-        self.assertEqual(items[1]["name"],"Süßkartoffel-Risotto mit Pilzen und Parmesan")
+        with self.assertRaisesRegex(ValueError,"aktiver Wochentag nicht verifizierbar"):
+            parse_topfdeckel_week(raw,date(2026,11,10),date(2026,11,9))
         with self.assertRaises(ValueError):
             parse_topfdeckel_week(raw,date(2026,11,9),date(2026,11,16))
 
