@@ -431,17 +431,25 @@ html,body,.page { background:#fff; }
     }
     function visibleDishes(restaurant){
       const raw=dishesForRestaurant(restaurant);
+      // Suppe nur für die Mensa-Menülinien, NICHT Global & Grill.
       if(restaurant.id==='mensa'){
         const soup=raw.find(item=>item.category==='Tagessuppe');
         const mains=raw.filter(item=>item.category!=='Tagessuppe');
-        return mains.map(item=>({name:(soup?soup.name+' + ':'')+item.name,price:item.price}));
+        return mains.map(item=>({
+          name:(soup && !['Global & Grill','Pizza & Co','Bowls & Co','Pasta & Co'].includes(item.category)
+            ? soup.name+' + ' : '')+item.name,
+          price:item.price,
+          priceDisplay:item.price==null?'Preis nicht bestätigt':null
+        }));
       }
       return raw.map(item=>({
-        name:includedPrefix(item,restaurant.id)+item.name,
+        name:includedPrefix(item,restaurant.id)+(restaurant.id==='losteria'
+          ? item.name.toLocaleLowerCase('it-IT').replace(/(^|[\\s-])([a-zà-ÿ])/g,(_,sep,letter)=>sep+letter.toLocaleUpperCase('it-IT'))
+          : item.name)+(restaurant.id==='topfdeckel' && item.category==='Suppe' ? ' (klein/groß)' : ''),
         price:item.price,
         priceDisplay:restaurant.id==='topfdeckel' && (item.price_small!=null || item.price_large!=null)
           ? [item.price_small,item.price_large].map(v=>v==null?'–':v.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €').join(' / ')
-          : null
+          : (item.price==null?'Preis nicht bestätigt':null)
       }));
     }
     function escapeHtml(value){
