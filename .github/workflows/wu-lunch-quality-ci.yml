@@ -9,11 +9,18 @@ on:
       - 'wu-lunch/scripts/update_mensa_ai.py'
       - 'wu-lunch/scripts/update_menus.py'
       - '.github/workflows/wu-lunch-menus.yml'
+      - 'wu-lunch/index.html'
+      - 'wu-lunch/data/menus.json'
+      - 'wu-lunch/data.js'
+      - 'wu-lunch/scripts/test_frontend_loading.py'
   pull_request:
     paths:
       - '.github/workflows/wu-lunch-quality-ci.yml'
       - 'wu-lunch/scripts/**'
       - '.github/workflows/wu-lunch-menus.yml'
+      - 'wu-lunch/index.html'
+      - 'wu-lunch/data/menus.json'
+      - 'wu-lunch/data.js'
 
 permissions:
   contents: read
@@ -36,3 +43,13 @@ jobs:
           python -m py_compile wu-lunch/ai-pilot/ai_direct.py
       - name: Regression tests (no network, no model calls)
         run: python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v
+      - name: Check inline frontend JavaScript syntax
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          src=Path("wu-lunch/index.html").read_text(encoding="utf-8")
+          scripts=re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>',src,re.I)
+          Path("/tmp/wu-lunch-inline.js").write_text("\n".join(scripts),encoding="utf-8")
+          PY
+          node --check /tmp/wu-lunch-inline.js
