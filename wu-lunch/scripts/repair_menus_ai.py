@@ -127,7 +127,7 @@ def needs_ai_review(ident, status, today):
         return prior.get("last_checked","")[:10] != today.isoformat()
     # Only skip an unchanged, already audited version of the ORIGINAL source.
     # Model prompt/parser revisions invalidate a previous review.
-    if prior.get("review_version") != "complete-v3-live-evidence":
+    if prior.get("review_version") != "complete-v4-row-evidence":
         return True
     current_week=(today-timedelta(days=today.weekday())).isoformat()
     if prior.get("review_week_start") != current_week:
@@ -329,6 +329,11 @@ def add_verified_missing_sides(ident, result, data, sources, snapshots, monday, 
     return added
 
 
+def publishable_result(result, validation):
+    """Warnings are diagnostic; unverified rows still never reach live data."""
+    return result.get("status") == "found" and not validation
+
+
 def analyze_one(ident, data, status, monday, today, key, model):
     issues = issue_codes(data, status, ident, today)
     # Interactive browser and PDF are handled by their dedicated import paths.
@@ -351,7 +356,7 @@ def analyze_one(ident, data, status, monday, today, key, model):
     # A dated AI entry without an independently checked source is not proof.
     draft = copy.deepcopy(data)
     repaired = []
-    if not result_issues and ident in AUTO_PRICE_IDS:
+    if publishable_result(result, validation) and ident in AUTO_PRICE_IDS:
         repaired = apply_safe_price_fixes(ident, result, draft, sources, snapshots, monday, today)
         repaired.extend(add_verified_missing_sides(ident, result, draft, sources, snapshots, monday, today))
         if repaired:
@@ -424,7 +429,7 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
         report["results"].append(entry)
         status.setdefault("ai_repair", {})[ident] = {
             "last_checked": report["checked_at"],
-            "review_version":"complete-v3-live-evidence",
+            "review_version":"complete-v4-row-evidence",
             "review_week_start":monday.isoformat(),
             "source_fingerprint":status.get("sources",{}).get(ident,{}).get("content_sha256"),
             "model": model,

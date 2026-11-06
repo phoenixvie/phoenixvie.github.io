@@ -55,7 +55,7 @@ class RepairTests(unittest.TestCase):
 
     def test_new_source_or_new_week_triggers_luna_even_if_parser_says_ok(self):
         state={"sources":{"lia":{"state":"ok","content_sha256":"new"}},
-               "ai_repair":{"lia":{"action":"review_only","review_version":"complete-v3-live-evidence",
+               "ai_repair":{"lia":{"action":"review_only","review_version":"complete-v4-row-evidence",
                    "review_week_start":"2026-11-02","last_checked":"2026-11-05T10:00:00",
                    "source_fingerprint":"old"}}}
         self.assertTrue(repair.needs_ai_review("lia",state,date(2026,11,6)))
@@ -89,6 +89,12 @@ class RepairTests(unittest.TestCase):
                 "lia",{"items":[row]},data,source(),snapshot,WEEK,date(2026,11,6))
         self.assertEqual(fixes,[{"date":DAY,"name":"Kartoffel-Curry mit Gemüse","price":12.5}])
         self.assertEqual(next(r for r in data["restaurants"] if r["id"]=="lia")["days"][DAY][0]["category"],"Hauptgericht")
+
+    def test_general_luna_warning_does_not_block_individually_proven_row(self):
+        result={"status":"found","warnings":["AG-Sticker-Rabatt ist kein Gerichtspreis"]}
+        self.assertTrue(repair.publishable_result(result,[]))
+        self.assertFalse(repair.publishable_result(result,["Eintrag 1: unbekannte Quelle"]))
+        self.assertFalse(repair.publishable_result({"status":"unclear","warnings":[]},[]))
 
     def test_unproven_side_is_not_added(self):
         data=current_data()
