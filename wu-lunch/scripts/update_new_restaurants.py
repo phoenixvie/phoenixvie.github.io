@@ -288,6 +288,11 @@ def fetch_finn(monday, *, key, previous):
     ]}]
     first, _ = ai.call_model(key, "gpt-6-luna", payload)
     second, _ = ai.call_model(key, "gpt-6.1-terra", payload)
+    for label, res in (("Luna", first), ("Terra", second)):
+        print("Finn analysis", label, "status", res.get("status"),
+              "items", len(res.get("items") or []),
+              "warnings", (res.get("warnings") or [])[:4],
+              "notes", (res.get("notes") or "")[:170], flush=True)
     for res in (first, second):
         issues = ai.validate(res, [{"url": image_url, "fetched": True}], monday, "finn")
         if issues:
