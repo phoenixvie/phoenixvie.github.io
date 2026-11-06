@@ -1,0 +1,72 @@
+name: WU Lunch – Mensa Original-PDF sichern
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/wu-lunch-mensa-pdf.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wu-lunch-mensa-pdf
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: PDF frisch von offizieller Quelle herunterladen und Metadaten erfassen
+        shell: bash
+        run: |
+          pip install requests PyMuPDF
+          mkdir -p wu-lunch/ai-pilot/source
+          python - <<'PY'
+          import requests, pymupdf, json, hashlib, re
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          from pathlib import Path
+          root=Path("wu-lunch/ai-pilot/source")
+          url="https://www.wumensa.at/menuplan-deutsch/"
+          r=requests.get(url,timeout=35,headers={"Cache-Control":"no-cache","Pragma":"no-cache","User-Agent":"WU-Lunch-Mensa-PDF-Snapshot/1.0"})
+          r.raise_for_status()
+          if not r.content.startswith(b"%PDF-"):raise RuntimeError("Keine PDF erhalten")
+          if len(r.content)>5_000_000:raise RuntimeError("PDF zu groß")
+          doc=pymupdf.open(stream=r.content,filetype="pdf")
+          if not 1<=len(doc)<=4:raise RuntimeError("Unerwartete PDF-Seitenzahl")
+          full="\n".join(p.get_text() for p in doc)
+          dates=re.findall(r"\b\d{1,2}\.\s*\d{1,2}\.\s*20\d{2}\b",full)
+          now=datetime.now(ZoneInfo("Europe/Vienna"))
+          (root/"mensa-latest.pdf").write_bytes(r.content)
+          (root/"mensa-latest.txt").write_text(full,encoding="utf-8")
+          meta={"fetched_at":now.isoformat(),"source":r.url,"http_status":r.status_code,
+                "sha256":hashlib.sha256(r.content).hexdigest(),"bytes":len(r.content),
+                "pages":len(doc),"detected_dates":dates[:12],
+                "current_week_monday":(now.date()).isoformat(),
+                "verification":"Snapshot only: PDF date MUST be checked by AI before publishing"}
+          (root/"mensa-latest.json").write_text(json.dumps(meta,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+          print(json.dumps(meta,ensure_ascii=False))
+          PY
+      - name: Original-PDF als Testartefakt veröffentlichen
+        uses: actions/upload-artifact@v4
+        with:
+          name: mensa-original-pdf
+          path: wu-lunch/ai-pilot/source/
+          retention-days: 14
+      - name: Snapshot getrennt von produktiven Menüs in GitHub sichern
+        run: |
+          git config user.name "wu-lunch-pdf-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add wu-lunch/ai-pilot/source/mensa-latest.pdf wu-lunch/ai-pilot/source/mensa-latest.txt wu-lunch/ai-pilot/source/mensa-latest.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "WU Lunch: snapshot original Mensa PDF"
+          git pull --rebase origin "${{ github.event.repository.default_branch }}"
+          git push origin HEAD:"${{ github.event.repository.default_branch }}"
