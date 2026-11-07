@@ -1,55 +1,58 @@
 {
-  "checked_at": "2026-11-06T21:05:24+01:00",
-  "week_start": "2026-11-02",
-  "week_end": "2026-11-06",
+  "checked_at": "2026-11-07T13:53:22+01:00",
+  "week_start": "2026-11-09",
+  "week_end": "2026-11-13",
   "health": "degraded",
   "sources": {
     "karmafood": {
-      "state": "not_published",
-      "last_success": null,
-      "checked_at": "2026-11-06T21:05:32+01:00",
+      "state": "ok",
+      "last_success": "2026-11-07T13:53:31+01:00",
+      "checked_at": "2026-11-07T13:53:31+01:00",
       "consecutive_failures": 0,
-      "note": "Karma Food: nur ein Plan für eine andere Woche veröffentlicht"
+      "content_sha256": "8c972c42db503a851a83ed46b331062ea5cb425fd6c72a07d9b88d18c49c2452",
+      "source_image": null,
+      "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367"
     },
     "finn": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-06T19:12:26+01:00",
-      "checked_at": "2026-11-06T21:05:32+01:00",
+      "checked_at": "2026-11-07T13:53:31+01:00",
       "consecutive_failures": 0,
       "content_sha256": "75c0d6609c32b5f4190be95d414faa054cc76db1b0f43093bb94ba0f52a77797",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
-      "source_pdf": null
+      "source_pdf": null,
+      "note": "Finn: aktuelle deutschsprachige Wochenkarte noch nicht veröffentlicht"
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-06T21:05:24+01:00",
+      "last_success": "2026-11-07T13:53:22+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
     "mensa": {
       "state": "error",
-      "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
+      "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
       "last_success": null,
-      "consecutive_failures": 22,
+      "consecutive_failures": 23,
       "content_sha256": null
     },
     "glashaus": {
-      "state": "cached",
+      "state": "error",
+      "error": "ValueError: Glashaus: Plan nicht für KW 2026-11-09: (datetime.date(2026, 11, 2), datetime.date(2026, 11, 6)); Textanfang: 'Mittagsmenüs | DAS GLASHAUS\\ntop of page\\nScroll\\nJeweils mit Suppe oder Salat\\nVegetarisch € 14,90 / Fisch&F",
       "last_success": "2026-11-06T12:05:26+01:00",
-      "consecutive_failures": 0,
-      "parser_version": null,
+      "consecutive_failures": 1,
       "content_sha256": "d5a4ab6258906a17bffc2ed49dbdffe7d7284d125adc32220133424bcd871243"
     },
     "campus": {
-      "state": "error",
-      "error": "ValueError: Campus: Plan nicht für KW 2026-11-02: (datetime.date(2026, 11, 9), datetime.date(2026, 11, 12))",
-      "last_success": "2026-11-06T10:40:36+01:00",
-      "consecutive_failures": 19,
-      "content_sha256": "bb226678fe348d1b0a46cce678175c65676aa94cec9f64a2f5c8afa76a43f0ec"
+      "state": "ok",
+      "last_success": "2026-11-07T13:53:22+01:00",
+      "consecutive_failures": 0,
+      "parser_version": null,
+      "content_sha256": "6de52c199297bdf9fedc2c6459660d87f913eee5fe66074c631e5b2acbaa9d92"
     },
     "baschly": {
-      "state": "cached",
-      "last_success": "2026-11-06T10:40:36+01:00",
+      "state": "ok",
+      "last_success": "2026-11-07T13:53:22+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "45af11f756853109dd58468e1835eb5564edf15e810c6e19ae047691e429c2e3"
@@ -62,63 +65,56 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "ok_browser",
+      "state": "cached",
       "last_success": "2026-11-06T21:05:58+01:00",
       "consecutive_failures": 0,
-      "day_sha256": {
-        "2026-11-02": "7e077d88b925efefea4a5e41a464d28abfd0db932802926198f3e54d5ba598c6",
-        "2026-11-03": "eb2ab8b7750cdfd25396cbae30d8ba57aa65d75b434e124aef3c65f0200890b7",
-        "2026-11-04": "857e28b18b3317161f8fa9b26b521e2004b0b68ae8e95d082169dadba8f3f9bd",
-        "2026-11-05": "c170909cb5e1b3297af8c39965f72702c063cdcd838395799c372c519a7bae15",
-        "2026-11-06": "1cc73765813a34b7e04bed4bc2104b811d54968cd9a8e3be9ed2c8b7300adb10"
-      }
+      "parser_version": null,
+      "content_sha256": null
     },
     "gruenehuette": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-06T10:40:36+01:00",
       "consecutive_failures": 0,
-      "parser_version": null,
-      "content_sha256": "7d89e2a67d78ff1f3aac6d776c103a8182e16061e206d3fd52a0e035706be653"
+      "note": "Grüne Hütte: Plan ist nicht von aktueller Woche: 2026-11-02"
     },
     "lia": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-06T19:43:52+01:00",
       "consecutive_failures": 0,
-      "parser_version": 4,
-      "content_sha256": "405a3658ad0a455cb7733d4dcceb49b806b745a0c0646ba8387de7071e318c83"
+      "note": "Lia WU: kein gültiger Wochenplan für 2026-11-09 (veröffentlichte Daten: 2026-11-02, 2026-11-03, 2026-11-04, 2026-11-05, 2026-11-06)"
     }
   },
   "problems": [
-    "mensa: ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanischer Bulgur Sour Cream') | Mensa: verstümmelter Tabellenzelltext erkannt ('mit Chili-Fülle mexikanis",
-    "campus: ValueError: Campus: Plan nicht für KW 2026-11-02: (datetime.date(2026, 11, 9), datetime.date(2026, 11, 12))"
+    "mensa: ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
+    "glashaus: ValueError: Glashaus: Plan nicht für KW 2026-11-09: (datetime.date(2026, 11, 2), datetime.date(2026, 11, 6)); Textanfang: 'Mittagsmenüs | DAS GLASHAUS\\ntop of page\\nScroll\\nJeweils mit Suppe oder Salat\\nVegetarisch € 14,90 / Fisch&F"
   ],
   "next_run": "Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 (Europe/Vienna, GitHub Actions: zeitliche Abweichung möglich)",
   "format_version": 1,
   "ai_repair": {
     "lia": {
-      "last_checked": "2026-11-06T20:32:11+01:00",
+      "last_checked": "2026-11-07T13:53:32+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-02",
-      "source_fingerprint": "405a3658ad0a455cb7733d4dcceb49b806b745a0c0646ba8387de7071e318c83",
+      "review_week_start": "2026-11-09",
+      "source_fingerprint": null,
       "model": "gpt-6-luna",
-      "action": "live_repaired",
-      "repairs": 3,
+      "action": "review_only",
+      "repairs": 0,
       "error": null
     },
     "campus": {
-      "last_checked": "2026-11-06T20:32:11+01:00",
+      "last_checked": "2026-11-07T13:53:32+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-02",
-      "source_fingerprint": "bb226678fe348d1b0a46cce678175c65676aa94cec9f64a2f5c8afa76a43f0ec",
+      "review_week_start": "2026-11-09",
+      "source_fingerprint": "6de52c199297bdf9fedc2c6459660d87f913eee5fe66074c631e5b2acbaa9d92",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
       "error": null
     },
     "glashaus": {
-      "last_checked": "2026-11-06T20:32:11+01:00",
+      "last_checked": "2026-11-07T13:53:32+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-02",
+      "review_week_start": "2026-11-09",
       "source_fingerprint": "d5a4ab6258906a17bffc2ed49dbdffe7d7284d125adc32220133424bcd871243",
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -126,19 +122,19 @@
       "error": null
     },
     "gruenehuette": {
-      "last_checked": "2026-11-06T20:32:11+01:00",
+      "last_checked": "2026-11-07T13:53:32+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-02",
-      "source_fingerprint": "7d89e2a67d78ff1f3aac6d776c103a8182e16061e206d3fd52a0e035706be653",
+      "review_week_start": "2026-11-09",
+      "source_fingerprint": null,
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
       "error": null
     },
     "baschly": {
-      "last_checked": "2026-11-06T20:32:11+01:00",
+      "last_checked": "2026-11-07T13:53:32+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-02",
+      "review_week_start": "2026-11-09",
       "source_fingerprint": "45af11f756853109dd58468e1835eb5564edf15e810c6e19ae047691e429c2e3",
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -146,9 +142,9 @@
       "error": null
     },
     "losteria": {
-      "last_checked": "2026-11-06T20:32:11+01:00",
+      "last_checked": "2026-11-07T13:53:32+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-02",
+      "review_week_start": "2026-11-09",
       "source_fingerprint": null,
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -156,10 +152,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-06T20:32:11+01:00",
+      "last_checked": "2026-11-07T13:53:32+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-02",
-      "source_fingerprint": null,
+      "review_week_start": "2026-11-09",
+      "source_fingerprint": "8c972c42db503a851a83ed46b331062ea5cb425fd6c72a07d9b88d18c49c2452",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -213,24 +209,6 @@
       "total_tokens": 60274
     }
   },
-  "quality_warnings": [
-    "lia 2026-11-02: Preis fehlt: Stroganoff vom Schweinsfilet mit Langkornreis",
-    "lia 2026-11-02: Preis fehlt: Champignon-Buchweizenbraten auf Haselnuss-Karottenragout",
-    "lia 2026-11-04: Preis fehlt: 1/2 Pizza mit Salami",
-    "campus 2026-11-02: Preis fehlt: Fleischlaibchen à la Metternich mit Koriander, Blattspinat und Erdäpfel-Mousseli",
-    "campus 2026-11-02: Preis fehlt: Gebackenes Sellerieschnitzel mit Wildpreiselbeeren und hausgemachter Sauce Tarta",
-    "campus 2026-11-03: Preis fehlt: Gefüllte Paprika in Tomatensauce mit Salzkartoffeln",
-    "campus 2026-11-03: Preis fehlt: Linseneintopf mit Sauerrahm, Wurzelgemüse und Serviettenknödel",
-    "campus 2026-11-04: Preis fehlt: Spaghetti Carbonara",
-    "campus 2026-11-04: Preis fehlt: Rote-Rüben Risotto mit Rucola, Feta und Ofentomaten",
-    "campus 2026-11-05: Preis fehlt: Schweinsfilet in Pfefferrahmsauce mit Speckbohnen und Kräuternockerln",
-    "campus 2026-11-05: Preis fehlt: Kartoffelgratin mit Duett von geschmolzenen Karotten und Kräuteröl",
-    "campus 2026-11-06: kein Menü vorhanden",
-    "karmafood 2026-11-02: kein Menü vorhanden",
-    "karmafood 2026-11-03: kein Menü vorhanden",
-    "karmafood 2026-11-04: kein Menü vorhanden",
-    "karmafood 2026-11-05: kein Menü vorhanden",
-    "karmafood 2026-11-06: kein Menü vorhanden"
-  ],
-  "quality_warning_count": 17
+  "quality_warnings": [],
+  "quality_warning_count": 0
 }

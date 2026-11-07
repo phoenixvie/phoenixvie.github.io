@@ -1,9 +1,232 @@
 {
-  "checked_at": "2026-11-06T21:05:58+01:00",
-  "week_start": "2026-11-02",
+  "checked_at": "2026-11-07T13:53:32+01:00",
+  "week_start": "2026-11-09",
   "model": "gpt-6-luna",
-  "api_calls": 0,
+  "api_calls": 7,
   "results": [
+    {
+      "restaurant": "lia",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Quelle enthält eine ältere Woche als die angefragte.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://lia.coffee/": "67aede67177a1552f55a626230bc213fe0aad7b7b657632da2a7c73505fc5d9a"
+      },
+      "usage": {
+        "input_tokens": 7476,
+        "input_tokens_details": {
+          "cache_write_tokens": 7473,
+          "cached_tokens": 0
+        },
+        "output_tokens": 224,
+        "output_tokens_details": {
+          "reasoning_tokens": 113
+        },
+        "total_tokens": 7700
+      }
+    },
+    {
+      "restaurant": "campus",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die ausgewiesene Periode endet am 12.11.2026 und deckt den Freitag der gesuchten Woche nicht ab."
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.dascampus.at/dc-mittagsmenues": "c491a51f12cb7fa92a7339232da196b78b8445142bba9dd44d9b9397c905b37e"
+      },
+      "usage": {
+        "input_tokens": 2114,
+        "input_tokens_details": {
+          "cache_write_tokens": 2111,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1233,
+        "output_tokens_details": {
+          "reasoning_tokens": 86
+        },
+        "total_tokens": 3347
+      }
+    },
+    {
+      "restaurant": "glashaus",
+      "issues": [
+        "source_error"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Wochenkarte in der Quelle ist älter als die gesuchte Woche.",
+        "Der Hinweis „Jeweils mit Suppe oder Salat“ und die Tarife Vegetarisch € 14,90 / Fisch&Fleisch € 15,90 beziehen sich auf die angezeigte ältere Wochenkarte.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.dasglashaus.at/menues": "935131888eb145f1e05438de6cd3b38fa99a96cbe5bdb52768cbb84e686d558a"
+      },
+      "usage": {
+        "input_tokens": 2566,
+        "input_tokens_details": {
+          "cache_write_tokens": 2563,
+          "cached_tokens": 0
+        },
+        "output_tokens": 238,
+        "output_tokens_details": {
+          "reasoning_tokens": 64
+        },
+        "total_tokens": 2804
+      }
+    },
+    {
+      "restaurant": "gruenehuette",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Für die gesuchte Woche ist in der übergebenen Quelle kein Menü belegt.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.zurgruenenhuette.com/mittags-menu": "5318ace35cac779a6276d597f42f1797e0b0262faf45f082f0dc894f3d31ba53"
+      },
+      "usage": {
+        "input_tokens": 2073,
+        "input_tokens_details": {
+          "cache_write_tokens": 2070,
+          "cached_tokens": 0
+        },
+        "output_tokens": 263,
+        "output_tokens_details": {
+          "reasoning_tokens": 143
+        },
+        "total_tokens": 2336
+      }
+    },
+    {
+      "restaurant": "baschly",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Bilddateien sind in den übergebenen Quellen nicht als lesbarer Inhalt verfügbar. Es wurden keine Gerichte oder Preise daraus abgeleitet.",
+        "Es gibt keine belegbare Zuordnung von Tagessuppe oder kleinem Salat zu einem Hauptgericht-Menüangebot.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 10,
+      "ai_only_examples": [],
+      "parser_only_examples": [
+        "2026-11-09: knackiger gemüse wok mit jasminreis mangold pakora und sweet chili sauce",
+        "2026-11-09: tandoori masala chicken curry mit basmatireis allergene glutenfrei",
+        "2026-11-10: hühnerschnitzel mit bratkartoffeln",
+        "2026-11-10: süsskartoffel gemüse curry mit basmatireis",
+        "2026-11-11: linsen spinat gemüse curry mit basmatireis"
+      ],
+      "source_hashes": {
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "6be92b6bde99fde5b33f5f82d72d3c0adc836b187a98b68e62564c99268b612f",
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "9321c47f1b00f0c6d057ad2ce03199c703f91588730989ce0d210992cdc615e1"
+      },
+      "usage": {
+        "input_tokens": 2557,
+        "input_tokens_details": {
+          "cache_write_tokens": 2554,
+          "cached_tokens": 0
+        },
+        "output_tokens": 242,
+        "output_tokens_details": {
+          "reasoning_tokens": 89
+        },
+        "total_tokens": 2799
+      }
+    },
+    {
+      "restaurant": "losteria",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Quelle belegt nicht, dass diese Gerichte in der geprüften Woche verfügbar sind.",
+        "Es sind keine Menü-Kombinationen oder gesonderten Preise für ein Mittagsmenü ausgewiesen."
+      ],
+      "ai_only_items": 4,
+      "parser_only_items": 0,
+      "ai_only_examples": [
+        "None: crema di patate con tartufo",
+        "None: pizza bianca tacchino e cipolletartufo di cielo",
+        "None: tagliatelle tartufo e funghi",
+        "None: tortina di mandorle"
+      ],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://losteria.net/at/menue/menu-della-casa/": "edd75208b1b626fa358d284dce31dca80ce83874be2c703da74d28f482d1cbb2"
+      },
+      "usage": {
+        "input_tokens": 1779,
+        "input_tokens_details": {
+          "cache_write_tokens": 1776,
+          "cached_tokens": 0
+        },
+        "output_tokens": 1166,
+        "output_tokens_details": {
+          "reasoning_tokens": 277
+        },
+        "total_tokens": 2945
+      }
+    },
+    {
+      "restaurant": "karmafood",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Rubrik „Extras“ nennt Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai ohne Tageszuordnung. Sie wurden nicht als datierte Gerichte erfasst.",
+        "Die Quelle nennt keine separat bepreisten Tagessuppen, Salate oder Nachspeisen. „mit Salat“ bzw. „mit Raita“ ist jeweils Teil des Gerichtnamens, kein separat bepreister Salat.",
+        "Für die Lunch Combo sind die enthaltenen Bestandteile nicht angegeben. „Lassi & Lunch“ wird ohne Preis genannt."
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "563cd00d2f58fddbfad0db886f768658589bd544045510b9080aeab176681c0d"
+      },
+      "usage": {
+        "input_tokens": 2452,
+        "input_tokens_details": {
+          "cache_write_tokens": 2449,
+          "cached_tokens": 0
+        },
+        "output_tokens": 2455,
+        "output_tokens_details": {
+          "reasoning_tokens": 717
+        },
+        "total_tokens": 4907
+      }
+    },
     {
       "restaurant": "mensa",
       "issues": [
@@ -20,7 +243,9 @@
     },
     {
       "restaurant": "finn",
-      "issues": [],
+      "issues": [
+        "source_not_published"
+      ],
       "action": "dedicated_image_ai",
       "repairs": []
     },
