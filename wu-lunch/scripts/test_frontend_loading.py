@@ -26,8 +26,8 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertIn("window.addEventListener('load',requestMapAfterPageLoad",html)
         self.assertIn("window.requestIdleCallback(loadLeafletAssets",html)
         self.assertIn("js.onload=()=>loadRealMap();",html)
-        self.assertIn("update();\n\n    // Render all menus first.",html)
-        self.assertLess(html.index("    update();\n\n    // Render all menus first."),
+        self.assertIn("update();\n    renderNextUpdate();\n\n    // Render all menus first.",html)
+        self.assertLess(html.index("    update();\n    renderNextUpdate();\n\n    // Render all menus first."),
                         html.index("function requestMapAfterPageLoad()"))
         self.assertIn("karmafood:'logo-karmafood'",html)
         self.assertIn("finn:'logo-finn'",html)
