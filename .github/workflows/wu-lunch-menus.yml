@@ -8,7 +8,7 @@ on:
     # die Prüfung unten filtert unerwünschte Stunden heraus.
     - cron: '15 4-17 * * 1'
     - cron: '15 6-11 * * 2-5'
-    - cron: '15 6-16 * * 6'
+    - cron: '15 6-17 * * 6'
   workflow_dispatch:
   push:
     # Clean-room test: menu data and cache cleared on 2026-11-06; run on this push.
