@@ -26,8 +26,8 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertIn("window.addEventListener('load',requestMapAfterPageLoad",html)
         self.assertIn("window.requestIdleCallback(loadLeafletAssets",html)
         self.assertIn("js.onload=()=>loadRealMap();",html)
-        self.assertIn("update();\n\n    // Render all menus first.",html)
-        self.assertLess(html.index("    update();\n\n    // Render all menus first."),
+        self.assertIn("update();\n    renderNextUpdate();",html)
+        self.assertLess(html.index("    update();\n    renderNextUpdate();"),
                         html.index("function requestMapAfterPageLoad()"))
         self.assertIn("karmafood:'logo-karmafood'",html)
         self.assertIn("finn:'logo-finn'",html)
@@ -35,11 +35,17 @@ class FrontendLoadingTests(unittest.TestCase):
     def test_weekend_preview_and_mobile_swipe_are_available(self):
         html=(ROOT/"index.html").read_text(encoding="utf-8")
         self.assertIn("const displayMondayIso=weekend",html)
-        self.assertIn("Noch nicht veröffentlicht – erscheint automatisch",html)
+        self.assertIn("Noch nicht veröffentlicht</div>",html)
+        self.assertNotIn("Vorschau auf Montag.",html)
+        self.assertIn("const IMPORT_SLOTS=",html)
+        self.assertIn('href="impressum.html"',html)
         self.assertIn("function moveDay(step)",html)
         self.assertIn("listView.addEventListener('pointerup'",html)
         self.assertIn("touch-action:pan-y",html)
         self.assertIn("day-slide-next",html)
+        workflow=(ROOT.parent/".github"/"workflows"/"wu-lunch-menus.yml").read_text(encoding="utf-8")
+        self.assertIn("'15 6-17 * * 6'",workflow)
+        self.assertIn("Sat 08:15–18:15",html)
 
 if __name__=="__main__":
     unittest.main()

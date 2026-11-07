@@ -254,14 +254,15 @@ html,body,.page { background:#fff; }
  .logo-box{font-size:27px!important}
  .map-stage{height:350px;min-height:320px}
 }
-.weekend-hint{max-width:1110px;margin:13px auto 0;padding:10px 14px;border:1px solid #e4e7ea;border-radius:5px;background:#f7f9fc;color:#586577;font-size:14px;line-height:1.5}
 .list-view{touch-action:pan-y}
 .list-view.day-slide-next{animation:day-slide-next .22s ease-out}
 .list-view.day-slide-previous{animation:day-slide-previous .22s ease-out}
 @keyframes day-slide-next{from{opacity:.35;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
 @keyframes day-slide-previous{from{opacity:.35;transform:translateX(-22px)}to{opacity:1;transform:translateX(0)}}
 @media (prefers-reduced-motion:reduce){.list-view.day-slide-next,.list-view.day-slide-previous{animation:none}}
-@media(max-width:750px){.weekend-hint{margin:12px 0 0;font-size:13px;padding:10px 12px}}
+.site-footer{display:flex;justify-content:space-between;gap:12px;margin:10px 2px 22px;color:#929292;font-size:11px;line-height:1.45}
+.site-footer a{color:inherit;text-decoration:none}.site-footer a:hover,.site-footer a:focus-visible{text-decoration:underline}
+@media(max-width:750px){.site-footer{margin:9px 1px 18px;font-size:10px}}
 .logo-omakueche{background:#b82c31;color:#fff}.logo-topfdeckel{background:#d48d29;color:#fff}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#8558a7;color:#fff}.logo-karmafood{background:#c65b40;color:#fff}.logo-finn{background:#49654e;color:#fff}
 </style>
 </head>
@@ -278,10 +279,14 @@ html,body,.page { background:#fff; }
     </section>
 
     <main class="content-wrap">
-      <div class="weekend-hint" id="weekendHint" hidden></div><section class="list-view" id="listView"></section>
+      <section class="list-view" id="listView"></section>
       <section class="map-view" id="mapView" aria-label="Karte der Restaurants">
         <div class="map-stage" id="mapStage" aria-label="Interaktive Karte der Restaurants rund um den WU Campus"></div>
       </section>
+      <footer class="site-footer">
+        <span id="nextUpdate" aria-live="polite"></span>
+        <a href="impressum.html">Impressum</a>
+      </footer>
     </main>
 
     
@@ -320,7 +325,7 @@ html,body,.page { background:#fff; }
     const MONDAY_FIRST = [1,2,3,4,5,6,0];
     const tabContainer = document.getElementById('dayTabs');
     const listView = document.getElementById('listView');
-    const weekendHint=document.getElementById('weekendHint');
+    const nextUpdate=document.getElementById('nextUpdate');
     const mapView = document.getElementById('mapView');
     const mapStage = document.getElementById('mapStage');
 
@@ -518,7 +523,7 @@ html,body,.page { background:#fff; }
       const label=(initials[restaurant.id]||restaurant.name.charAt(0)).toLocaleUpperCase('de-AT');
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
-      ).join('') : '<div class="empty-row">Noch nicht veröffentlicht – erscheint automatisch, sobald '+escapeHtml(restaurant.name)+' das Menü veröffentlicht.</div>';
+      ).join('') : '<div class="empty-row">Noch nicht veröffentlicht</div>';
       row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+escapeHtml(label)+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
        +'<div class="menu-lines">'+dishRows+'</div>'
@@ -533,16 +538,30 @@ html,body,.page { background:#fff; }
       DATA.restaurants.forEach(r => list.appendChild(renderRow(r)));
     }
 
-    function renderWeekendHint(){
-      if(!(weekend&&selectedDate===displayMondayIso)){
-        weekendHint.hidden=true;
-        return;
+    // Same slots as wu-lunch-menus.yml after its Europe/Vienna guard:
+    // Mon 06:15–18:15, Tue–Fri 08:15–12:15, Sat 08:15–18:15.
+    const IMPORT_SLOTS={1:[6,7,8,9,10,11,12,13,14,15,16,17,18],2:[8,9,10,11,12],3:[8,9,10,11,12],4:[8,9,10,11,12],5:[8,9,10,11,12],6:[8,9,10,11,12,13,14,15,16,17,18]};
+    const WEEKDAY_SHORT=['So.','Mo.','Di.','Mi.','Do.','Fr.','Sa.'];
+    function viennaClockParts(now){
+      const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Vienna',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);
+      return Object.fromEntries(parts.filter(part=>part.type!=='literal').map(part=>[part.type,Number(part.value)]));
+    }
+    function nextScheduledUpdate(){
+      const now=viennaClockParts(new Date());
+      // This UTC date intentionally represents Vienna wall-clock time so the
+      // weekly schedule stays correct across daylight-saving changes.
+      const candidate=new Date(Date.UTC(now.year,now.month-1,now.day,now.hour,now.minute+1));
+      for(let minute=0;minute<8*24*60;minute++,candidate.setUTCMinutes(candidate.getUTCMinutes()+1)){
+        const slots=IMPORT_SLOTS[candidate.getUTCDay()];
+        if(slots?.includes(candidate.getUTCHours())&&candidate.getUTCMinutes()===15)return candidate;
       }
-      const pending=DATA.restaurants.filter(r=>visibleDishes(r).length===0).map(r=>r.name);
-      weekendHint.textContent=pending.length
-        ? 'Vorschau auf Montag. Noch nicht veröffentlicht: '+pending.join(', ')+'. Erscheint automatisch nach Veröffentlichung.'
-        : 'Vorschau auf Montag.';
-      weekendHint.hidden=false;
+      return null;
+    }
+    function renderNextUpdate(){
+      const next=nextScheduledUpdate();
+      if(!next)return;
+      const two=value=>String(value).padStart(2,'0');
+      nextUpdate.textContent='Nächste automatische Prüfung: '+WEEKDAY_SHORT[next.getUTCDay()]+' '+two(next.getUTCDate())+'.'+two(next.getUTCMonth()+1)+'. '+two(next.getUTCHours())+':15 Uhr';
     }
 
     function moveDay(step){
@@ -659,7 +678,6 @@ html,body,.page { background:#fff; }
     function update(slideDirection=0){
       renderTabs();
       renderList();
-      renderWeekendHint();
       if(slideDirection){
         const animation=slideDirection>0?'day-slide-next':'day-slide-previous';
         listView.classList.remove('day-slide-next','day-slide-previous');
@@ -669,6 +687,8 @@ html,body,.page { background:#fff; }
     }
 
     update();
+    renderNextUpdate();
+    window.setInterval(renderNextUpdate,30000);
 
     // Render all menus first. Load Leaflet and map tiles only after the whole
     // page, fonts and images have loaded; do not block the initial restaurant
