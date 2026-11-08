@@ -1,101 +1,45 @@
 {
-  "checked_at": "2026-11-08T07:39:02+01:00",
+  "checked_at": "2026-11-08T08:10:44+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
-  "api_calls": 3,
+  "api_calls": 1,
   "results": [
-    {
-      "restaurant": "lia",
-      "issues": [
-        "source_not_published"
-      ],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die aktuelle Woche ist auf der Quelle nicht veröffentlicht bzw. nicht bestätigt. Keine Gerichte oder Preise aus der älteren Woche übernommen.",
-        "Keine eindeutig veröffentlichte aktuelle Karte"
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://lia.coffee/": "7b6c1c5b1cc99a7658f2b90de08b99696f3390dbf23eaed2f264bb62b6e865c7"
-      },
-      "usage": {
-        "input_tokens": 7482,
-        "input_tokens_details": {
-          "cache_write_tokens": 7479,
-          "cached_tokens": 0
-        },
-        "output_tokens": 281,
-        "output_tokens_details": {
-          "reasoning_tokens": 142
-        },
-        "total_tokens": 7763
-      }
-    },
-    {
-      "restaurant": "losteria",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Quelle enthält keine datierten Wochengerichte oder Tagesangebote."
-      ],
-      "ai_only_items": 4,
-      "parser_only_items": 0,
-      "ai_only_examples": [
-        "None: crema di patate con tartufo",
-        "None: pizza bianca tacchino e cipolletartufo di cielo",
-        "None: tagliatelle tartufo e funghi",
-        "None: tortina di mandorle"
-      ],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "edd75208b1b626fa358d284dce31dca80ce83874be2c703da74d28f482d1cbb2"
-      },
-      "usage": {
-        "input_tokens": 1779,
-        "input_tokens_details": {
-          "cache_write_tokens": 1776,
-          "cached_tokens": 0
-        },
-        "output_tokens": 862,
-        "output_tokens_details": {
-          "reasoning_tokens": 181
-        },
-        "total_tokens": 2641
-      }
-    },
     {
       "restaurant": "karmafood",
       "issues": [],
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Einzelpreise der Hauptgerichte außer dem ausdrücklich bepreisten Special sind nicht angegeben.",
-        "Die aufgelisteten Extras haben keine belegbare Tageszuordnung und wurden deshalb nicht als datierte Items ausgegeben.",
-        "„Lassi & Lunch“ steht ohne eigenen Preis oder nähere Angebotsbedingungen im HTML."
+        "Eintrag 16: Datum nicht ISO-konform",
+        "Eintrag 17: Datum nicht ISO-konform",
+        "Eintrag 18: Datum nicht ISO-konform",
+        "Eintrag 19: Datum nicht ISO-konform",
+        "Die Extras sind im Wochenmenü aufgeführt, aber keinem bestimmten Wochentag zugeordnet; sie sind daher mit dem Wochenzeitraum statt mit einem einzelnen Datum erfasst.",
+        "Samosas, Sweets & Mango Lassi, Spice it up: Kashmiri Chili Crisp und Masala Chai haben auf der Quelle keinen ausgewiesenen Einzelpreis."
       ],
-      "ai_only_items": 0,
+      "ai_only_items": 4,
       "parser_only_items": 0,
-      "ai_only_examples": [],
+      "ai_only_examples": [
+        "2026-11-09 bis 2026-11-13: masala chai",
+        "2026-11-09 bis 2026-11-13: samosas",
+        "2026-11-09 bis 2026-11-13: spice it up kashmiri chili crisp",
+        "2026-11-09 bis 2026-11-13: sweets mango lassi"
+      ],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "4323298c5d8751d180018f0d22d9c51dd7a539820774acc52dbf57dacab49376"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "a824ca1875921ecc5dc25a5a2f23432183537aa5e256704301ae93641c4f60c1"
       },
       "usage": {
-        "input_tokens": 2454,
+        "input_tokens": 2453,
         "input_tokens_details": {
-          "cache_write_tokens": 2451,
+          "cache_write_tokens": 2450,
           "cached_tokens": 0
         },
-        "output_tokens": 3355,
+        "output_tokens": 3200,
         "output_tokens_details": {
-          "reasoning_tokens": 996
+          "reasoning_tokens": 745
         },
-        "total_tokens": 5809
+        "total_tokens": 5653
       }
     },
     {
