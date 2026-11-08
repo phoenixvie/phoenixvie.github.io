@@ -16,6 +16,14 @@ on:
       - 'wu-lunch/scripts/**'
       - 'wu-lunch/requirements.txt'
       - '.github/workflows/wu-lunch-menus.yml'
+  pull_request:
+    paths:
+      - 'wu-lunch/index.html'
+      - 'wu-lunch/admin.html'
+      - 'wu-lunch/supabase-config.js'
+      - 'wu-lunch/scripts/**'
+      - 'wu-lunch/requirements.txt'
+      - '.github/workflows/wu-lunch-menus.yml'
 
 permissions:
   contents: write
