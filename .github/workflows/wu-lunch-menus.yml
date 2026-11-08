@@ -25,6 +25,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  test:
+    name: WU Lunch Regressionstests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: wu-lunch/requirements.txt
+      - name: Abhängigkeiten installieren
+        run: pip install -r wu-lunch/requirements.txt
+      - name: Offline- und Regressionstests
+        run: |
+          python wu-lunch/scripts/update_menus.py --smoke-test
+          python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v
   sync:
     # A feature-branch push must NEVER run the production importer or publish to master.
     if: github.ref == 'refs/heads/master'
