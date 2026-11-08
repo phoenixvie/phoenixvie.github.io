@@ -76,7 +76,7 @@ function RestaurantMap({restaurants, onSelect, focused}: {restaurants: Restauran
 
 function DishCard({dish}: {dish: DisplayDish}) {
   return <View style={styles.dishCard}>
-    <View style={styles.dishTop}><Text style={styles.dishName}>{dish.name}</Text><Text style={styles.price}>{dish.priceLabel || displayPrice(dish.price)}</Text></View>
+    <View style={styles.dishTop}><Text style={styles.dishName}>{dish.name}</Text><Text style={styles.price}>{dish.priceLabel ?? displayPrice(dish.price)}</Text></View>
     {dish.category ? <Text style={styles.category}>{dish.category}</Text> : null}
     {dish.description ? <Text style={styles.dishDescription}>{dish.description}</Text> : null}
     {dish.allergens?.length ? <Text style={styles.allergens}>Allergene: {dish.allergens.join(', ')}</Text> : null}

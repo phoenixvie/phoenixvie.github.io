@@ -169,6 +169,7 @@ export function visibleDishes(restaurant: Restaurant, date: string): DisplayDish
       name: item.category === 'Ausgabe 5' ? 'Pizza' : item.category || item.name,
       category: undefined,
       description: item.category === 'Ausgabe 5' ? '' : [item.name, item.description].filter(Boolean).join('\n'),
+      priceLabel: item.category === 'Ausgabe 5' && item.price == null ? '' : undefined,
     }));
   }
   const result: DisplayDish[] = [];

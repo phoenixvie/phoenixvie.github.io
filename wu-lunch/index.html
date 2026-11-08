@@ -605,7 +605,7 @@ html,body,.page { background:#fff; }
           name:item.category==='Ausgabe 5'?'Pizza':(item.category||item.name),
           detail:item.category==='Ausgabe 5'?'':[item.name,item.description,item.allergens?.length?'Allergene: '+item.allergens.join(', '):null,item.energy_kcal?item.energy_kcal+' kcal':null].filter(Boolean).join(' · '),
           price:item.price,
-          priceDisplay:item.price==null?'X €':null
+          priceDisplay:item.category==='Ausgabe 5' && item.price==null?'':(item.price==null?'X €':null)
         }));
       }
       const sorted=[...raw].sort((a,b)=>mealPosition(a)-mealPosition(b));

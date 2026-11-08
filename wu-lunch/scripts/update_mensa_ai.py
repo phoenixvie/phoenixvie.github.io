@@ -106,7 +106,8 @@ def validate_menu(result, original_text, monday, pdf_url):
         if day not in days:
             raise ValueError("Mensa: fehlender oder falscher Wochentag")
         name = item.get("name")
-        if not isinstance(name, str) or not 8 <= len(name.strip()) <= 160:
+        pizza_station = VALID_CATEGORIES.get(normalize(item.get("category"))) == "Ausgabe 5"
+        if not isinstance(name, str) or not ((pizza_station and name.strip() == "Pizza") or 8 <= len(name.strip()) <= 160):
             raise ValueError("Mensa: beschädigter Gerichtname")
         if not re.match(r"[A-ZÄÖÜ]", name.strip()):
             raise ValueError("Mensa: verdächtiger Gerichtbeginn")
@@ -116,7 +117,7 @@ def validate_menu(result, original_text, monday, pdf_url):
         if category.startswith("Ausgabe") and "ausgabe" not in original_text.casefold():
             raise ValueError("Mensa: Ausgabe-Nummer nicht im Original-PDF")
         price = item.get("price_eur")
-        if price is None and category not in ("Tagessuppe", "Pizza", "Pizza & Co", "Pasta", "Pasta & Co"):
+        if price is None and category not in ("Tagessuppe", "Pizza", "Pizza & Co", "Pasta", "Pasta & Co", "Ausgabe 5"):
             raise ValueError("Mensa: fehlender Gerichtpreis")
         if price is not None and (not isinstance(price, (int, float)) or isinstance(price, bool) or
             not math.isfinite(price) or not 0 < price <= 150):

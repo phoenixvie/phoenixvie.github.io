@@ -60,6 +60,14 @@ test('included soup and salad appear once as regular detail, and newsletter prom
   assert.deepEqual(visibleDishes(topf,'2026-11-09').map(row=>row.name),['Dessert des Tages']);
 });
 
+test('Mensa Ausgabe 5 shows only Pizza without an unverified price', () => {
+  const mensa = {id:'mensa',name:'WU Mensa',days:{'2026-11-09':[{name:'Pizza',category:'Ausgabe 5',price:null}]}};
+  const item = visibleDishes(mensa,'2026-11-09')[0];
+  assert.equal(item.name,'Pizza');
+  assert.equal(item.description,'');
+  assert.equal(item.priceLabel,'');
+});
+
 test('outdated source dates do not leak into a later week', () => {
   const restaurant = {id: 'finn', name: 'Finn', validFrom: '2026-11-02', validUntil: '2026-11-06', days: {'2026-11-09': [{name: 'Alt', price: 9}]}};
   assert.deepEqual(visibleDishes(restaurant, '2026-11-09'), []);
