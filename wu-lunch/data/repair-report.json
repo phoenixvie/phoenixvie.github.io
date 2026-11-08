@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T09:42:15+01:00",
+  "checked_at": "2026-11-08T15:34:52+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,27 +10,27 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die vier Einträge im Abschnitt „Extras“ (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai) haben keine Tageszuordnung. Sie wurden daher keinem Wochentag zugewiesen.",
-        "Außer dem Protein Power Chili ist kein Einzelpreis für ein Hauptgericht ausdrücklich angegeben."
+        "Die Seite listet Extras (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai) ohne Tageszuordnung und ohne Preise. Sie wurden deshalb keinem Datum zugeordnet und nicht als datierte Gerichte ausgegeben.",
+        "Es sind keine separat bepreisten Tagessuppen, Salate oder Nachspeisen aufgeführt."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "fc391e058f145d4cbe99c691a7398f031354054fcaf8cf538f29fa95cccdfbdd"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "bcd8e889e0c174d91e24fe5b36cd0648a0c67e9529cee766deafd5735edd4a1e"
       },
       "usage": {
-        "input_tokens": 2451,
+        "input_tokens": 2457,
         "input_tokens_details": {
-          "cache_write_tokens": 2448,
+          "cache_write_tokens": 2454,
           "cached_tokens": 0
         },
-        "output_tokens": 3352,
+        "output_tokens": 3011,
         "output_tokens_details": {
-          "reasoning_tokens": 1342
+          "reasoning_tokens": 721
         },
-        "total_tokens": 5803
+        "total_tokens": 5468
       }
     },
     {

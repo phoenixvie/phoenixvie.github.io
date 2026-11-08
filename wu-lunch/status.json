@@ -1,22 +1,22 @@
 {
-  "checked_at": "2026-11-08T09:41:44+01:00",
+  "checked_at": "2026-11-08T15:34:20+01:00",
   "week_start": "2026-11-09",
   "week_end": "2026-11-13",
   "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-08T09:41:51+01:00",
-      "checked_at": "2026-11-08T09:41:51+01:00",
+      "last_success": "2026-11-08T15:34:27+01:00",
+      "checked_at": "2026-11-08T15:34:27+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "d59c67e4885e669599896e5d4a03946bddf588acb9a11863f955a975f897a89c",
+      "content_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9",
       "source_image": null,
       "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367"
     },
     "finn": {
       "state": "not_published",
       "last_success": "2026-11-06T19:12:26+01:00",
-      "checked_at": "2026-11-08T09:41:51+01:00",
+      "checked_at": "2026-11-08T15:34:27+01:00",
       "consecutive_failures": 0,
       "content_sha256": "75c0d6609c32b5f4190be95d414faa054cc76db1b0f43093bb94ba0f52a77797",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
@@ -25,7 +25,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-08T09:41:44+01:00",
+      "last_success": "2026-11-08T15:34:20+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -33,12 +33,12 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
       "last_success": null,
-      "consecutive_failures": 30,
+      "consecutive_failures": 31,
       "content_sha256": null
     },
     "glashaus": {
       "state": "ok",
-      "last_success": "2026-11-08T09:41:44+01:00",
+      "last_success": "2026-11-08T15:34:20+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "d5a4ab6258906a17bffc2ed49dbdffe7d7284d125adc32220133424bcd871243"
@@ -65,20 +65,15 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "ok_browser",
+      "state": "cached",
       "last_success": "2026-11-08T09:42:15+01:00",
       "consecutive_failures": 0,
-      "day_sha256": {
-        "2026-11-09": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8",
-        "2026-11-10": "620b93826e0e6f7a3aea7f4fbee3e6da07a99333b366fbc6f7a0c24ac2d02b0b",
-        "2026-11-11": "3974faea0eeb22b6ad9391119e8d0b52a7cbdd5a501000739e76f4d5b03dbd7d",
-        "2026-11-12": "aacf119417daddbf08f0ea4166fc8cff8a298fd2c5a8bb0387b455ed4b2ffca5",
-        "2026-11-13": "ea919b4cf1c8246325876b7ed241b216ca1313f09bb340a73bfb488a72f95dec"
-      }
+      "parser_version": null,
+      "content_sha256": null
     },
     "gruenehuette": {
       "state": "ok",
-      "last_success": "2026-11-08T09:41:44+01:00",
+      "last_success": "2026-11-08T15:34:20+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "6d429a8330a51224730a01976c3d9d0792a25e28fd14d3bb04bc3fb342c8449d"
@@ -157,10 +152,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-08T09:42:15+01:00",
+      "last_checked": "2026-11-08T15:34:52+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-09",
-      "source_fingerprint": "d59c67e4885e669599896e5d4a03946bddf588acb9a11863f955a975f897a89c",
+      "source_fingerprint": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
