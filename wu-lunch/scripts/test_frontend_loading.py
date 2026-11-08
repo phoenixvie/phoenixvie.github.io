@@ -39,6 +39,14 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertNotIn("Vorschau auf Montag.",html)
         self.assertIn("const IMPORT_SLOTS=",html)
         self.assertIn('href="impressum.html"',html)
+        self.assertIn('href="admin.html"',html)
+        self.assertIn('await applyRestaurantOverrides();',html)
+        self.assertIn("restaurant_overrides?select=restaurant_id,is_enabled,sort_order",html)
+        self.assertTrue((ROOT/"admin.html").is_file())
+        admin=(ROOT/"admin.html").read_text(encoding="utf-8")
+        self.assertIn("/auth/v1/token?grant_type=password",admin)
+        self.assertIn("/rest/v1/menu_history",admin)
+        self.assertIn("backfillHistory",admin)
         self.assertIn("function moveDay(step)",html)
         self.assertIn("listView.addEventListener('pointerup'",html)
         self.assertIn("touch-action:pan-y",html)
@@ -49,6 +57,8 @@ class FrontendLoadingTests(unittest.TestCase):
         workflow=(ROOT.parent/".github"/"workflows"/"wu-lunch-menus.yml").read_text(encoding="utf-8")
         self.assertIn("'15 6-17 * * 6'",workflow)
         self.assertIn("Sat 08:15–18:15",html)
+        self.assertIn("Geprüfte Wochenkarte ins Admin-Archiv sichern",workflow)
+        self.assertIn("SUPABASE_SERVICE_ROLE_KEY",workflow)
 
 if __name__=="__main__":
     unittest.main()

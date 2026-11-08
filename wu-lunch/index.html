@@ -298,7 +298,7 @@ html,body,.page { background:#fff; }
       </section>
       <footer class="site-footer">
         <span id="nextUpdate" aria-live="polite"></span>
-        <a href="impressum.html">Impressum</a>
+        <span><a href="impressum.html">Impressum</a><span aria-hidden="true"> · </span><a href="admin.html">Admin</a></span>
       </footer>
     </main>
 
@@ -306,6 +306,7 @@ html,body,.page { background:#fff; }
   </div>
 
   <script src="data.js?v=5"></script>
+  <script src="supabase-config.js?v=1"></script>
   <script>
   (async function initializeLunchPage() {
     // Lädt täglich aktualisierte JSON-Daten direkt aus dem GitHub-Actions-Import.
@@ -322,6 +323,27 @@ html,body,.page { background:#fff; }
       console.warn('Live-Menüs nicht abrufbar; statisches Fallback verwendet:', error);
     }
     const DATA = freshData;
+    async function applyRestaurantOverrides(){
+      const config=window.WU_LUNCH_SUPABASE;
+      if(!config?.url||!config?.publishableKey)return;
+      try{
+        const response=await fetch(config.url+'/rest/v1/restaurant_overrides?select=restaurant_id,is_enabled,sort_order',{
+          headers:{apikey:config.publishableKey,Authorization:'Bearer '+config.publishableKey}
+        });
+        if(!response.ok)throw new Error('HTTP '+response.status);
+        const overrides=await response.json();
+        if(!Array.isArray(overrides))throw new Error('Ungültiges Einstellungsformat');
+        const byId=new Map(overrides.map(value=>[value.restaurant_id,value]));
+        DATA.restaurants=DATA.restaurants.filter(restaurant=>byId.get(restaurant.id)?.is_enabled!==false);
+        DATA.restaurants.sort((left,right)=>{
+          const leftOrder=byId.get(left.id)?.sort_order;
+          const rightOrder=byId.get(right.id)?.sort_order;
+          return (Number.isFinite(leftOrder)?leftOrder:99999)-(Number.isFinite(rightOrder)?rightOrder:99999);
+        });
+      }catch(error){
+        console.warn('Restaurant-Einstellungen nicht abrufbar; Standardreihenfolge verwendet:',error);
+      }
+    }
     // Keep the user's preferred order even when JSON or cached fallback has
     // an older order. Unknown future restaurants appear after this shortlist.
     const RESTAURANT_ORDER = [
@@ -333,6 +355,7 @@ html,body,.page { background:#fff; }
       return index < 0 ? RESTAURANT_ORDER.length : index;
     };
     DATA.restaurants.sort((a,b) => rank(a.id) - rank(b.id));
+    await applyRestaurantOverrides();
     const WEEKDAY_NAMES = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const SHORT_WEEKDAY = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const MONDAY_FIRST = [1,2,3,4,5,6,0];

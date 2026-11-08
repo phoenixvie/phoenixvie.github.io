@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin – WU Lunch</title>
+  <style>
+    :root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#20252b;background:#f7f8fa}*{box-sizing:border-box}body{margin:0}.page{max-width:900px;margin:0 auto;padding:28px 18px 48px}a{color:#176da8}.back{font-size:14px}.panel{background:#fff;border:1px solid #e1e5e9;border-radius:12px;padding:20px;margin-top:18px;box-shadow:0 2px 12px #18263a0a}h1{font-size:25px;margin:20px 0 4px}h2{font-size:18px;margin:0 0 14px}p{line-height:1.5}.muted{color:#66727e;font-size:14px}.notice{min-height:22px;color:#35566d;font-size:14px}.error{color:#b42318}.success{color:#087443}label{display:block;font-size:14px;font-weight:600;margin:12px 0 5px}input,select,button{font:inherit}input,select{width:100%;padding:10px;border:1px solid #cdd5dd;border-radius:7px;background:#fff}button{cursor:pointer;border:1px solid #0d6ead;background:#1379bd;color:#fff;border-radius:7px;padding:9px 12px;margin:12px 7px 0 0}button.secondary{background:#fff;color:#176da8;border-color:#aeb9c3}button:disabled{opacity:.55;cursor:wait}.hidden{display:none!important}.restaurant{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #edf0f2}.restaurant:first-of-type{border-top:0}.restaurant-name{flex:1}.restaurant label{display:flex;align-items:center;gap:7px;margin:0;font-weight:500}.restaurant input{width:auto}.icon-button{padding:4px 9px;margin:0;background:#fff;color:#176da8;border-color:#cbd5dc}.history-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.history-tab{margin:0;background:#fff;color:#176da8;border-color:#cbd5dc}.history-tab.active{background:#1379bd;color:#fff;border-color:#1379bd}.day{margin-top:12px}.day h3{font-size:15px;margin:0 0 5px}.dish{display:flex;justify-content:space-between;gap:14px;padding:5px 0;border-top:1px solid #edf0f2;font-size:14px}.dish span:last-child{white-space:nowrap}.footer{margin-top:26px;color:#68737e;font-size:13px}@media(max-width:560px){.page{padding:20px 12px}.panel{padding:16px}.restaurant{align-items:flex-start}.restaurant-name{line-height:1.25}.icon-button{padding:4px 8px}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <a class="back" href="index.html">← Zur Lunch-Übersicht</a>
+    <h1>WU Lunch Admin</h1>
+    <p class="muted">Zugang nur für den hinterlegten Administrator.</p>
+
+    <section class="panel" id="loginPanel">
+      <h2>Anmelden</h2>
+      <p class="muted">Beim ersten Besuch bitte ein eigenes Passwort festlegen. Falls eine E-Mail-Bestätigung aktiviert ist, bestätige zuerst die Nachricht in deinem Postfach.</p>
+      <label for="email">E-Mail</label>
+      <input id="email" type="email" value="marco@startit.at" readonly autocomplete="username">
+      <label for="password">Passwort</label>
+      <input id="password" type="password" minlength="12" autocomplete="current-password" required>
+      <div><button id="loginButton" type="button">Anmelden</button><button id="setupButton" class="secondary" type="button">Erstzugang einrichten</button></div>
+      <p class="notice" id="loginNotice" aria-live="polite"></p>
+    </section>
+
+    <section class="hidden" id="adminPanel">
+      <section class="panel">
+        <h2>Restaurants</h2>
+        <p class="muted">Sichtbarkeit und Reihenfolge gelten sofort für neue Seitenaufrufe der Lunch-Übersicht.</p>
+        <p class="notice" id="restaurantNotice" aria-live="polite"></p>
+        <div id="restaurantList"></div>
+      </section>
+      <section class="panel">
+        <h2>Archivierte Mittagsmenüs</h2>
+        <label for="weekSelect">Kalenderwoche</label>
+        <select id="weekSelect"><option>Archiv wird geladen …</option></select>
+        <div id="historyContent"></div>
+      </section>
+      <button id="logoutButton" class="secondary" type="button">Abmelden</button>
+    </section>
+    <p class="footer">WU Lunch · <a href="impressum.html">Impressum</a></p>
+  </main>
+  <script src="supabase-config.js?v=1"></script>
+  <script>
+  (()=>{
+    const config=window.WU_LUNCH_SUPABASE;
+    const email=document.getElementById('email'),password=document.getElementById('password');
+    const loginButton=document.getElementById('loginButton'),setupButton=document.getElementById('setupButton');
+    const loginNotice=document.getElementById('loginNotice'),loginPanel=document.getElementById('loginPanel'),adminPanel=document.getElementById('adminPanel');
+    const restaurantList=document.getElementById('restaurantList'),restaurantNotice=document.getElementById('restaurantNotice');
+    const weekSelect=document.getElementById('weekSelect'),historyContent=document.getElementById('historyContent');
+    let accessToken='',restaurants=[],history=[];
+    const api=(path,options={})=>fetch(config.url+path,{...options,headers:{apikey:config.publishableKey,Authorization:'Bearer '+(accessToken||config.publishableKey),...(options.headers||{})}});
+    const text=(element,message,kind='')=>{element.textContent=message;element.className='notice '+kind;};
+    const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    const money=value=>value==null?'':Number(value).toLocaleString('de-AT',{style:'currency',currency:'EUR'});
+    const formatWeek=date=>{const start=new Date(date+'T12:00:00Z'),end=new Date(start);end.setUTCDate(start.getUTCDate()+4);return 'KW '+String(Math.ceil((((start-new Date(Date.UTC(start.getUTCFullYear(),0,1)))/86400000)+new Date(Date.UTC(start.getUTCFullYear(),0,1)).getUTCDay()+1)/7)).padStart(2,'0')+' · '+start.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'})+'–'+end.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'});};
+    function setBusy(busy){loginButton.disabled=busy;setupButton.disabled=busy;}
+    async function signIn(){
+      if(!password.value){text(loginNotice,'Bitte Passwort eingeben.','error');return;}
+      setBusy(true);text(loginNotice,'Anmeldung wird geprüft …');
+      try{
+        const response=await api('/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:password.value})});
+        const body=await response.json();if(!response.ok)throw new Error(body.error_description||'Anmeldung nicht möglich');
+        accessToken=body.access_token;await verifyAdmin();
+      }catch(error){text(loginNotice,error.message||'Anmeldung nicht möglich.','error');}finally{setBusy(false);}
+    }
+    async function setup(){
+      if(password.value.length<12){text(loginNotice,'Bitte ein Passwort mit mindestens 12 Zeichen wählen.','error');return;}
+      setBusy(true);text(loginNotice,'Erstzugang wird eingerichtet …');
+      try{
+        const response=await api('/auth/v1/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email.value,password:password.value})});
+        const body=await response.json();if(!response.ok)throw new Error(body.msg||body.message||'Erstzugang nicht möglich');
+        text(loginNotice,'Prüfe dein E-Mail-Postfach und bestätige den Erstzugang. Danach hier anmelden.','success');
+      }catch(error){text(loginNotice,error.message||'Erstzugang nicht möglich.','error');}finally{setBusy(false);}
+    }
+    async function verifyAdmin(){
+      const response=await api('/rest/v1/admin_users?select=id&limit=1');
+      const rows=await response.json();
+      if(!response.ok||!Array.isArray(rows)||rows.length!==1){accessToken='';throw new Error('Dieses Konto hat keinen Admin-Zugang.');}
+      loginPanel.classList.add('hidden');adminPanel.classList.remove('hidden');
+      await Promise.all([loadRestaurants(),loadHistory()]);
+    }
+    function renderRestaurants(){
+      restaurantList.replaceChildren();
+      restaurants.forEach((restaurant,index)=>{
+        const row=document.createElement('div');row.className='restaurant';
+        row.innerHTML='<span class="restaurant-name">'+escape(restaurant.name||restaurant.restaurant_id)+'</span><label><input type="checkbox" '+(restaurant.is_enabled?'checked':'')+'> sichtbar</label><button class="icon-button" type="button" aria-label="Nach oben">↑</button><button class="icon-button" type="button" aria-label="Nach unten">↓</button>';
+        const checkbox=row.querySelector('input');checkbox.addEventListener('change',()=>saveRestaurant(restaurant.restaurant_id,{is_enabled:checkbox.checked}));
+        row.querySelectorAll('button')[0].addEventListener('click',()=>moveRestaurant(index,-1));
+        row.querySelectorAll('button')[1].addEventListener('click',()=>moveRestaurant(index,1));
+        restaurantList.append(row);
+      });
+    }
+    async function loadRestaurants(){
+      const [overrideResponse,menuResponse]=await Promise.all([api('/rest/v1/restaurant_overrides?select=restaurant_id,is_enabled,sort_order&order=sort_order.asc'),fetch('./data/menus.json',{cache:'no-store'})]);
+      const overrides=await overrideResponse.json();if(!overrideResponse.ok)throw new Error('Restaurant-Einstellungen konnten nicht geladen werden.');
+      const menu=menuResponse.ok?await menuResponse.json():{restaurants:[]};const names=new Map((menu.restaurants||[]).map(item=>[item.id,item.name]));
+      restaurants=overrides.map(item=>({...item,name:names.get(item.restaurant_id)||item.restaurant_id}));renderRestaurants();
+    }
+    async function saveRestaurant(id,change){
+      const response=await api('/rest/v1/restaurant_overrides?restaurant_id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(change)});
+      if(!response.ok){text(restaurantNotice,'Änderung konnte nicht gespeichert werden.','error');await loadRestaurants();return;}
+      text(restaurantNotice,'Gespeichert.','success');
+    }
+    async function moveRestaurant(index,direction){
+      const target=index+direction;if(target<0||target>=restaurants.length)return;
+      [restaurants[index],restaurants[target]]=[restaurants[target],restaurants[index]];
+      renderRestaurants();
+      const updates=restaurants.map((restaurant,order)=>api('/rest/v1/restaurant_overrides?restaurant_id=eq.'+encodeURIComponent(restaurant.restaurant_id),{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({sort_order:(order+1)*10})}));
+      const responses=await Promise.all(updates);if(responses.some(response=>!response.ok)){text(restaurantNotice,'Reihenfolge konnte nicht gespeichert werden.','error');await loadRestaurants();return;}
+      restaurants.forEach((restaurant,index)=>restaurant.sort_order=(index+1)*10);text(restaurantNotice,'Reihenfolge gespeichert.','success');
+    }
+    async function fetchHistory(){
+      const response=await api('/rest/v1/menu_history?select=week_start,menu_data,captured_at&order=week_start.desc');
+      const result=await response.json();if(!response.ok)throw new Error('Archiv konnte nicht geladen werden.');return result;
+    }
+    async function backfillHistory(){
+      const knownWeeks=new Set(history.map(entry=>entry.week_start));
+      const commitsResponse=await fetch('https://api.github.com/repos/phoenixvie/phoenixvie.github.io/commits?path=wu-lunch/data/menus.json&per_page=100',{headers:{Accept:'application/vnd.github+json'}});
+      if(!commitsResponse.ok)throw new Error('Frühere Menüversionen sind gerade nicht abrufbar.');
+      const commits=await commitsResponse.json();
+      for(const commit of commits){
+        const source=await fetch('https://raw.githubusercontent.com/phoenixvie/phoenixvie.github.io/'+commit.sha+'/wu-lunch/data/menus.json');
+        if(!source.ok)continue;
+        const menu=await source.json();
+        if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(menu.weekStart||'')||knownWeeks.has(menu.weekStart))continue;
+        const saved=await api('/rest/v1/menu_history?on_conflict=week_start',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({week_start:menu.weekStart,menu_data:menu,source_commit:commit.sha})});
+        if(saved.ok)knownWeeks.add(menu.weekStart);
+      }
+    }
+    async function loadHistory(){
+      history=await fetchHistory();
+      try{await backfillHistory();history=await fetchHistory();}catch(error){console.warn(error);}
+      weekSelect.innerHTML='';
+      if(!history.length){weekSelect.innerHTML='<option>Keine archivierten Wochen</option>';historyContent.innerHTML='<p class="muted">Noch keine archivierten Mittagsmenüs vorhanden.</p>';return;}
+      history.forEach((entry,index)=>{const option=document.createElement('option');option.value=index;option.textContent=formatWeek(entry.week_start);weekSelect.append(option);});
+      weekSelect.onchange=renderHistory;renderHistory();
+    }
+    function renderHistory(){
+      const menu=history[Number(weekSelect.value)]?.menu_data;if(!menu)return;
+      const dates=Object.keys(menu.restaurants?.[0]?.days||{});const date=dates[0];
+      const tab='<div class="history-tabs">'+dates.map((value,index)=>'<button class="history-tab '+(index===0?'active':'')+'" type="button" data-date="'+value+'">'+new Date(value+'T12:00:00Z').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'2-digit'})+'</button>').join('')+'</div>';
+      historyContent.innerHTML=tab+'<div id="archiveList"></div>';
+      const display=selected=>{const list=document.getElementById('archiveList');list.innerHTML=(menu.restaurants||[]).map(restaurant=>{const dishes=restaurant.days?.[selected]||[];return '<section class="day"><h3>'+escape(restaurant.name)+'</h3>'+(dishes.length?dishes.map(item=>'<div class="dish"><span>'+escape(item.name)+'</span><span>'+money(item.price)+'</span></div>').join(''):'<p class="muted">Noch nicht veröffentlicht</p>')+'</section>';}).join('');};
+      historyContent.querySelectorAll('.history-tab').forEach(button=>button.addEventListener('click',()=>{historyContent.querySelectorAll('.history-tab').forEach(item=>item.classList.toggle('active',item===button));display(button.dataset.date);}));display(date);
+    }
+    document.getElementById('logoutButton').addEventListener('click',()=>{accessToken='';password.value='';adminPanel.classList.add('hidden');loginPanel.classList.remove('hidden');text(loginNotice,'Abgemeldet.');});
+    loginButton.addEventListener('click',signIn);setupButton.addEventListener('click',setup);password.addEventListener('keydown',event=>{if(event.key==='Enter')signIn();});
+    if(!config?.url||!config?.publishableKey)text(loginNotice,'Die Admin-Konfiguration fehlt.','error');
+  })();
+  </script>
+</body>
+</html>
