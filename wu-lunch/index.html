@@ -178,6 +178,7 @@ html,body,.page { background:#fff; }
 .source-link { margin-top:7px; font-size:11px; color:#777; }
 .day-tabs { flex-wrap:nowrap; max-width:1120px; }
 .day-tab { flex:1; min-width:0; }
+.swipe-dots{display:none}
 @media(max-width:750px) {
  .page{padding:0 13px 24px}
  .hero { margin:0 -13px; width:calc(100% + 26px); height:clamp(132px,30vw,205px); }
@@ -185,6 +186,10 @@ html,body,.page { background:#fff; }
  .day-tabs { width:100%; max-width:100%; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); justify-content:stretch; overflow:visible; padding:0; }
  .day-tab { width:100%; min-width:0; flex:none; font-size:clamp(10px,2.7vw,13px); letter-spacing:-.035em; white-space:nowrap; padding:9px 2px; }
  .day-tab .small-date {font-size:clamp(9px,2.35vw,11px);letter-spacing:0;}
+ .swipe-dots{display:flex;justify-content:center;align-items:center;gap:7px;margin:-2px 0 2px}
+ .swipe-dot{width:7px;height:7px;padding:0;border:0;border-radius:50%;background:#d4d8dd;transition:transform .2s,background .2s;cursor:pointer}
+ .swipe-dot.active{background:#1687d5;transform:scale(1.2)}
+ .swipe-dot:focus-visible{outline:2px solid #1687d5;outline-offset:3px}
  .view-tabs { align-self:center }
  .content-wrap { margin:10px auto 0; }
  .row { grid-template-columns:70px minmax(0,1fr); gap:10px; padding:11px 0; }
@@ -249,6 +254,11 @@ html,body,.page { background:#fff; }
 .dish-price{font-weight:600!important}
 .map-stage{height:450px;min-height:360px;isolation:isolate}
 .map-stage .leaflet-container{width:100%;height:100%}
+.map-loader{position:absolute;inset:0;display:grid;place-items:center;background:#f8fafc;color:#1687d5;z-index:1}
+.map-loader-spinner{width:30px;height:30px;border:3px solid #d8e9f6;border-top-color:#1687d5;border-radius:50%;animation:map-spin .75s linear infinite}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@keyframes map-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.map-loader-spinner{animation:none}}
 @media(max-width:750px){
  .restaurant-title h3,.menu-line,.dish-price{font-size:14px!important;line-height:1.45!important}
  .logo-box{font-size:27px!important}
@@ -274,6 +284,7 @@ html,body,.page { background:#fff; }
 
     <section class="toolbar" aria-label="Navigation">
       <div class="day-tabs" id="dayTabs"></div>
+      <div class="swipe-dots" id="swipeDots" aria-label="Tagesnavigation: nach links oder rechts wischen"></div>
 
       
     </section>
@@ -281,7 +292,9 @@ html,body,.page { background:#fff; }
     <main class="content-wrap">
       <section class="list-view" id="listView"></section>
       <section class="map-view" id="mapView" aria-label="Karte der Restaurants">
-        <div class="map-stage" id="mapStage" aria-label="Interaktive Karte der Restaurants rund um den WU Campus"></div>
+        <div class="map-stage" id="mapStage" aria-label="Interaktive Karte der Restaurants rund um den WU Campus">
+          <div class="map-loader" role="status"><span class="map-loader-spinner" aria-hidden="true"></span><span class="visually-hidden">Karte wird geladen</span></div>
+        </div>
       </section>
       <footer class="site-footer">
         <span id="nextUpdate" aria-live="polite"></span>
@@ -324,6 +337,7 @@ html,body,.page { background:#fff; }
     const SHORT_WEEKDAY = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const MONDAY_FIRST = [1,2,3,4,5,6,0];
     const tabContainer = document.getElementById('dayTabs');
+    const swipeDots = document.getElementById('swipeDots');
     const listView = document.getElementById('listView');
     const nextUpdate=document.getElementById('nextUpdate');
     const mapView = document.getElementById('mapView');
@@ -411,6 +425,21 @@ html,body,.page { background:#fff; }
         btn.innerHTML = `${SHORT_WEEKDAY[weekday]}<span class="small-date">${formatShortDate(iso)}</span>`;
         btn.addEventListener('click',()=>{selectedDate = iso; update();});
         tabContainer.appendChild(btn);
+      });
+      renderSwipeDots();
+    }
+
+    function renderSwipeDots(){
+      swipeDots.innerHTML='';
+      weekDates.forEach(({iso,date})=>{
+        const dot=document.createElement('button');
+        const active=iso===selectedDate;
+        dot.type='button';
+        dot.className='swipe-dot'+(active?' active':'');
+        dot.setAttribute('aria-label','Zeige '+SHORT_WEEKDAY[date.getDay()]+' '+formatShortDate(iso));
+        dot.setAttribute('aria-current',active?'date':'false');
+        dot.addEventListener('click',()=>{selectedDate=iso;update();});
+        swipeDots.appendChild(dot);
       });
     }
 
