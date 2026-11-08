@@ -2,7 +2,7 @@
 
 Die App zeigt die Restaurantliste, eine OpenStreetMap-Karte über MapLibre, Tagesmenüs und Kontaktmöglichkeiten. Restaurantdaten kommen von `wu-lunch/data/menus.json` auf GitHub Pages. Sichtbarkeit, Reihenfolge, Stammdaten und manuelle Tagesmenüs kommen aus den öffentlich lesbaren, durch Schreibregeln geschützten Supabase-Tabellen. Der Adminbereich bleibt auf der Website; in der App ist kein Admin-Login erforderlich.
 
-Das App-Symbol verwendet die bereitgestellte Originaldatei `assets/icon-original.webp`; `assets/icon.png` ist die für den Android-Build benötigte PNG-Fassung.
+Das App-Symbol verwendet die bereitgestellte Originaldatei `assets/icon.png` unverändert.
 
 Die App fragt Daten beim Start, beim Wechsel zurück in den Vordergrund und alle 15 Sekunden im Vordergrund erneut ab. Admin-Änderungen sind deshalb üblicherweise binnen 15 Sekunden sichtbar. Neue automatisch importierte Menüs erscheinen nach dem GitHub-Pages-Deployment. Ohne Netzverbindung zeigt die App eine Fehlermeldung; bereits geladene Daten bleiben während eines vorübergehenden Fehlers sichtbar.
 
