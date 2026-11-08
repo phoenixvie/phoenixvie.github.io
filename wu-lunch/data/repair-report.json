@@ -1,45 +1,71 @@
 {
-  "checked_at": "2026-11-07T22:10:19+01:00",
+  "checked_at": "2026-11-08T07:39:02+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
-  "api_calls": 2,
+  "api_calls": 3,
   "results": [
     {
-      "restaurant": "gruenehuette",
+      "restaurant": "lia",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die aktuelle Woche ist auf der Quelle nicht veröffentlicht bzw. nicht bestätigt. Keine Gerichte oder Preise aus der älteren Woche übernommen.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://lia.coffee/": "7b6c1c5b1cc99a7658f2b90de08b99696f3390dbf23eaed2f264bb62b6e865c7"
+      },
+      "usage": {
+        "input_tokens": 7482,
+        "input_tokens_details": {
+          "cache_write_tokens": 7479,
+          "cached_tokens": 0
+        },
+        "output_tokens": 281,
+        "output_tokens_details": {
+          "reasoning_tokens": 142
+        },
+        "total_tokens": 7763
+      }
+    },
+    {
+      "restaurant": "losteria",
       "issues": [],
       "action": "review_only",
       "repairs": [],
-      "validation_issues": [],
-      "ai_only_items": 20,
-      "parser_only_items": 5,
+      "validation_issues": [
+        "Die Quelle enthält keine datierten Wochengerichte oder Tagesangebote."
+      ],
+      "ai_only_items": 4,
+      "parser_only_items": 0,
       "ai_only_examples": [
-        "2026-11-09: champignoncremesuppe",
-        "2026-11-09: frittatensuppe",
-        "2026-11-09: griessnockerlsuppe",
-        "2026-11-09: leberknödelsuppe",
-        "2026-11-10: champignoncremesuppe"
+        "None: crema di patate con tartufo",
+        "None: pizza bianca tacchino e cipolletartufo di cielo",
+        "None: tagliatelle tartufo e funghi",
+        "None: tortina di mandorle"
       ],
-      "parser_only_examples": [
-        "2026-11-09: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder champignoncremesuppe",
-        "2026-11-10: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder champignoncremesuppe",
-        "2026-11-11: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder champignoncremesuppe",
-        "2026-11-12: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder champignoncremesuppe",
-        "2026-11-13: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder champignoncremesuppe"
-      ],
+      "parser_only_examples": [],
       "source_hashes": {
-        "https://www.zurgruenenhuette.com/mittags-menu": "7d70092222f17674fda1528a2c7c00f547fbbab4749c8d462396656fccff3f41"
+        "https://losteria.net/at/menue/menu-della-casa/": "edd75208b1b626fa358d284dce31dca80ce83874be2c703da74d28f482d1cbb2"
       },
       "usage": {
-        "input_tokens": 2097,
+        "input_tokens": 1779,
         "input_tokens_details": {
-          "cache_write_tokens": 2094,
+          "cache_write_tokens": 1776,
           "cached_tokens": 0
         },
-        "output_tokens": 4199,
+        "output_tokens": 862,
         "output_tokens_details": {
-          "reasoning_tokens": 666
+          "reasoning_tokens": 181
         },
-        "total_tokens": 6296
+        "total_tokens": 2641
       }
     },
     {
@@ -48,27 +74,28 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Seite führt unter „Extras“ Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai auf, ordnet sie aber keinem konkreten Wochentag zu. Sie sind daher nicht als datierte Mittagsspeisen aufgenommen.",
-        "Es sind keine separat bepreisten Tagessuppen, Salate oder Nachspeisen ausgewiesen."
+        "Einzelpreise der Hauptgerichte außer dem ausdrücklich bepreisten Special sind nicht angegeben.",
+        "Die aufgelisteten Extras haben keine belegbare Tageszuordnung und wurden deshalb nicht als datierte Items ausgegeben.",
+        "„Lassi & Lunch“ steht ohne eigenen Preis oder nähere Angebotsbedingungen im HTML."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "30d8c8e621c0f273a1a9d531aa2e0609faae75b70277281ff9556363fa5a5c93"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "4323298c5d8751d180018f0d22d9c51dd7a539820774acc52dbf57dacab49376"
       },
       "usage": {
-        "input_tokens": 2459,
+        "input_tokens": 2454,
         "input_tokens_details": {
-          "cache_write_tokens": 2456,
+          "cache_write_tokens": 2451,
           "cached_tokens": 0
         },
-        "output_tokens": 3561,
+        "output_tokens": 3355,
         "output_tokens_details": {
-          "reasoning_tokens": 1123
+          "reasoning_tokens": 996
         },
-        "total_tokens": 6020
+        "total_tokens": 5809
       }
     },
     {
