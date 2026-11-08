@@ -45,6 +45,8 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertIn("Angaben ohne Gewähr",html)
         self.assertIn("Diese Website verwendet keine Cookies.",html)
         self.assertIn('id="lunchAnnouncement"',html)
+        self.assertIn('width:fit-content',html)
+        self.assertIn('text-align:center',html)
         self.assertIn("function loadAnnouncement()",html)
         self.assertIn("lunch_announcement?id=eq.true",html)
         self.assertIn("'X €'",html)
