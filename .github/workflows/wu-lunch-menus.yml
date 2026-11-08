@@ -162,7 +162,8 @@ jobs:
         if: steps.guard.outputs.skip == 'false'
         shell: bash
         env:
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          # The project URL is public; only the API secret is stored in GitHub.
+          SUPABASE_URL: https://vswnqdqnohbuzbwmsdvv.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           set -euo pipefail
@@ -177,7 +178,6 @@ jobs:
           curl --fail-with-body --silent --show-error --retry 3 --connect-timeout 10 \
             -X POST "${SUPABASE_URL}/rest/v1/menu_history?on_conflict=week_start" \
             -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
             -H "Content-Type: application/json" \
             -H "Prefer: resolution=merge-duplicates,return=minimal" \
             --data "${payload}"
