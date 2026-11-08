@@ -202,10 +202,16 @@
       menuEditor.replaceChildren();
       dishes.forEach((dish,index)=>{
         const item=document.createElement('div');item.className='day';item.dataset.index=index;
-        item.innerHTML='<label>Speise '+(index+1)+' · Name</label><input class="dish-name" maxlength="300" required><label>Preis in € (leer = X €)</label><input class="dish-price-input" type="number" min="0" max="149.99" step="0.01"><label>Kategorie</label><input class="dish-category" maxlength="80"><button class="secondary dish-remove" type="button">Entfernen</button>';
+        item.innerHTML='<label>Speise '+(index+1)+' · Name</label><input class="dish-name" maxlength="300" required><label>Preis in € (leer = X €)</label><input class="dish-price-input" type="number" min="0" max="149.99" step="0.01"><label>Preis klein in € (optional)</label><input class="dish-price-small" type="number" min="0" max="149.99" step="0.01"><label>Preis groß in € (optional)</label><input class="dish-price-large" type="number" min="0" max="149.99" step="0.01"><label>Kategorie</label><input class="dish-category" maxlength="80"><label>Beschreibung</label><textarea class="dish-description" maxlength="1000"></textarea><label>Inklusive Suppe</label><input class="dish-soup" maxlength="150"><label>Inklusive Wahlmöglichkeiten (durch Komma getrennt)</label><input class="dish-choices" maxlength="300"><label>Allergene (durch Komma getrennt)</label><input class="dish-allergens" maxlength="200"><button class="secondary dish-remove" type="button">Entfernen</button>';
         item.querySelector('.dish-name').value=dish.name||'';
         item.querySelector('.dish-price-input').value=dish.price??'';
+        item.querySelector('.dish-price-small').value=dish.price_small??'';
+        item.querySelector('.dish-price-large').value=dish.price_large??'';
         item.querySelector('.dish-category').value=dish.category||'';
+        item.querySelector('.dish-description').value=dish.description||'';
+        item.querySelector('.dish-soup').value=dish.included_soup||'';
+        item.querySelector('.dish-choices').value=(dish.included_choices||[]).join(', ');
+        item.querySelector('.dish-allergens').value=(dish.allergens||[]).join(', ');
         item.querySelector('.dish-remove').onclick=()=>item.remove();
         item._sourceDish=dish;
         menuEditor.append(item);
@@ -225,16 +231,31 @@
       renderDishEditor(override?.dishes??source?.days?.[menuDate.value]??[]);
       text(document.getElementById('menuNotice'),override?'Manuelle Fassung aktiv.':'Automatische Fassung.');
     }
+    const priceOrNull=value=>value===''?null:Number(value);
+    const commaList=value=>value.split(',').map(item=>item.trim()).filter(Boolean);
+    function readDraftDish(row){
+      return {...row._sourceDish,
+        name:row.querySelector('.dish-name').value.trim(),
+        price:priceOrNull(row.querySelector('.dish-price-input').value),
+        price_small:priceOrNull(row.querySelector('.dish-price-small').value),
+        price_large:priceOrNull(row.querySelector('.dish-price-large').value),
+        category:row.querySelector('.dish-category').value.trim(),
+        description:row.querySelector('.dish-description').value.trim(),
+        included_soup:row.querySelector('.dish-soup').value.trim()||null,
+        included_choices:commaList(row.querySelector('.dish-choices').value),
+        allergens:commaList(row.querySelector('.dish-allergens').value)
+      };
+    }
     async function saveMenu(){
       const notice=document.getElementById('menuNotice'),button=document.getElementById('saveMenuButton');button.disabled=true;
       try{
-        const dishes=[...menuEditor.children].map(row=>{
-          const name=row.querySelector('.dish-name').value.trim(),priceText=row.querySelector('.dish-price-input').value;
-          if(!name)throw new Error('Jede Speise braucht einen Namen.');
-          const price=priceText===''?null:Number(priceText);
-          if(price!==null&&(!Number.isFinite(price)||price<0||price>=150))throw new Error('Preis muss zwischen 0 und 149,99 € liegen.');
-          return {...row._sourceDish,name,price,category:row.querySelector('.dish-category').value.trim()};
-        });
+        const dishes=[...menuEditor.children].map(row=>readDraftDish(row));
+        for(const dish of dishes){
+          if(!dish.name)throw new Error('Jede Speise braucht einen Namen.');
+          for(const value of [dish.price,dish.price_small,dish.price_large]){
+            if(value!==null&&(!Number.isFinite(value)||value<0||value>=150))throw new Error('Preise müssen zwischen 0 und 149,99 € liegen.');
+          }
+        }
         const record={week_start:currentMenu.weekStart,restaurant_id:menuRestaurant.value,menu_date:menuDate.value,dishes};
         const response=await api('/rest/v1/menu_day_overrides?on_conflict=week_start,restaurant_id,menu_date',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(record)});
         if(!response.ok)throw new Error('Tagesmenü konnte nicht gespeichert werden.');
@@ -308,7 +329,7 @@
     profileRestaurant.addEventListener('change',renderProfile);
     document.getElementById('saveProfileButton').addEventListener('click',saveProfile);
     menuRestaurant.addEventListener('change',renderSelectedMenu);menuDate.addEventListener('change',renderSelectedMenu);
-    document.getElementById('addDishButton').addEventListener('click',()=>renderDishEditor([...menuEditor.children].map(row=>({...row._sourceDish,name:row.querySelector('.dish-name').value,price:row.querySelector('.dish-price-input').value===''?null:Number(row.querySelector('.dish-price-input').value),category:row.querySelector('.dish-category').value})).concat({name:'',price:null,category:'Hauptgericht'})));
+    document.getElementById('addDishButton').addEventListener('click',()=>renderDishEditor([...menuEditor.children].map(readDraftDish).concat({name:'',price:null,category:'Hauptgericht'})));
     document.getElementById('saveMenuButton').addEventListener('click',saveMenu);
     document.getElementById('resetMenuButton').addEventListener('click',resetMenu);
     if(!config?.url||!config?.publishableKey)text(loginNotice,'Die Admin-Konfiguration fehlt.','error');

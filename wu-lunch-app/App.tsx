@@ -74,8 +74,6 @@ function DishCard({dish}: {dish: DisplayDish}) {
     <View style={styles.dishTop}><Text style={styles.dishName}>{dish.name}</Text><Text style={styles.price}>{dish.priceLabel || displayPrice(dish.price)}</Text></View>
     {dish.category ? <Text style={styles.category}>{dish.category}</Text> : null}
     {dish.description ? <Text style={styles.dishDescription}>{dish.description}</Text> : null}
-    {dish.included_soup ? <Text style={styles.included}>Suppe: {dish.included_soup}</Text> : null}
-    {dish.included_choices?.length ? <Text style={styles.included}>{dish.included_choices.join(' · ')}</Text> : null}
     {dish.allergens?.length ? <Text style={styles.allergens}>Allergene: {dish.allergens.join(', ')}</Text> : null}
   </View>;
 }
@@ -191,7 +189,7 @@ const styles = StyleSheet.create({
   dishCard: {padding: 15, marginBottom: 11, borderWidth: 1, borderColor: '#e5eaf0', borderRadius: 9, backgroundColor: '#fff'},
   dishTop: {flexDirection: 'row', alignItems: 'flex-start', gap: 10}, dishName: {flex: 1, fontSize: 16, fontWeight: '600', color: '#1d2939'},
   price: {fontSize: 16, color: '#1d2939', fontWeight: '700'}, category: {color: blue, marginTop: 8, fontSize: 13, fontWeight: '600'},
-  dishDescription: {color: '#465363', marginTop: 7, fontSize: 14, lineHeight: 20}, included: {color: '#465363', marginTop: 7, fontSize: 14},
+  dishDescription: {color: '#465363', marginTop: 7, fontSize: 14, lineHeight: 20},
   allergens: {color: '#7a8795', marginTop: 7, fontSize: 12}, sourceHint: {color: '#8b97a3', fontSize: 12, lineHeight: 18, marginTop: 12},
   empty: {padding: 22, backgroundColor: '#f5f7fa', borderRadius: 8}, emptyTitle: {fontSize: 16, fontWeight: '600', color: '#455365'}, emptyText: {fontSize: 13, color: '#718092', marginTop: 7},
   bottomTabs: {flexDirection: 'row', minHeight: 62, borderTopWidth: 1, borderTopColor: '#e8ebef', backgroundColor: '#fff'},
