@@ -23,3 +23,11 @@ Die vom Nutzer bereitgestellten Screenshots für Restaurantliste und Tagesmenü 
 ## Funktion
 
 Restaurantauswahl, Zurück-Navigation, Menü/Karte/Kontakt, Tageswechsel, Tagpunkte, Kartenmarker und Live-Daten wurden im Browser geprüft. Die Menüansicht zeigt bei fehlender Veröffentlichung „Noch nicht veröffentlicht“. Die Karte zeigt ihre Quellenangaben. Keine neue APK wurde erstellt.
+
+## Iteration vom 08.11.2026
+
+- Alle Restaurantkacheln zeigen einen einzelnen Buchstaben.
+- Montag bis Freitag sind direkt wählbar; das Datum erscheint beim gewählten Tag, die Wischpunkte stehen darunter. Pfeile für Tageswechsel wurden entfernt.
+- „Weiter“ führt zum nächsten Restaurant der aktuellen Liste und setzt den Tag auf heute bzw. am Wochenende auf Montag. Im Browser mit einem Wechsel von Donnerstag auf das nächste Restaurant geprüft.
+- Ein Kartenmarker öffnet eine Leiste mit Name, Typ und Buchstabenkachel. Ein weiterer Marker ersetzt sie; ein Klick auf die Karte schließt sie. Die Leiste führt zum Menü. Alle drei Zustände wurden im Browser geprüft.
+- Für Öffnungszeiten führt ein Link zur jeweiligen Google-Maps-Suche. Uhrzeiten direkt in der App warten auf eine autorisierte Google Places API-Anbindung; es werden keine Zeiten erfunden.
