@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T15:34:52+01:00",
+  "checked_at": "2026-11-08T16:45:21+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,27 +10,28 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Seite listet Extras (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai) ohne Tageszuordnung und ohne Preise. Sie wurden deshalb keinem Datum zugeordnet und nicht als datierte Gerichte ausgegeben.",
-        "Es sind keine separat bepreisten Tagessuppen, Salate oder Nachspeisen aufgeführt."
+        "Für die meisten Hauptgerichte ist kein Einzelpreis angegeben.",
+        "Inhalt und genaue Zuordnung der Lunch Combo sind nicht näher spezifiziert; €13,50 ist kein belegter Einzelgerichtspreis.",
+        "Die unter „Extras“ aufgeführten Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai sind undatiert und ohne Preis."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "bcd8e889e0c174d91e24fe5b36cd0648a0c67e9529cee766deafd5735edd4a1e"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "b58de74775c23b605f67bac55d997523677182606639ce44ecb2c9c52be6e464"
       },
       "usage": {
-        "input_tokens": 2457,
+        "input_tokens": 2452,
         "input_tokens_details": {
-          "cache_write_tokens": 2454,
+          "cache_write_tokens": 2449,
           "cached_tokens": 0
         },
-        "output_tokens": 3011,
+        "output_tokens": 3245,
         "output_tokens_details": {
-          "reasoning_tokens": 721
+          "reasoning_tokens": 786
         },
-        "total_tokens": 5468
+        "total_tokens": 5697
       }
     },
     {
@@ -50,7 +51,7 @@
     {
       "restaurant": "finn",
       "issues": [
-        "source_not_published"
+        "source_error"
       ],
       "action": "dedicated_image_ai",
       "repairs": []

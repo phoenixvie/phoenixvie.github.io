@@ -2,7 +2,7 @@
   "weekStart": "2026-11-09",
   "weekEnd": "2026-11-13",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-08T15:34:20+01:00",
+  "checkedAt": "2026-11-08T16:43:38+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -36,10 +36,10 @@
       "id": "lia",
       "name": "Lia Coffee WU",
       "url": "https://lia.coffee/",
-      "status": "not_published",
+      "status": "verified",
       "note": "",
-      "validFrom": null,
-      "validUntil": null
+      "validFrom": "2026-11-09",
+      "validUntil": "2026-11-13"
     },
     {
       "id": "campus",
@@ -281,7 +281,7 @@
       "monogram": "FI",
       "url": "https://finn.wien/blogs/news/mittagsmenu",
       "note": "Wochenbild, Wochenkennzeichnung und zwei KI-Modellprüfungen",
-      "status": "not_published",
+      "status": "empty",
       "days": {
         "2026-11-09": [],
         "2026-11-10": [],
@@ -298,16 +298,121 @@
       "name": "Lia Coffee WU",
       "monogram": "L",
       "url": "https://lia.coffee/",
-      "status": "not_published",
+      "status": "verified",
       "note": "",
-      "validFrom": null,
-      "validUntil": null,
+      "validFrom": "2026-11-09",
+      "validUntil": "2026-11-13",
       "days": {
-        "2026-11-09": [],
-        "2026-11-10": [],
-        "2026-11-11": [],
-        "2026-11-12": [],
-        "2026-11-13": []
+        "2026-11-09": [
+          {
+            "name": "Cevapcici mit Pommes und Ajvar",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Gebackener Emmentaler mit Preiselbeeren und grünem Salat",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-10": [
+          {
+            "name": "Pasta Bolognese mit Parmesan und grünem Salat",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Pasta Pomodoro mit Parmesan und grünem Salat",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-11": [
+          {
+            "name": "Rindergeschnetzeltes „Stroganoff“ mit Serviettenknödeln",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Spinat-Kichererbsen-Eintopf mit Gemüselaibchen",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-12": [
+          {
+            "name": "Hühnerschnitzel mit Petersilkartoffeln",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Gefüllte Paprika mit Tomatensauce",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-13": [
+          {
+            "name": "Gegrillte Scholle mit geschmortem Spinat, Zwiebeln und Kartoffelpüree",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Kaiserschmarrn mit Apfelmus",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ]
       }
     },
     {
@@ -431,7 +536,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Shahi Paneer Veggie Curry",
@@ -444,7 +549,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Kurkuma Linsen Dal",
@@ -457,7 +562,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           }
         ],
         "2026-11-10": [
@@ -472,7 +577,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Cremiges Erbsen Minz Curry",
@@ -485,7 +590,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Chana Linsen Dal",
@@ -498,7 +603,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           }
         ],
         "2026-11-11": [
@@ -513,7 +618,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Baingan Bharta Style Curry",
@@ -526,7 +631,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Protein Power Chili mit Quinoa",
@@ -539,7 +644,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           }
         ],
         "2026-11-12": [
@@ -554,7 +659,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Schmorgemüse Quinoa Bowl mit Hummus Dip",
@@ -567,7 +672,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Karotten Linsen Dal",
@@ -580,7 +685,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           }
         ],
         "2026-11-13": [
@@ -595,7 +700,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Cremiges Korma Veggie Curry",
@@ -608,7 +713,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           },
           {
             "name": "Mama Masala Linsen Dal",
@@ -621,7 +726,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "d1d0fd160f39cbfefb912e283ea8b552d993da1dff58b35e3284f5917bc06cb9"
+            "source_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9"
           }
         ]
       },
