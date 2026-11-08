@@ -8,7 +8,7 @@ Die App fragt Daten beim Start, beim Wechsel zurück in den Vordergrund und alle
 
 ## Android-Testversion
 
-Der GitHub-Workflow **WU Lunch Android APK** erstellt bei Änderungen unter `wu-lunch-app/` ein installierbares Debug-APK. Nach einem erfolgreichen Lauf unter **Actions → WU Lunch Android APK** den Anhang `wu-lunch-android-apk` herunterladen und `app-debug.apk` auf einem Android-Gerät öffnen. Android kann dabei die Freigabe für Installationen aus dem Browser/Dateimanager verlangen.
+Der GitHub-Workflow **WU Lunch Android APK** erstellt bei Änderungen unter `wu-lunch-app/` ein eigenständig startbares Test-APK mit eingebettetem App-Code. Nach einem erfolgreichen Lauf unter **Actions → WU Lunch Android APK** den Anhang `wu-lunch-android-apk` herunterladen und `app-release.apk` auf einem Android-Gerät öffnen. Android kann dabei die Freigabe für Installationen aus dem Browser/Dateimanager verlangen. Dieses Test-APK wird vorläufig mit dem Android-Entwicklerschlüssel signiert und ist nicht für den Play Store bestimmt.
 
 Für eine Veröffentlichung im Play Store braucht die App später ein signiertes AAB, Store-Eintrag, Datenschutzhinweise und Tests auf echten Geräten. Das enthaltene `production`-Profil in `eas.json` ist dafür vorbereitet; Signierschlüssel und Store-Zugang sind bewusst nicht im Repository.
 

@@ -36,11 +36,11 @@ jobs:
         run: npm run test && npx tsc --noEmit
       - name: Generate Android project
         run: CI=1 npx expo prebuild --platform android
-      - name: Build installable debug APK
-        run: ./gradlew assembleDebug
+      - name: Build standalone test APK with bundled JavaScript
+        run: ./gradlew assembleRelease
         working-directory: wu-lunch-app/android
       - uses: actions/upload-artifact@v4
         with:
           name: wu-lunch-android-apk
-          path: wu-lunch-app/android/app/build/outputs/apk/debug/app-debug.apk
+          path: wu-lunch-app/android/app/build/outputs/apk/release/app-release.apk
           if-no-files-found: error
