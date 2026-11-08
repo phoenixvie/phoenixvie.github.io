@@ -179,6 +179,8 @@ html,body,.page { background:#fff; }
 .day-tabs { flex-wrap:nowrap; max-width:1120px; }
 .day-tab { flex:1; min-width:0; }
 .swipe-dots{display:none}
+.lunch-announcement{display:none;max-width:760px;margin:10px auto 0;padding:9px 12px;border:1px solid #dbe6ef;border-radius:7px;background:#f7fbff;color:#38536a;font-size:13px;line-height:1.45;text-align:left}
+.lunch-announcement a{color:#176da8;text-decoration:underline;text-underline-offset:2px}
 @media(max-width:750px) {
  .page{padding:0 13px 24px}
  .hero { margin:0 -13px; width:calc(100% + 26px); height:clamp(132px,30vw,205px); }
@@ -192,6 +194,7 @@ html,body,.page { background:#fff; }
  .swipe-dot:focus-visible{outline:2px solid #1687d5;outline-offset:3px}
  .view-tabs { align-self:center }
  .content-wrap { margin:10px auto 0; }
+  .lunch-announcement{margin:8px auto 0;padding:8px 10px;font-size:12px}
   .row {grid-template-columns:43px minmax(0,1fr);grid-template-areas:'logo title' 'menu menu' 'links links';gap:6px 9px;padding:11px 0;}
   .logo-cell{grid-area:logo;align-items:center;padding-top:0}
   .logo-box {width:42px;height:42px;padding:4px;font-size:11px}
@@ -293,6 +296,7 @@ html,body,.page { background:#fff; }
 
       
     </section>
+    <aside class="lunch-announcement" id="lunchAnnouncement" aria-live="polite"></aside>
 
     <main class="content-wrap">
       <section class="list-view" id="listView"></section>
@@ -304,6 +308,7 @@ html,body,.page { background:#fff; }
       <footer class="site-footer">
         <span id="nextUpdate" aria-live="polite"></span>
         <span>Angaben ohne Gewähr – bitte Menü auf der Restaurant-Website prüfen.</span>
+        <span>Diese Website verwendet keine Cookies.</span>
         <span><a href="impressum.html">Impressum</a><span aria-hidden="true"> · </span><a href="admin.html">Admin</a></span>
       </footer>
     </main>
@@ -329,6 +334,42 @@ html,body,.page { background:#fff; }
       console.warn('Live-Menüs nicht abrufbar; statisches Fallback verwendet:', error);
     }
     const DATA = freshData;
+    const announcementElement=document.getElementById('lunchAnnouncement');
+    let announcement={desktop_message:'',mobile_message:''};
+    function escapeAnnouncement(value){
+      return String(value??'').replace(/[&<>"']/g,chr=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[chr]));
+    }
+    function announcementHtml(message){
+      const linkPattern=/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g;
+      let html='',offset=0,match;
+      while((match=linkPattern.exec(message))){
+        html+=escapeAnnouncement(message.slice(offset,match.index));
+        try{
+          const url=new URL(match[2]);
+          if(url.protocol==='http:'||url.protocol==='https:')html+='<a href="'+escapeAnnouncement(url.href)+'" target="_blank" rel="noopener noreferrer">'+escapeAnnouncement(match[1])+'</a>';
+          else html+=escapeAnnouncement(match[0]);
+        }catch(error){html+=escapeAnnouncement(match[0]);}
+        offset=match.index+match[0].length;
+      }
+      return (html+escapeAnnouncement(message.slice(offset))).replace(/\n/g,'<br>');
+    }
+    function renderAnnouncement(){
+      const message=(window.matchMedia('(max-width:750px)').matches?announcement.mobile_message:announcement.desktop_message).trim();
+      announcementElement.style.display=message?'block':'none';
+      announcementElement.innerHTML=message?announcementHtml(message):'';
+    }
+    async function loadAnnouncement(){
+      const config=window.WU_LUNCH_SUPABASE;
+      if(!config?.url||!config?.publishableKey)return;
+      try{
+        const response=await fetch(config.url+'/rest/v1/lunch_announcement?id=eq.true&select=desktop_message,mobile_message',{
+          headers:{apikey:config.publishableKey,Authorization:'Bearer '+config.publishableKey}
+        });
+        const rows=await response.json();
+        if(response.ok&&Array.isArray(rows)&&rows[0])announcement=rows[0];
+      }catch(error){console.warn('Ankündigung nicht abrufbar:',error);}
+      renderAnnouncement();
+    }
     async function applyRestaurantOverrides(){
       const config=window.WU_LUNCH_SUPABASE;
       if(!config?.url||!config?.publishableKey)return;
@@ -361,7 +402,8 @@ html,body,.page { background:#fff; }
       return index < 0 ? RESTAURANT_ORDER.length : index;
     };
     DATA.restaurants.sort((a,b) => rank(a.id) - rank(b.id));
-    await applyRestaurantOverrides();
+    await Promise.all([applyRestaurantOverrides(),loadAnnouncement()]);
+    window.matchMedia('(max-width:750px)').addEventListener('change',renderAnnouncement);
     const WEEKDAY_NAMES = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const SHORT_WEEKDAY = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const MONDAY_FIRST = [1,2,3,4,5,6,0];
