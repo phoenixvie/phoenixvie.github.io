@@ -76,10 +76,11 @@ function RestaurantMap({restaurants, onSelect, focused}: {restaurants: Restauran
 
 function DishCard({dish}: {dish: DisplayDish}) {
   return <View style={styles.dishCard}>
-    <View style={styles.dishTop}><Text style={styles.dishName}>{dish.name}</Text><Text style={styles.price}>{dish.priceLabel || displayPrice(dish.price)}</Text></View>
+    <View style={styles.dishTop}><Text style={styles.dishName}>{dish.name}</Text><Text style={styles.price}>{dish.priceLabel ?? displayPrice(dish.price)}</Text></View>
     {dish.category ? <Text style={styles.category}>{dish.category}</Text> : null}
     {dish.description ? <Text style={styles.dishDescription}>{dish.description}</Text> : null}
     {dish.allergens?.length ? <Text style={styles.allergens}>Allergene: {dish.allergens.join(', ')}</Text> : null}
+    {dish.energy_kcal ? <Text style={styles.allergens}>{dish.energy_kcal} kcal</Text> : null}
   </View>;
 }
 
@@ -149,14 +150,19 @@ function AppContent() {
           </ScrollView>
         </> : detailTab === 'map' ? <RestaurantMap restaurants={[restaurant]} focused={restaurant} onSelect={() => {}}/> :
           <ScrollView style={styles.content} contentContainerStyle={styles.contactContent}>
-            <Text style={styles.contactHeading}>Restaurant kontaktieren</Text>
-            {restaurant.phone ? <SmallButton label="☎  Anrufen" onPress={() => openUrl('tel:' + restaurant.phone)}/> : null}
+            <Text style={styles.contactHeading}>Anrufen</Text>
+            {restaurant.phone ? <SmallButton label="☎  Anrufen" onPress={() => openUrl('tel:' + restaurant.phone!.replace(/[^+\d]/g, ''))}/> : null}
+            {restaurant.phone ? <Text style={styles.address}>{restaurant.phone}</Text> : null}
+            <Text style={styles.contactHeading}>Mail</Text>
             {restaurant.email ? <SmallButton label="✉  E-Mail" onPress={() => openUrl('mailto:' + restaurant.email)}/> : null}
+            {restaurant.email ? <Text style={styles.address}>{restaurant.email}</Text> : null}
+            {restaurant.hours?.length ? <><Text style={styles.contactHeading}>Öffnungszeiten</Text><Text style={styles.address}>{restaurant.hours.join('\n')}</Text>{restaurant.hoursSource ? <SmallButton label="Quelle: Restaurantwebseite" onPress={() => openUrl(restaurant.hoursSource!)}/> : null}</> : null}
+            <Text style={styles.contactHeading}>Mit Freunden essen gehen</Text>
+            <SmallButton label="↗  Teilen" onPress={() => {Share.share({message: 'Gehen wir heute ' + restaurant.name + ' zu Mittag?'}).catch(() => {});}}/>
             {restaurant.url ? <SmallButton label="↗  Webseite" onPress={() => openUrl(restaurant.url!)}/> : null}
             {(restaurant.address || fallbackLocations[restaurant.id]?.address) ? <><Text style={styles.contactHeading}>Standort</Text><Text style={styles.address}>{restaurant.address || fallbackLocations[restaurant.id]?.address}</Text><SmallButton label="⌖  Karte öffnen" onPress={() => setDetailTab('map')}/></> : null}
-            <Text style={styles.contactHeading}>App-Team</Text><SmallButton label="✉  E-Mail" onPress={() => openUrl('mailto:' + teamEmail)}/>
-            <SmallButton label="↗  Mit Freunden teilen" onPress={() => {Share.share({message: restaurant.name + ' · WU Lunch\nhttps://phoenixvie.github.io/wu-lunch/'}).catch(() => {});}}/>
             <SmallButton label="Impressum" onPress={() => openUrl('https://phoenixvie.github.io/wu-lunch/impressum.html')}/>
+            <Text style={styles.contactHeading}>Kontaktiere das App Team</Text><SmallButton label="✉  E-Mail" onPress={() => openUrl('mailto:' + teamEmail)}/>
           </ScrollView>
         }
         <View style={styles.bottomTabs}>

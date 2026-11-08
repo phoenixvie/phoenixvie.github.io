@@ -306,7 +306,7 @@
         "2026-11-09": [
           {
             "name": "Cevapcici mit Pommes und Ajvar",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -316,7 +316,7 @@
           },
           {
             "name": "Gebackener Emmentaler mit Preiselbeeren und grünem Salat",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -328,7 +328,7 @@
         "2026-11-10": [
           {
             "name": "Pasta Bolognese mit Parmesan und grünem Salat",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -338,7 +338,7 @@
           },
           {
             "name": "Pasta Pomodoro mit Parmesan und grünem Salat",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -350,7 +350,7 @@
         "2026-11-11": [
           {
             "name": "Rindergeschnetzeltes „Stroganoff“ mit Serviettenknödeln",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -360,7 +360,7 @@
           },
           {
             "name": "Spinat-Kichererbsen-Eintopf mit Gemüselaibchen",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -372,7 +372,7 @@
         "2026-11-12": [
           {
             "name": "Hühnerschnitzel mit Petersilkartoffeln",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -382,7 +382,7 @@
           },
           {
             "name": "Gefüllte Paprika mit Tomatensauce",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -394,7 +394,7 @@
         "2026-11-13": [
           {
             "name": "Gegrillte Scholle mit geschmortem Spinat, Zwiebeln und Kartoffelpüree",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -404,7 +404,7 @@
           },
           {
             "name": "Kaiserschmarrn mit Apfelmus",
-            "price": 10.0,
+            "price": 10,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -849,32 +849,6 @@
             "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
           },
           {
-            "name": "Gratis-Dessert zum Start",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
-          },
-          {
-            "name": "Dein erstes Dessert geht auf uns.",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
-          },
-          {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
             "price": 9.5,
             "category": "Menükombo",
@@ -994,32 +968,6 @@
           },
           {
             "name": "Dessert des Tages",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "620b93826e0e6f7a3aea7f4fbee3e6da07a99333b366fbc6f7a0c24ac2d02b0b"
-          },
-          {
-            "name": "Gratis-Dessert zum Start",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "620b93826e0e6f7a3aea7f4fbee3e6da07a99333b366fbc6f7a0c24ac2d02b0b"
-          },
-          {
-            "name": "Dein erstes Dessert geht auf uns.",
             "price": 2.9,
             "category": "Nachspeise",
             "diet": "unknown",
@@ -1163,32 +1111,6 @@
             "source_sha256": "3974faea0eeb22b6ad9391119e8d0b52a7cbdd5a501000739e76f4d5b03dbd7d"
           },
           {
-            "name": "Gratis-Dessert zum Start",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "3974faea0eeb22b6ad9391119e8d0b52a7cbdd5a501000739e76f4d5b03dbd7d"
-          },
-          {
-            "name": "Dein erstes Dessert geht auf uns.",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "3974faea0eeb22b6ad9391119e8d0b52a7cbdd5a501000739e76f4d5b03dbd7d"
-          },
-          {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
             "price": 9.5,
             "category": "Menükombo",
@@ -1320,32 +1242,6 @@
             "source_sha256": "aacf119417daddbf08f0ea4166fc8cff8a298fd2c5a8bb0387b455ed4b2ffca5"
           },
           {
-            "name": "Gratis-Dessert zum Start",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "aacf119417daddbf08f0ea4166fc8cff8a298fd2c5a8bb0387b455ed4b2ffca5"
-          },
-          {
-            "name": "Dein erstes Dessert geht auf uns.",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "aacf119417daddbf08f0ea4166fc8cff8a298fd2c5a8bb0387b455ed4b2ffca5"
-          },
-          {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
             "price": 9.5,
             "category": "Menükombo",
@@ -1450,32 +1346,6 @@
           },
           {
             "name": "Dessert des Tages",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "ea919b4cf1c8246325876b7ed241b216ca1313f09bb340a73bfb488a72f95dec"
-          },
-          {
-            "name": "Gratis-Dessert zum Start",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "ea919b4cf1c8246325876b7ed241b216ca1313f09bb340a73bfb488a72f95dec"
-          },
-          {
-            "name": "Dein erstes Dessert geht auf uns.",
             "price": 2.9,
             "category": "Nachspeise",
             "diet": "unknown",
@@ -1622,7 +1492,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2.0,
+            "price": 2,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
@@ -1654,7 +1524,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2.0,
+            "price": 2,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
@@ -1686,7 +1556,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2.0,
+            "price": 2,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
@@ -1718,7 +1588,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2.0,
+            "price": 2,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
@@ -1740,7 +1610,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2.0,
+            "price": 2,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",

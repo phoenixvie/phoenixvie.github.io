@@ -79,6 +79,10 @@ noch Preise, Portionen, Zeiträume oder enthaltene Beilagen. Erfasse:
 - Baschly: Tagessuppe ODER kleiner Salat, wenn die Quelle das ausdrücklich so vorgibt;
 - Grüne Hütte: Suppe nicht gratis, wenn Aufpreis genannt;
 - Topf & Deckel: tages-/wochenbezogenen Inhalt, keine Tab-Verwechslung.
+- Mensa-PDF: jeden Wochentag und jeden erkennbaren Ausgabebereich getrennt
+  erfassen; Zutaten, Varianten, explizite Allergene und Nährwerte nur dem
+  belegten Gericht zuordnen. Aktuelle Kategorien nicht in alte Ausgabe-Nummern
+  umdeuten. Ein "laut Aushang" genannter Preis bleibt null.
 Bei Widerspruch, nicht verfügbarer aktueller Woche oder fehlendem Preis: null bzw.
 status unclear/not_published. evidence_excerpt enthält ein KURZES wörtliches Zitat
 aus dem Original (oder so exakt wie möglich aus dem PDF). source_url ist eine
@@ -94,6 +98,8 @@ ITEM_SCHEMA = obj({
     "price_eur": {"type":["number","null"]},
     "included_items": {"type":"array","items":{"type":"string"}},
     "extra_costs": {"type":"array","items":{"type":"string"}},
+    "allergens": {"type":"array","items":{"type":"string"}},
+    "energy_kcal": {"type":["number","null"]},
     "source_url": {"type":"string"},
     "evidence_excerpt": {"type":"string"},
     "confidence": {"type":"string","enum":["high","medium","low"]},

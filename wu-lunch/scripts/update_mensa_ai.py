@@ -42,8 +42,17 @@ VALID_CATEGORIES = {
     "global grill": "Global & Grill",
     "soup deal": "Soup Deal",
     "pizza": "Pizza",
+    "pizza co": "Pizza & Co",
     "bowls": "Bowls",
+    "bowls co": "Bowls & Co",
     "pasta": "Pasta",
+    "pasta co": "Pasta & Co",
+    "ausgabe 1 2": "Ausgabe 1+2",
+    "ausgabe 3 4": "Ausgabe 3+4",
+    "ausgabe 5": "Ausgabe 5",
+    "ausgabe 6": "Ausgabe 6",
+    "ausgabe 7": "Ausgabe 7",
+    "ausgabe 8": "Ausgabe 8",
 }
 STOPWORDS = {"mit", "und", "oder", "euro", "menü", "menu", "der", "die", "das", "von", "den", "dem", "für", "auf", "aus", "ein", "eine"}
 
@@ -97,12 +106,20 @@ def validate_menu(result, original_text, monday, pdf_url):
         if day not in days:
             raise ValueError("Mensa: fehlender oder falscher Wochentag")
         name = item.get("name")
-        if not isinstance(name, str) or not 8 <= len(name.strip()) <= 160:
+        pizza_station = VALID_CATEGORIES.get(normalize(item.get("category"))) == "Ausgabe 5"
+        if not isinstance(name, str) or not ((pizza_station and name.strip() == "Pizza") or 8 <= len(name.strip()) <= 160):
             raise ValueError("Mensa: beschädigter Gerichtname")
         if not re.match(r"[A-ZÄÖÜ]", name.strip()):
             raise ValueError("Mensa: verdächtiger Gerichtbeginn")
+        category = VALID_CATEGORIES.get(normalize(item.get("category")))
+        if category is None:
+            raise ValueError("Mensa: unbekannte Speisenkategorie")
+        if category.startswith("Ausgabe") and "ausgabe" not in original_text.casefold():
+            raise ValueError("Mensa: Ausgabe-Nummer nicht im Original-PDF")
         price = item.get("price_eur")
-        if (not isinstance(price, (int, float)) or isinstance(price, bool) or
+        if price is None and category not in ("Tagessuppe", "Pizza", "Pizza & Co", "Pasta", "Pasta & Co", "Ausgabe 5"):
+            raise ValueError("Mensa: fehlender Gerichtpreis")
+        if price is not None and (not isinstance(price, (int, float)) or isinstance(price, bool) or
             not math.isfinite(price) or not 0 < price <= 150):
             raise ValueError("Mensa: fehlender oder ungültiger Preis")
         if item.get("source_url") != pdf_url:
@@ -115,9 +132,16 @@ def validate_menu(result, original_text, monday, pdf_url):
         evidence_terms = {x for x in normalize(evidence).split() if len(x) >= 5 and x not in STOPWORDS}
         if len(evidence_terms & pdf_words) < 2:
             raise ValueError("Mensa: Quellenbeleg nicht im extrahierten PDF-Text auffindbar")
-        category = VALID_CATEGORIES.get(normalize(item.get("category")))
-        if category is None:
-            raise ValueError("Mensa: unbekannte Speisenkategorie")
+        allergens = item.get("allergens") or []
+        if not isinstance(allergens, list) or any(not isinstance(x, str) or not re.fullmatch(r"[A-R]", x) for x in allergens):
+            raise ValueError("Mensa: ungültige Allergene")
+        if any(not re.search(r"(?<![A-Z])" + re.escape(code) + r"(?![A-Z])", evidence.upper()) for code in allergens):
+            raise ValueError("Mensa: Allergen nicht im Gerichtbeleg")
+        energy = item.get("energy_kcal")
+        if energy is not None and (not isinstance(energy, (int, float)) or not 0 < energy < 5000):
+            raise ValueError("Mensa: ungültiger Nährwert")
+        if energy is not None and str(int(energy)) not in evidence:
+            raise ValueError("Mensa: Nährwert nicht im Gerichtbeleg")
         included = item.get("included_items") or []
         if not isinstance(included, list) or any(not isinstance(x, str) for x in included):
             raise ValueError("Mensa: ungültige inkludierte Leistungen")
@@ -142,7 +166,8 @@ def validate_menu(result, original_text, monday, pdf_url):
         ] if x)
         days[day].append({
             "name": name.strip(), "price": price, "category": category,
-            "diet": diet, "description": description, "allergens": [],
+            "diet": diet, "description": description, "allergens": allergens,
+            "energy_kcal": energy,
             "included_soup": None, "included_choices": included,
             "source_url": pdf_url, "evidence_excerpt": evidence.strip(),
             "ai_confidence": item.get("confidence") or "unknown",
