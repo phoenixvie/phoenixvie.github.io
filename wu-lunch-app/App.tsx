@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  ActivityIndicator, AppState, Image, Linking, Pressable, ScrollView,
+  ActivityIndicator, AppState, Image, Linking, Pressable, ScrollView, Share,
   StatusBar, StyleSheet, Text, View,
 } from 'react-native';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
@@ -28,6 +28,11 @@ const knownLogos: Record<string, string> = {
   campus: 'https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Das_Campus.jpg',
   baschly: 'https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Baschly.jpg',
   losteria: 'https://www.wu.ac.at/fileadmin/wu/h/campus/infrastructure/catering/Logo_Losteria.jpg',
+};
+const knownTypes: Record<string, string> = {
+  mensa: 'International', campus: 'International', baschly: 'Orientalisch',
+  finn: 'International', karmafood: 'International', losteria: 'Italienisch',
+  gruenehuette: 'Österreichisch',
 };
 
 function Logo({restaurant}: {restaurant: Restaurant}) {
@@ -150,7 +155,8 @@ function AppContent() {
             {restaurant.url ? <SmallButton label="↗  Webseite" onPress={() => openUrl(restaurant.url!)}/> : null}
             {(restaurant.address || fallbackLocations[restaurant.id]?.address) ? <><Text style={styles.contactHeading}>Standort</Text><Text style={styles.address}>{restaurant.address || fallbackLocations[restaurant.id]?.address}</Text><SmallButton label="⌖  Karte öffnen" onPress={() => setDetailTab('map')}/></> : null}
             <Text style={styles.contactHeading}>App-Team</Text><SmallButton label="✉  E-Mail" onPress={() => openUrl('mailto:' + teamEmail)}/>
-            <SmallButton label="↗  Menü teilen" onPress={() => openUrl('https://phoenixvie.github.io/wu-lunch/')}/>
+            <SmallButton label="↗  Mit Freunden teilen" onPress={() => {Share.share({message: restaurant.name + ' · WU Lunch\nhttps://phoenixvie.github.io/wu-lunch/'}).catch(() => {});}}/>
+            <SmallButton label="Impressum" onPress={() => openUrl('https://phoenixvie.github.io/wu-lunch/impressum.html')}/>
           </ScrollView>
         }
         <View style={styles.bottomTabs}>
@@ -158,7 +164,7 @@ function AppContent() {
         </View>
       </> : <>
         <View style={styles.segment}><Pressable onPress={() => setHomeTab('list')} style={[styles.segmentButton, homeTab === 'list' && styles.segmentSelected]}><Text style={[styles.segmentText, homeTab === 'list' && styles.segmentTextSelected]}>Liste</Text></Pressable><Pressable onPress={() => setHomeTab('map')} style={[styles.segmentButton, homeTab === 'map' && styles.segmentSelected]}><Text style={[styles.segmentText, homeTab === 'map' && styles.segmentTextSelected]}>Karte</Text></Pressable></View>
-        {homeTab === 'list' ? <ScrollView style={styles.content}><Text style={styles.groupTitle}>WU Food · {displayDate(data.weekStart, {day: '2-digit', month: '2-digit'})}–{displayDate(data.weekEnd, {day: '2-digit', month: '2-digit'})}</Text>{data.restaurants.map(item => <Pressable key={item.id} style={styles.restaurantRow} onPress={() => selectRestaurant(item.id)}><Logo restaurant={item}/><View style={styles.restaurantMeta}><Text style={styles.restaurantName}>{item.name}</Text><Text style={styles.restaurantType}>{item.restaurantType || 'Restaurant'}</Text></View><Text style={styles.chevron}>›</Text></Pressable>)}{error ? <Text style={styles.error}>{error}</Text> : null}</ScrollView> : <RestaurantMap restaurants={data.restaurants} onSelect={selectRestaurant}/>}
+        {homeTab === 'list' ? <ScrollView style={styles.content}><Text style={styles.groupTitle}>WU Food · {displayDate(data.weekStart, {day: '2-digit', month: '2-digit'})}–{displayDate(data.weekEnd, {day: '2-digit', month: '2-digit'})}</Text>{data.restaurants.map(item => <Pressable key={item.id} style={styles.restaurantRow} onPress={() => selectRestaurant(item.id)}><Logo restaurant={item}/><View style={styles.restaurantMeta}><Text style={styles.restaurantName}>{item.name}</Text><Text style={styles.restaurantType}>{item.restaurantType || knownTypes[item.id] || 'Restaurant'}</Text></View><Text style={styles.chevron}>›</Text></Pressable>)}{error ? <Text style={styles.error}>{error}</Text> : null}</ScrollView> : <RestaurantMap restaurants={data.restaurants} onSelect={selectRestaurant}/>}
       </>}</View>
     {data && error ? <Text style={styles.errorStrip}>{error}</Text> : null}
   </SafeAreaView>;
