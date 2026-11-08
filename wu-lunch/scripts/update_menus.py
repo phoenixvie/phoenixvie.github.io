@@ -495,6 +495,10 @@ def topf_desserts(lines):
             continue
         if ("dessert" not in label.casefold() and "nachspeise" not in label.casefold()) or "€" in label:
             continue
+        # Newsletter welcome gifts appear below the menu on the same page.
+        # They are conditional promotions, not separately purchasable dishes.
+        if re.search(r"gratis|erstes dessert|geht auf uns|newsletter|willkommens",label,re.I):
+            continue
         seen.add(label.casefold())
         desserts.append(make_item(label,price,"Nachspeise","unknown","Separat erhältlich"))
     if not desserts:

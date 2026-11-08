@@ -81,6 +81,12 @@ class SideAndPriceTests(unittest.TestCase):
         self.assertEqual([(x["name"],x["price"],x["category"]) for x in desserts],
                          [("Dessert des Tages",2.9,"Nachspeise")])
 
+    def test_topf_newsletter_gift_is_not_a_dessert_for_sale(self):
+        lines=["Dessert","Dessert des Tages","€ 2.90","Gratis-Dessert zum Start",
+               "Dein erstes Dessert geht auf uns."]
+        self.assertEqual([item["name"] for item in menus.topf_desserts(lines)],
+                         ["Dessert des Tages"])
+
     def test_finn_verified_sides_and_combo(self):
         first={"status":"found","warnings":[],"items":[
             ai_side("Tagessuppe oder Salat","Suppe/Salat",3.5),
