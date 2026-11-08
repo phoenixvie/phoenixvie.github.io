@@ -10,6 +10,8 @@
     "topfdeckel": {"phone": "+43 670 3019988", "email": "info@topfdeckel.at", "hours": ["Mo–Fr 11:00–15:00", "Sa & So geschlossen"], "source": "https://topfdeckel.at/tageskarte"},
     "gruenehuette": {"phone": "+43 664 75428070", "email": "office@zurgruenenhuette.com", "hours": ["Mo–Sa 11:30–23:00", "Küche bis 22:00", "So & Feiertag geschlossen"], "source": "https://www.zurgruenenhuette.com/"},
     "glashaus": {"phone": "+43 1 3483553", "email": "hello@dasglashaus.at", "hours": ["Mo–Mi 11:30–22:00", "Do & Fr 11:30–23:00", "Sa 09:00–23:00", "So & Feiertag 09:00–15:00"], "source": "https://www.dasglashaus.at/kontakt"},
-    "losteria": {"phone": "+43 1 720051010", "email": "wien-wirtschaftsuni@losteria.at", "hours": ["Mo–Mi & So 11:00–23:00", "Do–Sa 11:00–00:00"], "source": "https://losteria.net/de-en/restaurants/restaurant/wien-wirtschaftsuni/"}
+    "losteria": {"phone": "+43 1 720051010", "email": "wien-wirtschaftsuni@losteria.at", "hours": ["Mo–Mi & So 11:00–23:00", "Do–Sa 11:00–00:00"], "source": "https://losteria.net/de-en/restaurants/restaurant/wien-wirtschaftsuni/"},
+    "omakueche": {"phone": "+43 676 9061800", "email": "Omaskueche1020@gmail.com", "hours": ["Mo, Mi–So 11:00–21:00", "Di 11:00–17:00"], "source": "https://www.xn--omakche-q2a.at/"}
   }
 }
+
