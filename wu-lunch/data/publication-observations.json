@@ -1,0 +1,120 @@
+{
+  "started_at": "2026-11-08T13:16:40+01:00",
+  "ends_after": "2026-12-04",
+  "sources": {
+    "mensa": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9",
+          "format": "pdf",
+          "validity": null,
+          "changed": false
+        }
+      ],
+      "changes": []
+    },
+    "campus": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "f09f2ca018209a2570cd4cf63bda2143c26010f53653b3904539bb8d820eadf7",
+          "format": "html",
+          "validity": [
+            "2026-11-09",
+            "2026-11-12"
+          ],
+          "changed": false
+        }
+      ],
+      "changes": []
+    },
+    "glashaus": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "d5a4ab6258906a17bffc2ed49dbdffe7d7284d125adc32220133424bcd871243",
+          "format": "html",
+          "validity": [
+            "2026-11-02",
+            "2026-11-06"
+          ],
+          "changed": false
+        }
+      ],
+      "changes": []
+    },
+    "baschly-veggie": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "8fea54d1e6989ffd9a766ef59d869404cec44cb63e535fd1abb2636b9dc82e42",
+          "format": "html",
+          "validity": null,
+          "changed": false
+        }
+      ],
+      "changes": []
+    },
+    "baschly-fleisch": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "652464ea9713d5c8f7ff428ac152655423f0adf8e8299187de1cee185f5d8dfc",
+          "format": "html",
+          "validity": null,
+          "changed": false
+        }
+      ],
+      "changes": []
+    },
+    "losteria": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "76a56f5bbccdac1b1e165a8598fb3734a1ad4fb3400cb85c820a34d9768cd29d",
+          "format": "html",
+          "validity": null,
+          "changed": false
+        }
+      ],
+      "changes": []
+    },
+    "topfdeckel": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "55ad579d5b662faba64801a0034709c47c9112f78f4f328a14227022f88d0d44",
+          "format": "html",
+          "validity": null,
+          "changed": false
+        }
+      ],
+      "changes": []
+    },
+    "gruenehuette": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "5191d915457418d5eccdb6cf4c6d600ca8bd3a7097fe4815531c17ba8c4d21b4",
+          "format": "html",
+          "validity": null,
+          "changed": false
+        }
+      ],
+      "changes": []
+    },
+    "lia": {
+      "observations": [
+        {
+          "at": "2026-11-08T13:16:40+01:00",
+          "sha256": "3424dd804083a815b0b331b58aee0e0947d65fe52456cef6374b931dffc811e2",
+          "format": "html",
+          "validity": null,
+          "changed": false
+        }
+      ],
+      "changes": []
+    }
+  }
+}
