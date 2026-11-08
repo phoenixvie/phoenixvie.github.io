@@ -40,7 +40,7 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertIn("const IMPORT_SLOTS=",html)
         self.assertIn('href="impressum.html"',html)
         self.assertIn('href="admin.html"',html)
-        self.assertIn('await applyRestaurantOverrides();',html)
+        self.assertIn('await Promise.all([applyRestaurantOverrides(),loadAnnouncement()]);',html)
         self.assertIn("restaurant_overrides?select=restaurant_id,is_enabled,sort_order",html)
         self.assertIn("Angaben ohne Gewähr",html)
         self.assertIn("Diese Website verwendet keine Cookies.",html)
