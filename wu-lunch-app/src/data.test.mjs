@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {loadLunchData, visibleDishes, displayPrice, datesOfWeek} from './data.ts';
+import {loadLunchData, visibleDishes, displayPrice, datesOfWeek, displayWeekStart} from './data.ts';
 
 test('live profile and manual day override take effect, including an intentionally empty day', async () => {
   const original = globalThis.fetch;
@@ -25,7 +25,7 @@ test('live profile and manual day override take effect, including an intentional
     return new Response(JSON.stringify(body), {status: 200});
   };
   try {
-    const loaded = await loadLunchData();
+    const loaded = await loadLunchData('2026-11-09');
     assert.deepEqual(loaded.restaurants.map(row => row.id), ['finn', 'mensa']);
     assert.equal(loaded.restaurants[1].name, 'Neue Mensa');
     assert.equal(loaded.restaurants[1].restaurantType, 'International');
@@ -46,6 +46,8 @@ test('dish display keeps soup first and does not invent prices', () => {
   assert.equal(dishes[0].priceLabel, '3 € / 5 €');
   assert.equal(displayPrice(dishes[2].price), 'X €');
   assert.equal(datesOfWeek('2026-11-09')[4], '2026-11-13');
+  assert.equal(displayWeekStart(new Date('2026-11-07T12:00:00Z')), '2026-11-09');
+  assert.equal(displayWeekStart(new Date('2026-11-06T12:00:00Z')), '2026-11-02');
 });
 
 test('outdated source dates do not leak into a later week', () => {

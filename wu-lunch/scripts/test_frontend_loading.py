@@ -66,6 +66,7 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertIn("function saveMenu()",admin)
         self.assertIn("function resetMenu()",admin)
         self.assertIn("/storage/v1/object/lunch-logos/",admin)
+        self.assertIn("menu_day_overrides?week_start=eq.",admin)
         self.assertIn("Automatische Menüprüfung",admin)
         self.assertIn("Montag:</strong> stündlich von 06:15 bis 18:15 Uhr",admin)
         self.assertIn("Dienstag bis Freitag:</strong> stündlich von 08:15 bis 12:15 Uhr",admin)

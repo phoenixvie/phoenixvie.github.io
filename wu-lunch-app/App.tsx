@@ -33,6 +33,7 @@ const knownLogos: Record<string, string> = {
 function Logo({restaurant}: {restaurant: Restaurant}) {
   const [failed, setFailed] = useState(false);
   const uri = restaurant.logoUrl || knownLogos[restaurant.id];
+  useEffect(() => setFailed(false), [uri]);
   if (uri && !failed) return <Image source={{uri}} style={styles.logo} onError={() => setFailed(true)} />;
   return <View style={styles.monogram}><Text style={styles.monogramText}>{restaurant.monogram || restaurant.name[0]}</Text></View>;
 }

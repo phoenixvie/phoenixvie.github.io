@@ -287,12 +287,19 @@
       history.forEach((entry,index)=>{const option=document.createElement('option');option.value=index;option.textContent=formatWeek(entry.week_start);weekSelect.append(option);});
       weekSelect.onchange=renderHistory;renderHistory();
     }
-    function renderHistory(){
+    async function renderHistory(){
       const menu=history[Number(weekSelect.value)]?.menu_data;if(!menu)return;
+      let manual=[];
+      try{
+        const response=await api('/rest/v1/menu_day_overrides?week_start=eq.'+encodeURIComponent(menu.weekStart)+'&select=restaurant_id,menu_date,dishes');
+        if(!response.ok)throw new Error('Manuelle Änderungen konnten nicht geladen werden.');
+        manual=await response.json();
+      }catch(error){historyContent.textContent=error.message||'Archiv konnte nicht vollständig geladen werden.';return;}
+      const byDay=new Map(manual.map(item=>[item.restaurant_id+'|'+item.menu_date,item.dishes]));
       const dates=Object.keys(menu.restaurants?.[0]?.days||{});const date=dates[0];
       const tab='<div class="history-tabs">'+dates.map((value,index)=>'<button class="history-tab '+(index===0?'active':'')+'" type="button" data-date="'+value+'">'+new Date(value+'T12:00:00Z').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'2-digit'})+'</button>').join('')+'</div>';
       historyContent.innerHTML=tab+'<div id="archiveList"></div>';
-      const display=selected=>{const list=document.getElementById('archiveList');list.innerHTML=(menu.restaurants||[]).map(restaurant=>{const dishes=restaurant.days?.[selected]||[];return '<section class="day"><h3>'+escape(restaurant.name)+'</h3>'+(dishes.length?dishes.map(item=>'<div class="dish"><span>'+escape(item.name)+'</span><span>'+money(item.price)+'</span></div>').join(''):'<p class="muted">Noch nicht veröffentlicht</p>')+'</section>';}).join('');};
+      const display=selected=>{const list=document.getElementById('archiveList');list.innerHTML=(menu.restaurants||[]).map(restaurant=>{const dishes=byDay.get(restaurant.id+'|'+selected)??restaurant.days?.[selected]??[];return '<section class="day"><h3>'+escape(restaurant.name)+'</h3>'+(dishes.length?dishes.map(item=>'<div class="dish"><span>'+escape(item.name)+'</span><span>'+money(item.price)+'</span></div>').join(''):'<p class="muted">Noch nicht veröffentlicht</p>')+'</section>';}).join('');};
       historyContent.querySelectorAll('.history-tab').forEach(button=>button.addEventListener('click',()=>{historyContent.querySelectorAll('.history-tab').forEach(item=>item.classList.toggle('active',item===button));display(button.dataset.date);}));display(date);
     }
     document.getElementById('logoutButton').addEventListener('click',()=>{accessToken='';password.value='';adminPanel.classList.add('hidden');loginPanel.classList.remove('hidden');text(loginNotice,'Abgemeldet.');});

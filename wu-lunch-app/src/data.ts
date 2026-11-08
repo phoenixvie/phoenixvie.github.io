@@ -65,14 +65,24 @@ async function publicRows<T>(path: string): Promise<T[]> {
   return response.json();
 }
 
-export async function loadLunchData(): Promise<LunchData> {
+export function displayWeekStart(now = new Date()): string {
+  const parts = new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit', day: '2-digit'}).formatToParts(now);
+  const part = (type: string) => parts.find(item => item.type === type)?.value || '';
+  const today = new Date(`${part('year')}-${part('month')}-${part('day')}T12:00:00Z`);
+  const weekday = today.getUTCDay();
+  const move = weekday === 6 ? 2 : weekday === 0 ? 1 : 1 - weekday;
+  today.setUTCDate(today.getUTCDate() + move);
+  return today.toISOString().slice(0, 10);
+}
+
+export async function loadLunchData(weekStart = displayWeekStart()): Promise<LunchData> {
   const response = await fetch(base + 'data/menus.json?t=' + Date.now(), {cache: 'no-store'});
   if (!response.ok) throw new Error('Menüs konnten nicht geladen werden.');
   const data: LunchData = await response.json();
   if (!data.weekStart || !Array.isArray(data.restaurants)) throw new Error('Ungültige Menüdaten.');
   const [profiles, manualDays] = await Promise.all([
     publicRows<Override>('restaurant_overrides?select=*'),
-    publicRows<DayOverride>('menu_day_overrides?week_start=eq.' + data.weekStart + '&select=restaurant_id,menu_date,dishes'),
+    publicRows<DayOverride>('menu_day_overrides?week_start=eq.' + weekStart + '&select=restaurant_id,menu_date,dishes'),
   ]);
   const profileById = new Map(profiles.map(row => [row.restaurant_id, row]));
   const visible: Restaurant[] = [];
@@ -100,7 +110,8 @@ export async function loadLunchData(): Promise<LunchData> {
     visible.push(restaurant);
   }
   visible.sort((a, b) => (profileById.get(a.id)?.sort_order ?? 9999) - (profileById.get(b.id)?.sort_order ?? 9999));
-  return {...data, restaurants: visible};
+  const friday = datesOfWeek(weekStart)[4];
+  return {...data, weekStart, weekEnd: friday, restaurants: visible};
 }
 
 export function datesOfWeek(weekStart: string): string[] {
