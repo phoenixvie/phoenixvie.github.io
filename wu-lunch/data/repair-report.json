@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T16:45:21+01:00",
+  "checked_at": "2026-11-08T22:26:54+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,28 +10,27 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die meisten Hauptgerichte ist kein Einzelpreis angegeben.",
-        "Inhalt und genaue Zuordnung der Lunch Combo sind nicht näher spezifiziert; €13,50 ist kein belegter Einzelgerichtspreis.",
-        "Die unter „Extras“ aufgeführten Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai sind undatiert und ohne Preis."
+        "Für die regulären Hauptgerichte ist kein eindeutig zugeordneter Einzelpreis angegeben.",
+        "„Extras“ (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp, Masala Chai) stehen ohne Tageszuordnung und ohne Einzelpreise."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "b58de74775c23b605f67bac55d997523677182606639ce44ecb2c9c52be6e464"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "62026cef32bb800b59337b33402bd0993b9600df86829df9a23203cde218cc53"
       },
       "usage": {
-        "input_tokens": 2452,
+        "input_tokens": 2556,
         "input_tokens_details": {
-          "cache_write_tokens": 2449,
+          "cache_write_tokens": 2553,
           "cached_tokens": 0
         },
-        "output_tokens": 3245,
+        "output_tokens": 3326,
         "output_tokens_details": {
-          "reasoning_tokens": 786
+          "reasoning_tokens": 822
         },
-        "total_tokens": 5697
+        "total_tokens": 5882
       }
     },
     {

@@ -1,33 +1,33 @@
 {
-  "checked_at": "2026-11-08T16:43:38+01:00",
+  "checked_at": "2026-11-08T22:26:15+01:00",
   "week_start": "2026-11-09",
   "week_end": "2026-11-13",
   "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-08T16:43:47+01:00",
-      "checked_at": "2026-11-08T16:43:47+01:00",
+      "last_success": "2026-11-08T22:26:23+01:00",
+      "checked_at": "2026-11-08T22:26:23+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9",
+      "content_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7",
       "source_image": null,
       "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367"
     },
     "finn": {
       "state": "error",
       "last_success": "2026-11-06T19:12:26+01:00",
-      "checked_at": "2026-11-08T16:43:47+01:00",
-      "consecutive_failures": 1,
+      "checked_at": "2026-11-08T22:26:23+01:00",
+      "consecutive_failures": 2,
       "content_sha256": "75c0d6609c32b5f4190be95d414faa054cc76db1b0f43093bb94ba0f52a77797",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
       "source_pdf": null,
-      "note": "Finn: drei Bildanalysen widersprechen sich; keine Veröffentlichung",
+      "note": "Finn: diese Bildversion heute bereits mit KI geprüft; neuer Versuch erst bei Änderung oder morgen",
       "last_attempt_sha256": "bd30bff3a4d5807cb0a5c7a37a8a97cc76d07194a5e40f9ae773e959e2f9d0ae",
       "last_attempt_at": "2026-11-08T16:43:48+01:00"
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-08T16:43:38+01:00",
+      "last_success": "2026-11-08T22:26:15+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -35,14 +35,14 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
       "last_success": null,
-      "consecutive_failures": 32,
+      "consecutive_failures": 33,
       "content_sha256": null
     },
     "glashaus": {
-      "state": "error",
-      "error": "ValueError: Glashaus: Plan nicht für KW 2026-11-09: (datetime.date(2026, 11, 2), datetime.date(2026, 11, 6)); Textanfang: 'Mittagsmenüs | DAS GLASHAUS\\ntop of page\\nScroll\\nJeweils mit Suppe oder Salat\\nVegetarisch € 14,90 / Fisch&F",
-      "last_success": "2026-11-08T15:34:20+01:00",
-      "consecutive_failures": 1,
+      "state": "ok",
+      "last_success": "2026-11-08T22:26:15+01:00",
+      "consecutive_failures": 0,
+      "parser_version": null,
       "content_sha256": "d5a4ab6258906a17bffc2ed49dbdffe7d7284d125adc32220133424bcd871243"
     },
     "campus": {
@@ -75,14 +75,14 @@
     },
     "gruenehuette": {
       "state": "ok",
-      "last_success": "2026-11-08T16:43:38+01:00",
+      "last_success": "2026-11-08T22:26:15+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "6d429a8330a51224730a01976c3d9d0792a25e28fd14d3bb04bc3fb342c8449d"
     },
     "lia": {
       "state": "ok",
-      "last_success": "2026-11-08T16:43:38+01:00",
+      "last_success": "2026-11-08T22:26:15+01:00",
       "consecutive_failures": 0,
       "parser_version": 4,
       "content_sha256": null
@@ -90,8 +90,7 @@
   },
   "problems": [
     "mensa: ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
-    "glashaus: ValueError: Glashaus: Plan nicht für KW 2026-11-09: (datetime.date(2026, 11, 2), datetime.date(2026, 11, 6)); Textanfang: 'Mittagsmenüs | DAS GLASHAUS\\ntop of page\\nScroll\\nJeweils mit Suppe oder Salat\\nVegetarisch € 14,90 / Fisch&F",
-    "finn: ValueError: Finn: drei Bildanalysen widersprechen sich; keine Veröffentlichung"
+    "finn: ValueError: Finn: diese Bildversion heute bereits mit KI geprüft; neuer Versuch erst bei Änderung oder morgen"
   ],
   "next_run": "Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 (Europe/Vienna, GitHub Actions: zeitliche Abweichung möglich)",
   "format_version": 1,
@@ -157,10 +156,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-08T16:45:21+01:00",
+      "last_checked": "2026-11-08T22:26:54+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-09",
-      "source_fingerprint": "b6b77b9b608b450cd23684507c66361ad1d587f4fe05dfd3079e8b6419a0f9d9",
+      "source_fingerprint": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
