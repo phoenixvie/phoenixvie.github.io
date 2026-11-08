@@ -92,10 +92,10 @@
     }
     .logo-box small{display:block;font-size:12px;font-weight:normal;letter-spacing:0}
     .logo-mensa{background:#e30613;font-size:22px;text-transform:lowercase}
-    .logo-campus{background:#c46c2a;font-size:16px}
+     .logo-campus{background:#116dff;font-size:16px}
     .logo-baschly{background:#222;font-size:18px}
-    .logo-glashaus{background:#aacd61;color:#173a17;font-size:16px}
-    .logo-losteria{background:#e9e4d8;color:#222;font-size:14px}
+     .logo-glashaus{background:#9c2426;color:#fff;font-size:16px}
+     .logo-losteria{background:#1a1a1a;color:#fff;font-size:14px}
 
     .menu-cell{min-width:0}
     .restaurant-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
@@ -192,18 +192,23 @@ html,body,.page { background:#fff; }
  .swipe-dot:focus-visible{outline:2px solid #1687d5;outline-offset:3px}
  .view-tabs { align-self:center }
  .content-wrap { margin:10px auto 0; }
- .row { grid-template-columns:70px minmax(0,1fr); gap:10px; padding:11px 0; }
- .logo-box {width:65px;height:65px;font-size:14px}
- .logo-image {width:64px;height:58px}
+  .row {grid-template-columns:43px minmax(0,1fr);grid-template-areas:'logo title' 'menu menu' 'links links';gap:6px 9px;padding:11px 0;}
+  .logo-cell{grid-area:logo;align-items:center;padding-top:0}
+  .logo-box {width:42px;height:42px;padding:4px;font-size:11px}
+  .logo-image {width:40px;height:38px}
+  .menu-cell{display:contents}
+  .restaurant-title{grid-area:title;align-self:center;margin:0}
+  .menu-lines{grid-area:menu;margin-top:2px}
+  .restaurant-links{grid-area:links;margin-top:0}
  .menu-line { font-size:12.5px; gap:8px }
  .dish-price {font-size:12.5px}
  .restaurant-title h3 {font-size:14px}
  .map-stage {height:330px}
 }
 @media(max-width:370px) {
- .row { grid-template-columns:61px minmax(0,1fr); gap:9px }
- .logo-box {width:55px;height:55px;font-size:12px}
- .logo-image {width:54px;height:52px}
+  .row {grid-template-columns:39px minmax(0,1fr);gap:5px 8px}
+  .logo-box {width:38px;height:38px;font-size:10px}
+  .logo-image {width:36px;height:35px}
  .menu-line,.dish-price {font-size:12px}
 }
 
@@ -247,9 +252,9 @@ html,body,.page { background:#fff; }
 .logo-box{font-size:34px!important;font-weight:800!important;letter-spacing:0!important;color:#fff!important;border-radius:9px!important;box-shadow:none!important;text-transform:uppercase!important}
 .logo-mensa{background:#e30613!important}
 .logo-campus{background:#387dda!important}
-.logo-glashaus{background:#6f9e39!important}
+.logo-glashaus{background:#9c2426!important}
 .logo-baschly{background:#8a55a6!important}
-.logo-losteria{background:#bc7837!important}
+.logo-losteria{background:#1a1a1a!important}
 .restaurant-title h3,.menu-line,.dish-price{font-size:15px!important;line-height:1.5!important}
 .dish-price{font-weight:600!important}
 .map-stage{height:450px;min-height:360px;isolation:isolate}
@@ -270,10 +275,10 @@ html,body,.page { background:#fff; }
 @keyframes day-slide-next{from{opacity:.35;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
 @keyframes day-slide-previous{from{opacity:.35;transform:translateX(-22px)}to{opacity:1;transform:translateX(0)}}
 @media (prefers-reduced-motion:reduce){.list-view.day-slide-next,.list-view.day-slide-previous{animation:none}}
-.site-footer{display:flex;justify-content:space-between;gap:12px;margin:10px 2px 22px;color:#929292;font-size:11px;line-height:1.45}
+.site-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:10px 2px 22px;color:#929292;font-size:11px;line-height:1.45}
 .site-footer a{color:inherit;text-decoration:none}.site-footer a:hover,.site-footer a:focus-visible{text-decoration:underline}
 @media(max-width:750px){.site-footer{margin:9px 1px 18px;font-size:10px}}
-.logo-omakueche{background:#b82c31;color:#fff}.logo-topfdeckel{background:#d48d29;color:#fff}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#8558a7;color:#fff}.logo-karmafood{background:#c65b40;color:#fff}.logo-finn{background:#49654e;color:#fff}
+.logo-omakueche{background:#c9a581;color:#fff}.logo-topfdeckel{background:#6cb78e;color:#173d2b}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#4a579b;color:#fff}.logo-karmafood{background:#c65b40;color:#fff}.logo-finn{background:#49654e;color:#fff}
 </style>
 </head>
 <body>
@@ -298,6 +303,7 @@ html,body,.page { background:#fff; }
       </section>
       <footer class="site-footer">
         <span id="nextUpdate" aria-live="polite"></span>
+        <span>Angaben ohne Gewähr – bitte Menü auf der Restaurant-Website prüfen.</span>
         <span><a href="impressum.html">Impressum</a><span aria-hidden="true"> · </span><a href="admin.html">Admin</a></span>
       </footer>
     </main>
@@ -533,7 +539,7 @@ html,body,.page { background:#fff; }
           name:(soup && !['Global & Grill','Pizza & Co','Bowls & Co','Pasta & Co'].includes(item.category)
             ? soup.name+' + ' : '')+item.name,
           price:item.price,
-          priceDisplay:item.price==null?'Preis nicht bestätigt':null
+          priceDisplay:item.price==null?'X €':null
         }));
       }
       const sorted=[...raw].sort((a,b)=>mealPosition(a)-mealPosition(b));
@@ -546,12 +552,11 @@ html,body,.page { background:#fff; }
         // A soup with no proven price is never automatically presented as free.
         if(!isStandaloneSoup)name=includedPrefix(item,restaurant.id)+name;
         if(restaurant.id==='topfdeckel' && item.category==='Suppe')name+=' (klein/groß)';
-        if(isStandaloneSoup && item.price==null)name+=' (Einzelpreis nicht bestätigt)';
         out.push({
           name,price:item.price,
           priceDisplay:restaurant.id==='topfdeckel' && (item.price_small!=null || item.price_large!=null)
             ? [item.price_small,item.price_large].map(v=>v==null?'–':v.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €').join(' / ')
-            : (item.price==null?'Preis nicht bestätigt':null)
+            : (item.price==null?'X €':null)
         });
         // Structured menu combinations: show the actual total price and the
         // explicit optional nature, never add it to the main price by default.
