@@ -177,7 +177,6 @@ jobs:
           curl --fail-with-body --silent --show-error --retry 3 --connect-timeout 10 \
             -X POST "${SUPABASE_URL}/rest/v1/menu_history?on_conflict=week_start" \
             -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
             -H "Content-Type: application/json" \
             -H "Prefer: resolution=merge-duplicates,return=minimal" \
             --data "${payload}"
