@@ -2,7 +2,7 @@
   "weekStart": "2026-11-09",
   "weekEnd": "2026-11-13",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-08T08:09:03+01:00",
+  "checkedAt": "2026-11-08T08:41:41+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -431,7 +431,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Shahi Paneer Veggie Curry",
@@ -444,7 +444,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Kurkuma Linsen Dal",
@@ -457,7 +457,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           }
         ],
         "2026-11-10": [
@@ -472,7 +472,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Cremiges Erbsen Minz Curry",
@@ -485,7 +485,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Chana Linsen Dal",
@@ -498,7 +498,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           }
         ],
         "2026-11-11": [
@@ -513,7 +513,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Baingan Bharta Style Curry",
@@ -526,7 +526,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Protein Power Chili mit Quinoa",
@@ -539,7 +539,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           }
         ],
         "2026-11-12": [
@@ -554,7 +554,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Schmorgemüse Quinoa Bowl mit Hummus Dip",
@@ -567,7 +567,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Karotten Linsen Dal",
@@ -580,7 +580,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           }
         ],
         "2026-11-13": [
@@ -595,7 +595,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Cremiges Korma Veggie Curry",
@@ -608,7 +608,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           },
           {
             "name": "Mama Masala Linsen Dal",
@@ -621,7 +621,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "491c269ebd34d221949e02f5b096b804be4fa38fb68c746c91ef652f110b65aa"
+            "source_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7"
           }
         ]
       },
@@ -653,7 +653,7 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Haussalat",
@@ -668,7 +668,7 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Tan Tan Beef mit Asia Slaw, Sesam-Limetten-Mayo & Nori-Crunch",
@@ -683,7 +683,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Quiche Lorraine aus dem Ofen mit würzigem Speck & Käse",
@@ -698,22 +698,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
-          },
-          {
-            "name": "(A, C, F, G, L, M, O)",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "veggie",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Red Thai Curry in cremiger Kokos Sauce & Wokgemüse",
@@ -728,7 +713,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Kürbisrisotto mit Feta, gerösteten Walnüssen",
@@ -743,7 +728,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Dessert des Tages",
@@ -756,7 +741,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Gratis-Dessert zum Start",
@@ -769,7 +754,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Dein erstes Dessert geht auf uns.",
@@ -782,7 +767,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -795,7 +780,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -808,7 +793,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-09",
-            "source_sha256": "19e01b96f8b426a90eaaff223523c55bafc2c7510156058821d5c74fd5ab1d88"
+            "source_sha256": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1"
           }
         ],
         "2026-11-10": [
@@ -825,7 +810,7 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Haussalat",
@@ -840,10 +825,10 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
-            "name": "Italienische Hühnerpfanne mit mediterranem Gemüse",
+            "name": "Mediterrane Hühnerpfanne mit Ofengemüse, getrockneten Tomaten & Basilikum-Zitronen-Creme",
             "price": 7.5,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -855,7 +840,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Chicken-Stroganoff in Senf-Rahmsauce mit Waldpilzen & Sauerrahm Dip",
@@ -870,7 +855,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Sweetpotato Quesadillas mit Chili Sin Carne & Sour Cream Dip",
@@ -885,7 +870,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Cremiges Brokkoli-Kokoscurry mit gerösteten Erdnüssen",
@@ -900,7 +885,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Dessert des Tages",
@@ -913,7 +898,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Gratis-Dessert zum Start",
@@ -926,7 +911,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Dein erstes Dessert geht auf uns.",
@@ -939,7 +924,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -952,7 +937,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -965,7 +950,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-10",
-            "source_sha256": "eb2ba6b900650c2940770b080383554f28c33b402efd4159e25dec01c5ee55e7"
+            "source_sha256": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57"
           }
         ],
         "2026-11-11": [
@@ -982,7 +967,7 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Haussalat",
@@ -997,7 +982,7 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Ofenfrische Burritos mit Chili con Carne, geschmolzenem Käse, Guacamole Dip",
@@ -1012,7 +997,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Rindsgeschnetzeltes in cremiger Pilzrahmsauce",
@@ -1027,7 +1012,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Tomaten-Mozzarella Lasagne mit Spinat und frischem Salat",
@@ -1042,7 +1027,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Cremiges Eierschwammerl-Risotto mit Parmesan, Spinat",
@@ -1057,7 +1042,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Dessert des Tages",
@@ -1070,7 +1055,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Gratis-Dessert zum Start",
@@ -1083,7 +1068,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Dein erstes Dessert geht auf uns.",
@@ -1096,7 +1081,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -1109,7 +1094,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -1122,7 +1107,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-11",
-            "source_sha256": "277f235435f2568aef70dc70b804c85dd035eb0a906a71b4be1cceb531133ae2"
+            "source_sha256": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900"
           }
         ],
         "2026-11-12": [
@@ -1139,7 +1124,7 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Haussalat",
@@ -1154,10 +1139,10 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
-            "name": "Gebratenes Lachsforelle auf cremigem Zitronen-Zucchini-Risotto mit Feta",
+            "name": "Gebratene Lachsforelle auf cremigem Zitronen-Zucchini-Risotto mit Feta",
             "price": 7.5,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -1169,7 +1154,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Indisches Chicken Tikka in cremiger Masalasauce",
@@ -1184,7 +1169,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Süßkartoffel-Feta Gratin aus dem Ofen mit Spinat",
@@ -1199,7 +1184,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen",
@@ -1214,7 +1199,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Dessert des Tages",
@@ -1227,7 +1212,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Gratis-Dessert zum Start",
@@ -1240,7 +1225,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Dein erstes Dessert geht auf uns.",
@@ -1253,7 +1238,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -1266,7 +1251,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -1279,7 +1264,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-12",
-            "source_sha256": "4ed29e0df3fc28255c76d79e3cfd207c6931360ade9bda7603ac8e5aa40f8e21"
+            "source_sha256": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646"
           }
         ],
         "2026-11-13": [
@@ -1296,7 +1281,7 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Haussalat",
@@ -1311,7 +1296,7 @@
             "price_large": 5.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Alt Wiener Schinkenfleckerl mit überbackenem Käse",
@@ -1326,7 +1311,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Grünes Thai Curry mit Huhn Wokgemüse in Kokos-Zitronensauce",
@@ -1341,7 +1326,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Kürbis-Ricotta-Gratin aus dem Ofen mit Blattspinat",
@@ -1356,7 +1341,7 @@
             "price_large": 11.9,
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Dessert des Tages",
@@ -1369,7 +1354,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Gratis-Dessert zum Start",
@@ -1382,7 +1367,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Dein erstes Dessert geht auf uns.",
@@ -1395,7 +1380,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -1408,7 +1393,7 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -1421,11 +1406,11 @@
             "included_choices": [],
             "source_url": "https://topfdeckel.at/wochenmenu",
             "source_day": "2026-11-13",
-            "source_sha256": "776d8246d91619b330ff3e68f2eb5f2aaa8c5437ff231ce504659f5add872c34"
+            "source_sha256": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
           }
         ]
       },
-      "browser_verified_at": "2026-11-08T08:09:34+01:00"
+      "browser_verified_at": "2026-11-08T08:42:16+01:00"
     },
     {
       "id": "omakueche",

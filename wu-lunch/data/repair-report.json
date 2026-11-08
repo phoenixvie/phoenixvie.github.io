@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T08:10:44+01:00",
+  "checked_at": "2026-11-08T08:43:12+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,24 +10,15 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Eintrag 16: Datum nicht ISO-konform",
-        "Eintrag 17: Datum nicht ISO-konform",
-        "Eintrag 18: Datum nicht ISO-konform",
-        "Eintrag 19: Datum nicht ISO-konform",
-        "Die Extras sind im Wochenmenü aufgeführt, aber keinem bestimmten Wochentag zugeordnet; sie sind daher mit dem Wochenzeitraum statt mit einem einzelnen Datum erfasst.",
-        "Samosas, Sweets & Mango Lassi, Spice it up: Kashmiri Chili Crisp und Masala Chai haben auf der Quelle keinen ausgewiesenen Einzelpreis."
+        "Die Quelle erklärt nicht, welche Bestandteile im Lunch Combo enthalten sind; daraus wurden keine Inklusivleistungen abgeleitet.",
+        "Für die als Extras aufgeführten Artikel sind keine Wochentage oder Preise belegt; sie wurden daher nicht als datierte Gerichte aufgenommen."
       ],
-      "ai_only_items": 4,
+      "ai_only_items": 0,
       "parser_only_items": 0,
-      "ai_only_examples": [
-        "2026-11-09 bis 2026-11-13: masala chai",
-        "2026-11-09 bis 2026-11-13: samosas",
-        "2026-11-09 bis 2026-11-13: spice it up kashmiri chili crisp",
-        "2026-11-09 bis 2026-11-13: sweets mango lassi"
-      ],
+      "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "a824ca1875921ecc5dc25a5a2f23432183537aa5e256704301ae93641c4f60c1"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "9dc74085111935de029caab45e79a957f6eef504bf1cad0acc7a595f3f875d31"
       },
       "usage": {
         "input_tokens": 2453,
@@ -35,11 +26,11 @@
           "cache_write_tokens": 2450,
           "cached_tokens": 0
         },
-        "output_tokens": 3200,
+        "output_tokens": 2951,
         "output_tokens_details": {
-          "reasoning_tokens": 745
+          "reasoning_tokens": 810
         },
-        "total_tokens": 5653
+        "total_tokens": 5404
       }
     },
     {
