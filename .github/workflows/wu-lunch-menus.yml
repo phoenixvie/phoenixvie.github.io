@@ -162,7 +162,8 @@ jobs:
         if: steps.guard.outputs.skip == 'false'
         shell: bash
         env:
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          # The project URL is public; only the API secret is stored in GitHub.
+          SUPABASE_URL: https://vswnqdqnohbuzbwmsdvv.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           set -euo pipefail
