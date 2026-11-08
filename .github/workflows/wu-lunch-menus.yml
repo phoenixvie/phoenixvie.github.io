@@ -133,6 +133,29 @@ jobs:
           # Dedicated Finn image, Mensa PDF and Topf browser workflows stay
           # separate. No artificial two-restaurants-per-day bottleneck.
           python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
+      - name: Geprüfte Wochenkarte ins Admin-Archiv sichern
+        if: steps.guard.outputs.skip == 'false'
+        shell: bash
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          set -euo pipefail
+          # The service key exists only in GitHub Actions, never in the site.
+          # If the secret has not been added yet, admin login backfills prior
+          # repository versions once; publishing menus must still continue.
+          if [[ -z "${SUPABASE_URL}" || -z "${SUPABASE_SERVICE_ROLE_KEY}" ]]; then
+            echo "::warning::Admin-Archiv noch nicht automatisch verbunden (SUPABASE_URL oder SUPABASE_SERVICE_ROLE_KEY fehlt)."
+            exit 0
+          fi
+          payload="$(jq -c --arg commit "${GITHUB_SHA}" '{week_start:.weekStart,menu_data:.,source_commit:$commit}' wu-lunch/data/menus.json)"
+          curl --fail-with-body --silent --show-error --retry 3 --connect-timeout 10 \
+            -X POST "${SUPABASE_URL}/rest/v1/menu_history?on_conflict=week_start" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: resolution=merge-duplicates,return=minimal" \
+            --data "${payload}"
       - name: Änderungen nur bei Bedarf veröffentlichen
         if: steps.guard.outputs.skip == 'false'
         shell: bash
