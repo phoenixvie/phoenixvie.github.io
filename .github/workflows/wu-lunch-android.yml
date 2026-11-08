@@ -1,0 +1,46 @@
+name: WU Lunch Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-android.yml']
+  pull_request:
+    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-android.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: wu-lunch-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: wu-lunch-app/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Unit tests and type check
+        run: npm run test && npx tsc --noEmit
+      - name: Generate Android project
+        run: CI=1 npx expo prebuild --platform android
+      - name: Build standalone test APK with bundled JavaScript
+        run: ./gradlew assembleRelease
+        working-directory: wu-lunch-app/android
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wu-lunch-android-apk
+          path: wu-lunch-app/android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error

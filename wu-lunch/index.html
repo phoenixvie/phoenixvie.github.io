@@ -374,7 +374,7 @@ html,body,.page { background:#fff; }
       const config=window.WU_LUNCH_SUPABASE;
       if(!config?.url||!config?.publishableKey)return;
       try{
-        const response=await fetch(config.url+'/rest/v1/restaurant_overrides?select=restaurant_id,is_enabled,sort_order',{
+        const response=await fetch(config.url+'/rest/v1/restaurant_overrides?select=*',{
           headers:{apikey:config.publishableKey,Authorization:'Bearer '+config.publishableKey}
         });
         if(!response.ok)throw new Error('HTTP '+response.status);
@@ -382,6 +382,19 @@ html,body,.page { background:#fff; }
         if(!Array.isArray(overrides))throw new Error('Ungültiges Einstellungsformat');
         const byId=new Map(overrides.map(value=>[value.restaurant_id,value]));
         DATA.restaurants=DATA.restaurants.filter(restaurant=>byId.get(restaurant.id)?.is_enabled!==false);
+        DATA.restaurants.forEach(restaurant=>{
+          const profile=byId.get(restaurant.id);
+          if(!profile)return;
+          restaurant.name=profile.display_name||restaurant.name;
+          restaurant.url=profile.website_url||restaurant.url;
+          restaurant.logo_url=profile.logo_url||null;
+          restaurant.restaurant_type=profile.restaurant_type||null;
+          restaurant.phone=profile.phone||null;
+          restaurant.email=profile.email||null;
+          restaurant.address=profile.address||null;
+          restaurant.latitude=profile.latitude;
+          restaurant.longitude=profile.longitude;
+        });
         DATA.restaurants.sort((left,right)=>{
           const leftOrder=byId.get(left.id)?.sort_order;
           const rightOrder=byId.get(right.id)?.sort_order;
@@ -390,6 +403,24 @@ html,body,.page { background:#fff; }
       }catch(error){
         console.warn('Restaurant-Einstellungen nicht abrufbar; Standardreihenfolge verwendet:',error);
       }
+    }
+    async function applyManualMenus(){
+      const config=window.WU_LUNCH_SUPABASE;
+      if(!config?.url||!config?.publishableKey)return;
+      try{
+        const response=await fetch(config.url+'/rest/v1/menu_day_overrides?week_start=eq.'+encodeURIComponent(DATA.weekStart)+'&select=restaurant_id,menu_date,dishes',{
+          headers:{apikey:config.publishableKey,Authorization:'Bearer '+config.publishableKey},cache:'no-store'
+        });
+        if(!response.ok)throw new Error('HTTP '+response.status);
+        const rows=await response.json();
+        for(const row of rows){
+          const restaurant=DATA.restaurants.find(item=>item.id===row.restaurant_id);
+          if(restaurant&&Array.isArray(row.dishes)){
+            restaurant.days[row.menu_date]=row.dishes;
+            (restaurant.manualDays??= {})[row.menu_date]=true;
+          }
+        }
+      }catch(error){console.warn('Manuelle Menüänderungen nicht abrufbar:',error);}
     }
     // Keep the user's preferred order even when JSON or cached fallback has
     // an older order. Unknown future restaurants appear after this shortlist.
@@ -402,7 +433,7 @@ html,body,.page { background:#fff; }
       return index < 0 ? RESTAURANT_ORDER.length : index;
     };
     DATA.restaurants.sort((a,b) => rank(a.id) - rank(b.id));
-    await Promise.all([applyRestaurantOverrides(),loadAnnouncement()]);
+    await Promise.all([applyRestaurantOverrides(),loadAnnouncement(),applyManualMenus()]);
     window.matchMedia('(max-width:750px)').addEventListener('change',renderAnnouncement);
     const WEEKDAY_NAMES = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
     const SHORT_WEEKDAY = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
@@ -515,6 +546,7 @@ html,body,.page { background:#fff; }
     }
 
     function dishesForRestaurant(restaurant){
+      if(restaurant.manualDays?.[selectedDate])return restaurant.days[selectedDate]||[];
       const isCurrentWeek=DATA.weekStart===displayMondayIso;
       const validTo=restaurant.validUntil||'';
       const validFrom=restaurant.validFrom||'';
@@ -623,7 +655,7 @@ html,body,.page { background:#fff; }
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
       ).join('') : '<div class="empty-row">Noch nicht veröffentlicht</div>';
-      row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+escapeHtml(label)+'</div></div>'
+      row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+(restaurant.logo_url?'<img class="logo-image" src="'+escapeHtml(restaurant.logo_url)+'" alt="">':escapeHtml(label))+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
        +'<div class="menu-lines">'+dishRows+'</div>'
        +'<div class="restaurant-links"><a class="source-link" href="'+escapeHtml(restaurant.url)+'" target="_blank" rel="noopener noreferrer">Zum Restaurant</a>'
@@ -698,6 +730,13 @@ html,body,.page { background:#fff; }
       karmafood:{address:'Ausstellungsstraße 63, 1020 Wien',building:'Messe/Prater',letter:'K',color:'#c65b40'},
       finn:{address:'Welthandelsplatz 1, Gebäude EA, 1020 Wien',building:'EA',letter:'F',color:'#49654e'}
     };
+    DATA.restaurants.forEach(restaurant=>{
+      const info=locationInfo[restaurant.id];if(!info)return;
+      if(restaurant.address)info.address=restaurant.address;
+      if(Number.isFinite(restaurant.latitude)&&Number.isFinite(restaurant.longitude)){
+        info.lat=restaurant.latitude;info.lon=restaurant.longitude;
+      }
+    });
     // Google Maps Suche mit Restaurantname, WU-Standort und Adresse.
     // Keine erfundenen Place-IDs; Google Maps kann das passende Profil auflösen.
     function googleMapsUrl(restaurant, info){
