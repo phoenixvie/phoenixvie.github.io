@@ -1,0 +1,9 @@
+node_modules/
+.expo/
+.expo-local/
+.build-temp/
+dist-test/
+export.log
+prebuild.log
+android/
+ios/
