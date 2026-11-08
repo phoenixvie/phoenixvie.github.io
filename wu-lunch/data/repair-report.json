@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T09:03:46+01:00",
+  "checked_at": "2026-11-08T09:19:33+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,28 +10,37 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die übrigen Hauptgerichte ist kein Einzelpreis angegeben; daher price_eur=null.",
-        "Keine Tagessuppen, separat bestellbaren Salate oder Nachspeisen sind für einzelne Tage aufgeführt. Die undatierten Extras wurden keinem Tag zugeordnet.",
-        "Das Angebot nennt „Lunch Combo €13,50“ und „Lassi & Lunch“, spezifiziert aber nicht die Bestandteile der Kombination."
+        "Eintrag 16: Datum nicht ISO-konform",
+        "Eintrag 17: Datum nicht ISO-konform",
+        "Eintrag 18: Datum nicht ISO-konform",
+        "Eintrag 19: Datum nicht ISO-konform",
+        "Keine Tagessuppen oder separat bepreisten Salate/Nachspeisen sind in der Quelle ausgewiesen.",
+        "Die Lunch-Combo-Bestandteile werden nicht näher beschrieben; 13,50 € wird als Combo-Gesamtpreis und nicht als Einzelpreis des Hauptgerichts erfasst.",
+        "Die „Extras“ sind undatiert innerhalb der Wochenkarte und keinem bestimmten Tag zuweisbar."
       ],
-      "ai_only_items": 0,
+      "ai_only_items": 4,
       "parser_only_items": 0,
-      "ai_only_examples": [],
+      "ai_only_examples": [
+        "2026-11-09 bis 2026-11-13: masala chai",
+        "2026-11-09 bis 2026-11-13: samosas",
+        "2026-11-09 bis 2026-11-13: spice it up kashmiri chili crisp",
+        "2026-11-09 bis 2026-11-13: sweets mango lassi"
+      ],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "9192d84cfea3b2a0746289753f3f4b89728ea62b46a434ad32263d032aff536b"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "3fd79a65a6c2a9c8e42ff13dd7b3a47d1140549301726d8d876776aa05f2cb10"
       },
       "usage": {
-        "input_tokens": 2455,
+        "input_tokens": 2460,
         "input_tokens_details": {
-          "cache_write_tokens": 2452,
+          "cache_write_tokens": 2457,
           "cached_tokens": 0
         },
-        "output_tokens": 2349,
+        "output_tokens": 3714,
         "output_tokens_details": {
-          "reasoning_tokens": 550
+          "reasoning_tokens": 905
         },
-        "total_tokens": 4804
+        "total_tokens": 6174
       }
     },
     {

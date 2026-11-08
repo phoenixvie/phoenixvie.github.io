@@ -1,22 +1,22 @@
 {
-  "checked_at": "2026-11-08T09:01:48+01:00",
+  "checked_at": "2026-11-08T09:17:57+01:00",
   "week_start": "2026-11-09",
   "week_end": "2026-11-13",
   "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-08T09:01:58+01:00",
-      "checked_at": "2026-11-08T09:01:58+01:00",
+      "last_success": "2026-11-08T09:18:04+01:00",
+      "checked_at": "2026-11-08T09:18:04+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "5f23419f6aeb962d6daf2a8b4fa014ad01df98f103e7b5d2b8850d0b971f2c98",
+      "content_sha256": "644a673c152efb2b3707efa2c259337b921e2cce98315d66fdcac98c96323fd6",
       "source_image": null,
       "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367"
     },
     "finn": {
       "state": "not_published",
       "last_success": "2026-11-06T19:12:26+01:00",
-      "checked_at": "2026-11-08T09:01:58+01:00",
+      "checked_at": "2026-11-08T09:18:04+01:00",
       "consecutive_failures": 0,
       "content_sha256": "75c0d6609c32b5f4190be95d414faa054cc76db1b0f43093bb94ba0f52a77797",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
@@ -25,7 +25,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-08T09:01:48+01:00",
+      "last_success": "2026-11-08T09:17:57+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -33,14 +33,14 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
       "last_success": null,
-      "consecutive_failures": 28,
+      "consecutive_failures": 29,
       "content_sha256": null
     },
     "glashaus": {
-      "state": "error",
-      "error": "ValueError: Glashaus: Plan nicht für KW 2026-11-09: (datetime.date(2026, 11, 2), datetime.date(2026, 11, 6)); Textanfang: 'Mittagsmenüs | DAS GLASHAUS\\ntop of page\\nScroll\\nJeweils mit Suppe oder Salat\\nVegetarisch € 14,90 / Fisch&F",
-      "last_success": "2026-11-08T08:09:03+01:00",
-      "consecutive_failures": 2,
+      "state": "ok",
+      "last_success": "2026-11-08T09:17:57+01:00",
+      "consecutive_failures": 0,
+      "parser_version": null,
       "content_sha256": "d5a4ab6258906a17bffc2ed49dbdffe7d7284d125adc32220133424bcd871243"
     },
     "campus": {
@@ -66,19 +66,19 @@
     },
     "topfdeckel": {
       "state": "ok_browser",
-      "last_success": "2026-11-08T09:02:25+01:00",
+      "last_success": "2026-11-08T09:18:30+01:00",
       "consecutive_failures": 0,
       "day_sha256": {
-        "2026-11-09": "dd1db08a24bed86b13d5a28e1321bd7dab8d554ce1b0b357266359902ec62f80",
-        "2026-11-10": "8dc4da81c16f722958de40271ffcf0f713652b63619024c4ebd47aec2c2af22e",
-        "2026-11-11": "1f91ffe84597f892728bd37415b1ea6c3e3f700e37ed3be4d4307302b6cc565c",
-        "2026-11-12": "f62e688410daf902f34efec40c206ccab1b73ee41329b11327adfa597a7d75dd",
-        "2026-11-13": "f8b218cafa795fb3094e57fe67180bbb1cca30a11f4af0a1385789ae67bdfc3c"
+        "2026-11-09": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8",
+        "2026-11-10": "620b93826e0e6f7a3aea7f4fbee3e6da07a99333b366fbc6f7a0c24ac2d02b0b",
+        "2026-11-11": "3974faea0eeb22b6ad9391119e8d0b52a7cbdd5a501000739e76f4d5b03dbd7d",
+        "2026-11-12": "aacf119417daddbf08f0ea4166fc8cff8a298fd2c5a8bb0387b455ed4b2ffca5",
+        "2026-11-13": "ea919b4cf1c8246325876b7ed241b216ca1313f09bb340a73bfb488a72f95dec"
       }
     },
     "gruenehuette": {
       "state": "ok",
-      "last_success": "2026-11-08T09:01:48+01:00",
+      "last_success": "2026-11-08T09:17:57+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "6d429a8330a51224730a01976c3d9d0792a25e28fd14d3bb04bc3fb342c8449d"
@@ -91,8 +91,7 @@
     }
   },
   "problems": [
-    "mensa: ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
-    "glashaus: ValueError: Glashaus: Plan nicht für KW 2026-11-09: (datetime.date(2026, 11, 2), datetime.date(2026, 11, 6)); Textanfang: 'Mittagsmenüs | DAS GLASHAUS\\ntop of page\\nScroll\\nJeweils mit Suppe oder Salat\\nVegetarisch € 14,90 / Fisch&F"
+    "mensa: ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche"
   ],
   "next_run": "Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 (Europe/Vienna, GitHub Actions: zeitliche Abweichung möglich)",
   "format_version": 1,
@@ -158,10 +157,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-08T09:03:46+01:00",
+      "last_checked": "2026-11-08T09:19:33+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-09",
-      "source_fingerprint": "5f23419f6aeb962d6daf2a8b4fa014ad01df98f103e7b5d2b8850d0b971f2c98",
+      "source_fingerprint": "644a673c152efb2b3707efa2c259337b921e2cce98315d66fdcac98c96323fd6",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -171,27 +170,27 @@
   "topf_luna_audit": {
     "state": "review_needed",
     "model": "gpt-6-luna",
-    "fingerprint": "7fec2971fb18c081b37b0ab7abdbb79388a9e4268552c5190086b3ff06fea381",
-    "checked_at": "2026-11-08T09:03:46+01:00",
+    "fingerprint": "63c64e04332c85b639e91afd68ad0160e0a7b66293fb08992df0b2aeff537837",
+    "checked_at": "2026-11-08T09:19:33+01:00",
     "validation_issues": [
       "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
     ],
     "ai_only_examples": {},
     "warnings": [
-      "In den sichtbaren Tages-Tabs ist keine Menükombination mit ausdrücklich ausgewiesenem Gesamtpreis zu sehen.",
-      "Die Suppen werden nicht als kostenlos ausgewiesen; ihnen wurden keine kostenlosen Preise oder Inklusivleistungen zugeschrieben."
+      "Für Suppe und Haussalat stehen die Klein-/Großpreise auf Ebene des Vorspeisenabschnitts, nicht direkt neben den einzelnen Namen; sie wurden als Abschnittstarif zugeordnet.",
+      "Die Seite weist keine konkrete Menü-Kombination aus. Suppe oder Dessert wurden daher nicht als gratis oder inklusive angesetzt."
     ],
     "usage": {
-      "input_tokens": 50975,
+      "input_tokens": 51054,
       "input_tokens_details": {
-        "cache_write_tokens": 50972,
+        "cache_write_tokens": 51051,
         "cached_tokens": 0
       },
-      "output_tokens": 10067,
+      "output_tokens": 9502,
       "output_tokens_details": {
-        "reasoning_tokens": 882
+        "reasoning_tokens": 653
       },
-      "total_tokens": 61042
+      "total_tokens": 60556
     }
   },
   "quality_warnings": [],
