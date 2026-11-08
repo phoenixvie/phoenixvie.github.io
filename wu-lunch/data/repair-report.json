@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T08:43:12+01:00",
+  "checked_at": "2026-11-08T09:03:46+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,27 +10,28 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Quelle erklärt nicht, welche Bestandteile im Lunch Combo enthalten sind; daraus wurden keine Inklusivleistungen abgeleitet.",
-        "Für die als Extras aufgeführten Artikel sind keine Wochentage oder Preise belegt; sie wurden daher nicht als datierte Gerichte aufgenommen."
+        "Für die übrigen Hauptgerichte ist kein Einzelpreis angegeben; daher price_eur=null.",
+        "Keine Tagessuppen, separat bestellbaren Salate oder Nachspeisen sind für einzelne Tage aufgeführt. Die undatierten Extras wurden keinem Tag zugeordnet.",
+        "Das Angebot nennt „Lunch Combo €13,50“ und „Lassi & Lunch“, spezifiziert aber nicht die Bestandteile der Kombination."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "9dc74085111935de029caab45e79a957f6eef504bf1cad0acc7a595f3f875d31"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "9192d84cfea3b2a0746289753f3f4b89728ea62b46a434ad32263d032aff536b"
       },
       "usage": {
-        "input_tokens": 2453,
+        "input_tokens": 2455,
         "input_tokens_details": {
-          "cache_write_tokens": 2450,
+          "cache_write_tokens": 2452,
           "cached_tokens": 0
         },
-        "output_tokens": 2951,
+        "output_tokens": 2349,
         "output_tokens_details": {
-          "reasoning_tokens": 810
+          "reasoning_tokens": 550
         },
-        "total_tokens": 5404
+        "total_tokens": 4804
       }
     },
     {

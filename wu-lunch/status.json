@@ -1,22 +1,22 @@
 {
-  "checked_at": "2026-11-08T08:41:41+01:00",
+  "checked_at": "2026-11-08T09:01:48+01:00",
   "week_start": "2026-11-09",
   "week_end": "2026-11-13",
   "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-08T08:41:49+01:00",
-      "checked_at": "2026-11-08T08:41:49+01:00",
+      "last_success": "2026-11-08T09:01:58+01:00",
+      "checked_at": "2026-11-08T09:01:58+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7",
+      "content_sha256": "5f23419f6aeb962d6daf2a8b4fa014ad01df98f103e7b5d2b8850d0b971f2c98",
       "source_image": null,
       "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367"
     },
     "finn": {
       "state": "not_published",
       "last_success": "2026-11-06T19:12:26+01:00",
-      "checked_at": "2026-11-08T08:41:49+01:00",
+      "checked_at": "2026-11-08T09:01:58+01:00",
       "consecutive_failures": 0,
       "content_sha256": "75c0d6609c32b5f4190be95d414faa054cc76db1b0f43093bb94ba0f52a77797",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw45.jpg?v=1793555904",
@@ -25,7 +25,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-08T08:41:41+01:00",
+      "last_success": "2026-11-08T09:01:48+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -33,14 +33,14 @@
       "state": "error",
       "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: PDF ist nicht aus aktueller Woche: None; Textlänge=2631, Textanfang='SPEISEPLAN KW 45\\n02..2026 - 06.11.2026\\n€ 5,80\\n€ 6,3 | Mensa: PDF ist nicht aus aktueller Woche",
       "last_success": null,
-      "consecutive_failures": 27,
+      "consecutive_failures": 28,
       "content_sha256": null
     },
     "glashaus": {
       "state": "error",
       "error": "ValueError: Glashaus: Plan nicht für KW 2026-11-09: (datetime.date(2026, 11, 2), datetime.date(2026, 11, 6)); Textanfang: 'Mittagsmenüs | DAS GLASHAUS\\ntop of page\\nScroll\\nJeweils mit Suppe oder Salat\\nVegetarisch € 14,90 / Fisch&F",
       "last_success": "2026-11-08T08:09:03+01:00",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "content_sha256": "d5a4ab6258906a17bffc2ed49dbdffe7d7284d125adc32220133424bcd871243"
     },
     "campus": {
@@ -66,19 +66,19 @@
     },
     "topfdeckel": {
       "state": "ok_browser",
-      "last_success": "2026-11-08T08:42:16+01:00",
+      "last_success": "2026-11-08T09:02:25+01:00",
       "consecutive_failures": 0,
       "day_sha256": {
-        "2026-11-09": "c0d6bdecf0e145e34f0b35ec68bbbf37b84637d1c1ee1f333fe51585e84769e1",
-        "2026-11-10": "51eda60298895e5c2a7c636e5ebccfc4d619fadb38cdc7b2aeada75499baee57",
-        "2026-11-11": "43aa2188eee00f29ddc5a119ec449948a46cfef60aca3bc5b86fc137a9c88900",
-        "2026-11-12": "22465cdc0d3459e44b1f3c14f84f56b8704f81d93957af459fd396b7f9384646",
-        "2026-11-13": "01b15c5bbcae111c6fde2fd383756e0b7f1ecf19c1da38cd409a6e814fe221f9"
+        "2026-11-09": "dd1db08a24bed86b13d5a28e1321bd7dab8d554ce1b0b357266359902ec62f80",
+        "2026-11-10": "8dc4da81c16f722958de40271ffcf0f713652b63619024c4ebd47aec2c2af22e",
+        "2026-11-11": "1f91ffe84597f892728bd37415b1ea6c3e3f700e37ed3be4d4307302b6cc565c",
+        "2026-11-12": "f62e688410daf902f34efec40c206ccab1b73ee41329b11327adfa597a7d75dd",
+        "2026-11-13": "f8b218cafa795fb3094e57fe67180bbb1cca30a11f4af0a1385789ae67bdfc3c"
       }
     },
     "gruenehuette": {
       "state": "ok",
-      "last_success": "2026-11-08T08:41:41+01:00",
+      "last_success": "2026-11-08T09:01:48+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "6d429a8330a51224730a01976c3d9d0792a25e28fd14d3bb04bc3fb342c8449d"
@@ -158,10 +158,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-08T08:43:12+01:00",
+      "last_checked": "2026-11-08T09:03:46+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-09",
-      "source_fingerprint": "e5148cf9ff27207a1d0f8211ce9e5e89bdb5d40c1e7f2c377ddc2a41c4bb7ce7",
+      "source_fingerprint": "5f23419f6aeb962d6daf2a8b4fa014ad01df98f103e7b5d2b8850d0b971f2c98",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -171,27 +171,27 @@
   "topf_luna_audit": {
     "state": "review_needed",
     "model": "gpt-6-luna",
-    "fingerprint": "bc7849352d7defd274fc87bb3903eef803cc8eb9559a05494c17b5bcf681bd09",
-    "checked_at": "2026-11-08T08:43:11+01:00",
+    "fingerprint": "7fec2971fb18c081b37b0ab7abdbb79388a9e4268552c5190086b3ff06fea381",
+    "checked_at": "2026-11-08T09:03:46+01:00",
     "validation_issues": [
       "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
     ],
     "ai_only_examples": {},
     "warnings": [
-      "Die Tabs nennen keine Kombination aus Hauptspeise und Suppe, Salat oder Dessert. Die aufgeführten Artikel und Preise belegen daher keine kostenlose Inklusivleistung.",
-      "Die Standardtarife für Hauptspeisen gelten laut Bereichsüberschrift als klein €7.50 und groß €11.90. Die Lachsforelle am Donnerstag ist ausdrücklich nur groß für €13.90 ausgewiesen; dafür wurde kein Kleinpreis übernommen."
+      "In den sichtbaren Tages-Tabs ist keine Menükombination mit ausdrücklich ausgewiesenem Gesamtpreis zu sehen.",
+      "Die Suppen werden nicht als kostenlos ausgewiesen; ihnen wurden keine kostenlosen Preise oder Inklusivleistungen zugeschrieben."
     ],
     "usage": {
-      "input_tokens": 51053,
+      "input_tokens": 50975,
       "input_tokens_details": {
-        "cache_write_tokens": 51050,
+        "cache_write_tokens": 50972,
         "cached_tokens": 0
       },
-      "output_tokens": 7552,
+      "output_tokens": 10067,
       "output_tokens_details": {
-        "reasoning_tokens": 830
+        "reasoning_tokens": 882
       },
-      "total_tokens": 58605
+      "total_tokens": 61042
     }
   },
   "quality_warnings": [],
