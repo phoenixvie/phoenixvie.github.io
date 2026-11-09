@@ -1,45 +1,47 @@
 {
-  "checked_at": "2026-11-09T13:49:33+01:00",
+  "checked_at": "2026-11-09T20:02:39+01:00",
   "week_start": "2026-11-09",
   "week_end": "2026-11-13",
   "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-09T13:49:40+01:00",
-      "checked_at": "2026-11-09T13:49:40+01:00",
+      "last_success": "2026-11-09T20:02:48+01:00",
+      "checked_at": "2026-11-09T20:02:48+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358",
+      "content_sha256": "6404e07fbd8083a6add0f5541a180a5672577c1719954150d284aed5610eb036",
       "source_image": null,
+      "review_version": null,
+      "review_week_start": "2026-11-09",
       "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367"
     },
     "finn": {
-      "state": "error",
-      "last_success": "2026-11-06T19:12:26+01:00",
-      "checked_at": "2026-11-09T13:49:40+01:00",
-      "consecutive_failures": 3,
-      "content_sha256": "75c0d6609c32b5f4190be95d414faa054cc76db1b0f43093bb94ba0f52a77797",
+      "state": "ok",
+      "last_success": "2026-11-09T20:02:48+01:00",
+      "checked_at": "2026-11-09T20:02:48+01:00",
+      "consecutive_failures": 0,
+      "content_sha256": "bd30bff3a4d5807cb0a5c7a37a8a97cc76d07194a5e40f9ae773e959e2f9d0ae",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-      "source_pdf": null,
-      "note": "Finn: drei Bildanalysen widersprechen sich; keine Veröffentlichung",
-      "last_attempt_sha256": "bd30bff3a4d5807cb0a5c7a37a8a97cc76d07194a5e40f9ae773e959e2f9d0ae",
-      "last_attempt_at": "2026-11-09T13:49:42+01:00"
+      "review_version": "image-v2-year-warning",
+      "review_week_start": "2026-11-09",
+      "source_pdf": null
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-09T13:49:33+01:00",
+      "last_success": "2026-11-09T20:02:39+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
     "mensa": {
       "state": "error",
-      "error": "ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('\"One Pot\" Beef & Cheese Maccaroni') | Mensa: verstümmelter Tabellenzelltext erkannt ('\"One Pot\" Beef & Cheese Maccaroni')",
-      "last_success": null,
-      "consecutive_failures": 34,
-      "content_sha256": null
+      "last_success": "2026-11-09T20:02:39+01:00",
+      "consecutive_failures": 0,
+      "parser_version": null,
+      "content_sha256": null,
+      "error": "Mensa: KI lieferte keinen eindeutigen Plan oder offene Warnungen"
     },
     "glashaus": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-09T13:49:33+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
@@ -53,7 +55,7 @@
       "content_sha256": "6de52c199297bdf9fedc2c6459660d87f913eee5fe66074c631e5b2acbaa9d92"
     },
     "baschly": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-09T13:49:33+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
@@ -67,14 +69,19 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "ok",
-      "last_success": "2026-11-09T13:49:33+01:00",
+      "state": "ok_browser",
+      "last_success": "2026-11-09T20:04:35+01:00",
       "consecutive_failures": 0,
-      "parser_version": null,
-      "content_sha256": null
+      "day_sha256": {
+        "2026-11-09": "88882537a797b6704aa2285f402103c82e914e18e553573250f851bc221df907",
+        "2026-11-10": "be43b71e968311e0523e852fe35173524b7fadbaf62db97c896d403ebdbe44a6",
+        "2026-11-11": "311874b629d880fc14300eaac4c718d72df2aaace6eaf02663bb3416c64533bb",
+        "2026-11-12": "368a3764f05ecfac0b9943e65d89a4eb0d2f4fe66cac3e762b97d8c7239cae75",
+        "2026-11-13": "2e04cade97bd487032033695f7f11c844fe21b2ac79263663bee0c4080a4f370"
+      }
     },
     "gruenehuette": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-09T13:49:33+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
@@ -82,24 +89,23 @@
     },
     "lia": {
       "state": "ok",
-      "last_success": "2026-11-09T13:49:33+01:00",
+      "last_success": "2026-11-09T20:02:39+01:00",
       "consecutive_failures": 0,
       "parser_version": 4,
-      "content_sha256": null
+      "content_sha256": "83fc100855e2682cf76288a22c1fe1553338ebfb34cdb8bcaf7fbf2e9b6cdc34"
     }
   },
   "problems": [
-    "mensa: ValueError: Mensa: aktuelle PDF-Woche nicht verifizierbar: Mensa: verstümmelter Tabellenzelltext erkannt ('\"One Pot\" Beef & Cheese Maccaroni') | Mensa: verstümmelter Tabellenzelltext erkannt ('\"One Pot\" Beef & Cheese Maccaroni')",
-    "finn: ValueError: Finn: drei Bildanalysen widersprechen sich; keine Veröffentlichung"
+    "mensa: Mensa: KI lieferte keinen eindeutigen Plan oder offene Warnungen"
   ],
   "next_run": "Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 (Europe/Vienna, GitHub Actions: zeitliche Abweichung möglich)",
   "format_version": 1,
   "ai_repair": {
     "lia": {
-      "last_checked": "2026-11-09T13:51:02+01:00",
+      "last_checked": "2026-11-09T20:07:29+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-09",
-      "source_fingerprint": null,
+      "source_fingerprint": "83fc100855e2682cf76288a22c1fe1553338ebfb34cdb8bcaf7fbf2e9b6cdc34",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -156,10 +162,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-09T13:51:02+01:00",
+      "last_checked": "2026-11-09T20:07:29+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-09",
-      "source_fingerprint": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358",
+      "source_fingerprint": "6404e07fbd8083a6add0f5541a180a5672577c1719954150d284aed5610eb036",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -169,34 +175,39 @@
   "topf_luna_audit": {
     "state": "review_needed",
     "model": "gpt-6-luna",
-    "fingerprint": "63c64e04332c85b639e91afd68ad0160e0a7b66293fb08992df0b2aeff537837",
-    "checked_at": "2026-11-08T09:19:33+01:00",
+    "fingerprint": "32b22d25d525df3c37d6e209f088b0b65eada26e78520ef06120aaf1693100e3",
+    "checked_at": "2026-11-09T20:05:58+01:00",
     "validation_issues": [
       "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
     ],
     "ai_only_examples": {},
     "warnings": [
-      "Für Suppe und Haussalat stehen die Klein-/Großpreise auf Ebene des Vorspeisenabschnitts, nicht direkt neben den einzelnen Namen; sie wurden als Abschnittstarif zugeordnet.",
-      "Die Seite weist keine konkrete Menü-Kombination aus. Suppe oder Dessert wurden daher nicht als gratis oder inklusive angesetzt."
+      "In den übergebenen Tabs ist keine Menü-Kombination (z. B. Hauptspeise mit Suppe oder Dessert zu einem Gesamtpreis) ausgewiesen. Deshalb wurde keine Kombination ergänzt.",
+      "Beim Lachsfilet am Donnerstag ist nur die große Portion mit €13.90 angegeben; ein kleiner Preis ist nicht ausgewiesen."
     ],
     "usage": {
-      "input_tokens": 51054,
+      "input_tokens": 50573,
       "input_tokens_details": {
-        "cache_write_tokens": 51051,
+        "cache_write_tokens": 50570,
         "cached_tokens": 0
       },
-      "output_tokens": 9502,
+      "output_tokens": 10948,
       "output_tokens_details": {
-        "reasoning_tokens": 653
+        "reasoning_tokens": 787
       },
-      "total_tokens": 60556
+      "total_tokens": 61521
     }
   },
-  "quality_warnings": [
-    "mensa 2026-11-09: kein Menü vorhanden",
-    "finn 2026-11-09: kein Menü vorhanden",
-    "campus 2026-11-09: Preis fehlt: Faschierter Braten mit Senfzwiebelsauce und Süßkartoffelpüree",
-    "campus 2026-11-09: Preis fehlt: Kürbis-Ravioli in Weißweinsauce mit Grana und Rucola"
-  ],
-  "quality_warning_count": 4
+  "quality_warnings": [],
+  "quality_warning_count": 0,
+  "mensa_luna_audit": {
+    "checked_at": "2026-11-09T20:05:58+01:00",
+    "source_sha256": "1c0b1f73ba49eb17d7a152a17861b9888bb0f7258a73ebb00a0019712a2b440c",
+    "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+    "week_start": "2026-11-09",
+    "version": "ai-pdf-2-content-hash",
+    "last_attempt_at": "2026-11-09T20:05:58+01:00",
+    "state": "error",
+    "error": "Mensa: KI lieferte keinen eindeutigen Plan oder offene Warnungen"
+  }
 }

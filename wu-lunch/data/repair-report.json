@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-11-09T13:51:02+01:00",
+  "checked_at": "2026-11-09T20:07:29+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
-  "api_calls": 4,
+  "api_calls": 2,
   "results": [
     {
       "restaurant": "lia",
@@ -10,8 +10,7 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Das Emmentaler-Gericht ist im Quelltext als „Vegan“ gekennzeichnet, enthält laut Gerichtsbeschreibung aber Emmentaler; die Kennzeichnung wirkt widersprüchlich und wurde nicht geändert.",
-        "Für Suppe/Salat als Ergänzung zum Menü wird kein Preis angegeben; es wurde kein Einzelpreis angenommen."
+        "Der gebackene Emmentaler ist im Original als „Vegan“ gekennzeichnet, obwohl das Gericht Käse enthält. Die widersprüchliche Kennzeichnung wurde nicht korrigiert."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
@@ -26,80 +25,11 @@
           "cache_write_tokens": 7124,
           "cached_tokens": 0
         },
-        "output_tokens": 2525,
+        "output_tokens": 1935,
         "output_tokens_details": {
-          "reasoning_tokens": 683
+          "reasoning_tokens": 513
         },
-        "total_tokens": 9652
-      }
-    },
-    {
-      "restaurant": "baschly",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Bildinhalte sind im übergebenen HTML nicht lesbar. Daher werden daraus keine Gerichte oder Preise abgeleitet.",
-        "Keine eindeutig veröffentlichte aktuelle Karte"
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 10,
-      "ai_only_examples": [],
-      "parser_only_examples": [
-        "2026-11-09: butter chicken masala curry mit basmatireis allergene glutenfrei laktosefrei",
-        "2026-11-09: knackiger gemüse wok mit jasminreis frühlingsrolle und sweet chili sauce laktosefrei",
-        "2026-11-10: hühnerschnitzel mit erdäpfelsalat",
-        "2026-11-10: thai kokos gemüsecurry mit basmatireis",
-        "2026-11-11: linsen spinat gemüse curry mit basmatireis"
-      ],
-      "source_hashes": {
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "d0551ae349dda80c843c8b33d137d0bcc8b4bb32dc9ae35ac57d5cf326b201d2",
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "41ed40710da4c85132309ac56202f0477484d6b8620fce5e4730ddecb0f35ace"
-      },
-      "usage": {
-        "input_tokens": 2658,
-        "input_tokens_details": {
-          "cache_write_tokens": 2655,
-          "cached_tokens": 0
-        },
-        "output_tokens": 307,
-        "output_tokens_details": {
-          "reasoning_tokens": 152
-        },
-        "total_tokens": 2965
-      }
-    },
-    {
-      "restaurant": "losteria",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Quelle belegt keine Zuordnung zu 2026-11-09 bis 2026-11-13."
-      ],
-      "ai_only_items": 4,
-      "parser_only_items": 0,
-      "ai_only_examples": [
-        "None: crema di patate con tartufo",
-        "None: pizza bianca tacchino e cipolletartufo di cielo",
-        "None: tagliatelle tartufo e funghi",
-        "None: tortina di mandorle"
-      ],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "edd75208b1b626fa358d284dce31dca80ce83874be2c703da74d28f482d1cbb2"
-      },
-      "usage": {
-        "input_tokens": 1884,
-        "input_tokens_details": {
-          "cache_write_tokens": 1881,
-          "cached_tokens": 0
-        },
-        "output_tokens": 887,
-        "output_tokens_details": {
-          "reasoning_tokens": 165
-        },
-        "total_tokens": 2771
+        "total_tokens": 9062
       }
     },
     {
@@ -108,33 +38,32 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Quelle erläutert nicht, welche Bestandteile die Lunch-Combo zu €13,50 umfasst; sie wird daher nicht als kostenlose Inklusivleistung erfasst.",
-        "Für die Einträge im Abschnitt „Extras“ sind keine Tage oder Einzelpreise angegeben."
+        "Für die übrigen Hauptgerichte ist kein Einzelpreis ausgewiesen.",
+        "Die Extras (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai) stehen ohne Tageszuordnung; sie wurden keinem Wochentag zugeordnet. Es sind keine separat bepreisten Tagessuppen, Salate oder Nachspeisen für einzelne Tage ausgewiesen."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "44161b6a56b93a9d6164283e373520170a844dbfc302f3fc67baf1359e2803ff"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "e2f03a2ab874dd1c9f29bcbcaf845cd51ce048eb5fb7870f01e350c5e65149e5"
       },
       "usage": {
-        "input_tokens": 2560,
+        "input_tokens": 2562,
         "input_tokens_details": {
-          "cache_write_tokens": 2557,
+          "cache_write_tokens": 2559,
           "cached_tokens": 0
         },
-        "output_tokens": 3368,
+        "output_tokens": 3530,
         "output_tokens_details": {
-          "reasoning_tokens": 780
+          "reasoning_tokens": 965
         },
-        "total_tokens": 5928
+        "total_tokens": 6092
       }
     },
     {
       "restaurant": "mensa",
       "issues": [
-        "missing_day",
         "source_error"
       ],
       "action": "dedicated_pdf_ai",
@@ -148,10 +77,7 @@
     },
     {
       "restaurant": "finn",
-      "issues": [
-        "missing_day",
-        "source_error"
-      ],
+      "issues": [],
       "action": "dedicated_image_ai",
       "repairs": []
     },
