@@ -3,16 +3,23 @@
     "name": "WU Lunch",
     "slug": "wu-lunch",
     "scheme": "wulunch",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "icon": "./assets/icon.png",
     "orientation": "portrait",
     "newArchEnabled": true,
     "android": {
       "package": "at.startit.wulunch",
-      "versionCode": 1,
-      "adaptiveIcon": {"foregroundImage": "./assets/icon.png", "backgroundColor": "#092566"},
-      "permissions": ["INTERNET"]
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#092566"
+      },
+      "permissions": [
+        "INTERNET"
+      ]
     },
-    "plugins": ["@maplibre/maplibre-react-native"]
+    "plugins": [
+      "./plugins/withIconInset.cjs"
+    ]
   }
 }

@@ -1,20 +1,23 @@
 {
   "name": "wu-lunch-android",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
-    "test": "node --experimental-strip-types --test src/data.test.mjs",
-    "check": "npm run test && tsc --noEmit && expo export --platform android"
+    "test": "node --experimental-strip-types --test src/data.test.mjs scripts/preview-native.test.mjs",
+    "check": "npm run test && tsc --noEmit && expo export --platform android",
+    "bundle:preview": "node scripts/bundle-preview.mjs",
+    "pretest": "npm run bundle:preview",
+    "prestart": "npm run bundle:preview"
   },
   "dependencies": {
-    "@maplibre/maplibre-react-native": "11.5.1",
     "expo": "~58.0.23",
     "react": "19.3.0",
     "react-native": "0.88.1",
-    "react-native-safe-area-context": "5.11.1"
+    "react-native-safe-area-context": "5.11.1",
+    "react-native-webview": "^14.0.1"
   },
   "devDependencies": {
     "@types/react": "~19.2.0",

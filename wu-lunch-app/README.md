@@ -17,3 +17,9 @@ Für eine Veröffentlichung im Play Store braucht die App später ein signiertes
 Node.js 24, npm und für lokale Android-Builds Android Studio/JDK 17 installieren. Dann in diesem Ordner `npm ci`, `npm run test`, `npx tsc --noEmit`, `npx expo run:android` ausführen. MapLibre benötigt einen nativen Android-Build; Expo Go reicht nicht aus. Das GitHub-APK kann ohne lokales Android Studio gebaut werden.
 
 Adressen und Kartenkoordinaten lassen sich im Web-Adminbereich je Restaurant ändern. Wo noch keine geprüften Koordinaten vorliegen, wird kein Kartenmarker erfunden. Die Standardstandorte stammen aus der bisherigen Website und geprüften OpenStreetMap-Einträgen.
+# Android 0.2.0: gemeinsame Designquelle
+
+Die Android-Oberfläche wird aus den lokalen Dateien unter `preview/` eingebettet. `npm run bundle:preview` erstellt daraus `src/previewHtml.ts`; Tests und CI generieren die Datei erneut. Die APK enthält das Layout und die Google-Material-Symbole selbst, lädt Menüs, Adminänderungen und Kartendaten weiterhin online. Die Menüquellen öffnen sich über eine separate native WebView ohne privilegierte Nachrichtenbrücke. Das adaptive Android-Symbol behält das alte Motiv mit 20 Prozent zusätzlichem Innenabstand.
+
+APK-Builds starten nur manuell oder für Pull Requests mit `[APK]` im Titel. Die CI prüft den Design-Fingerabdruck innerhalb der tatsächlichen APK und installiert sie für Oberflächenprüfungen auf einem Android-Emulator. Das Downloadpaket heißt `wu-food-android-0.2.0` und enthält `WU-Food-0.2.0.apk` sowie `build-info.json`.
+
