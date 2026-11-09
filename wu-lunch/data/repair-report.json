@@ -1,35 +1,36 @@
 {
-  "checked_at": "2026-11-09T20:07:29+01:00",
+  "checked_at": "2026-11-09T20:14:05+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 2,
   "results": [
     {
-      "restaurant": "lia",
+      "restaurant": "glashaus",
       "issues": [],
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Der gebackene Emmentaler ist im Original als „Vegan“ gekennzeichnet, obwohl das Gericht Käse enthält. Die widersprüchliche Kennzeichnung wurde nicht korrigiert."
+        "Die Tagesgerichte sind trotz des Vermerks „FEIERTAG“ für die angefragte Woche aufgeführt.",
+        "Suppe und Salat sind nicht einzeln benannt oder bepreist und werden deshalb nicht als separate Gerichte erfasst."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://lia.coffee/": "a0793c5593ddd19cac5c0d0e61eda999ead10057ebf5772680aa1e818c46865b"
+        "https://www.dasglashaus.at/menues": "f16535591d3fa9ebc8eb2276e9db3ad89a41ce770f1b515b0d24129ec060128c"
       },
       "usage": {
-        "input_tokens": 7127,
+        "input_tokens": 2680,
         "input_tokens_details": {
-          "cache_write_tokens": 7124,
+          "cache_write_tokens": 2677,
           "cached_tokens": 0
         },
-        "output_tokens": 1935,
+        "output_tokens": 2798,
         "output_tokens_details": {
-          "reasoning_tokens": 513
+          "reasoning_tokens": 596
         },
-        "total_tokens": 9062
+        "total_tokens": 5478
       }
     },
     {
@@ -38,27 +39,36 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
+        "Eintrag 16: Tageszuordnung fehlt",
+        "Eintrag 17: Tageszuordnung fehlt",
+        "Eintrag 18: Tageszuordnung fehlt",
+        "Eintrag 19: Tageszuordnung fehlt",
         "Für die übrigen Hauptgerichte ist kein Einzelpreis ausgewiesen.",
-        "Die Extras (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai) stehen ohne Tageszuordnung; sie wurden keinem Wochentag zugeordnet. Es sind keine separat bepreisten Tagessuppen, Salate oder Nachspeisen für einzelne Tage ausgewiesen."
+        "Die Wochenkarte führt keine separat bepreisten Tagessuppen, Salate oder Nachspeisen auf. Die genannten Extras sind ohne Einzelpreise gelistet."
       ],
-      "ai_only_items": 0,
+      "ai_only_items": 4,
       "parser_only_items": 0,
-      "ai_only_examples": [],
+      "ai_only_examples": [
+        "None: masala chai",
+        "None: samosas",
+        "None: spice it up kashmiri chili crisp",
+        "None: sweets mango lassi"
+      ],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "e2f03a2ab874dd1c9f29bcbcaf845cd51ce048eb5fb7870f01e350c5e65149e5"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "0c2c39531f2c278111d770a35e5045233af4706d82c4b19253973db2bc429803"
       },
       "usage": {
-        "input_tokens": 2562,
+        "input_tokens": 2560,
         "input_tokens_details": {
-          "cache_write_tokens": 2559,
+          "cache_write_tokens": 2557,
           "cached_tokens": 0
         },
-        "output_tokens": 3530,
+        "output_tokens": 3791,
         "output_tokens_details": {
-          "reasoning_tokens": 965
+          "reasoning_tokens": 885
         },
-        "total_tokens": 6092
+        "total_tokens": 6351
       }
     },
     {
