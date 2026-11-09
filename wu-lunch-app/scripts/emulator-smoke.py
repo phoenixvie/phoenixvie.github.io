@@ -69,7 +69,11 @@ wait_for('In Google Maps öffnen')
 capture('04-map')
 adb('shell', 'input', 'keyevent', 'KEYCODE_HOME')
 time.sleep(1)
-adb('shell', 'am', 'start', '-a', 'android.intent.action.ALL_APPS')
+try:
+    adb('shell', 'am', 'start', '-a', 'android.intent.action.ALL_APPS')
+except subprocess.CalledProcessError:
+    # Launcher entry points vary; this optional screenshot must not fail app checks.
+    adb('shell', 'input', 'swipe', '540', '1600', '540', '300', '500')
 time.sleep(2)
 capture('06-launcher')
 print('Installed APK passed list, menu, contact and map smoke checks.')
