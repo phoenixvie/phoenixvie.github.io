@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-09T20:46:45+01:00",
+  "checked_at": "2026-11-09T20:50:45+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,27 +10,28 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die übrigen Hauptgerichte ist kein Einzelpreis ausgewiesen. Der Lunch-Combo-Preis ist als Kombinationsangebot in extra_costs erfasst, nicht als Einzelpreis oder kostenlose Inklusivleistung.",
-        "Der Abschnitt „Extras“ ist keinem bestimmten Wochentag zugeordnet und wurde daher nicht als datierte Speise aufgenommen."
+        "Der Preis von €13,50 ist als Gesamtpreis des Lunch Combos ausgewiesen, nicht als Einzelpreis eines Hauptgerichts.",
+        "Für die meisten Gerichte ist kein Einzelpreis angegeben. Das Protein Power Chili ist ausdrücklich mit €11,50 als Special ausgezeichnet.",
+        "Es sind keine separat angebotenen Tagessuppen, Salate oder Nachspeisen mit belegtem Einzelpreis aufgeführt."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "41029c025ac773396fd1ddca392c14e17c46b33003eb1b7b68d84cd07f50d217"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "0187efc87e528054d6e5200d79088ce9b40f954bdf05837050356e413a17f9c5"
       },
       "usage": {
-        "input_tokens": 2599,
+        "input_tokens": 2600,
         "input_tokens_details": {
-          "cached_tokens": 0,
-          "cache_write_tokens": 2596
+          "cache_write_tokens": 2597,
+          "cached_tokens": 0
         },
-        "output_tokens": 2181,
+        "output_tokens": 3354,
         "output_tokens_details": {
-          "reasoning_tokens": 434
+          "reasoning_tokens": 915
         },
-        "total_tokens": 4780
+        "total_tokens": 5954
       }
     },
     {
