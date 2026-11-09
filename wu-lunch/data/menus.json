@@ -2,7 +2,7 @@
   "weekStart": "2026-11-09",
   "weekEnd": "2026-11-13",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-08T22:26:15+01:00",
+  "checkedAt": "2026-11-09T13:49:33+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -63,7 +63,7 @@
       "id": "topfdeckel",
       "name": "Topf & Deckel",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "verified",
+      "status": "daily",
       "note": "",
       "validFrom": "2026-11-09",
       "validUntil": "2026-11-13"
@@ -135,7 +135,7 @@
       "days": {
         "2026-11-09": [
           {
-            "name": "Knackiger Gemüse-Wok mit Jasminreis, Mangold-Pakora und Sweet-Chili-Sauce",
+            "name": "Knackiger Gemüse-Wok mit Jasminreis, Frühlingsrolle und Sweet-Chili-Sauce, laktosefrei",
             "price": 9.5,
             "category": "Veggie",
             "diet": "veggie",
@@ -148,7 +148,7 @@
             ]
           },
           {
-            "name": "Tandoori-Masala-Chicken-Curry mit Basmatireis Allergene: Glutenfrei",
+            "name": "Butter-Chicken-Masala-Curry mit Basmatireis Allergene: Glutenfrei, laktosefrei",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
@@ -163,7 +163,7 @@
         ],
         "2026-11-10": [
           {
-            "name": "Süßkartoffel-Gemüse-Curry mit Basmatireis",
+            "name": "Thai-Kokos Gemüsecurry mit Basmatireis",
             "price": 9.5,
             "category": "Veggie",
             "diet": "veggie",
@@ -176,7 +176,7 @@
             ]
           },
           {
-            "name": "Hühnerschnitzel mit Bratkartoffeln",
+            "name": "Hühnerschnitzel mit Erdäpfelsalat",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
@@ -204,7 +204,7 @@
             ]
           },
           {
-            "name": "Teriyaki-Crispy-Chicken mit würzigem Eierreis",
+            "name": "Teriyaki-Crispy-Chicken im Burgerbun mit Pommes",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
@@ -219,7 +219,7 @@
         ],
         "2026-11-12": [
           {
-            "name": "Kichererbsen-Curry mit Basmatireis und Joghurt",
+            "name": "Kürbisrisotee: A, G",
             "price": 9.5,
             "category": "Veggie",
             "diet": "veggie",
@@ -232,7 +232,7 @@
             ]
           },
           {
-            "name": "Natur-Hühnerbrust mit Mozzarella gefüllt, auf Kartoffel-Rote-Rüben-Püree",
+            "name": "Faschierte Laibchen (Rind) mit Kartoffel-Püree",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
@@ -260,7 +260,7 @@
             ]
           },
           {
-            "name": "Thai-Kokos-Chicken-Curry mit Basmatireis",
+            "name": "Thai-Redkokos-Chicken-Curry mit Basmatireis",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
@@ -306,7 +306,7 @@
         "2026-11-09": [
           {
             "name": "Cevapcici mit Pommes und Ajvar",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -316,7 +316,7 @@
           },
           {
             "name": "Gebackener Emmentaler mit Preiselbeeren und grünem Salat",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -328,7 +328,7 @@
         "2026-11-10": [
           {
             "name": "Pasta Bolognese mit Parmesan und grünem Salat",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -338,7 +338,7 @@
           },
           {
             "name": "Pasta Pomodoro mit Parmesan und grünem Salat",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -350,7 +350,7 @@
         "2026-11-11": [
           {
             "name": "Rindergeschnetzeltes „Stroganoff“ mit Serviettenknödeln",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -360,7 +360,7 @@
           },
           {
             "name": "Spinat-Kichererbsen-Eintopf mit Gemüselaibchen",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -372,7 +372,7 @@
         "2026-11-12": [
           {
             "name": "Hühnerschnitzel mit Petersilkartoffeln",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -382,7 +382,7 @@
           },
           {
             "name": "Gefüllte Paprika mit Tomatensauce",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -394,7 +394,7 @@
         "2026-11-13": [
           {
             "name": "Gegrillte Scholle mit geschmortem Spinat, Zwiebeln und Kartoffelpüree",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -404,7 +404,7 @@
           },
           {
             "name": "Kaiserschmarrn mit Apfelmus",
-            "price": 10,
+            "price": 10.0,
             "category": "Hauptgericht",
             "diet": "unknown",
             "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
@@ -536,7 +536,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Shahi Paneer Veggie Curry",
@@ -549,7 +549,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Kurkuma Linsen Dal",
@@ -562,7 +562,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           }
         ],
         "2026-11-10": [
@@ -577,7 +577,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Cremiges Erbsen Minz Curry",
@@ -590,7 +590,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Chana Linsen Dal",
@@ -603,7 +603,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           }
         ],
         "2026-11-11": [
@@ -618,7 +618,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Baingan Bharta Style Curry",
@@ -631,7 +631,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Protein Power Chili mit Quinoa",
@@ -644,7 +644,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           }
         ],
         "2026-11-12": [
@@ -659,7 +659,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Schmorgemüse Quinoa Bowl mit Hummus Dip",
@@ -672,7 +672,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Karotten Linsen Dal",
@@ -685,7 +685,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           }
         ],
         "2026-11-13": [
@@ -700,7 +700,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Cremiges Korma Veggie Curry",
@@ -713,7 +713,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           },
           {
             "name": "Mama Masala Linsen Dal",
@@ -726,7 +726,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "8fb9d442b9d7d2c1d2574c4d9b805ab120caed6ed0c9a05ebc813ebb5d491ba7"
+            "source_sha256": "121523e478bd52d59e302586ceaae6f5ed0434048e1db3a16252e68d890f0358"
           }
         ]
       },
@@ -739,7 +739,7 @@
       "name": "Topf & Deckel",
       "monogram": "T",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "verified",
+      "status": "daily",
       "note": "Alle fünf Wochentage über echte Browser-Tabs der offiziellen Wochenmenü-Seite geprüft.",
       "validFrom": "2026-11-09",
       "validUntil": "2026-11-13",
@@ -755,10 +755,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "price_large": 5.9
           },
           {
             "name": "Haussalat",
@@ -770,25 +767,19 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "price_large": 5.9
           },
           {
-            "name": "Tan Tan Faschiertes mit Asian Slaw, Limetten-Sesam-Mayo & Nori Crunch",
+            "name": "Tan Tan Faschiertes mit Asian Slaw, Basmatireis, Limetten-Sesam-Mayo & Nori Crunch.",
             "price": 7.5,
             "category": "Hauptgericht",
             "diet": "unknown",
-            "description": "Optionale Beilage: Asian Slaw; Preis klein / groß",
+            "description": "Preis klein / groß",
             "allergens": [],
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "price_large": 11.9
           },
           {
             "name": "Quiche Lorraine aus dem Ofen mit würzigem Speck & Käse",
@@ -800,10 +791,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "price_large": 11.9
           },
           {
             "name": "Red Thai Curry in cremiger Kokos Sauce & Wokgemüse",
@@ -815,10 +803,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "price_large": 11.9
           },
           {
             "name": "Kürbisrisotto mit Feta, gerösteten Walnüssen",
@@ -830,10 +815,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "price_large": 11.9
           },
           {
             "name": "Dessert des Tages",
@@ -843,10 +825,7 @@
             "description": "Separat erhältlich",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "included_choices": []
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -856,10 +835,7 @@
             "description": "Eine Option zum kleinen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "included_choices": []
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -869,10 +845,7 @@
             "description": "Eine Option zum großen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "fa17f9c440dc49ad5533f7a1fb5dc9df0598cf7d27b9d2500bbfb319fc3adad8"
+            "included_choices": []
           }
         ],
         "2026-11-10": [
@@ -1492,7 +1465,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2,
+            "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
@@ -1524,7 +1497,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2,
+            "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
@@ -1556,7 +1529,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2,
+            "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
@@ -1588,7 +1561,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2,
+            "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
@@ -1610,7 +1583,7 @@
           },
           {
             "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
-            "price": 2,
+            "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
             "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
