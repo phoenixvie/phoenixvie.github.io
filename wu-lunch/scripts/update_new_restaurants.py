@@ -270,7 +270,7 @@ def validate_finn_pair(first, second, monday, img_url):
         diet = "vegan" if cat == "vegan" else "veggie" if cat in ("veggie", "vegetarisch") else "meat" if cat in ("fleisch", "meat", "fisch", "fish") else "unknown"
         days[d].append({
             "name": name.strip(), "price": price, "category": item["category"],
-            "diet": diet, "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "diet": diet, "description": "",
             "allergens": [], "included_soup": None, "included_choices": [],
             "source_url": img_url, "evidence_excerpt": item.get("evidence_excerpt", ""),
             "ai_confidence": "two-model-agreement",
@@ -471,6 +471,11 @@ def run(today, *, karma_only=False):
             else:
                 days, digest, source_url = fetch_finn(monday, key=key, previous=previous)
             if days is None:
+                if ident == 'finn':
+                    for rows in restaurant.get('days',{}).values():
+                        for item in rows:
+                            if item.get('description') == 'Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).':
+                                item['description']=''
                 source_states[ident] = {**previous, "state": "cached", "checked_at": now}
                 continue
             legacy.candidate_quality_gate(ident, restaurant.get("days", {}), days)
