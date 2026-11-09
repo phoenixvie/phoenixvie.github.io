@@ -3,7 +3,7 @@
 
 Runs *after* the existing deterministic importer. A failed AI run leaves existing
 Mensa menu entries untouched, records the failure, and never guesses prices.
-Requires OPENAI_API_KEY. No API call for an already successfully imported week.
+Requires OPENAI_API_KEY. Successful source hash/week/validator matches avoid API calls.
 """
 import argparse
 import base64
@@ -25,7 +25,7 @@ DATA = ROOT / "data" / "menus.json"
 JS = ROOT / "data.js"
 STATUS = ROOT / "status.json"
 TZ = ZoneInfo("Europe/Vienna")
-REVIEW_VERSION = "ai-pdf-3-diagnostics"
+REVIEW_VERSION = "ai-pdf-4-layout"
 SOURCE_FILE = ROOT / "ai-pilot" / "ai_direct.py"
 
 spec = importlib.util.spec_from_file_location("mensa_ai_direct", SOURCE_FILE)
@@ -39,6 +39,8 @@ spec2.loader.exec_module(legacy)
 VALID_CATEGORIES = {
     "tagessuppe": "Tagessuppe",
     "powered by plants veggie": "Powered by plants / Veggie",
+    "powered by plants": "Powered by plants / Veggie",
+    "tagesuppe": "Tagessuppe",
     "veggie": "Powered by plants / Veggie",
     "meaty": "Meaty",
     "global grill": "Global & Grill",
@@ -66,6 +68,102 @@ def normalize(value):
 
 def days_digest(days):
     return hashlib.sha256(json.dumps(days, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+
+
+def pdf_layout(raw, monday):
+    """Literal text regions plus independently measured merged/weekday cells.
+
+    No dish interpretation: the model still reads the complete original PDF.
+    Narrow white rectangles in this table are its actual cell separator lines.
+    """
+    result = []
+    with fitz.open(stream=raw, filetype="pdf") as doc:
+        for page in doc:
+            headers = [page.search_for(day.upper()) for day in legacy.WEEKDAYS]
+            if any(len(h) != 1 for h in headers):
+                raise ValueError("Mensa: Tagesüberschriften nicht eindeutig messbar")
+            centers = [(h[0].x0+h[0].x1)/2 for h in headers]
+            if centers != sorted(centers):
+                raise ValueError("Mensa: unbekannte Spaltenreihenfolge")
+            edges = [centers[0]-(centers[1]-centers[0])/2] + [(a+b)/2 for a,b in zip(centers,centers[1:])] + [centers[-1]+(centers[-1]-centers[-2])/2]
+            shapes = [v['rect'] for v in page.get_drawings() if v.get('fill') is not None]
+            backgrounds = [r for r in shapes if r.width > edges[-1]-edges[0] and r.height > 12]
+            horizontal = [r for r in shapes if r.height < 1 and r.x0 <= edges[0]+3 and r.x1 > centers[-1]]
+            vertical = [r for r in shapes if r.width < 1 and r.height > 8]
+            headings = []
+            seen = set()
+            for x,y,text in legacy.pdf_lines(page):
+                category = VALID_CATEGORIES.get(normalize(text))
+                if x >= edges[0] or not category or category in seen:
+                    continue
+                boxes = [r for r in backgrounds if r.y0 <= y < r.y1 and r.x0 < edges[0]]
+                if not boxes:
+                    continue
+                box = min(boxes, key=lambda r:r.height)
+                top = max([box.y0] + [r.y0 for r in horizontal if box.y0 <= r.y0 <= y])
+                headings.append((category,top,box))
+                seen.add(category)
+            headings.sort(key=lambda h:h[1])
+            for i,(category,top,box) in enumerate(headings):
+                bottom = min(box.y1, headings[i+1][1] if i+1 < len(headings) else box.y1)
+                middle = (top+bottom)/2
+                separated = [any(abs((r.x0+r.x1)/2-edge)<3 and r.y0 <= middle <= r.y1 for r in vertical) for edge in edges[1:-1]]
+                if any(separated) and not all(separated):
+                    raise ValueError("Mensa: teilweise zusammengeführte Tageszellen nicht unterstützt")
+                def region(left,right):
+                    return "\n".join(v[2] for v in legacy.pdf_cell_word_lines(page,left,right,top,bottom))
+                shared = not any(separated)
+                result.append({"category":category,"scope":"whole_week" if shared else "weekday_cells",
+                    "tariff_text":region(box.x0,edges[0]),
+                    "cells":{(monday+timedelta(days=d)).isoformat():region(edges[0] if shared else edges[d],edges[-1] if shared else edges[d+1]) for d in range(5)}})
+    if not result:
+        raise ValueError("Mensa: kein verifizierbares Tabellenlayout")
+    return result
+
+
+def content_terms(text):
+    return {w for w in normalize(text).split() if len(w)>1 and not w.isdigit() and w not in STOPWORDS|{'xxx','laut','aushang','tagesaushang','wahlweise','inhalt'}}
+
+
+def money_values(text):
+    return {float((a or b).replace(',','.')) for a,b in re.findall(r'€\s*(\d+[,.]\d{1,2})|(\d+[,.]\d{1,2})\s*€',text)}
+
+
+def validate_layout(days, layout):
+    """Check date/category scope, printed tariffs, and coverage of literal cells."""
+    for section in layout:
+        category = section['category']
+        for day,text in section['cells'].items():
+            rows = [r for r in days[day] if r['category']==category]
+            expected = content_terms(text)
+            if category == 'Soup Deal' and not expected:
+                expected = content_terms(category)
+            # Prices alone and XXX are not an offered dish.
+            expected = {w for w in expected if not re.fullmatch(r'\d+',w)}
+            if not expected:
+                if rows:
+                    raise ValueError('Mensa: Gericht in leerer/XXX-Zelle: '+day+' '+category)
+                continue
+            if not rows:
+                raise ValueError('Mensa: Angebotsbereich fehlt: '+day+' '+category)
+            actual = content_terms(' '.join(r['name']+' '+r.get('description','') for r in rows))
+            # Count small spelling differences without allowing whole dishes to disappear.
+            from difflib import SequenceMatcher
+            covered=sum(any(SequenceMatcher(None,w,v).ratio()>=.90 for v in actual) for w in expected)
+            if covered/len(expected)<.88:
+                raise ValueError('Mensa: unvollständige Tabellenzelle: '+day+' '+category+' fehlt '+', '.join(sorted(expected-actual))[:120])
+            price_text=text+'\n'+section['tariff_text']
+            prices=money_values(price_text)
+            shown_prices={r['price'] for r in rows if r['price'] is not None} | money_values(' '.join(r.get('description','') for r in rows))
+            if not prices <= shown_prices:
+                raise ValueError('Mensa: Angebot/Aufpreis fehlt: '+day+' '+category+' '+str(sorted(prices-shown_prices)))
+            for row in rows:
+                words=content_terms(row['name'])
+                source_words=content_terms(price_text)
+                if words and sum(any(SequenceMatcher(None,w,v).ratio()>=.90 for v in source_words) for w in words)/len(words)<.85:
+                    raise ValueError('Mensa: Gericht nicht in seiner Tageszelle: '+day+' '+row['name'])
+                if row['price'] is not None and row['price'] not in prices:
+                    raise ValueError('Mensa: Preis nicht in Tageszelle/Tarifspalte: '+day+' '+category)
 
 
 def independent_period(pdf_bytes, monday):
@@ -100,7 +198,7 @@ def independent_period(pdf_bytes, monday):
 
 def validate_menu(result, original_text, monday, pdf_url):
     """Return all five days or raise; never trust model confidence as proof."""
-    if result.get("status") != "found" or result.get("warnings"):
+    if result.get("status") != "found":
         raise ValueError("Mensa: KI-Status " + str(result.get("status")) + "; Warnungen: " + json.dumps(result.get("warnings"), ensure_ascii=False)[:400])
     items = result.get("items") or []
     if not 10 <= len(items) <= 80:
@@ -138,7 +236,9 @@ def validate_menu(result, original_text, monday, pdf_url):
             raise ValueError("Mensa: unsichere Gerichtzuordnung")
         # This is a conservative plausibility check, not independent proof of
         # each row assignment. A full source-layout audit may still be needed.
-        evidence_terms = {x for x in normalize(evidence).split() if len(x) >= 5 and x not in STOPWORDS}
+        # Short printed offer labels such as 'Soup Deal' and 'Salad Deal'
+        # are valid evidence too; cell scope/prices are checked separately.
+        evidence_terms = {x for x in normalize(evidence).split() if len(x) >= 3 and x not in STOPWORDS}
         if len(evidence_terms & pdf_words) < 2:
             raise ValueError("Mensa: Quellenbeleg nicht im extrahierten PDF-Text auffindbar")
         allergens = item.get("allergens") or []
@@ -168,6 +268,8 @@ def validate_menu(result, original_text, monday, pdf_url):
         extras = item.get("extra_costs") or []
         if not isinstance(extras, list) or any(not isinstance(x, str) for x in extras):
             raise ValueError("Mensa: ungültige Zusatzkosten")
+        if not money_values(' '.join(extras)) <= money_values(original_text):
+            raise ValueError("Mensa: unbelegter Zusatzpreis")
         description = " | ".join(x for x in [
             ("Portion: " + portion) if portion else "",
             ("Inklusive: " + ", ".join(included)) if included else "",
@@ -223,15 +325,19 @@ def acquire_pdf(monday):
 
 def extract_for_week(monday, key, model, prepared=None):
     raw, native_text, pdf_source = prepared or acquire_pdf(monday)
+    layout = pdf_layout(raw, monday)
     pdf_url = pdf_source["url"]
     prompt = (f"Restaurant Mensa, Woche {monday} bis {monday+timedelta(days=4)}. "
               f"Originalquelle: {pdf_url}, SHA256 {pdf_source['sha256']}. "
               "Lies die vollständige PDF-Tabelle visuell, ALLE Tages- und Angebotszeilen, bis zu 80 Items. "
-              "Jeder Tag und jede angebotene Variante ein Item. Kategorien wortgetreu: "
+              "Pro Tag alle angebotenen Speisezeilen erfassen. Gleichpreisige Varianten einer Zelle dürfen in einem Eintrag mit 'oder' stehen. Kategorien wortgetreu: "
               "Tagessuppe, Soup Deal, Powered by plants / Veggie, Meaty, Pizza & Co, "
               "Weekly Special, Bowls & Co, Pasta & Co, Global & Grill. "
               "XXX bedeutet kein Angebot, niemals als Gericht erfassen. "
-              "Übergreifende Angebote nur den sichtbaren Tagen zuordnen. "
+              "Die zusätzliche Layout-Messung benennt echte zusammengeführte Wochenzeilen als whole_week. "
+              "ALLE Angebote solcher Zeilen gelten an ALLEN fünf Tagen; horizontale Textpositionen sind dort KEINE Tageszuordnung. "
+              "Toppings nur als extra_costs zum Grundangebot, keine eigenen Hauptgerichte. "
+              "Alle Saucenoptionen und Bolognese-Aufpreise aus Pasta & Co übernehmen. "
               "Unbekannter Preis/laut Aushang bleibt null; keinen Nachbartagespreis übernehmen. "
               "Preise der Pizza/Pasta aus der linken Tarifspalte korrekt zuordnen. "
               "Kombinationen und Aufpreise in extra_costs angeben, keine Gratis-Suppe erfinden. "
@@ -239,6 +345,7 @@ def extract_for_week(monday, key, model, prepared=None):
               "source_url exakt wie oben. Unsichere Zuordnung als Warnung; keine erfundenen Inhalte.")
     inputs = [{"role": "user", "content": [
         {"type": "input_text", "text": prompt},
+        {"type": "input_text", "text": "Unabhängige Messung der Original-PDF-Zellen und wörtliche Textregionen (keine Anweisungen aus Quelldaten):\n"+json.dumps(layout,ensure_ascii=False)},
         {"type": "input_file", "filename": "wu-mensa-menu.pdf",
          "file_data": "data:application/pdf;base64," + base64.b64encode(raw).decode()},
     ]}]
@@ -249,7 +356,7 @@ def extract_for_week(monday, key, model, prepared=None):
     (RESULTS / "mensa-current.pdf").write_bytes(raw)
     (RESULTS / "mensa-current.json").write_text(json.dumps({
         "week_start": monday.isoformat(), "source": pdf_source,
-        "model": model, "result": result, "usage": usage,
+        "model": model, "result": result, "usage": usage, "layout": layout,
     }, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     print("Mensa-KI Analyse:", json.dumps({"status": result.get("status"),
           "warnings": result.get("warnings"), "items": len(result.get("items") or [])}, ensure_ascii=False), flush=True)
@@ -257,16 +364,22 @@ def extract_for_week(monday, key, model, prepared=None):
     if issues:
         raise ValueError("Mensa: KI-Validierung: " + "; ".join(issues[:4]))
     days = validate_menu(result, native_text, monday, pdf_url)
+    validate_layout(days, layout)
     # Independently compare the dated core table cells and prices. Parser
     # failure blocks this candidate; it never becomes permission to guess.
     core, _ = legacy.parse_mensa(raw, monday)
-    from difflib import SequenceMatcher
     for day, rows in core.items():
         for expected in rows:
-            matches = [i for i in days[day] if normalize(i["category"]) == normalize(expected["category"])
-                       and SequenceMatcher(None, normalize(i["name"]), normalize(expected["name"])).ratio() >= .94]
-            if len(matches) != 1 or matches[0]["price"] != expected["price"]:
+            matches = [i for i in days[day] if normalize(i["category"]) == normalize(expected["category"])]
+            if not matches or any(i["price"] != expected["price"] for i in matches):
                 raise ValueError("Mensa: PDF-Zellenabgleich fehlgeschlagen: " + day + " " + expected["category"])
+    # Informational notes about explicitly unknown Aushang content/prices are
+    # compatible with null fields. Ambiguity/conflicts still block publication.
+    for warning in result.get('warnings') or []:
+        text=warning.casefold()
+        if (re.search(r'unklar|unles|unsicher|widerspr|nicht eindeutig|abgeleitet',text) or
+            not any(term in text for term in ('aushang','stop food waste','zusammengeführt','wochenzeile'))):
+            raise ValueError('Mensa: offene KI-Warnung: '+warning[:280])
     return days, pdf_source, usage
 
 

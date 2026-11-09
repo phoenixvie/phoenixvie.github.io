@@ -16,6 +16,25 @@ MON = date(2026, 11, 9)
 
 
 class RefreshTests(unittest.TestCase):
+    def test_merged_weekly_row_requires_all_offers_and_prices_each_day(self):
+        days={(MON+timedelta(days=i)).isoformat():[
+            {'category':'Bowls & Co','name':'Bowl Wrap Salad','price':7.9,'description':'Special Topping +2,00 €; Fleisch Topping +2,50 €'},
+            {'category':'Bowls & Co','name':'Salad Deal','price':4.25,'description':''}] for i in range(5)}
+        layout=[{'category':'Bowls & Co','scope':'whole_week','tariff_text':'',
+                 'cells':{day:'Bowl Wrap Salad € 7,90 Special Topping € 2,00 Fleisch Topping € 2,50 Salad Deal € 4,25' for day in days}}]
+        mensa.validate_layout(days,layout)
+        bad=copy.deepcopy(days)
+        bad['2026-11-11'].pop()
+        with self.assertRaisesRegex(ValueError,'fehlt'):
+            mensa.validate_layout(bad,layout)
+        bad=copy.deepcopy(days)
+        bad['2026-11-10'][0]['price']=8.2
+        with self.assertRaises(ValueError):
+            mensa.validate_layout(bad,layout)
+        soup={day:[{'category':'Soup Deal','name':'Soup Deal – Inhalt laut Tagesaushang','price':4.25,'description':''}] for day in days}
+        mensa.validate_layout(soup,[{'category':'Soup Deal','scope':'whole_week','tariff_text':'Soup Deal € 4,25',
+                                    'cells':{day:'laut Tagesaushang' for day in days}}])
+
     def test_campus_explicit_owner_tariffs_and_unknown_category(self):
         days = {str(MON): [legacy.make_item('Fleischgericht mit Reis', None, 'Menü 1'),
                           legacy.make_item('Gemüsegericht mit Reis', 99, 'Menü 2'),
