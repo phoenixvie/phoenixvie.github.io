@@ -122,7 +122,7 @@ def pdf_layout(raw, monday):
 
 
 def content_terms(text):
-    return {w for w in normalize(text).split() if len(w)>1 and not w.isdigit() and w not in STOPWORDS|{'xxx','laut','aushang','tagesaushang','wahlweise'}}
+    return {w for w in normalize(text).split() if len(w)>1 and not w.isdigit() and w not in STOPWORDS|{'xxx','laut','aushang','tagesaushang','wahlweise','inhalt'}}
 
 
 def money_values(text):

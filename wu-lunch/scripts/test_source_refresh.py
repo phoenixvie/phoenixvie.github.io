@@ -31,6 +31,9 @@ class RefreshTests(unittest.TestCase):
         bad['2026-11-10'][0]['price']=8.2
         with self.assertRaises(ValueError):
             mensa.validate_layout(bad,layout)
+        soup={day:[{'category':'Soup Deal','name':'Soup Deal – Inhalt laut Tagesaushang','price':4.25,'description':''}] for day in days}
+        mensa.validate_layout(soup,[{'category':'Soup Deal','scope':'whole_week','tariff_text':'Soup Deal € 4,25',
+                                    'cells':{day:'laut Tagesaushang' for day in days}}])
 
     def test_campus_explicit_owner_tariffs_and_unknown_category(self):
         days = {str(MON): [legacy.make_item('Fleischgericht mit Reis', None, 'Menü 1'),
