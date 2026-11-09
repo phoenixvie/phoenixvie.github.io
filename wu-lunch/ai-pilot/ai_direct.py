@@ -232,9 +232,9 @@ def read_text(response):
         raise ValueError("API hat keinen JSON-Ausgabetext zurückgegeben")
     return "".join(fragments)
 
-def call_model(key, model, inputs, timeout=160):
+def call_model(key, model, inputs, timeout=160, max_output_tokens=11500):
     body={"model":model,"store":False,"instructions":SYSTEM,
-          "input":inputs,"max_output_tokens":11500,
+          "input":inputs,"max_output_tokens":max_output_tokens,
           "text":{"format":{"type":"json_schema","name":"lunch_menu_extraction",
                             "strict":True,"schema":SCHEMA}}}
     resp=SESSION.post("https://api.openai.com/v1/responses",
@@ -252,7 +252,8 @@ def validate(result, sources, week_start, restaurant):
     allowed_urls={x["url"] for x in sources if x.get("fetched")}
     problems=[]
     seen=set()
-    if len(result["items"])>55:problems.append("Über 55 Gerichte: Ausgabe gekürzt/verdächtig")
+    limit = 80 if restaurant == "mensa" else 55
+    if len(result["items"])>limit:problems.append(f"Über {limit} Gerichte: Ausgabe gekürzt/verdächtig")
     for n,item in enumerate(result["items"]):
         prefix=f"Eintrag {n+1}"
         if item["source_url"] not in allowed_urls:problems.append(prefix+": unbekannte Quelle")

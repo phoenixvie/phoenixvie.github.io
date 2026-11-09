@@ -2,11 +2,6 @@ name: WU Lunch Android APK
 
 on:
   workflow_dispatch:
-  push:
-    branches: [master]
-    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-android.yml']
-  pull_request:
-    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-android.yml']
 
 permissions:
   contents: read
