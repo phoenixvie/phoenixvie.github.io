@@ -6,7 +6,7 @@
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
-    "test": "node --experimental-strip-types --test src/data.test.mjs scripts/preview-native.test.mjs",
+    "test": "node --experimental-strip-types --test src/data.test.mjs scripts/preview-native.test.mjs scripts/pdf.test.mjs",
     "check": "npm run test && tsc --noEmit && expo export --platform android",
     "bundle:preview": "node scripts/bundle-preview.mjs",
     "pretest": "npm run bundle:preview",

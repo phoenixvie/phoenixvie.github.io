@@ -3,6 +3,7 @@ import {ActivityIndicator, BackHandler, Linking, Modal, Pressable, Share, Status
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {previewHtml} from './src/previewHtml';
+import {encodePdf, pdfViewerHtml} from './src/pdfViewer';
 
 const baseUrl = 'https://phoenixvie.github.io/wu-lunch-app/preview/';
 const htmlSource = {html: previewHtml, baseUrl};
@@ -16,10 +17,29 @@ function openExternal(url: string) {
 function AppContent() {
   const main = useRef<WebView<{}>>(null);
   const browser = useRef<WebView<{}>>(null);
-  const [page, setPage] = useState<{url: string; title: string} | null>(null);
+  const [page, setPage] = useState<{url: string; title: string; loading?: boolean; pdf?: string} | null>(null);
+  const sourceRequest = useRef(0);
   const [canGoBack, setCanGoBack] = useState(false);
   const [failed, setFailed] = useState(false);
-  const closePage = () => {setPage(null); setCanGoBack(false); setFailed(false);};
+  const closePage = () => {sourceRequest.current++; setPage(null); setCanGoBack(false); setFailed(false);};
+  const openSource = async (url: string, title: string) => {
+    const request = ++sourceRequest.current;
+    setFailed(false); setCanGoBack(false); setPage({url, title, loading:true});
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      // Some restaurant endpoints return HTML for HEAD but a PDF for GET.
+      const response = await fetch(url, {signal:controller.signal, headers:{'Cache-Control':'no-cache'}});
+      let pdf: string | undefined;
+      if (response.ok && (response.headers.get('content-type') || '').includes('application/pdf')) {
+        const bytes = new Uint8Array(await response.arrayBuffer());
+        pdf = pdfViewerHtml(encodePdf(bytes));
+      }
+      if (request === sourceRequest.current) setPage({url, title, pdf});
+    } catch {
+      if (request === sourceRequest.current) setPage({url, title});
+    } finally {clearTimeout(timeout);}
+  };
   const browserBack = () => {if (canGoBack) browser.current?.goBack(); else closePage();};
   useEffect(() => {
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -35,7 +55,7 @@ function AppContent() {
       const item = JSON.parse(nativeEvent.data);
       if (item.type === 'open-source') {
         const url = webUrl(item.url);
-        if (url) {setFailed(false); setCanGoBack(false); setPage({url, title: typeof item.title === 'string' ? item.title : 'Restaurant'});}
+        if (url) void openSource(url, typeof item.title === 'string' ? item.title : 'Restaurant');
       } else if (item.type === 'open-external' && typeof item.url === 'string') openExternal(item.url);
       else if (item.type === 'share' && typeof item.text === 'string') Share.share({message: item.text}).catch(() => {});
       else if (item.type === 'exit') BackHandler.exitApp();
@@ -57,7 +77,7 @@ function AppContent() {
           <Text style={styles.title} numberOfLines={1}>{page?.title}</Text>
           <Pressable accessibilityLabel="Restaurantseite schließen" onPress={closePage} style={styles.back}><Text style={styles.backText}>Schließen</Text></Pressable>
         </View>
-        {page ? <WebView<{}> ref={browser} source={{uri: page.url}} style={styles.web} originWhitelist={['http://*', 'https://*']}
+        {page?.loading ? <View style={[styles.web,{justifyContent:'center'}]}><ActivityIndicator color="#087cf4" /></View> : page ? <WebView<{}> ref={browser} source={page.pdf ? {html:page.pdf,baseUrl} : {uri: page.url}} style={styles.web} originWhitelist={['*']}
           startInLoadingState renderLoading={() => <View style={styles.loader}><ActivityIndicator color="#087cf4" /></View>}
           onNavigationStateChange={state => setCanGoBack(state.canGoBack)} onError={() => setFailed(true)}
           setSupportMultipleWindows={false} onShouldStartLoadWithRequest={request => {
