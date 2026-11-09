@@ -100,6 +100,23 @@ jobs:
           result=$?
           echo "exit_code=$result" >> "$GITHUB_OUTPUT"
           exit 0
+      - name: Neues oder geändertes Mensa-PDF vollständig mit Luna prüfen
+        if: steps.guard.outputs.skip == 'false'
+        continue-on-error: true
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
+      - name: Mensa-Original und KI-Kandidat zur Prüfung sichern
+        if: always() && steps.guard.outputs.skip == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mensa-source-and-candidate
+          path: wu-lunch/ai-pilot/results/mensa-current.*
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Karma Food und Finn – Originalquelle sicher aktualisieren
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
@@ -130,15 +147,6 @@ jobs:
           pip install 'playwright>=1.50,<2'
           python -m playwright install --with-deps chromium
           python wu-lunch/scripts/update_topf_browser.py
-      - name: Neues oder geändertes Mensa-PDF vollständig mit Luna prüfen
-        if: steps.guard.outputs.skip == 'false'
-        continue-on-error: true
-        shell: bash
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          set -euo pipefail
-          python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
       - name: Luna prüft jede neue/geänderte Mittagsspeisekarte
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
