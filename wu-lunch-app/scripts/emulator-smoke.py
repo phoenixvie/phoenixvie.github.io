@@ -1,5 +1,6 @@
 import re
 import subprocess
+import sys
 import time
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -21,14 +22,27 @@ def wait_for(*labels):
     (proof / 'failure.xml').write_text(last)
     raise AssertionError('Missing screen labels: ' + str(labels))
 def tap(label):
-    xml = ET.fromstring(snapshot())
-    node = next(n for n in xml.iter('node') if n.get('text') == label or n.get('content-desc') == label)
-    x1, y1, x2, y2 = map(int, re.findall(r'\d+', node.get('bounds')))
-    adb('shell', 'input', 'tap', str((x1+x2)//2), str((y1+y2)//2))
+    for _ in range(6):
+        xml = ET.fromstring(snapshot())
+        nodes = [n for n in xml.iter('node') if n.get('clickable') == 'true' and (n.get('text') == label or n.get('content-desc') == label or n.get('text', '').startswith(label + ' '))]
+        for node in nodes:
+            x1, y1, x2, y2 = map(int, re.findall(r'\d+', node.get('bounds')))
+            if x2 > x1 and y2 > y1:
+                adb('shell', 'input', 'tap', str((x1+x2)//2), str((y1+y2)//2))
+                return
+        adb('shell', 'input', 'swipe', '540', '1450', '540', '500', '250')
+    raise AssertionError('No visible button for ' + label)
 def capture(name):
     (proof / (name+'.xml')).write_text(snapshot())
     with (proof / (name+'.png')).open('wb') as out:
         subprocess.run(['adb', 'exec-out', 'screencap', '-p'], stdout=out, check=True)
+def failure(kind, value, traceback):
+    try:
+        capture('failure')
+        (proof / 'logcat.txt').write_text(adb('logcat', '-d', '-t', '500'))
+    finally:
+        sys.__excepthook__(kind, value, traceback)
+sys.excepthook = failure
 
 adb('install', '-r', 'android/app/build/outputs/apk/release/WU-Food-0.2.0.apk')
 adb('shell', 'am', 'start', '-n', 'at.startit.wulunch/.MainActivity')
@@ -37,10 +51,24 @@ capture('01-list')
 tap('WU Mensa')
 wait_for('Weiter', 'Zurück', 'Montag')
 capture('02-menu')
+tap('Zurück')
+wait_for("L'Osteria", 'Weiter')
+tap('Weiter')
+wait_for('WU Mensa', 'Weiter')
+tap('Restaurantwebseite')
+wait_for('Schließen')
+time.sleep(3)
+capture('05-source')
+tap('Schließen')
+wait_for('Kontakt', 'Weiter')
 tap('Kontakt')
 wait_for('ANRUFEN', 'MAIL', 'WEBSEITE', 'Öffnungszeiten')
 capture('03-contact')
 tap('Karte')
 wait_for('In Google Maps öffnen')
 capture('04-map')
+adb('shell', 'input', 'keyevent', 'KEYCODE_HOME')
+adb('shell', 'input', 'swipe', '540', '1700', '540', '300', '300')
+time.sleep(2)
+capture('06-launcher')
 print('Installed APK passed list, menu, contact and map smoke checks.')
