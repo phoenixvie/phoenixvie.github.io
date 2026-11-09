@@ -21,6 +21,17 @@ kontrolliert Tageszellen, Wochenangebote, Preise und Aufpreise sowie die
 Vollständigkeit. Unklare Zuordnung bleibt gesperrt. Original und KI-Kandidat
 stehen 14 Tage im Actions-Artefakt `mensa-source-and-candidate` bereit.
 
+`data/mensa-ai-candidate.json` hält die unveränderte Modellantwort getrennt von
+den veröffentlichten Menüs. Sie wird nur bei passender Woche, Quell-URL,
+Datei-Prüfsumme, Modell- und Extraktionsversion erneut verwendet und durchläuft
+die vollständige aktuelle Freigabeprüfung. Das spart erneute Modellaufrufe bei
+reinen Prüferkorrekturen. Ein Kandidat ist niemals allein eine Freigabe.
+Niedrige Konfidenz ist nur bei ausdrücklich unbestimmten Originalhinweisen
+(„laut Aushang“, „Stop Food Waste Day“ ohne Speise/Preis) zulässig; konkrete
+unsichere Gerichte bleiben gesperrt. Fehlende Speisen oder Preise werden nicht
+ergänzt. Der bedingte Smart-Menü-Tarif ist ein eigener Eintrag für den „Deal des
+Tages“, kein Aufpreis/Gratis-Upgrade zu jedem Hauptgericht.
+
 Der Agent ruft die vorhandene `ai-pilot/ai_direct.py`-Extraktion mit den direkt
 heruntergeladenen Originalquellen auf. Er verwendet die GitHub-Actions-Secret
 `OPENAI_API_KEY` und standardmäßig `gpt-6-luna`. **Ohne Secret werden

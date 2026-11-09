@@ -16,6 +16,50 @@ MON = date(2026, 11, 9)
 
 
 class RefreshTests(unittest.TestCase):
+    def test_notice_confidence_never_allows_an_uncertain_real_dish(self):
+        url='https://www.wumensa.at/menuplan-deutsch/'
+        rows=[]
+        for i in range(5):
+            day=(MON+timedelta(days=i)).isoformat()
+            for name,category,price,confidence in [('Faschierter Braten mit Reis','Meaty',6.4,'high'),('Soup Deal laut Tagesaushang','Soup Deal',4.25,'medium')]:
+                rows.append({'date':day,'name':name,'category':category,'price_eur':price,'confidence':confidence,
+                             'source_url':url,'evidence_excerpt':name,'allergens':[],'extra_costs':[]})
+        result={'status':'found','warnings':[],'items':rows}
+        text='Faschierter Braten mit Reis € 6,40 Soup Deal laut Tagesaushang € 4,25'
+        days=mensa.validate_menu(result,text,MON,url)
+        self.assertTrue(days[str(MON)][1]['details_unpublished'])
+        self.assertEqual(days[str(MON)][1]['ai_confidence'],'medium')
+        rows[0]['confidence']='medium'
+        with self.assertRaisesRegex(ValueError,'unsichere Gerichtzuordnung'):
+            mensa.validate_menu(result,text,MON,url)
+
+    def test_quarantined_candidate_must_match_week_bytes_model_and_prompt(self):
+        source={'url':'https://www.wumensa.at/menuplan-deutsch/','sha256':'verified-bytes'}
+        record={'week_start':str(MON),'source':source,'model':'gpt-6-luna','extraction_version':mensa.EXTRACTION_VERSION,
+                'result':{},'validated_by':mensa.REVIEW_VERSION}
+        with TemporaryDirectory() as tmp:
+            path=Path(tmp)/'candidate.json';path.write_text(json.dumps(record),encoding='utf-8')
+            with patch.object(mensa,'CANDIDATE',path):
+                self.assertIsNotNone(mensa.cached_candidate(MON,source,'gpt-6-luna'))
+                self.assertIsNone(mensa.cached_candidate(MON,{**source,'sha256':'changed'},'gpt-6-luna'))
+                self.assertIsNone(mensa.cached_candidate(MON+timedelta(days=7),source,'gpt-6-luna'))
+                self.assertIsNone(mensa.cached_candidate(MON,source,'other-model'))
+
+    def test_compound_spelling_needs_an_attested_other_component(self):
+        self.assertTrue(mensa.same_source_word('erdäpfel','petersilerdäpfel',{'petersil','erdäpfel'}))
+        self.assertFalse(mensa.same_source_word('erdäpfel','karottenerdäpfel',{'erdäpfel'}))
+        self.assertTrue(mensa.same_source_word('cremiger','cremigem'))
+        self.assertFalse(mensa.same_source_word('schweinsbraten','rindsbraten'))
+
+    def test_changed_verified_pdf_can_remove_offers_but_same_pdf_cannot_shrink(self):
+        days={(MON+timedelta(days=i)).isoformat():[{'name':'Verified new dish'}] for i in range(5)}
+        old={day:rows+[{'name':'Removed in the new original PDF'}] for day,rows in days.items()}
+        data={'restaurants':[{'id':'mensa','days':old}],'sources':[{'id':'mensa'}]}
+        status={'mensa_luna_audit':{'source_sha256':'old'}}
+        mensa.apply_candidate(copy.deepcopy(data),copy.deepcopy(status),days,MON,{'sha256':'new'}, {},'gpt-6-luna')
+        with self.assertRaisesRegex(ValueError,'löschen'):
+            mensa.apply_candidate(copy.deepcopy(data),copy.deepcopy(status),days,MON,{'sha256':'old'}, {},'gpt-6-luna')
+
     def test_pdf_category_continues_into_an_unlabelled_subrow(self):
         doc=fitz.open();p=doc.new_page(width=1050,height=590)
         for i,day in enumerate(legacy.WEEKDAYS):
