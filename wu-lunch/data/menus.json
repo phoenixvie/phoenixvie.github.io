@@ -2,7 +2,7 @@
   "weekStart": "2026-11-09",
   "weekEnd": "2026-11-13",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-09T20:26:06+01:00",
+  "checkedAt": "2026-11-09T20:34:43+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -1004,7 +1004,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Shahi Paneer Veggie Curry",
@@ -1017,7 +1017,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Kurkuma Linsen Dal",
@@ -1030,7 +1030,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           }
         ],
         "2026-11-10": [
@@ -1045,7 +1045,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Cremiges Erbsen Minz Curry",
@@ -1058,7 +1058,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Chana Linsen Dal",
@@ -1071,7 +1071,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           }
         ],
         "2026-11-11": [
@@ -1086,7 +1086,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Baingan Bharta Style Curry",
@@ -1099,7 +1099,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Protein Power Chili mit Quinoa",
@@ -1112,7 +1112,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           }
         ],
         "2026-11-12": [
@@ -1127,7 +1127,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Schmorgemüse Quinoa Bowl mit Hummus Dip",
@@ -1140,7 +1140,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Karotten Linsen Dal",
@@ -1153,7 +1153,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           }
         ],
         "2026-11-13": [
@@ -1168,7 +1168,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Cremiges Korma Veggie Curry",
@@ -1181,7 +1181,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           },
           {
             "name": "Mama Masala Linsen Dal",
@@ -1194,7 +1194,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "fb2244f671396d5d1dc11f73e60571f24d0e729316d2f2362e85c9d28eee7361"
+            "source_sha256": "3afae87b09f0031cbd00eedf205abe32e623afa2b8d0d5f56c81c28bc28f376e"
           }
         ]
       },
@@ -1853,7 +1853,7 @@
           }
         ]
       },
-      "browser_verified_at": "2026-11-09T20:28:06+01:00"
+      "browser_verified_at": "2026-11-09T20:36:32+01:00"
     },
     {
       "id": "omakueche",
