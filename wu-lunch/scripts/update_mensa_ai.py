@@ -25,7 +25,7 @@ DATA = ROOT / "data" / "menus.json"
 JS = ROOT / "data.js"
 STATUS = ROOT / "status.json"
 TZ = ZoneInfo("Europe/Vienna")
-REVIEW_VERSION = "ai-pdf-2-content-hash"
+REVIEW_VERSION = "ai-pdf-3-diagnostics"
 SOURCE_FILE = ROOT / "ai-pilot" / "ai_direct.py"
 
 spec = importlib.util.spec_from_file_location("mensa_ai_direct", SOURCE_FILE)
@@ -101,7 +101,7 @@ def independent_period(pdf_bytes, monday):
 def validate_menu(result, original_text, monday, pdf_url):
     """Return all five days or raise; never trust model confidence as proof."""
     if result.get("status") != "found" or result.get("warnings"):
-        raise ValueError("Mensa: KI lieferte keinen eindeutigen Plan oder offene Warnungen")
+        raise ValueError("Mensa: KI-Status " + str(result.get("status")) + "; Warnungen: " + json.dumps(result.get("warnings"), ensure_ascii=False)[:400])
     items = result.get("items") or []
     if not 10 <= len(items) <= 80:
         raise ValueError("Mensa: ungewöhnlich wenige oder viele Gerichte")
@@ -243,6 +243,16 @@ def extract_for_week(monday, key, model, prepared=None):
          "file_data": "data:application/pdf;base64," + base64.b64encode(raw).decode()},
     ]}]
     result, usage = ai.call_model(key, model, inputs, max_output_tokens=22000)
+    # Retain the actual candidate and exact downloaded bytes for inspection.
+    # Public restaurant content only; no credentials or request headers.
+    RESULTS.mkdir(parents=True, exist_ok=True)
+    (RESULTS / "mensa-current.pdf").write_bytes(raw)
+    (RESULTS / "mensa-current.json").write_text(json.dumps({
+        "week_start": monday.isoformat(), "source": pdf_source,
+        "model": model, "result": result, "usage": usage,
+    }, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+    print("Mensa-KI Analyse:", json.dumps({"status": result.get("status"),
+          "warnings": result.get("warnings"), "items": len(result.get("items") or [])}, ensure_ascii=False), flush=True)
     issues = ai.validate(result, [pdf_source], monday, "mensa")
     if issues:
         raise ValueError("Mensa: KI-Validierung: " + "; ".join(issues[:4]))
