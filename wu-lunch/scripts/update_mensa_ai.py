@@ -103,7 +103,7 @@ def validate_menu(result, original_text, monday, pdf_url):
     if result.get("status") != "found" or result.get("warnings"):
         raise ValueError("Mensa: KI lieferte keinen eindeutigen Plan oder offene Warnungen")
     items = result.get("items") or []
-    if not 10 <= len(items) <= 55:
+    if not 10 <= len(items) <= 80:
         raise ValueError("Mensa: ungewöhnlich wenige oder viele Gerichte")
     days = {(monday + timedelta(days=i)).isoformat(): [] for i in range(5)}
     seen = set()
@@ -226,7 +226,7 @@ def extract_for_week(monday, key, model, prepared=None):
     pdf_url = pdf_source["url"]
     prompt = (f"Restaurant Mensa, Woche {monday} bis {monday+timedelta(days=4)}. "
               f"Originalquelle: {pdf_url}, SHA256 {pdf_source['sha256']}. "
-              "Lies die vollständige PDF-Tabelle visuell, ALLE Tages- und Angebotszeilen. "
+              "Lies die vollständige PDF-Tabelle visuell, ALLE Tages- und Angebotszeilen, bis zu 80 Items. "
               "Jeder Tag und jede angebotene Variante ein Item. Kategorien wortgetreu: "
               "Tagessuppe, Soup Deal, Powered by plants / Veggie, Meaty, Pizza & Co, "
               "Weekly Special, Bowls & Co, Pasta & Co, Global & Grill. "
@@ -242,7 +242,7 @@ def extract_for_week(monday, key, model, prepared=None):
         {"type": "input_file", "filename": "wu-mensa-menu.pdf",
          "file_data": "data:application/pdf;base64," + base64.b64encode(raw).decode()},
     ]}]
-    result, usage = ai.call_model(key, model, inputs)
+    result, usage = ai.call_model(key, model, inputs, max_output_tokens=22000)
     issues = ai.validate(result, [pdf_source], monday, "mensa")
     if issues:
         raise ValueError("Mensa: KI-Validierung: " + "; ".join(issues[:4]))
