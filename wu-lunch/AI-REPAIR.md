@@ -1,12 +1,25 @@
 # WU Lunch – automatisierte Qualitätskontrolle und KI-Reparatur
 
-## Betriebsmodus (Stand: 6. November 2026; 11 Restaurants)
+## Betriebsmodus (Stand: 9. November 2026; 11 Restaurants)
 
-Das werktägliche GitHub Actions-Importverfahren bleibt Hauptdatenquelle. Nach den
-bestehenden Parsern und dem **Playwright-Import aller Topf-&-Deckel-Tabs** wird
-um **11:15 Wiener Zeit** beziehungsweise bei manuellem Workflowstart
-die separate Mensa-PDF-KI und danach der begrenzte Restaurant-Repair-Agent
-ausgeführt.
+GitHub Actions prüft Montag stündlich 06:15–18:15, Dienstag–Freitag
+08:15–12:15 und Samstag 08:15–18:15 (Europe/Vienna; Verzögerungen möglich).
+Nach den Parsern prüft Mensa bei jedem freigegebenen Lauf das Original-PDF.
+Danach folgen Finn/Karma, der zeitlich begrenzte Topf-Browserimport und der
+Restaurant-Repair-Agent. Die zusätzliche 11-Uhr-Sperre für Mensa entfällt.
+
+Mensa lädt die Originaldatei bei jeder Prüfung erneut. Ein erfolgreicher Cache
+gilt nur für denselben PDF-Hash, dieselbe Woche, Prüfversion und unveränderte
+veröffentlichte Gerichte. Nur dann entfällt der bezahlte Modellaufruf. Finn
+prüft ebenfalls die Bildbytes und nicht nur die Bild-URL. Fehlgeschlagene
+Versuche sind pro Inhalt/Prüfversion/Woche auf einen Versuch am Tag begrenzt.
+
+Mensa bekommt zusätzlich zum Original-PDF wörtliche Zelltexte und gemessene
+Tabellenlinien. Zusammengeführte Wochenzeilen dürfen nicht anhand der
+horizontalen Textposition einzelnen Tagen zugeordnet werden. Die Freigabe
+kontrolliert Tageszellen, Wochenangebote, Preise und Aufpreise sowie die
+Vollständigkeit. Unklare Zuordnung bleibt gesperrt. Original und KI-Kandidat
+stehen 14 Tage im Actions-Artefakt `mensa-source-and-candidate` bereit.
 
 Der Agent ruft die vorhandene `ai-pilot/ai_direct.py`-Extraktion mit den direkt
 heruntergeladenen Originalquellen auf. Er verwendet die GitHub-Actions-Secret
@@ -29,11 +42,12 @@ keine KI-Anfragen durchgeführt**; der reguläre Import bleibt bestehen.
 | Karma Food (Messe/Prater) | Datierte HTML-Tage und offizielle Preis-PDF | HTML/PDF-Abgleich, getrennte Hauptgericht-/Special-/Lunch-Combo-Preise; keine Veröffentlichung für falsche Woche |
 | Finn | Offizielle Shopify-Wochenkarte als Bild | Erst richtige ISO-KW, Bildversion und Datum prüfen; dann zwei unabhängige Bildanalysen mit kompletter Übereinstimmung, sonst keine Veröffentlichung |
 
-Pro normalem Lauf werden höchstens **zwei** HTML-Restaurants mit Luna analysiert.
+Pro normalem Lauf werden höchstens **sieben** HTML-Restaurants mit Luna analysiert.
 Dringende Fehler werden priorisiert, wiederkehrende Fehler rotiert, übrige Quellen
 stichprobenartig geprüft. Mensa, Topf & Deckel, Karma Food und Finn folgen ihren dedizierten Abläufen;
-die kostenpflichtigen Mensa-PDF-Aufrufe sind zusätzlich begrenzt auf die
-noch nicht erfolgreich verifizierte Woche.
+die kostenpflichtigen Mensa-PDF-Aufrufe sind an neue/geänderte Originaldateien
+oder eine geänderte Prüfversion gebunden. Die Campus-Tarife 13,90 € (Fleisch)
+und 12,90 € (vegetarisch) sind ausdrücklich Betreiberangaben (`admin_tariff`).
 
 ### Automatische Änderung – bewusst eng begrenzt
 
