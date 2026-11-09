@@ -197,6 +197,7 @@ jobs:
           # Nie konflikthafte JSON-Dateien blind zusammenführen oder force-pushen.
           for attempt in 1 2 3; do
             git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
+            if [[ -f wu-lunch/data/mensa-ai-candidate.json ]]; then git add wu-lunch/data/mensa-ai-candidate.json; fi
             if [[ -f wu-lunch/data/repair-report.json ]]; then git add wu-lunch/data/repair-report.json; fi
             if git diff --cached --quiet; then
               echo "Keine Datenänderungen"
