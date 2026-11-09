@@ -25,6 +25,7 @@ def tap(label):
     for _ in range(6):
         xml = ET.fromstring(snapshot())
         nodes = [n for n in xml.iter('node') if n.get('clickable') == 'true' and (n.get('text') == label or n.get('content-desc') == label or n.get('text', '').startswith(label + ' '))]
+        nodes.sort(key=lambda n: 0 if n.get('text') == label or n.get('content-desc') == label else 1)
         for node in nodes:
             x1, y1, x2, y2 = map(int, re.findall(r'\d+', node.get('bounds')))
             if x2 > x1 and y2 > y1:
@@ -56,10 +57,10 @@ wait_for("L'Osteria", 'Weiter')
 tap('Weiter')
 wait_for('WU Mensa', 'Weiter')
 tap('Restaurantwebseite')
-wait_for('Schließen')
+wait_for('Restaurantseite schließen')
 time.sleep(3)
 capture('05-source')
-tap('Schließen')
+tap('Restaurantseite schließen')
 wait_for('Kontakt', 'Weiter')
 tap('Kontakt')
 wait_for('ANRUFEN', 'MAIL', 'WEBSEITE', 'Öffnungszeiten')
