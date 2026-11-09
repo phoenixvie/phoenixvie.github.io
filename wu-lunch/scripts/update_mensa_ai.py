@@ -25,7 +25,7 @@ DATA = ROOT / "data" / "menus.json"
 JS = ROOT / "data.js"
 STATUS = ROOT / "status.json"
 TZ = ZoneInfo("Europe/Vienna")
-REVIEW_VERSION = "ai-pdf-4-layout"
+REVIEW_VERSION = "ai-pdf-5-continuations"
 SOURCE_FILE = ROOT / "ai-pilot" / "ai_direct.py"
 
 spec = importlib.util.spec_from_file_location("mensa_ai_direct", SOURCE_FILE)
@@ -52,6 +52,7 @@ VALID_CATEGORIES = {
     "pasta": "Pasta",
     "pasta co": "Pasta & Co",
     "weekly special": "Weekly Special",
+    "menüoption": "Menüoption",
     "ausgabe 1 2": "Ausgabe 1+2",
     "ausgabe 3 4": "Ausgabe 3+4",
     "ausgabe 5": "Ausgabe 5",
@@ -103,9 +104,20 @@ def pdf_layout(raw, monday):
                 top = max([box.y0] + [r.y0 for r in horizontal if box.y0 <= r.y0 <= y])
                 headings.append((category,top,box))
                 seen.add(category)
+            # The conditional Smart-Menü banner is its own merged row, not
+            # an included service of every adjacent main dish.
+            for x,y,text in legacy.pdf_lines(page):
+                if re.search(r'Smart\s*Men[üu]',text,re.I):
+                    boxes=[r for r in backgrounds if r.y0<=y<r.y1]
+                    if boxes and 'Menüoption' not in seen:
+                        box=min(boxes,key=lambda r:r.height)
+                        headings.append(('Menüoption',box.y0,box))
+                        seen.add('Menüoption')
             headings.sort(key=lambda h:h[1])
             for i,(category,top,box) in enumerate(headings):
-                bottom = min(box.y1, headings[i+1][1] if i+1 < len(headings) else box.y1)
+                # A category can continue across differently shaded subrows
+                # without repeating its left label (e.g. Spezialpasta).
+                bottom = headings[i+1][1] if i+1 < len(headings) else box.y1
                 middle = (top+bottom)/2
                 separated = [any(abs((r.x0+r.x1)/2-edge)<3 and r.y0 <= middle <= r.y1 for r in vertical) for edge in edges[1:-1]]
                 if any(separated) and not all(separated):
@@ -122,7 +134,7 @@ def pdf_layout(raw, monday):
 
 
 def content_terms(text):
-    return {w for w in normalize(text).split() if len(w)>1 and not w.isdigit() and w not in STOPWORDS|{'xxx','laut','aushang','tagesaushang','wahlweise','inhalt'}}
+    return {w for w in normalize(text).split() if len(w)>1 and not w.isdigit() and w not in STOPWORDS|{'xxx','laut','aushang','tagesaushang','wahlweise','inhalt','des','um','zum','nur','mach','jetzt'}}
 
 
 def money_values(text):
@@ -332,12 +344,15 @@ def extract_for_week(monday, key, model, prepared=None):
               "Lies die vollständige PDF-Tabelle visuell, ALLE Tages- und Angebotszeilen, bis zu 80 Items. "
               "Pro Tag alle angebotenen Speisezeilen erfassen. Gleichpreisige Varianten einer Zelle dürfen in einem Eintrag mit 'oder' stehen. Kategorien wortgetreu: "
               "Tagessuppe, Soup Deal, Powered by plants / Veggie, Meaty, Pizza & Co, "
-              "Weekly Special, Bowls & Co, Pasta & Co, Global & Grill. "
+              "Weekly Special, Bowls & Co, Pasta & Co, Global & Grill, Menüoption. "
               "XXX bedeutet kein Angebot, niemals als Gericht erfassen. "
               "Die zusätzliche Layout-Messung benennt echte zusammengeführte Wochenzeilen als whole_week. "
               "ALLE Angebote solcher Zeilen gelten an ALLEN fünf Tagen; horizontale Textpositionen sind dort KEINE Tageszuordnung. "
               "Toppings nur als extra_costs zum Grundangebot, keine eigenen Hauptgerichte. "
               "Alle Saucenoptionen und Bolognese-Aufpreise aus Pasta & Co übernehmen. "
+              "Smart Menü ist ein separates bedingtes Wochenangebot: 'Deal des Tages + Suppe + Beilagensalat', "
+              "Kategorie Menüoption, Gesamtpreis aus der Bannerzeile. NICHT einem ungeklärten Hauptgericht zuordnen. "
+              "Allergens enthält ausschließlich einzelne Buchstaben; Variantenhinweise gehören in evidence_excerpt bzw. den Gerichttext. "
               "Unbekannter Preis/laut Aushang bleibt null; keinen Nachbartagespreis übernehmen. "
               "Preise der Pizza/Pasta aus der linken Tarifspalte korrekt zuordnen. "
               "Kombinationen und Aufpreise in extra_costs angeben, keine Gratis-Suppe erfinden. "
@@ -377,6 +392,12 @@ def extract_for_week(monday, key, model, prepared=None):
     # compatible with null fields. Ambiguity/conflicts still block publication.
     for warning in result.get('warnings') or []:
         text=warning.casefold()
+        if ('smart' in text and ('nicht eindeutig' in text or 'nicht sicher' in text) and
+            any(s['category']=='Menüoption' for s in layout) and
+            all(any(r['category']=='Menüoption' and 'deal' in r['name'].casefold() for r in rows) for rows in days.values())):
+            # The generic, conditional offer was verified as a separate row;
+            # uncertainty about its eligible main dish is not a free upgrade.
+            continue
         if (re.search(r'unklar|unles|unsicher|widerspr|nicht eindeutig|abgeleitet',text) or
             not any(term in text for term in ('aushang','stop food waste','zusammengeführt','wochenzeile'))):
             raise ValueError('Mensa: offene KI-Warnung: '+warning[:280])

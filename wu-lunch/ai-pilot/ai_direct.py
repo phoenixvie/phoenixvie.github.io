@@ -98,7 +98,7 @@ ITEM_SCHEMA = obj({
     "price_eur": {"type":["number","null"]},
     "included_items": {"type":"array","items":{"type":"string"}},
     "extra_costs": {"type":"array","items":{"type":"string"}},
-    "allergens": {"type":"array","items":{"type":"string"}},
+    "allergens": {"type":"array","items":{"type":"string","enum":list("ABCDEFGHIJKLMNOPQR")}},
     "energy_kcal": {"type":["number","null"]},
     "source_url": {"type":"string"},
     "evidence_excerpt": {"type":"string"},

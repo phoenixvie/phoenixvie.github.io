@@ -16,6 +16,28 @@ MON = date(2026, 11, 9)
 
 
 class RefreshTests(unittest.TestCase):
+    def test_pdf_category_continues_into_an_unlabelled_subrow(self):
+        doc=fitz.open();p=doc.new_page(width=1050,height=590)
+        for i,day in enumerate(legacy.WEEKDAYS):
+            p.insert_text((250+i*153,80),day.upper(),fontsize=10)
+        p.draw_rect(fitz.Rect(20,100,1030,180),fill=(.8,.8,.8),color=None)
+        p.draw_rect(fitz.Rect(180,180,1030,210),fill=(.6,.6,.6),color=None)
+        p.draw_rect(fitz.Rect(20,210,1030,300),fill=(.8,.8,.8),color=None)
+        p.insert_text((25,140),'Pasta & Co',fontsize=10)
+        p.insert_text((25,250),'Global & Grill',fontsize=10)
+        centers=[(p.search_for(day.upper())[0].x0+p.search_for(day.upper())[0].x1)/2 for day in legacy.WEEKDAYS]
+        for a,b in zip(centers,centers[1:]):
+            x=(a+b)/2
+            p.draw_rect(fitz.Rect(x-.1,100,x+.1,300),fill=(1,1,1),color=None)
+        for i in range(5):
+            p.insert_text((250+i*153,160),'Hausgemachte Pasta',fontsize=9)
+            p.insert_text((250+i*153,200),'Spezialpasta laut Aushang',fontsize=9)
+        layout=mensa.pdf_layout(doc.tobytes(),MON)
+        doc.close()
+        pasta=next(s for s in layout if s['category']=='Pasta & Co')
+        self.assertEqual(pasta['scope'],'weekday_cells')
+        self.assertTrue(all('Spezialpasta' in text for text in pasta['cells'].values()))
+
     def test_merged_weekly_row_requires_all_offers_and_prices_each_day(self):
         days={(MON+timedelta(days=i)).isoformat():[
             {'category':'Bowls & Co','name':'Bowl Wrap Salad','price':7.9,'description':'Special Topping +2,00 €; Fleisch Topping +2,50 €'},
