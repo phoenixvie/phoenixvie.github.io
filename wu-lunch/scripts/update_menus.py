@@ -175,6 +175,18 @@ def make_item(name, price, category, diet="unknown", description="", allergens=N
             "included_soup":tidy(included_soup) if included_soup else None,
             "included_choices":included_choices or []}
 
+def apply_campus_prices(days):
+    """Owner-specified menu tariffs; do not claim website price evidence."""
+    for rows in days.values():
+        for item in rows:
+            category=tidy(item.get("category", "")).casefold()
+            if category in {"menü 1", "menü mit fleisch", "regulär", "fleisch"}:
+                item.update(price=13.90,category="Menü mit Fleisch",diet="meat",price_source="admin_tariff")
+            elif category in {"menü 2", "vegetarisches menü", "vegetarisch", "vegan"}:
+                item.update(price=12.90,category="Vegetarisches Menü",diet="veggie",price_source="admin_tariff")
+    return days
+
+
 def parse_campus(raw,monday):
     lines=html_lines(raw)
     all_text="\n".join(lines)
@@ -196,7 +208,7 @@ def parse_campus(raw,monday):
         result[d.isoformat()]=[make_item(t,None,f"Menü {i+1}") for i,t in enumerate(picks[:2])]
     if sum(len(v) for v in result.values())<4:
         raise ValueError("Campus: zu wenige Speisen erkannt")
-    return result,p
+    return apply_campus_prices(result),p
 
 def parse_glashaus(raw,monday):
     lines=html_lines(raw); whole="\n".join(lines)
@@ -362,6 +374,18 @@ def parse_mensa(raw,monday):
                 for j,(sy,label) in enumerate(boundary):
                     if label not in {"Tagessuppe","Powered by plants / Veggie","Meaty","Global & Grill"}:continue
                     bottom=boundary[j+1][0] if j+1<len(boundary) else page.rect.height
+                    # Category labels are vertically centred in coloured rows,
+                    # not their upper edge. Reading from label y drops the first
+                    # dish lines. Prefer the actual vector row rectangle.
+                    row_top=sy+1
+                    backgrounds=[v["rect"] for v in page.get_drawings()
+                                 if v.get("fill") is not None and v["rect"].height>12
+                                 and v["rect"].x0<left and v["rect"].x1>centers[-1]
+                                 and v["rect"].y0<=sy<v["rect"].y1]
+                    if backgrounds:
+                        row=min(backgrounds,key=lambda r:r.height)
+                        row_top=row.y0
+                        bottom=row.y1
                     # Die Mensa legt einen roten Smart-Menü-Werbebanner direkt
                     # unter „Meaty“. Er ist kein Bestandteil des Tagesgerichts.
                     promo=[y for x,y,labeltext in rows
@@ -373,7 +397,7 @@ def parse_mensa(raw,monday):
                     # Clipping schneidet am Spaltenrand Wörter ab und mischt Nachbarzellen.
                     # Wortzentren statt linkem Zeilenanfang verwenden:
                     # die fünf Tages-Spalten enthalten stark unterschiedlich breite Zeilen.
-                    cell=pdf_cell_word_lines(page,left,right,sy+1,bottom-1)
+                    cell=pdf_cell_word_lines(page,left,right,row_top,bottom-1)
                     if not cell:
                         cell=[(x,y,text) for x,y,text in rows
                               if left-1<=x<right-1 and sy+1<=y<bottom-1]
@@ -382,7 +406,7 @@ def parse_mensa(raw,monday):
                     cost=euros(content)
                     names=[]
                     for _,_,line in cell:
-                        if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line,re.I):continue
+                        if re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,35}",line):continue
                         if re.search(r"Mach den Deal|Smart Menü|Beilagensalat um nur|zu deinem Menü",line,re.I):continue
                         line=re.sub(r"€\s*\d{1,3}[,.]\d{2}|\d{1,3}[,.]\d{2}\s*€?","",line)
                         line=tidy(line)
@@ -396,7 +420,7 @@ def parse_mensa(raw,monday):
     for day_items in result.values():
         for item in day_items:
             title=item["name"]
-            if not title or len(title)>160 or not re.match(r"[A-ZÄÖÜ]",title):
+            if not title or len(title)>160 or not re.match(r'["„“«]?[A-ZÄÖÜ]',title):
                 raise ValueError(f"Mensa: verstümmelter Tabellenzelltext erkannt ({title[:55]!r})")
             if item["category"]=="Tagessuppe" and "suppe" not in title.casefold():
                 raise ValueError(f"Mensa: verdächtige Suppe ({title[:55]!r})")
@@ -929,6 +953,7 @@ def run(today):
     for new_id in ("karmafood", "finn"):
         operations[new_id]=previous.get(new_id, {"state":"not_published", "last_success":None})
     apply_result(data,"omakueche",buffet_days(monday),"recurring")
+    apply_campus_prices(restaurant(data,"campus").get("days",{}))
     operations["omakueche"]={"state":"recurring","last_success":now,"consecutive_failures":0,
                              "note":"Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"}
     for ident in ("mensa","glashaus","campus","baschly","losteria","topfdeckel","gruenehuette","lia"):
@@ -993,6 +1018,14 @@ def run(today):
                 for candidate in list(dict.fromkeys(candidates))[:8]:
                     try:
                         raw=safe_get(candidate,12_000_000)
+                        audit=state.get("mensa_luna_audit",{})
+                        kept=restaurant(data,"mensa").get("days",{})
+                        kept_hash=hashlib.sha256(json.dumps(kept,ensure_ascii=False,sort_keys=True).encode()).hexdigest()
+                        if (audit.get("state") in ("ok","cached") and audit.get("week_start")==monday.isoformat()
+                            and audit.get("source_sha256")==hashlib.sha256(raw).hexdigest()
+                            and audit.get("published_days_sha256")==kept_hash):
+                            parsed=(kept,(monday,monday+timedelta(days=4)))
+                            break
                         parsed=parse_mensa(raw,monday)
                         break
                     except (ValueError,RuntimeError,requests.RequestException) as exc:
@@ -1012,6 +1045,7 @@ def run(today):
                 days,validity=parse_campus(raw,monday)
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
                 preserve_verified_prices(restaurant(data,"campus").get("days",{}),days)
+                apply_campus_prices(days)
                 apply_result(data,"campus",days,"verified",validity)
                 observed_digest=menu_fingerprint(raw)
             elif ident=="baschly":
@@ -1089,6 +1123,8 @@ def run(today):
         status["ai_repair"]=state["ai_repair"]
     if isinstance(state.get("topf_luna_audit"),dict):
         status["topf_luna_audit"]=state["topf_luna_audit"]
+    if isinstance(state.get("mensa_luna_audit"),dict):
+        status["mensa_luna_audit"]=state["mensa_luna_audit"]
     validate_meal_components(data)
     warnings=quality_warnings(data,today)
     status["quality_warnings"]=warnings

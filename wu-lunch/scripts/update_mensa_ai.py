@@ -6,6 +6,7 @@ Mensa menu entries untouched, records the failure, and never guesses prices.
 Requires OPENAI_API_KEY. No API call for an already successfully imported week.
 """
 import argparse
+import base64
 import hashlib
 import importlib.util
 import json
@@ -24,6 +25,7 @@ DATA = ROOT / "data" / "menus.json"
 JS = ROOT / "data.js"
 STATUS = ROOT / "status.json"
 TZ = ZoneInfo("Europe/Vienna")
+REVIEW_VERSION = "ai-pdf-2-content-hash"
 SOURCE_FILE = ROOT / "ai-pilot" / "ai_direct.py"
 
 spec = importlib.util.spec_from_file_location("mensa_ai_direct", SOURCE_FILE)
@@ -47,6 +49,7 @@ VALID_CATEGORIES = {
     "bowls co": "Bowls & Co",
     "pasta": "Pasta",
     "pasta co": "Pasta & Co",
+    "weekly special": "Weekly Special",
     "ausgabe 1 2": "Ausgabe 1+2",
     "ausgabe 3 4": "Ausgabe 3+4",
     "ausgabe 5": "Ausgabe 5",
@@ -59,6 +62,10 @@ STOPWORDS = {"mit", "und", "oder", "euro", "menü", "menu", "der", "die", "das",
 
 def normalize(value):
     return re.sub(r"[^a-z0-9äöüß]+", " ", str(value).casefold()).strip()
+
+
+def days_digest(days):
+    return hashlib.sha256(json.dumps(days, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
 
 
 def independent_period(pdf_bytes, monday):
@@ -109,7 +116,7 @@ def validate_menu(result, original_text, monday, pdf_url):
         pizza_station = VALID_CATEGORIES.get(normalize(item.get("category"))) == "Ausgabe 5"
         if not isinstance(name, str) or not ((pizza_station and name.strip() == "Pizza") or 8 <= len(name.strip()) <= 160):
             raise ValueError("Mensa: beschädigter Gerichtname")
-        if not re.match(r"[A-ZÄÖÜ]", name.strip()):
+        if not re.match(r'["„“«]?[A-ZÄÖÜ]', name.strip()):
             raise ValueError("Mensa: verdächtiger Gerichtbeginn")
         category = VALID_CATEGORIES.get(normalize(item.get("category")))
         if category is None:
@@ -117,7 +124,7 @@ def validate_menu(result, original_text, monday, pdf_url):
         if category.startswith("Ausgabe") and "ausgabe" not in original_text.casefold():
             raise ValueError("Mensa: Ausgabe-Nummer nicht im Original-PDF")
         price = item.get("price_eur")
-        if price is None and category not in ("Tagessuppe", "Pizza", "Pizza & Co", "Pasta", "Pasta & Co", "Ausgabe 5"):
+        if price is None and category not in ("Tagessuppe", "Soup Deal", "Global & Grill", "Pizza", "Pizza & Co", "Pasta", "Pasta & Co", "Ausgabe 5"):
             raise ValueError("Mensa: fehlender Gerichtpreis")
         if price is not None and (not isinstance(price, (int, float)) or isinstance(price, bool) or
             not math.isfinite(price) or not 0 < price <= 150):
@@ -127,6 +134,8 @@ def validate_menu(result, original_text, monday, pdf_url):
         evidence = item.get("evidence_excerpt")
         if not isinstance(evidence, str) or len(evidence.strip()) < 8:
             raise ValueError("Mensa: Quellenzitat fehlt")
+        if item.get("confidence") != "high":
+            raise ValueError("Mensa: unsichere Gerichtzuordnung")
         # This is a conservative plausibility check, not independent proof of
         # each row assignment. A full source-layout audit may still be needed.
         evidence_terms = {x for x in normalize(evidence).split() if len(x) >= 5 and x not in STOPWORDS}
@@ -180,26 +189,75 @@ def validate_menu(result, original_text, monday, pdf_url):
     return days
 
 
-def extract_for_week(monday, key, model):
-    # Reuses the original PDF discovery, allowlisted URLs, structured JSON
-    # schema and OpenAI Responses PDF input of the existing isolated pilot.
-    inputs, sources = ai.build_inputs("mensa", datetime.now(TZ), monday)
-    pdf_sources = [s for s in sources if s.get("fetched") and s.get("type") == "pdf"]
-    if len(pdf_sources) != 1:
-        raise ValueError("Mensa: genau eine Original-PDF-Quelle erwartet")
-    pdf_url = pdf_sources[0]["url"]
-    # Read the same original URL again only for independent date/text checks;
-    # reject if content hash differs from the PDF actually sent to the model.
-    final_url, raw = ai.safe_source_get(pdf_url)
-    if final_url != pdf_url or hashlib.sha256(raw).hexdigest() != pdf_sources[0]["sha256"]:
-        raise ValueError("Mensa: PDF zwischen KI-Analyse und Kontrolle verändert")
-    native_text = independent_period(raw, monday)
+def acquire_pdf(monday):
+    """Discover the German menu from the homepage, then try its stable endpoint.
+
+    Some homepage responses contain only a JS shell. Always keep the official
+    German endpoint as a fallback. Fetch once; validation and AI use those bytes.
+    """
+    candidates = []
+    try:
+        home, raw = ai.safe_source_get("https://www.wumensa.at/")
+        soup = ai.BeautifulSoup(raw, "html.parser")
+        for a in soup.find_all("a", href=True):
+            href = ai.urljoin(home, a["href"])
+            if "menuplan-deutsch" in href or (".pdf" in href.lower() and "engl" not in href.lower()):
+                candidates.append(href)
+    except Exception as exc:
+        print("Mensa Homepage-Discovery:", str(exc)[:150])
+    candidates.extend(["https://www.wumensa.at/menuplan-deutsch/",
+                       "https://www.wumensa.at/menuplan-deutsch/?week=" + monday.isoformat()])
+    errors = []
+    for candidate in list(dict.fromkeys(candidates))[:8]:
+        try:
+            url, raw = ai.safe_source_get(candidate)
+            url, raw = ai.find_mensa_pdf(url, raw)
+            text = independent_period(raw, monday)
+            source = {"url": url, "sha256": hashlib.sha256(raw).hexdigest(),
+                      "bytes": len(raw), "type": "pdf", "fetched": True, "truncated": False}
+            return raw, text, source
+        except Exception as exc:
+            errors.append(str(exc)[:160])
+    raise ValueError("Mensa: kein verifiziertes aktuelles Original-PDF: " + " | ".join(errors[:3]))
+
+
+def extract_for_week(monday, key, model, prepared=None):
+    raw, native_text, pdf_source = prepared or acquire_pdf(monday)
+    pdf_url = pdf_source["url"]
+    prompt = (f"Restaurant Mensa, Woche {monday} bis {monday+timedelta(days=4)}. "
+              f"Originalquelle: {pdf_url}, SHA256 {pdf_source['sha256']}. "
+              "Lies die vollständige PDF-Tabelle visuell, ALLE Tages- und Angebotszeilen. "
+              "Jeder Tag und jede angebotene Variante ein Item. Kategorien wortgetreu: "
+              "Tagessuppe, Soup Deal, Powered by plants / Veggie, Meaty, Pizza & Co, "
+              "Weekly Special, Bowls & Co, Pasta & Co, Global & Grill. "
+              "XXX bedeutet kein Angebot, niemals als Gericht erfassen. "
+              "Übergreifende Angebote nur den sichtbaren Tagen zuordnen. "
+              "Unbekannter Preis/laut Aushang bleibt null; keinen Nachbartagespreis übernehmen. "
+              "Preise der Pizza/Pasta aus der linken Tarifspalte korrekt zuordnen. "
+              "Kombinationen und Aufpreise in extra_costs angeben, keine Gratis-Suppe erfinden. "
+              "evidence_excerpt zitiert Gericht UND Preis mit Tagen/Kategorie, sofern sichtbar. "
+              "source_url exakt wie oben. Unsichere Zuordnung als Warnung; keine erfundenen Inhalte.")
+    inputs = [{"role": "user", "content": [
+        {"type": "input_text", "text": prompt},
+        {"type": "input_file", "filename": "wu-mensa-menu.pdf",
+         "file_data": "data:application/pdf;base64," + base64.b64encode(raw).decode()},
+    ]}]
     result, usage = ai.call_model(key, model, inputs)
-    issues = ai.validate(result, sources, monday, "mensa")
+    issues = ai.validate(result, [pdf_source], monday, "mensa")
     if issues:
         raise ValueError("Mensa: KI-Validierung: " + "; ".join(issues[:4]))
     days = validate_menu(result, native_text, monday, pdf_url)
-    return days, pdf_sources[0], usage
+    # Independently compare the dated core table cells and prices. Parser
+    # failure blocks this candidate; it never becomes permission to guess.
+    core, _ = legacy.parse_mensa(raw, monday)
+    from difflib import SequenceMatcher
+    for day, rows in core.items():
+        for expected in rows:
+            matches = [i for i in days[day] if normalize(i["category"]) == normalize(expected["category"])
+                       and SequenceMatcher(None, normalize(i["name"]), normalize(expected["name"])).ratio() >= .94]
+            if len(matches) != 1 or matches[0]["price"] != expected["price"]:
+                raise ValueError("Mensa: PDF-Zellenabgleich fehlgeschlagen: " + day + " " + expected["category"])
+    return days, pdf_source, usage
 
 
 def apply_candidate(data, status, days, monday, pdf_source, usage, model):
@@ -220,7 +278,7 @@ def apply_candidate(data, status, days, monday, pdf_source, usage, model):
     now = datetime.now(TZ).isoformat(timespec="seconds")
     status.setdefault("sources", {})["mensa"] = {
         "state": "ok", "last_success": now, "consecutive_failures": 0,
-        "parser_version": "ai-pdf-1",
+        "parser_version": REVIEW_VERSION,
         "content_sha256": pdf_source["sha256"],
         "model": model,
         "usage": usage,
@@ -238,29 +296,51 @@ def run(today, model):
     status = json.loads(STATUS.read_text(encoding="utf-8"))
     if data.get("weekStart") != monday.isoformat():
         raise ValueError("Mensa: Datenwoche entspricht nicht der aktuellen Woche")
-    prior = status.get("sources", {}).get("mensa", {})
+    prior = status.get("mensa_luna_audit", {})
     mensa = next(r for r in data["restaurants"] if r["id"] == "mensa")
-    if (prior.get("parser_version") == "ai-pdf-1" and
-        prior.get("last_success", "").startswith(monday.isoformat()) and
-        all(mensa.get("days", {}).get((monday + timedelta(days=i)).isoformat()) for i in range(5))):
-        print("Mensa-KI: aktuelle Woche bereits analysiert; kein weiterer API-Aufruf")
-        return False
     # Always audit the first independently verified PDF of a new week.
     # A parser reporting 'ok' does not prove that all PDF columns and
     # included side dishes were interpreted correctly.
-    key = os.environ.get("OPENAI_API_KEY", "").strip()
-    if not key:
-        print("::warning::Mensa-KI übersprungen: OPENAI_API_KEY fehlt")
-        return False
+    now = datetime.now(TZ).isoformat(timespec="seconds")
+    audit = {**prior, "checked_at": now}
     try:
-        days, pdf_source, usage = extract_for_week(monday, key, model)
+        prepared = acquire_pdf(monday)
+        pdf_source = prepared[2]
+        same = (prior.get("source_sha256") == pdf_source["sha256"] and
+                prior.get("week_start") == monday.isoformat() and prior.get("version") == REVIEW_VERSION)
+        if same and prior.get("state") in ("ok", "cached") and prior.get("published_days_sha256") == days_digest(mensa.get("days", {})) and all(
+            mensa.get("days", {}).get((monday+timedelta(days=i)).isoformat()) for i in range(5)):
+            audit["state"] = "cached"
+            # Restore independently audited data status after the core parser.
+            status["sources"]["mensa"].update(state="cached", parser_version=REVIEW_VERSION,
+                                               content_sha256=pdf_source["sha256"])
+            status["problems"] = [p for p in status.get("problems", []) if not p.startswith("mensa:")]
+            status["health"] = "degraded" if status["problems"] or status.get("quality_warning_count") else "healthy"
+            print("Mensa-KI: unverändertes geprüftes Original-PDF; kein API-Aufruf")
+            status["mensa_luna_audit"] = audit
+            STATUS.write_text(json.dumps(status, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+            return False
+        if same and prior.get("last_attempt_at", "")[:10] == now[:10]:
+            raise ValueError("Mensa: diese PDF-Version heute bereits geprüft; erneuter Versuch bei Änderung oder morgen")
+        key = os.environ.get("OPENAI_API_KEY", "").strip()
+        if not key:
+            raise ValueError("Mensa: OPENAI_API_KEY fehlt")
+        audit.update(source_sha256=pdf_source["sha256"], source_url=pdf_source["url"],
+                     week_start=monday.isoformat(), version=REVIEW_VERSION, last_attempt_at=now)
+        days, pdf_source, usage = extract_for_week(monday, key, model, prepared)
         apply_candidate(data, status, days, monday, pdf_source, usage, model)
+        audit.update(state="ok", last_success=now, error=None, published_days_sha256=days_digest(days))
     except Exception as exc:
         detail = str(exc)[:230]
         print("::warning::Mensa-KI nicht übernommen: " + detail)
-        # Never overwrite production on a failed model validation. The normal
-        # importer has already recorded the underlying parser failure.
+        audit.update(state="error", error=detail)
+        status["mensa_luna_audit"] = audit
+        status.setdefault("sources", {}).setdefault("mensa", {}).update(state="error", error=detail)
+        status["problems"] = [p for p in status.get("problems", []) if not p.startswith("mensa:")]+["mensa: "+detail]
+        status["health"] = "degraded"
+        STATUS.write_text(json.dumps(status, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
         return False
+    status["mensa_luna_audit"] = audit
     DATA.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     JS.write_text("window.CAMPUS_LUNCH_DATA = " + json.dumps(
         data, ensure_ascii=False, separators=(",", ":")) + ";\n", encoding="utf-8")

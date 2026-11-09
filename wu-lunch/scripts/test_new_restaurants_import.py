@@ -84,6 +84,8 @@ class NewRestaurantTests(unittest.TestCase):
         previous={
             "last_attempt_at":today.isoformat()+"T07:00:00+01:00",
             "last_attempt_sha256":hashlib.sha256(image).hexdigest(),
+            "last_attempt_version":module.FINN_REVIEW_VERSION,
+            "last_attempt_week_start":monday.isoformat(),
         }
         html=finn_fixture(monday.isocalendar().week,monday)
         with patch.object(module.legacy,"safe_get",side_effect=lambda url,*args: html if url==module.FINN_URL else image):
@@ -125,6 +127,8 @@ class NewRestaurantTests(unittest.TestCase):
         second["warnings"]=["Die Jahreszahl ist im Bild nicht angegeben."]
         days=module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
         self.assertEqual(len(days),5)
+        second["warnings"]=["Das Bild nennt Tagesdaten und Wochentage, aber keine Jahreszahl; sie stimmen mit der angefragten Woche 2026 überein."]
+        self.assertEqual(len(module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])),5)
         second["warnings"]=["Der Preis für Montag ist unklar."]
         with self.assertRaisesRegex(ValueError,"nicht eindeutig"):
             module.validate_finn_pair(first,second,MON,first["items"][0]["source_url"])
