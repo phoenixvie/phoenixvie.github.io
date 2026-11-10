@@ -69,7 +69,7 @@ function AppContent() {
         if (url) void openSource(url, typeof item.title === 'string' ? item.title : 'Restaurant');
       } else if (item.type === 'open-external' && typeof item.url === 'string') {
         const url=webUrl(item.url);
-        if(url && !url.startsWith('https://www.google.com/maps'))void openSource(url,'Restaurant');else openExternal(item.url);
+        if(url)void openSource(url,'Restaurant');else openExternal(item.url);
       }
       else if (item.type === 'share' && typeof item.text === 'string') Share.share({message: item.text}).catch(() => {});
       else if (item.type === 'exit') BackHandler.exitApp();
@@ -82,7 +82,8 @@ function AppContent() {
       javaScriptEnabled domStorageEnabled setSupportMultipleWindows={false} style={styles.web}
       onShouldStartLoadWithRequest={request => {
         if (request.isTopFrame === false || request.url === 'about:blank' || request.url.split('?')[0] === baseUrl || request.url.split('?')[0] === baseUrl+'index.html') return true;
-        openExternal(request.url); return false;
+        const url=webUrl(request.url);
+        if(url)void openSource(url,'Restaurant');else openExternal(request.url); return false;
       }} />
     <Modal visible={!!page} onRequestClose={browserBack} animationType="slide">
       <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>

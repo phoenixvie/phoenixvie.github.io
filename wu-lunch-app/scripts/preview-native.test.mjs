@@ -38,7 +38,10 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   await click({action:'share'});
   assert.equal(messages.at(-1).text,'Gehen wir heute WU Mensa zu Mittag?');
   await click({detail:'info'});
-  assert.match(app.innerHTML,/<h1>Information<\/h1>/);
+  assert.match(app.innerHTML,/<h1>Restaurant<\/h1>/);
+  assert.match(app.innerHTML,/data-detail="info"[^>]*><span[^>]*>info<\/span>Restaurant/);
+  assert.doesNotMatch(app.innerHTML,/Quelle: Restaurantwebseite|info-card info-hours/);
+  assert.match(app.innerHTML,/info-row[^]*Öffnungszeiten[^]*info-hours-list/);
   assert.match(app.innerHTML,/info-hero/);assert.match(app.innerHTML,/WU Mensa/);
   assert.match(app.innerHTML,/tel:\+43123/);assert.match(app.innerHTML,/mailto:mensa@example.test/);
   assert.match(app.innerHTML,/Welthandelsplatz 1, D1\/TC, 1020 Wien/);
@@ -46,6 +49,10 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.match(app.innerHTML,/info-map/);assert.match(mapElement.innerHTML,/Karte wird geladen/);
   assert.doesNotMatch(app.innerHTML,/Mit Freunden essen gehen|Kontaktiere das App Team|data-detail="contact"|data-detail="map"/);
   await click({detail:'menu'});
+  assert.match(app.innerHTML,/<h2 class="day-heading">\d{1,2}\. November 2026<\/h2>/);
+  const link={href:'https://www.google.com/maps/search/?api=1&query=WU'};
+  actions.get('click')({preventDefault(){},target:{closest:selector=>selector==='a[href]'?link:null}});
+  assert.deepEqual(messages.at(-1),{type:'open-source',url:link.href,title:'WU Mensa'});
   assert.equal(refreshMs,3000);
   restaurants[0].days=Object.fromEntries(Array.from({length:5},(_,i)=>['2026-11-'+String(9+i).padStart(2,'0'),[{name:'Live aktualisiertes Gericht',category:'Meaty',price:6.4}]]));
   await refresh();
