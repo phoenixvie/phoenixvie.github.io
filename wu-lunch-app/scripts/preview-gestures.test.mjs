@@ -3,18 +3,17 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 
-test('Mensa uses six ordered stations, suppresses pizza detail and preserves other offers',async()=>{
+test('Mensa retains only stations 1+2, 3+4 and 8 with separate soup lines',async()=>{
   const source=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
   const helper=source.slice(source.indexOf('function mensaStations('),source.indexOf('function dishes('));
   const context={Intl};vm.createContext(context);vm.runInContext(helper,context);
   const rows=['Global & Grill','Bowls & Co','Pasta & Co','Meaty','Powered by plants / Veggie','Pizza & Co','Weekly Special'].map((category,i)=>({category,name:'Originalgericht '+i,price:i+5,description:'Quellenbeilage'}));
   rows.push({category:'Tagessuppe',name:'Gemüsesuppe',price:null});
   const result=context.mensaStations(rows);
-  assert.equal(result.slice(0,6).map(i=>i.category).join('|'),'Ausgabe 1+2|Ausgabe 3+4|Ausgabe 5|Ausgabe 6|Ausgabe 7|Ausgabe 8');
-  assert.equal(result[2].name,'Pizza');assert.equal(result[2].price,null);assert.equal(result[2].description,'');
+  assert.equal(result.map(i=>i.category).join('|'),'Ausgabe 1+2|Ausgabe 3+4|Ausgabe 8');
   assert.ok(!result.some(item=>item.category==='Tagessuppe'));
   assert.match(result[0].name,/Gemüsesuppe/);assert.match(result[1].name,/Gemüsesuppe/);
-  assert.equal(result[3].name,'Pasta');assert.equal(result[4].name,'Bowl');
+  assert.match(result[0].name,/Gemüsesuppe\nOriginalgericht/);
   assert.match(result[0].name,/Originalgericht 4/);assert.match(result[0].name,/Quellenbeilage/);
   assert.equal(context.mensaStations([]).length,0);
   const web=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');
@@ -27,9 +26,12 @@ test('restaurant rules retain verified totals, remove commentary and merge Topf 
   const c={};vm.createContext(c);vm.runInContext(helper,c);
   const main={name:'Pasta mit grünem Salat',category:'Hauptgericht',price:10,description:'Preis bestätigt',menu_options:[{label:'Hauptgericht mit Suppe',total_price:11}]};
   const finn=c.restaurantDisplayRules('finn',[main,{name:'Tagessuppe oder Salat',category:'Suppe/Salat',price:3.5}]);
-  assert.equal(finn.length,1);assert.equal(finn[0].price,11);assert.equal(finn[0].description,'Mit Tagessuppe');assert.equal(finn[0].menu_options.length,0);
+  assert.equal(finn.length,1);assert.equal(finn[0].price,11);assert.equal(finn[0].description,'Mit Tagessuppe und grünem Salat');assert.equal(finn[0].menu_options.length,0);
   assert.equal(main.price,10); // presentation never rewrites source data
-  assert.equal(c.restaurantDisplayRules('lia',[main])[0].description,'');
+  assert.equal(c.restaurantDisplayRules('lia',[main])[0].description,'Mit Tagessuppe und grünem Salat');
+  assert.equal(finn[0].name,'Pasta');
+  assert.equal(c.restaurantDisplayRules('lia',[main])[0].price,10);
+  assert.equal(c.restaurantDisplayRules('finn',[{...main,name:'Curry mit Reis'}])[0].description,'Mit Tagessuppe');
   assert.equal(c.restaurantDisplayRules('karmafood',[main])[0].description,'');
   assert.equal(c.restaurantDisplayRules('baschly',[main])[0].description,main.description);
   const topf=c.restaurantDisplayRules('topfdeckel',[
@@ -42,7 +44,9 @@ test('restaurant rules retain verified totals, remove commentary and merge Topf 
   assert.equal(topf[2].description,'(klein / groß)');
   assert.equal(c.restaurantDisplayRules('omakueche',[{name:'All-you-can-eat-Buffet (Erwachsene)',description:'to go'}])[0].name,'All-you-can-eat-Buffet');
   assert.equal(c.restaurantDisplayRules('gruenehuette',[{name:'Suppen zur Auswahl: Frittatensuppe',category:'Suppe',price:2}])[0].description,'Optional zum Tagesteller');
+  assert.equal(c.restaurantDisplayRules('gruenehuette',[{name:'Frittatensuppe',category:'Suppe'}])[0].detailInline,true);
   const web=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');assert.ok(web.includes(helper.trim()));
+  assert.match(web,/dish-detail\{white-space:pre-line\}/);
 });
 
 test('white menu pane accepts horizontal swipes and ignores vertical or cancelled gestures', async()=>{

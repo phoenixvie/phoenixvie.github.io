@@ -284,6 +284,7 @@ html,body,.page { background:#fff; }
 .logo-omakueche{background:#c9a581;color:#fff}.logo-topfdeckel{background:#6cb78e;color:#173d2b}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#4a579b;color:#fff}.logo-karmafood{background:#c65b40;color:#fff}.logo-finn{background:#49654e;color:#fff}
 .selected-day-heading{font-size:14px;text-align:center;color:#444;margin:3px 0 0;font-weight:400}
 .dish-text{font-weight:700}.dish-detail{font-weight:400;color:#555;display:block}
+.dish-detail{white-space:pre-line}.dish-detail.inline{display:inline}
 </style>
 </head>
 <body>
@@ -597,14 +598,15 @@ html,body,.page { background:#fff; }
     }
 function restaurantDisplayRules(id,raw){
   const rows=raw.map(item=>({...item}));
-  if(id==='finn')return rows.filter(item=>! /suppe|salat|soup|salad|dessert/i.test(item.category||'')).map(item=>{
+  if(id==='finn'||id==='lia')return rows.filter(item=>! /suppe|salat|soup|salad|dessert/i.test(item.category||'')).map(item=>{
     const combo=(item.menu_options||[]).find(option=>/suppe/i.test(option.label||'')&&Number.isFinite(option.total_price));
-    return {...item,price:combo?combo.total_price:null,description:'Mit Tagessuppe',menu_options:[]};
+    const salad=/\s+(?:und|mit)\s+grünem\s+Salat\s*$/i.test(item.name);
+    return {...item,name:item.name.replace(/\s+(?:und|mit)\s+grünem\s+Salat\s*$/i,''),price:id==='finn'?(combo?combo.total_price:null):item.price,description:'Mit Tagessuppe'+(salad?' und grünem Salat':''),included_choices:[],menu_options:[]};
   });
-  if(id==='lia'||id==='karmafood')return rows.map(item=>({...item,description:'',included_choices:[],menu_options:[]}));
+  if(id==='karmafood')return rows.map(item=>({...item,description:'',included_choices:[],menu_options:[]}));
   if(id==='omakueche')return rows.map(item=>({...item,name:item.name.replace(/\s*\(Erwachsene\)/gi,''),description:'',included_choices:[],menu_options:[]}));
   if(id==='gruenehuette')return rows.map(item=>/suppe|soup/i.test(item.category||'')?
-    {...item,name:item.name.replace(/^Suppen zur Auswahl:\s*/i,''),description:'Optional zum Tagesteller'}:
+    {...item,name:item.name.replace(/^Suppen zur Auswahl:\s*/i,'').replace(/\boder,\s*/gi,'oder '),description:'Optional zum Tagesteller',detailInline:true}:
     {...item,description:'',included_choices:[]});
   if(id!=='topfdeckel')return rows;
   const light=rows.find(item=>/light lunch/i.test(item.name)),big=rows.find(item=>/big lunch/i.test(item.name));
@@ -635,7 +637,7 @@ function mensaStations(raw){
     out.push({category:label,name:((label==='Ausgabe 1+2'||label==='Ausgabe 3+4')&&soup?soup.name+'\n':'')+lines.join('\n\n'),price:common,priceLabel:prices.length>1?' ':undefined,description:''});
   }
   // Soup and conditional menu offers retain their original terms and prices.
-  return [...out,...raw.filter(item=>!assigned.has(item)&&! /tagess?uppe|soup deal|menüoption|smart menü/i.test(item.category||item.name))];
+  return [...out.filter(item=>!['Ausgabe 5','Ausgabe 6','Ausgabe 7'].includes(item.category)),...raw.filter(item=>!assigned.has(item)&&! /tagess?uppe|soup deal|menüoption|smart menü/i.test(item.category||item.name))];
 }
     function visibleDishes(restaurant){
       const raw=restaurantDisplayRules(restaurant.id,dishesForRestaurant(restaurant));
@@ -658,7 +660,7 @@ function mensaStations(raw){
           ? item.name.toLocaleLowerCase('it-IT').replace(/(^|[\\s-])([a-zà-ÿ])/g,(_,sep,letter)=>sep+letter.toLocaleUpperCase('it-IT'))
           : item.name;
         out.push({
-          name,detail:includedDetail(item),price:item.price,
+          name,detail:includedDetail(item),detailInline:item.detailInline,price:item.price,
           priceDisplay:item.priceLabel|| (restaurant.id==='topfdeckel' && (item.price_small!=null || item.price_large!=null)
             ? [item.price_small,item.price_large].map(v=>v==null?'–':v.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €').join(' / ')
             : (item.price==null?'X €':null))
@@ -684,7 +686,7 @@ function mensaStations(raw){
       const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L',omakueche:'O',topfdeckel:'T',gruenehuette:'H',lia:'L',karmafood:'K',finn:'F'};
       const label=(initials[restaurant.id]||restaurant.name.charAt(0)).toLocaleUpperCase('de-AT');
       const dishRows=items.length ? items.map(item=>
-        '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+(item.detail?'<span class="dish-detail">'+escapeHtml(item.detail)+'</span>':'')+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
+        '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+(item.detail?'<span class="dish-detail'+(item.detailInline?' inline':'')+'">'+(item.detailInline?' ':'')+escapeHtml(item.detail)+'</span>':'')+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
       ).join('') : '<div class="empty-row">Noch nicht veröffentlicht</div>';
       row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+(restaurant.logo_url?'<img class="logo-image" src="'+escapeHtml(restaurant.logo_url)+'" alt="">':escapeHtml(label))+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
