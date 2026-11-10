@@ -34,3 +34,15 @@ jobs:
       - run: npx tsc --noEmit
       - name: JavaScript-Bundle prüfen (keine APK)
         run: npx expo export --platform android --output-dir ../android-source-check
+  publish-preview:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    needs: [preview, native-source]
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+    steps:
+      - name: Aktuellen Master auf GitHub Pages veröffentlichen
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh api --method POST "repos/$GH_REPO/pages/builds"
