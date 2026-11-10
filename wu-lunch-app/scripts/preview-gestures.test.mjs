@@ -86,3 +86,18 @@ test('white menu pane accepts horizontal swipes and ignores vertical or cancelle
   start();end(400,400);
   assert.match(app.innerHTML,/weekday active" data-day="0"/);
 });
+
+test('included soup or salad precedes the main course without changing separate or optional offers',async()=>{
+  const source=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  const helper=source.slice(source.indexOf('function mealPresentation('),source.indexOf('function renderMenu('));
+  const c={};vm.createContext(c);vm.runInContext(helper,c);
+  for(const detail of ['Mit Suppe oder Salat','Mit Tagessuppe und grünem Salat','Mit Tagessuppe oder kleinem Salat']){
+    const original={name:'Hauptspeise',price:14.9,description:detail};
+    const shown=c.mealPresentation(original);
+    assert.equal(shown.starter,detail.replace(/^Mit /,''));assert.equal(shown.detail,'');
+    assert.equal(original.description,detail);
+  }
+  for(const row of [{price:13.5,description:'Suppe optional +2,00 €'},{price:3.5,description:'Separat erhältlich'},{price:null,description:'Mit Tagessuppe'},{price:2,description:'Optional zum Tagesteller',detailInline:true},{price:7.5,description:'(klein / groß)'}]){
+    const shown=c.mealPresentation(row);assert.equal(shown.starter,'');assert.equal(shown.detail,row.description);
+  }
+});
