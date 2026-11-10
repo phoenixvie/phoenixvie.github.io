@@ -68,7 +68,8 @@ function AppContent() {
         const url = webUrl(item.url);
         if (url) void openSource(url, typeof item.title === 'string' ? item.title : 'Restaurant');
       } else if (item.type === 'open-external' && typeof item.url === 'string') {
-        const url=webUrl(item.url);if(url)void openSource(url,'Restaurant');else openExternal(item.url);
+        const url=webUrl(item.url);
+        if(url && !url.startsWith('https://www.google.com/maps'))void openSource(url,'Restaurant');else openExternal(item.url);
       }
       else if (item.type === 'share' && typeof item.text === 'string') Share.share({message: item.text}).catch(() => {});
       else if (item.type === 'exit') BackHandler.exitApp();
