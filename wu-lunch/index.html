@@ -595,17 +595,36 @@ html,body,.page { background:#fff; }
       if(category.includes('menüoption') || category.includes('menükombo') || category.includes('kombination'))return 4;
       return 1;
     }
+function mensaStations(raw){
+  if(!raw.length)return [];
+  const normalize=s=>String(s||'').toLowerCase().replace(/[^a-z0-9äöü]+/g,' ').trim();
+  const specs=[['Ausgabe 1+2',['powered by plants veggie','powered by plants','veggie','ausgabe 1 2']],['Ausgabe 3+4',['meaty','ausgabe 3 4']],['Ausgabe 5',['pizza','pizza co','weekly special','ausgabe 5']],['Ausgabe 6',['pasta','pasta co','ausgabe 6']],['Ausgabe 7',['bowls','bowls co','ausgabe 7']],['Ausgabe 8',['global grill','global grills','ausgabe 8']]];
+  const assigned=new Set(),out=[];
+  const euro=v=>new Intl.NumberFormat('de-AT',{maximumFractionDigits:2}).format(v)+' €';
+  for(const [label,categories] of specs){
+    const rows=raw.filter(item=>categories.includes(normalize(item.category)));
+    rows.forEach(item=>assigned.add(item));
+    if(label==='Ausgabe 5'){out.push({category:label,name:'Pizza',price:null,description:''});continue}
+    if(!rows.length)continue;
+    const prices=[...new Set(rows.map(item=>item.price))];
+    const common=prices.length===1?prices[0]:null;
+    const lines=rows.map(item=>[item.name+(prices.length>1?' – '+(item.price==null?'X €':euro(item.price)):''),item.description,item.allergens?.length?'Allergene: '+item.allergens.join(', '):'',item.energy_kcal?item.energy_kcal+' kcal':''].filter(Boolean).join('\n'));
+    out.push({category:label,name:lines.join('\n\n'),price:common,priceLabel:prices.length>1?' ':undefined,description:''});
+  }
+  // Soup and conditional menu offers retain their original terms and prices.
+  return [...out,...raw.filter(item=>!assigned.has(item))];
+}
     function visibleDishes(restaurant){
       const raw=dishesForRestaurant(restaurant);
       // Mensa's weekly soup is included in some menu lines, but an
       // independent sale/price is NOT documented. Don't invent a standalone
       // soup offer. Preserve the correct inclusion semantics for this source.
       if(restaurant.id==='mensa'){
-        return raw.map(item=>({
-          name:item.category==='Ausgabe 5'?'Pizza':(item.category||item.name),
-          detail:item.category==='Ausgabe 5'?'':[item.name,item.description,item.allergens?.length?'Allergene: '+item.allergens.join(', '):null,item.energy_kcal?item.energy_kcal+' kcal':null].filter(Boolean).join(' · '),
+        return mensaStations(raw).map(item=>({
+          name:item.category||item.name,
+          detail:[item.name,item.description,item.allergens?.length?'Allergene: '+item.allergens.join(', '):null,item.energy_kcal?item.energy_kcal+' kcal':null].filter(Boolean).join(' · '),
           price:item.price,
-          priceDisplay:item.category==='Ausgabe 5' && item.price==null?'':(item.price==null?'X €':null)
+          priceDisplay:item.category==='Ausgabe 5'?'':item.priceLabel||(item.price==null?'X €':null)
         }));
       }
       const sorted=[...raw].sort((a,b)=>mealPosition(a)-mealPosition(b));
