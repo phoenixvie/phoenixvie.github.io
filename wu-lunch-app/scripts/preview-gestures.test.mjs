@@ -78,11 +78,11 @@ test('white menu pane accepts horizontal swipes and ignores vertical or cancelle
   const start=()=>actions.get('touchstart')({target:whitePane,touches:[{}],changedTouches:[{screenX:300,screenY:400}]});
   const end=(x,y)=>actions.get('touchend')({target:whitePane,changedTouches:[{screenX:x,screenY:y}],preventDefault:()=>{}});
   start();end(100,405);
-  assert.match(app.innerHTML,/10\. November 2026/);
+  assert.match(app.innerHTML,/weekday active" data-day="1"/);
   start();end(100,700);
-  assert.match(app.innerHTML,/10\. November 2026/);
+  assert.match(app.innerHTML,/weekday active" data-day="1"/);
   start();actions.get('touchcancel')();end(100,400);
-  assert.match(app.innerHTML,/10\. November 2026/);
+  assert.match(app.innerHTML,/weekday active" data-day="1"/);
   start();end(400,400);
-  assert.match(app.innerHTML,/9\. November 2026/);
+  assert.match(app.innerHTML,/weekday active" data-day="0"/);
 });
