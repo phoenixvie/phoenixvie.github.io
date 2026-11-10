@@ -597,8 +597,9 @@ html,body,.page { background:#fff; }
       return 1;
     }
 function restaurantDisplayRules(id,raw){
-  const rows=raw.map(item=>({...item}));
-  if(id==='finn'||id==='lia')return rows.filter(item=>! /suppe|salat|soup|salad|dessert/i.test(item.category||'')).map(item=>{
+  const rows=raw.map(item=>({...item,allergens:[],name:item.name.replace(/\s*\([ABCDEFGHLMNOPR](?:\s*[,/]\s*[ABCDEFGHLMNOPR])*\)/g,'')}));
+  if(id==='lia')return rows.map(item=>({...item,name:item.name.replace(/\s+(?:und|mit)\s+grünem\s+Salat\s*$/i,''),description:'',included_choices:[],menu_options:[]}));
+  if(id==='finn')return rows.filter(item=>! /suppe|salat|soup|salad|dessert/i.test(item.category||'')).map(item=>{
     const combo=(item.menu_options||[]).find(option=>/suppe/i.test(option.label||'')&&Number.isFinite(option.total_price));
     const salad=/\s+(?:und|mit)\s+grünem\s+Salat\s*$/i.test(item.name);
     return {...item,name:item.name.replace(/\s+(?:und|mit)\s+grünem\s+Salat\s*$/i,''),price:id==='finn'?(combo?combo.total_price:null):item.price,description:'Mit Tagessuppe'+(salad?' und grünem Salat':''),included_choices:[],menu_options:[]};
@@ -620,6 +621,18 @@ function restaurantDisplayRules(id,raw){
 
 function mensaStations(raw){
   if(!raw.length)return [];
+  const seen=new Set();
+  raw=raw.map(item=>({...item,allergens:[],name:item.name.replace(/\s*\([ABCDEFGHLMNOPR](?:\s*[,/]\s*[ABCDEFGHLMNOPR])*\)/g,'')})).filter(item=>{
+    const key=JSON.stringify([item.category,item.name.toLowerCase().replace(/[^a-z0-9äöü]+/g,' ').trim(),item.price]);
+    if(seen.has(key))return false;seen.add(key);return true;
+  });
+  const planted=raw.find(item=>/mensa burger/i.test(item.name)&&/planted.*crispy.*chicken/i.test(item.name)&&! /\bbeef\b/i.test(item.name));
+  const beef=raw.find(item=>/mensa burger/i.test(item.name)&&/\bbeef\b/i.test(item.name));
+  if(planted&&beef&&planted.category===beef.category&&planted.price===beef.price){
+    if(!/planted/i.test(beef.name))beef.name=beef.name.replace(/\bBeef\b/i,"Beef oder "+planted.name.slice(planted.name.toLowerCase().indexOf('planted')));
+    beef.description=[...new Set([beef.description,planted.description].filter(Boolean))].join('\n');
+    raw=raw.filter(item=>item!==planted);
+  }
   const normalize=s=>String(s||'').toLowerCase().replace(/[^a-z0-9äöü]+/g,' ').trim();
   const specs=[['Ausgabe 1+2',['powered by plants veggie','powered by plants','veggie','ausgabe 1 2']],['Ausgabe 3+4',['meaty','ausgabe 3 4']],['Ausgabe 5',['pizza','pizza co','weekly special','ausgabe 5']],['Ausgabe 6',['pasta','pasta co','ausgabe 6']],['Ausgabe 7',['bowls','bowls co','ausgabe 7']],['Ausgabe 8',['global grill','global grills','ausgabe 8']]];
   const assigned=new Set(),out=[];
@@ -633,7 +646,7 @@ function mensaStations(raw){
     if(!rows.length)continue;
     const prices=[...new Set(rows.map(item=>item.price))];
     const common=prices.length===1?prices[0]:null;
-    const lines=rows.map(item=>[item.name+(prices.length>1?' – '+(item.price==null?'X €':euro(item.price)):''),item.description,item.allergens?.length?'Allergene: '+item.allergens.join(', '):'',item.energy_kcal?item.energy_kcal+' kcal':''].filter(Boolean).join('\n'));
+    const lines=rows.map(item=>[item.name+(prices.length>1?' – '+(item.price==null?'X €':euro(item.price)):''),item.description,item.energy_kcal?item.energy_kcal+' kcal':''].filter(Boolean).join('\n'));
     out.push({category:label,name:((label==='Ausgabe 1+2'||label==='Ausgabe 3+4')&&soup?soup.name+'\n':'')+lines.join('\n\n'),price:common,priceLabel:prices.length>1?' ':undefined,description:''});
   }
   // Soup and conditional menu offers retain their original terms and prices.
@@ -647,7 +660,7 @@ function mensaStations(raw){
       if(restaurant.id==='mensa'){
         return mensaStations(raw).map(item=>({
           name:item.category||item.name,
-          detail:[item.name,item.description,item.allergens?.length?'Allergene: '+item.allergens.join(', '):null,item.energy_kcal?item.energy_kcal+' kcal':null].filter(Boolean).join(' · '),
+          detail:[item.name,item.description,item.energy_kcal?item.energy_kcal+' kcal':null].filter(Boolean).join(' · '),
           price:item.price,
           priceDisplay:item.category==='Ausgabe 5'?'':item.priceLabel||(item.price==null?'X €':null)
         }));

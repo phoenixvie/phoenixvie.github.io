@@ -28,9 +28,10 @@ test('restaurant rules retain verified totals, remove commentary and merge Topf 
   const finn=c.restaurantDisplayRules('finn',[main,{name:'Tagessuppe oder Salat',category:'Suppe/Salat',price:3.5}]);
   assert.equal(finn.length,1);assert.equal(finn[0].price,11);assert.equal(finn[0].description,'Mit Tagessuppe und grünem Salat');assert.equal(finn[0].menu_options.length,0);
   assert.equal(main.price,10); // presentation never rewrites source data
-  assert.equal(c.restaurantDisplayRules('lia',[main])[0].description,'Mit Tagessuppe und grünem Salat');
+  assert.equal(c.restaurantDisplayRules('lia',[main])[0].description,'');
   assert.equal(finn[0].name,'Pasta');
   assert.equal(c.restaurantDisplayRules('lia',[main])[0].price,10);
+  assert.deepEqual(Array.from(c.restaurantDisplayRules('lia',[main])[0].included_choices),[]);
   assert.equal(c.restaurantDisplayRules('finn',[{...main,name:'Curry mit Reis'}])[0].description,'Mit Tagessuppe');
   assert.equal(c.restaurantDisplayRules('karmafood',[main])[0].description,'');
   assert.equal(c.restaurantDisplayRules('baschly',[main])[0].description,main.description);
@@ -47,6 +48,18 @@ test('restaurant rules retain verified totals, remove commentary and merge Topf 
   assert.equal(c.restaurantDisplayRules('gruenehuette',[{name:'Frittatensuppe',category:'Suppe'}])[0].detailInline,true);
   const web=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');assert.ok(web.includes(helper.trim()));
   assert.match(web,/dish-detail\{white-space:pre-line\}/);
+});
+
+test('Mensa removes repeated identical burger rows and never displays allergen codes',async()=>{
+  const source=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  const helper=source.slice(source.indexOf('function mensaStations('),source.indexOf('function dishes('));
+  const c={Intl};vm.createContext(c);vm.runInContext(helper,c);
+  const burger={name:"Mensa Burger mit Pommes – Planted 'Crispy Chicken style'",category:'Global & Grill',price:9.8,allergens:['A']};
+  const rows=c.mensaStations([burger,{...burger}, {...burger,name:'Mensa Burger mit Pommes – Beef',allergens:['A','C','G']}]);
+  assert.equal(rows.length,1);
+  assert.equal(rows[0].name.match(/Planted/g).length,1);assert.match(rows[0].name,/Beef/);
+  assert.equal(rows[0].name.match(/Mensa Burger/g).length,1);
+  assert.ok(!source.includes('Allergene:'));
 });
 
 test('white menu pane accepts horizontal swipes and ignores vertical or cancelled gestures', async()=>{

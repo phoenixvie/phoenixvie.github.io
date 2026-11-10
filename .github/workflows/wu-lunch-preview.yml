@@ -1,10 +1,10 @@
 name: WU Food Webvorschau prüfen
 on:
   pull_request:
-    paths: ['wu-lunch-app/preview/**', 'wu-lunch-app/scripts/preview-gestures.test.mjs', '.github/workflows/wu-lunch-preview.yml']
+    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
   push:
     branches: [master]
-    paths: ['wu-lunch-app/preview/**', 'wu-lunch-app/scripts/preview-gestures.test.mjs', '.github/workflows/wu-lunch-preview.yml']
+    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
 permissions:
   contents: read
 jobs:
@@ -17,3 +17,20 @@ jobs:
           node-version: '24'
       - run: node --check wu-lunch-app/preview/app.js
       - run: node --test wu-lunch-app/scripts/preview-gestures.test.mjs
+  native-source:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wu-lunch-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: wu-lunch-app/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npx tsc --noEmit
+      - name: JavaScript-Bundle prüfen (keine APK)
+        run: npx expo export --platform android --output-dir ../android-source-check

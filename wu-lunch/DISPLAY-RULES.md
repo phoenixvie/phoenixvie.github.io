@@ -13,10 +13,12 @@ erhalten. Diese Regeln gelten für neue Wochen, nicht nur für bestimmte Gericht
 - Finn: nur das Hauptgericht als Menü mit Tagessuppe zum bestätigten
   Kombinationsgesamtpreis anzeigen. Einzelgericht, separate Suppe/Salat und
   zusätzliche optionale Menüzeile ausblenden. Fehlenden Kombipreis nicht raten.
-- Finn und Lia: „und grünem Salat“ aus dem Gerichtnamen in die Unterzeile
+- Finn: „und grünem Salat“ aus dem Gerichtnamen in die Unterzeile
   „Mit Tagessuppe und grünem Salat“ verschieben, falls der Salat im
   Originalgericht genannt ist. Kein Salat zu anderen Gerichten erfinden.
-  Lia behält seinen bisherigen Menüpreis; Finn den bestätigten Kombipreis.
+  Finn behält den bestätigten Kombipreis.
+- Lia: keine zusätzliche Suppe/Salat und keine entsprechende Unterzeile;
+  grünen Salat aus der bisherigen Beilagenformulierung entfernen. Menüpreis erhalten.
 - Karma Food: erklärende Preisbestätigungs-/Rabatt-/Kombitexte entfernen.
 - Campus: unverändert, bestehende feste Tarife gelten weiter.
 - Topf & Deckel: Suppe ohne Preis und Verkaufskommentar. Light/Big Lunch zu einer
@@ -31,3 +33,12 @@ erhalten. Diese Regeln gelten für neue Wochen, nicht nur für bestimmte Gericht
 
 Die umgesetzten Funktionen `restaurantDisplayRules` und `mensaStations` müssen
 in beiden Ansichten übereinstimmen; Regressionstests prüfen diese Gleichheit.
+
+- Allgemein: Allergene niemals anzeigen; identische Mensa-Gerichte je Kategorie
+  und Preis deduplizieren. Beef und Planted werden bei gleichem Preis als Alternativen in einer Burger-Zeile zusammengefasst.
+- App-Restaurantwebseite: voller Inhaltsbereich ohne App-Kopfzeile, unten nur
+  ein mittiger Zurück-Button. HTTP-Webseiten und PDFs intern öffnen; Telefon
+  und Mail bleiben Systemaktionen.
+- Freigegebene Live-Daten alle drei Sekunden ohne parallele Abrufe prüfen und
+  beim Wiederöffnen aktualisieren. Die App lädt ihre Weboberfläche online,
+  mit eingebauter Oberfläche als Rückfall. Dafür ist einmal eine neue APK nötig.
