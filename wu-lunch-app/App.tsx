@@ -109,8 +109,8 @@ function AppContent() {
 export default function App() {return <SafeAreaProvider><AppContent /></SafeAreaProvider>;}
 const styles = StyleSheet.create({
   screen: {flex: 1, backgroundColor: '#087cf4'}, web: {flex: 1, backgroundColor: '#fff'},
-  browserFooter: {height: 60, alignItems:'center',justifyContent:'center',backgroundColor:'#fff',borderTopWidth:1,borderTopColor:'#ddd'},
-  footerText: {fontSize:16,color:'#087cf4'},
+  browserFooter: {height: 60, alignItems:'center',justifyContent:'center',backgroundColor:'#087cf4',borderTopWidth:1,borderTopColor:'#087cf4'},
+  footerText: {fontSize:16,color:'#fff'},
   back: {width: 65, height: 48, alignItems: 'center', justifyContent: 'center'}, backText: {fontSize: 12, color: '#fff'},
   title: {flex: 1, textAlign: 'center', color: '#fff', fontSize: 22, fontWeight: '500'},
   loader: {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff'},

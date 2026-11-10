@@ -116,7 +116,7 @@ app.addEventListener('click',async e=>{
     case'open-menu-source':{const r=currentRestaurant(),url=safeUrl(r?.menuSourceUrl||r?.url);if(!url)break;if(!nativePost('open-source',{url,title:r.name})){sourceViewUrl=url;render()}break}
     case'close-source':sourceViewUrl=null;render();break;
     case'previous-restaurant':
-    case'next-restaurant':selectedId=adjacentRestaurantId(target.dataset.action==='next-restaurant'?1:-1);sourceViewUrl=null;dayIndex=initialDayIndex();render();break;
+    case'next-restaurant':selectedId=adjacentRestaurantId(target.dataset.action==='next-restaurant'?1:-1);sourceViewUrl=null;render();break;
     case'share':{const message='Gehen wir heute '+currentRestaurant()?.name+' zu Mittag?';if(nativePost('share',{text:message}))break;if(navigator.share)try{await navigator.share({text:message})}catch{}else navigator.clipboard?.writeText(message);break}
     case'retry':load();break;
   }
