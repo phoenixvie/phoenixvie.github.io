@@ -31,10 +31,13 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   await click({action:'open-menu-source'});
   assert.deepEqual(messages.at(-1),{type:'open-source',url:'https://www.wumensa.at/menuplan-deutsch/',title:'WU Mensa'});
   assert.ok(!app.innerHTML.includes('<iframe'));
+  await click({day:'3'});
   await click({action:'previous-restaurant'});
+  assert.match(app.innerHTML,/weekday active" data-day="3"/);
   assert.match(app.innerHTML,/<h1>Finn<\/h1>/);
   await click({action:'next-restaurant'});
   assert.match(app.innerHTML,/<h1>WU Mensa<\/h1>/);
+  assert.match(app.innerHTML,/weekday active" data-day="3"/);
   await click({action:'share'});
   assert.equal(messages.at(-1).text,'Gehen wir heute WU Mensa zu Mittag?');
   await click({detail:'info'});
@@ -61,6 +64,7 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   await click({detail:'menu'});
   await click({action:'next-restaurant'});
   assert.match(app.innerHTML,/<h1>WU Mensa<\/h1>/);
+  assert.match(app.innerHTML,/weekday active" data-day="3"/);
   assert.doesNotMatch(app.innerHTML,/day-heading/);
   assert.match(app.innerHTML,/Montag<\/span><span class="weekday-date">09\.11\.<\/span>/);
   const link={href:'https://www.google.com/maps/search/?api=1&query=WU'};
