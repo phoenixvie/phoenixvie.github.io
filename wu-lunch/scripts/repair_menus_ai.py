@@ -449,6 +449,7 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
         status["health"] = "healthy"
     legacy.validate_meal_components(data)
     if any(row["repairs"] for row in report["results"]):
+        legacy.apply_campus_prices(next(r for r in data["restaurants"] if r["id"]=="campus").get("days",{}))
         DATA.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         FRONTEND.write_text("window.CAMPUS_LUNCH_DATA = " +
                             json.dumps(data, ensure_ascii=False, separators=(",", ":")) + ";\n", encoding="utf-8")

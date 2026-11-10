@@ -33,6 +33,7 @@ KARMA_URL = "https://karmafood.at/pages/wochenmenu-karma-food-wien"
 FINN_URL = "https://finn.wien/blogs/news/mittagsmenu"
 DAYS = ("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
 FINN_IMG = re.compile(r"FINN_kw(\d{1,2})(e)?(?:_\d+x\d+)?\.jpe?g$", re.I)
+FINN_REVIEW_VERSION = "image-v2-year-warning"
 
 
 def normal(value):
@@ -215,7 +216,8 @@ def validate_finn_pair(first, second, monday, img_url):
         # Finn images omit a year; validated ISO week AND recent Shopify
         # version timestamp independently anchor the source year.
         benign = lambda w: (("jahreszahl" in w or "jahresangabe" in w) and
-                            ("nicht angegeben" in w or "fehlt" in w or "nicht genannt" in w))
+                            any(x in w for x in ("nicht angegeben", "fehlt", "nicht genannt", "keine jahreszahl", "keine jahresangabe")) and
+                            not any(x in w for x in ("unklar", "widerspruch", "abweich", "preis", "unlesbar", "nicht überein")))
         if (result.get("status") != "found" or
             any(not benign(w) for w in warnings) or not result.get("items")):
             raise ValueError("Finn: Bildanalyse unvollständig oder nicht eindeutig")
@@ -268,7 +270,7 @@ def validate_finn_pair(first, second, monday, img_url):
         diet = "vegan" if cat == "vegan" else "veggie" if cat in ("veggie", "vegetarisch") else "meat" if cat in ("fleisch", "meat", "fisch", "fish") else "unknown"
         days[d].append({
             "name": name.strip(), "price": price, "category": item["category"],
-            "diet": diet, "description": "Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).",
+            "diet": diet, "description": "",
             "allergens": [], "included_soup": None, "included_choices": [],
             "source_url": img_url, "evidence_excerpt": item.get("evidence_excerpt", ""),
             "ai_confidence": "two-model-agreement",
@@ -347,25 +349,28 @@ def attach_finn_weekly_extras(days, prices, image_url):
 def fetch_finn(monday, *, key, previous):
     raw = legacy.safe_get(FINN_URL)
     image_url = select_finn_image(raw, monday)
-    # Avoid repeated API calls when the verified current image has not changed.
-    if (previous.get("source_image") == image_url and
-        previous.get("state") in ("ok", "cached") and previous.get("last_success", "")[:10] >= monday.isoformat()):
-        return None, previous.get("content_sha256"), image_url
-    if not key:
-        raise ValueError("Finn: OPENAI_API_KEY fehlt für Originalbild-Analyse")
+    # Download every time: publishers can replace bytes under the same URL.
     image = legacy.safe_get(image_url, 5_000_000)
     if not image.startswith(b"\xff\xd8\xff") or len(image) < 8_000:
         raise ValueError("Finn: ungültige oder zu kleine Speisekarten-JPEG")
     sha = hashlib.sha256(image).hexdigest()
-    if previous.get("content_sha256") == sha and previous.get("state") in ("ok", "cached"):
+    if (previous.get("content_sha256") == sha and previous.get("state") in ("ok", "cached")
+        and previous.get("review_version") == FINN_REVIEW_VERSION
+        and previous.get("review_week_start") == monday.isoformat()):
         return None, sha, image_url
+    if not key:
+        raise ValueError("Finn: OPENAI_API_KEY fehlt für Originalbild-Analyse")
     now = datetime.now(TZ).isoformat(timespec="seconds")
     if (previous.get("last_attempt_sha256") == sha and
+        previous.get("last_attempt_version") == FINN_REVIEW_VERSION and
+        previous.get("last_attempt_week_start") == monday.isoformat() and
         previous.get("last_attempt_at", "")[:10] == now[:10]):
         raise ValueError("Finn: diese Bildversion heute bereits mit KI geprüft; neuer Versuch erst bei Änderung oder morgen")
     # Mark an attempt BEFORE the paid model call. The caller retains this
     # record even if the models disagree or the API returns an error.
     previous.update({"last_attempt_sha256": sha, "last_attempt_at": now,
+                     "last_attempt_version": FINN_REVIEW_VERSION,
+                     "last_attempt_week_start": monday.isoformat(),
                      "source_image": image_url})
     spec = importlib.util.spec_from_file_location("finn_visual_ai", ROOT / "ai-pilot" / "ai_direct.py")
     ai = importlib.util.module_from_spec(spec)
@@ -466,6 +471,11 @@ def run(today, *, karma_only=False):
             else:
                 days, digest, source_url = fetch_finn(monday, key=key, previous=previous)
             if days is None:
+                if ident == 'finn':
+                    for rows in restaurant.get('days',{}).values():
+                        for item in rows:
+                            if item.get('description') == 'Optionales Suppen-/Salat-Menü laut Originalbild (Aufpreis separat).':
+                                item['description']=''
                 source_states[ident] = {**previous, "state": "cached", "checked_at": now}
                 continue
             legacy.candidate_quality_gate(ident, restaurant.get("days", {}), days)
@@ -484,6 +494,8 @@ def run(today, *, karma_only=False):
                 "state": "ok", "last_success": now, "checked_at": now,
                 "consecutive_failures": 0, "content_sha256": digest,
                 "source_image": source_url if ident == "finn" else None,
+                "review_version": FINN_REVIEW_VERSION if ident == "finn" else None,
+                "review_week_start": monday.isoformat(),
                 "source_pdf": source_url if ident == "karmafood" else None,
             }
         except Exception as exc:

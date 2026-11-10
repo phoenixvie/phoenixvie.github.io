@@ -100,6 +100,23 @@ jobs:
           result=$?
           echo "exit_code=$result" >> "$GITHUB_OUTPUT"
           exit 0
+      - name: Neues oder geändertes Mensa-PDF vollständig mit Luna prüfen
+        if: steps.guard.outputs.skip == 'false'
+        continue-on-error: true
+        shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          set -euo pipefail
+          python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
+      - name: Mensa-Original und KI-Kandidat zur Prüfung sichern
+        if: always() && steps.guard.outputs.skip == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: mensa-source-and-candidate
+          path: wu-lunch/ai-pilot/results/mensa-current.*
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Karma Food und Finn – Originalquelle sicher aktualisieren
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
@@ -130,21 +147,6 @@ jobs:
           pip install 'playwright>=1.50,<2'
           python -m playwright install --with-deps chromium
           python wu-lunch/scripts/update_topf_browser.py
-      - name: Mensa-PDF mit Luna reparieren (nur falls nötig)
-        if: steps.guard.outputs.skip == 'false' && github.event_name != 'push'
-        continue-on-error: true
-        shell: bash
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          set -euo pipefail
-          hour="$(TZ=Europe/Vienna date +%H)"
-          day="$(TZ=Europe/Vienna date +%u)"
-          if [[ "${{ github.event_name }}" != "workflow_dispatch" && "$hour" != "11" && ! ( "$day" == "1" && "$hour" == "07" ) ]]; then
-            echo "Mensa-KI läuft Mo 07:15 und 11:15, Di–Sa 11:15 Wien."
-            exit 0
-          fi
-          python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
       - name: Luna prüft jede neue/geänderte Mittagsspeisekarte
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
@@ -184,6 +186,8 @@ jobs:
       - name: Änderungen nur bei Bedarf veröffentlichen
         if: steps.guard.outputs.skip == 'false'
         shell: bash
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
           git config user.name "wu-lunch-bot"
@@ -193,6 +197,7 @@ jobs:
           # Nie konflikthafte JSON-Dateien blind zusammenführen oder force-pushen.
           for attempt in 1 2 3; do
             git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
+            if [[ -f wu-lunch/data/mensa-ai-candidate.json ]]; then git add wu-lunch/data/mensa-ai-candidate.json; fi
             if [[ -f wu-lunch/data/repair-report.json ]]; then git add wu-lunch/data/repair-report.json; fi
             if git diff --cached --quiet; then
               echo "Keine Datenänderungen"
@@ -206,6 +211,9 @@ jobs:
             git fetch origin "$branch"
             git reset --hard "origin/$branch"
             python wu-lunch/scripts/update_menus.py
+            python wu-lunch/scripts/update_new_restaurants.py
+            python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
+            python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
           done
           echo "::error::Menüimport konnte nach drei Konfliktversuchen nicht veröffentlicht werden."
           exit 1
@@ -216,3 +224,10 @@ jobs:
             echo "::error::Alle Datenquellen konnten nicht verarbeitet werden – wu-lunch/status.json prüfen."
             exit 1
           fi
+          python - <<'PY'
+          import json
+          status=json.load(open('wu-lunch/status.json'))
+          failed=[name for name in ('mensa','finn') if status.get('sources',{}).get(name,{}).get('state')=='error']
+          if failed:
+              raise SystemExit('Quellenprüfung fehlgeschlagen: '+', '.join(failed)+' – Details in wu-lunch/status.json')
+          PY

@@ -23,3 +23,9 @@ Die Android-Oberfläche wird aus den lokalen Dateien unter `preview/` eingebette
 
 APK-Builds starten nur manuell oder für Pull Requests mit `[APK]` im Titel. Die CI prüft den Design-Fingerabdruck innerhalb der tatsächlichen APK und installiert sie für Oberflächenprüfungen auf einem Android-Emulator. Das Downloadpaket heißt `wu-food-android-0.2.0` und enthält `WU-Food-0.2.0.apk` sowie `build-info.json`.
 
+
+Die App lädt die veröffentlichte Weboberfläche bei Start und Wiederaufnahme neu.
+Freigegebene Menüdaten werden alle drei Sekunden aktualisiert. Restaurantseiten
+und PDF-Dateien öffnen intern mit einem einzigen Zurück-Button unten. Die
+eingebaute Oberfläche dient nur als Rückfall bei Ladefehlern. Bestehende APKs
+erhalten diese Umstellung erst durch eine ausdrücklich freigegebene neue APK.

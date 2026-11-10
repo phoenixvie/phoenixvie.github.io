@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-08T22:26:54+01:00",
+  "checked_at": "2026-11-09T20:50:45+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,33 +10,34 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die regulären Hauptgerichte ist kein eindeutig zugeordneter Einzelpreis angegeben.",
-        "„Extras“ (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp, Masala Chai) stehen ohne Tageszuordnung und ohne Einzelpreise."
+        "Der Preis von €13,50 ist als Gesamtpreis des Lunch Combos ausgewiesen, nicht als Einzelpreis eines Hauptgerichts.",
+        "Für die meisten Gerichte ist kein Einzelpreis angegeben. Das Protein Power Chili ist ausdrücklich mit €11,50 als Special ausgezeichnet.",
+        "Es sind keine separat angebotenen Tagessuppen, Salate oder Nachspeisen mit belegtem Einzelpreis aufgeführt."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "62026cef32bb800b59337b33402bd0993b9600df86829df9a23203cde218cc53"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "0187efc87e528054d6e5200d79088ce9b40f954bdf05837050356e413a17f9c5"
       },
       "usage": {
-        "input_tokens": 2556,
+        "input_tokens": 2600,
         "input_tokens_details": {
-          "cache_write_tokens": 2553,
+          "cache_write_tokens": 2597,
           "cached_tokens": 0
         },
-        "output_tokens": 3326,
+        "output_tokens": 3354,
         "output_tokens_details": {
-          "reasoning_tokens": 822
+          "reasoning_tokens": 915
         },
-        "total_tokens": 5882
+        "total_tokens": 5954
       }
     },
     {
       "restaurant": "mensa",
       "issues": [
-        "source_error"
+        "missing_price"
       ],
       "action": "dedicated_pdf_ai",
       "repairs": []
@@ -49,9 +50,7 @@
     },
     {
       "restaurant": "finn",
-      "issues": [
-        "source_error"
-      ],
+      "issues": [],
       "action": "dedicated_image_ai",
       "repairs": []
     },

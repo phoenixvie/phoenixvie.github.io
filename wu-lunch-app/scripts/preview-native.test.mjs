@@ -10,13 +10,14 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.ok(!html.includes('href="./style.css"'));
   const code = html.match(/<script>(window.WU_FOOD_BUILD[\s\S]*?)<\/script>/)[1];
   const events = new Map(), actions = new Map(), messages = [];
+  let refresh,refreshMs;
   const app = {innerHTML: '', addEventListener: (type, callback) => actions.set(type, callback)};
   const restaurants = [{id:'mensa',name:'WU Mensa',url:'https://www.wumensa.at/menuplan-deutsch/',days:{}},{id:'finn',name:'Finn',url:'https://finn.wien/blogs/news/mittagsmenu',days:{}}];
   const context = {URL, URLSearchParams, Intl, Date, console, navigator:{}, location:{hostname:'phoenixvie.github.io',search:''},
     document:{getElementById:()=>app,addEventListener:(type,callback)=>events.set(type,callback)},
-    setInterval:()=>0, setTimeout:()=>0,
+    setInterval:(callback,ms)=>{refresh=callback;refreshMs=ms;return 0}, setTimeout:()=>0,
     ReactNativeWebView:{postMessage:value=>messages.push(JSON.parse(value))},
-    fetch:async url=>({ok:true,json:async()=>url.includes('restaurant_overrides')?[{restaurant_id:'mensa',website_url:'https://www.wumensa.at/'}]:url.includes('menu_day_overrides')?[]:url.includes('restaurant-contact')?{restaurants:{}}:{weekStart:'2026-11-09',restaurants}})};
+    fetch:async url=>({ok:true,json:async()=>url.includes('restaurant_overrides')?[{restaurant_id:'mensa',website_url:'https://www.wumensa.at/'}]:url.includes('menu_day_overrides')?[]:url.includes('restaurant-contact')?{restaurants:{}}:{weekStart:'2026-11-09',restaurants:JSON.parse(JSON.stringify(restaurants))}})};
   context.window=context;
   vm.runInNewContext(code,context);
   assert.ok(events.has('DOMContentLoaded'));
@@ -35,4 +36,8 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.match(app.innerHTML,/<h1>WU Mensa<\/h1>/);
   await click({action:'share'});
   assert.equal(messages.at(-1).text,'Gehen wir heute WU Mensa zu Mittag?');
+  assert.equal(refreshMs,3000);
+  restaurants[0].days=Object.fromEntries(Array.from({length:5},(_,i)=>['2026-11-'+String(9+i).padStart(2,'0'),[{name:'Live aktualisiertes Gericht',category:'Meaty',price:6.4}]]));
+  await refresh();
+  assert.match(app.innerHTML,/Live aktualisiertes Gericht/);
 });
