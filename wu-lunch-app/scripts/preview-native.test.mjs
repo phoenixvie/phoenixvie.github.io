@@ -49,6 +49,8 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.match(app.innerHTML,/info-map/);assert.match(mapElement.innerHTML,/Karte wird geladen/);
   assert.doesNotMatch(app.innerHTML,/Mit Freunden essen gehen|Kontaktiere das App Team|data-detail="contact"|data-detail="map"/);
   assert.match(app.innerHTML,/Webseite<\/span><a href="https:\/\/www.wumensa.at\/"/);
+  assert.match(app.innerHTML,/>www\.wumensa\.at<\/a>/);
+  assert.match(app.innerHTML,/>www\.wumensa\.at\/menuplan-deutsch<\/a>/);
   assert.match(app.innerHTML,/Webseite – Mittagsmenü<\/span><a href="https:\/\/www.wumensa.at\/menuplan-deutsch\/"/);
   await click({action:'next-restaurant'});
   assert.match(app.innerHTML,/<h1>Restaurant<\/h1>/);assert.match(app.innerHTML,/<h2>Finn<\/h2>/);
