@@ -35,7 +35,7 @@ Die umgesetzten Funktionen `restaurantDisplayRules` und `mensaStations` müssen
 in beiden Ansichten übereinstimmen; Regressionstests prüfen diese Gleichheit.
 
 - Allgemein: Allergene niemals anzeigen; identische Mensa-Gerichte je Kategorie
-  und Preis deduplizieren. Beef und Planted bleiben unterschiedliche Varianten.
+  und Preis deduplizieren. Beef und Planted werden bei gleichem Preis als Alternativen in einer Burger-Zeile zusammengefasst.
 - App-Restaurantwebseite: voller Inhaltsbereich ohne App-Kopfzeile, unten nur
   ein mittiger Zurück-Button. HTTP-Webseiten und PDFs intern öffnen; Telefon
   und Mail bleiben Systemaktionen.

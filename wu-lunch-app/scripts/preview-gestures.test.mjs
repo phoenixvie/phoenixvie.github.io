@@ -58,6 +58,7 @@ test('Mensa removes repeated identical burger rows and never displays allergen c
   const rows=c.mensaStations([burger,{...burger}, {...burger,name:'Mensa Burger mit Pommes – Beef',allergens:['A','C','G']}]);
   assert.equal(rows.length,1);
   assert.equal(rows[0].name.match(/Planted/g).length,1);assert.match(rows[0].name,/Beef/);
+  assert.equal(rows[0].name.match(/Mensa Burger/g).length,1);
   assert.ok(!source.includes('Allergene:'));
 });
 
