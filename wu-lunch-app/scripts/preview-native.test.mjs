@@ -12,12 +12,13 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   const events = new Map(), actions = new Map(), messages = [];
   let refresh,refreshMs;
   const app = {innerHTML: '', addEventListener: (type, callback) => actions.set(type, callback)};
+  const mapElement={innerHTML:''};
   const restaurants = [{id:'mensa',name:'WU Mensa',url:'https://www.wumensa.at/menuplan-deutsch/',days:{}},{id:'finn',name:'Finn',url:'https://finn.wien/blogs/news/mittagsmenu',days:{}}];
   const context = {URL, URLSearchParams, Intl, Date, console, navigator:{}, location:{hostname:'phoenixvie.github.io',search:''},
-    document:{getElementById:()=>app,addEventListener:(type,callback)=>events.set(type,callback)},
+    document:{getElementById:id=>id==='map'?mapElement:app,addEventListener:(type,callback)=>events.set(type,callback)},
     setInterval:(callback,ms)=>{refresh=callback;refreshMs=ms;return 0}, setTimeout:()=>0,
     ReactNativeWebView:{postMessage:value=>messages.push(JSON.parse(value))},
-    fetch:async url=>({ok:true,json:async()=>url.includes('restaurant_overrides')?[{restaurant_id:'mensa',website_url:'https://www.wumensa.at/'}]:url.includes('menu_day_overrides')?[]:url.includes('restaurant-contact')?{restaurants:{}}:{weekStart:'2026-11-09',restaurants:JSON.parse(JSON.stringify(restaurants))}})};
+    fetch:async url=>({ok:true,json:async()=>url.includes('restaurant_overrides')?[{restaurant_id:'mensa',website_url:'https://www.wumensa.at/'}]:url.includes('menu_day_overrides')?[]:url.includes('restaurant-contact')?{restaurants:{mensa:{phone:'+43 123',email:'mensa@example.test',hours:['Mo–Fr 11:00–14:00']}}}:{weekStart:'2026-11-09',restaurants:JSON.parse(JSON.stringify(restaurants))}})};
   context.window=context;
   vm.runInNewContext(code,context);
   assert.ok(events.has('DOMContentLoaded'));
@@ -36,6 +37,15 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.match(app.innerHTML,/<h1>WU Mensa<\/h1>/);
   await click({action:'share'});
   assert.equal(messages.at(-1).text,'Gehen wir heute WU Mensa zu Mittag?');
+  await click({detail:'info'});
+  assert.match(app.innerHTML,/<h1>Information<\/h1>/);
+  assert.match(app.innerHTML,/info-hero/);assert.match(app.innerHTML,/WU Mensa/);
+  assert.match(app.innerHTML,/tel:\+43123/);assert.match(app.innerHTML,/mailto:mensa@example.test/);
+  assert.match(app.innerHTML,/Welthandelsplatz 1, D1\/TC, 1020 Wien/);
+  assert.match(app.innerHTML,/Öffnungszeiten/);assert.match(app.innerHTML,/Mo–Fr 11:00–14:00/);
+  assert.match(app.innerHTML,/info-map/);assert.match(mapElement.innerHTML,/Karte wird geladen/);
+  assert.doesNotMatch(app.innerHTML,/Mit Freunden essen gehen|Kontaktiere das App Team|data-detail="contact"|data-detail="map"/);
+  await click({detail:'menu'});
   assert.equal(refreshMs,3000);
   restaurants[0].days=Object.fromEntries(Array.from({length:5},(_,i)=>['2026-11-'+String(9+i).padStart(2,'0'),[{name:'Live aktualisiertes Gericht',category:'Meaty',price:6.4}]]));
   await refresh();
