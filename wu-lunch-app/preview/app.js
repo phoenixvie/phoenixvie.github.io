@@ -32,7 +32,7 @@ function restaurantDisplayRules(id,raw){
   if(id==='karmafood')return rows.map(item=>({...item,description:'',included_choices:[],menu_options:[]}));
   if(id==='omakueche')return rows.map(item=>({...item,name:item.name.replace(/\s*\(Erwachsene\)/gi,''),description:'',included_choices:[],menu_options:[]}));
   if(id==='gruenehuette')return rows.map(item=>/suppe|soup/i.test(item.category||'')?
-    {...item,name:item.name.replace(/^Suppen zur Auswahl:\s*/i,''),description:'Optional zum Tagesteller',detailInline:true}:
+    {...item,name:item.name.replace(/^Suppen zur Auswahl:\s*/i,'').replace(/\boder,\s*/gi,'oder '),description:'Optional zum Tagesteller',detailInline:true}:
     {...item,description:'',included_choices:[]});
   if(id!=='topfdeckel')return rows;
   const light=rows.find(item=>/light lunch/i.test(item.name)),big=rows.find(item=>/big lunch/i.test(item.name));
