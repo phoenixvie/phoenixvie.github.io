@@ -21,7 +21,6 @@ function AppContent() {
   const sourceRequest = useRef(0);
   const [canGoBack, setCanGoBack] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [offline, setOffline] = useState(false);
   const closePage = () => {sourceRequest.current++; setPage(null); setCanGoBack(false); setFailed(false);main.current?.injectJavaScript('window.wuFoodRefresh?.();true;');};
   const openSource = async (url: string, title: string) => {
     const request = ++sourceRequest.current;
@@ -44,10 +43,10 @@ function AppContent() {
   const browserBack = () => {if (canGoBack) browser.current?.goBack(); else closePage();};
   useEffect(() => {
     const listener=AppState.addEventListener('change',state=>{
-      if(state==='active'){if(offline)setOffline(false);else main.current?.reload();}
+      if(state==='active')main.current?.injectJavaScript('window.wuFoodRefresh?.();true;');
     });
     return ()=>listener.remove();
-  },[offline]);
+  },[]);
   useEffect(() => {
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (page) {if (canGoBack) browser.current?.goBack(); else closePage();}
@@ -59,9 +58,11 @@ function AppContent() {
   const message = ({nativeEvent}: WebViewMessageEvent) => {
     // Restaurant pages never receive this privileged bridge.
     try {
+      if(nativeEvent.url!=='about:blank') {
       const origin=new URL(nativeEvent.url);
       if(origin.origin!==new URL(baseUrl).origin || ![new URL(baseUrl).pathname,new URL(baseUrl).pathname+'index.html'].includes(origin.pathname))return;
-    } catch {if(!offline || nativeEvent.url!=='about:blank')return;}
+      }
+    } catch {return;}
     try {
       const item = JSON.parse(nativeEvent.data);
       if (item.type === 'open-source') {
@@ -77,8 +78,8 @@ function AppContent() {
   };
   return <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
     <StatusBar barStyle="light-content" />
-    <WebView<{}> ref={main} source={offline?htmlSource:{uri:baseUrl+'?app=1',headers:{'Cache-Control':'no-cache'}}} originWhitelist={['*']} onMessage={message}
-      cacheEnabled={false} onError={()=>{if(!offline)setOffline(true);}}
+    <WebView<{}> ref={main} source={htmlSource} originWhitelist={['*']} onMessage={message}
+      cacheEnabled={false}
       javaScriptEnabled domStorageEnabled setSupportMultipleWindows={false} style={styles.web}
       onShouldStartLoadWithRequest={request => {
         if (request.isTopFrame === false || request.url === 'about:blank' || request.url.split('?')[0] === baseUrl || request.url.split('?')[0] === baseUrl+'index.html') return true;

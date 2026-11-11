@@ -17,7 +17,7 @@ test('Mensa retains only stations 1+2, 3+4 and 8 with separate soup lines',async
   assert.match(result[0].name,/Originalgericht 4/);assert.match(result[0].name,/Quellenbeilage/);
   assert.equal(context.mensaStations([]).length,0);
   const web=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');
-  assert.ok(web.includes(helper.trim()));
+  assert.ok(web.replace(/\r\n/g,'\n').includes(helper.trim().replace(/\r\n/g,'\n')));
 });
 
 test('restaurant rules retain verified totals, remove commentary and merge Topf combos',async()=>{
@@ -46,7 +46,7 @@ test('restaurant rules retain verified totals, remove commentary and merge Topf 
   assert.equal(c.restaurantDisplayRules('omakueche',[{name:'All-you-can-eat-Buffet (Erwachsene)',description:'to go'}])[0].name,'All-you-can-eat-Buffet');
   assert.equal(c.restaurantDisplayRules('gruenehuette',[{name:'Suppen zur Auswahl: Frittatensuppe',category:'Suppe',price:2}])[0].description,'Optional zum Tagesteller');
   assert.equal(c.restaurantDisplayRules('gruenehuette',[{name:'Frittatensuppe',category:'Suppe'}])[0].detailInline,true);
-  const web=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');assert.ok(web.includes(helper.trim()));
+  const web=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');assert.ok(web.replace(/\r\n/g,'\n').includes(helper.trim().replace(/\r\n/g,'\n')));
   assert.match(web,/dish-detail\{white-space:pre-line\}/);
 });
 
