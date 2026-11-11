@@ -58,9 +58,11 @@ function AppContent() {
   const message = ({nativeEvent}: WebViewMessageEvent) => {
     // Restaurant pages never receive this privileged bridge.
     try {
+      if(nativeEvent.url!=='about:blank') {
       const origin=new URL(nativeEvent.url);
       if(origin.origin!==new URL(baseUrl).origin || ![new URL(baseUrl).pathname,new URL(baseUrl).pathname+'index.html'].includes(origin.pathname))return;
-    } catch {if(nativeEvent.url!=='about:blank')return;}
+      }
+    } catch {return;}
     try {
       const item = JSON.parse(nativeEvent.data);
       if (item.type === 'open-source') {
