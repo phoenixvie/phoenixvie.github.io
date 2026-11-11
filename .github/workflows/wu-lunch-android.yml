@@ -2,12 +2,15 @@ name: WU Lunch Android APK
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-android.yml']
 
 permissions:
   contents: read
 
 jobs:
   build-apk:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.title, '[APK]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     defaults:
@@ -31,11 +34,34 @@ jobs:
         run: npm run test && npx tsc --noEmit
       - name: Generate Android project
         run: CI=1 npx expo prebuild --platform android
+      - name: Verify adaptive icon inset
+        run: grep -q 'android:inset="20%"' android/app/src/main/res/drawable/ic_launcher_foreground_inset.xml
       - name: Build standalone test APK with bundled JavaScript
         run: ./gradlew assembleRelease
         working-directory: wu-lunch-app/android
+      - name: Verify packaged design and name the APK
+        run: python scripts/verify-apk.py
+      - name: Enable emulator acceleration
+        run: sudo chmod 666 /dev/kvm
+      - name: Install and check the actual APK
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          working-directory: wu-lunch-app
+          script: python scripts/emulator-smoke.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wu-food-android-proof
+          path: wu-lunch-app/android-proof
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
-          name: wu-lunch-android-apk
-          path: wu-lunch-app/android/app/build/outputs/apk/release/app-release.apk
+          name: wu-food-android-0.3.0
+          path: |
+            wu-lunch-app/android/app/build/outputs/apk/release/WU-Food-0.3.0.apk
+            wu-lunch-app/android/app/build/outputs/apk/release/build-info.json
           if-no-files-found: error

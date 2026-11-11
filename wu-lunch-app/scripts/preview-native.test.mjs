@@ -11,14 +11,17 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   const code = html.match(/<script>(window.WU_FOOD_BUILD[\s\S]*?)<\/script>/)[1];
   const events = new Map(), actions = new Map(), messages = [];
   let refresh,refreshMs;
+  let profiles=[{restaurant_id:'mensa',website_url:'https://www.wumensa.at/'}], manual=[];
+  const cache=new Map();
+  const localStorage={getItem:key=>cache.get(key)||null,setItem:(key,value)=>cache.set(key,value)};
   const app = {innerHTML: '', addEventListener: (type, callback) => actions.set(type, callback)};
   const mapElement={innerHTML:''};
   const restaurants = [{id:'mensa',name:'WU Mensa',url:'https://www.wumensa.at/menuplan-deutsch/',days:{}},{id:'finn',name:'Finn',url:'https://finn.wien/blogs/news/mittagsmenu',days:{}}];
-  const context = {URL, URLSearchParams, Intl, Date, console, navigator:{}, location:{hostname:'phoenixvie.github.io',search:''},
+  const context = {URL, URLSearchParams, Intl, Date, console, localStorage, navigator:{}, location:{hostname:'phoenixvie.github.io',search:''},
     document:{getElementById:id=>id==='map'?mapElement:app,addEventListener:(type,callback)=>events.set(type,callback)},
     setInterval:(callback,ms)=>{refresh=callback;refreshMs=ms;return 0}, setTimeout:()=>0,
     ReactNativeWebView:{postMessage:value=>messages.push(JSON.parse(value))},
-    fetch:async url=>({ok:true,json:async()=>url.includes('restaurant_overrides')?[{restaurant_id:'mensa',website_url:'https://www.wumensa.at/'}]:url.includes('menu_day_overrides')?[]:url.includes('restaurant-contact')?{restaurants:{mensa:{phone:'+43 123',email:'mensa@example.test',hours:['Mo–Fr 11:00–14:00']}}}:{weekStart:'2026-11-09',restaurants:JSON.parse(JSON.stringify(restaurants))}})};
+    fetch:async url=>({ok:true,json:async()=>url.includes('restaurant_overrides')?profiles:url.includes('menu_day_overrides')?manual:url.includes('restaurant-contact')?{restaurants:{mensa:{phone:'+43 123',email:'mensa@example.test',hours:['Mo–Fr 11:00–14:00']}}}:{weekStart:'2026-11-09',restaurants:JSON.parse(JSON.stringify(restaurants))}})};
   context.window=context;
   vm.runInNewContext(code,context);
   assert.ok(events.has('DOMContentLoaded'));
@@ -74,4 +77,18 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   restaurants[0].days=Object.fromEntries(Array.from({length:5},(_,i)=>['2026-11-'+String(9+i).padStart(2,'0'),[{name:'Live aktualisiertes Gericht',category:'Meaty',price:6.4}]]));
   await refresh();
   assert.match(app.innerHTML,/Live aktualisiertes Gericht/);
+  manual=[{restaurant_id:'mensa',menu_date:'2026-11-12',dishes:[{name:'Manuell korrigiertes Menü',price:8}]}];
+  await refresh();assert.match(app.innerHTML,/Manuell korrigiertes Menü/);
+  profiles=[{restaurant_id:'mensa',is_enabled:false},{restaurant_id:'finn',sort_order:0}];
+  await refresh();assert.doesNotMatch(app.innerHTML,/WU Mensa/);assert.match(app.innerHTML,/Finn/);
+  profiles=[{restaurant_id:'mensa',sort_order:2},{restaurant_id:'finn',sort_order:1}];
+  await refresh();assert.ok(app.innerHTML.indexOf('data-restaurant="finn"')<app.innerHTML.indexOf('data-restaurant="mensa"'));
+  assert.ok(cache.has('wu-food-live-v1'));
+  const cachedApp={innerHTML:'',addEventListener(){}};
+  const cachedContext={...context,document:{getElementById:()=>cachedApp,addEventListener:(name,fn)=>{if(name==='DOMContentLoaded')events.set('cached-ready',fn)}},fetch:()=>new Promise(()=>{})};
+  cachedContext.window=cachedContext;
+  vm.runInNewContext(code,cachedContext); // cached restaurant list renders before any network response
+  events.get('cached-ready')();
+  assert.match(cachedApp.innerHTML,/Finn/);assert.match(cachedApp.innerHTML,/WU Mensa/);
+
 });
