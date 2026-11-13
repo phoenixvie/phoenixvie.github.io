@@ -35,6 +35,12 @@ test('admin UI texts update German and English without changing source keys or m
   c.WULunchI18n.setLanguage('de');assert.equal(node.textContent,'Speisen');
 });
 
+test('explicit manual menu/profile translations retain priority over shared default labels',async()=>{
+  const c=context('en',[['International','Global cuisine','manual']]);
+  c.fetch=async()=>({ok:true,json:async()=>[{text_key:'International',de_text:'International',en_text:'International',updated_at:'2026-11-13T18:00:00Z'}]});
+  await c.WULunchI18n.refreshUi();assert.equal(c.WULunchI18n.english('International'),'Global cuisine');
+});
+
 test('language toggle restores German text and accessibility labels and remembers the explicit choice',()=>{
   const saved=new Map(),events=[],messages=[];
   const node={textContent:'Zurück',parentElement:{closest:()=>null}};

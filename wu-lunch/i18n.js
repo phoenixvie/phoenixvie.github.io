@@ -36,7 +36,7 @@
   const originals=new WeakMap(),originalAttributes=new WeakMap();
   try{const cache=JSON.parse(root.localStorage?.getItem('wu-lunch-en-v1')||'[]');translations=new Map(cache.map(row=>[row[0],row[1]]));manuals=new Set(cache.filter(row=>row[2]==='manual').map(row=>row[0]));}catch{}
   function english(source){
-    if(typeof source!=='string')return null;if(uiRows.has(source))return label(source,'en');if(manuals.has(source))return translations.get(source);
+    if(typeof source!=='string')return null;if(manuals.has(source))return translations.get(source);if(uiRows.has(source))return label(source,'en');
     if(source.includes('\n')){const lines=source.split('\n');const translated=lines.map(line=>!line.trim()?line:english(line.trim()));if(translated.every(x=>x!==null))return translated.join('\n');}
     if(/^Optional: /.test(source)){const value=english(source.slice(10));if(value)return 'Optional: '+value;}
     if(source.endsWith(':')&&ui[source.slice(0,-1)])return ui[source.slice(0,-1)]+':';
