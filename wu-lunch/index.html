@@ -284,7 +284,7 @@ html,body,.page { background:#fff; }
 .logo-omakueche{background:#c9a581;color:#fff}.logo-topfdeckel{background:#6cb78e;color:#173d2b}.logo-gruenehuette{background:#448b54;color:#fff}.logo-lia{background:#4a579b;color:#fff}.logo-karmafood{background:#c65b40;color:#fff}.logo-finn{background:#49654e;color:#fff}
 .selected-day-heading{font-size:14px;text-align:center;color:#444;margin:3px 0 0;font-weight:400}
 .dish-text{font-weight:700}.dish-detail{font-weight:400;color:#555;display:block}
-.dish-detail{white-space:pre-line}.dish-detail.inline{display:inline}
+.row:not(.restaurant-losteria) .dish-text{font-weight:400}.mensa-station{font-weight:700}.dish-detail{white-space:pre-line}.dish-detail.inline{display:inline}
 </style>
 </head>
 <body>
@@ -666,7 +666,8 @@ function mensaStations(raw){
           priceDisplay:item.category==='Ausgabe 5'?'':item.priceLabel||(item.price==null?'X €':null)
         }));
       }
-      const sorted=[...raw].sort((a,b)=>mealPosition(a)-mealPosition(b));
+      const rank=item=>restaurant.id==='topfdeckel'&&/menükombo|light lunch|big lunch/i.test([item.category,item.name].join(' '))?0.5:mealPosition(item);
+      const sorted=[...raw].sort((a,b)=>rank(a)-rank(b));
       const out=[];
       sorted.forEach(item=>{
         if(restaurant.id==='topfdeckel' && /gratis-dessert zum start|dein erstes dessert geht auf uns/i.test(item.name))return;
@@ -693,14 +694,25 @@ function mensaStations(raw){
     function escapeHtml(value){
       return String(value??'').replace(/[&<>"']/g,chr=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[chr]));
     }
+    function renderMenuDishText(restaurantId,item){
+      const cleanName=restaurantId==='losteria'?item.name:item.name.replace(/\s+Allergene:\s*.*$/i,'').replace(/:\s*[ABCDEFGHLMNOPR](?:\s*,\s*[ABCDEFGHLMNOPR])*\s*$/,'');
+      const name=escapeHtml(cleanName), detail=String(item.detail||'').trim();
+      if(restaurantId==='losteria')return name+(detail?'<span class="dish-detail'+(item.detailInline?' inline':'')+'">'+(item.detailInline?' ':'')+escapeHtml(detail)+'</span>':'');
+      const course=value=>value.replace(/^Mit\s+/i,'').replace(/\bkleinem Salat\b/g,'kleiner Salat').replace(/\bgrünem Salat\b/g,'grüner Salat');
+      if(restaurantId==='campus'&&detail==='Suppe oder Salat · Dessert')return '<span class="dish-detail">Suppe oder Salat</span>'+name+'<span class="dish-detail">Dessert</span>';
+      const included=/^Mit\s+((?:Tages)?suppe|(?:kleinem|kleiner|grünem|grüner)\s+Salat|Salat)(?:\s+(?:oder|und)\s+((?:Tages)?suppe|(?:kleinem|kleiner|grünem|grüner)\s+Salat|Salat))?\.?$/i.test(detail);
+      if(!item.detailInline&&included)return '<span class="dish-detail">'+escapeHtml(course(detail).replace(/\.$/,''))+'</span>'+name;
+      const title=restaurantId==='mensa'&&/^Ausgabe\b/.test(item.name)?'<span class="mensa-station">'+name+'</span>':name;
+      return title+(detail?'<span class="dish-detail'+(item.detailInline?' inline':'')+'">'+(item.detailInline?' ':'')+escapeHtml(detail)+'</span>':'');
+    }
     function renderRow(restaurant){
       const items=visibleDishes(restaurant);
       const row=document.createElement('article');
-      row.className='row';
+      row.className='row'+(restaurant.id==='losteria'?' restaurant-losteria':'');
       const initials={mensa:'M',campus:'C',glashaus:'G',baschly:'B',losteria:'L',omakueche:'O',topfdeckel:'T',gruenehuette:'H',lia:'L',karmafood:'K',finn:'F'};
       const label=(initials[restaurant.id]||restaurant.name.charAt(0)).toLocaleUpperCase('de-AT');
       const dishRows=items.length ? items.map(item=>
-        '<div class="menu-line"><span class="dish-text">'+escapeHtml(item.name)+(item.detail?'<span class="dish-detail'+(item.detailInline?' inline':'')+'">'+(item.detailInline?' ':'')+escapeHtml(item.detail)+'</span>':'')+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
+        '<div class="menu-line"><span class="dish-text">'+renderMenuDishText(restaurant.id,item)+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
       ).join('') : '<div class="empty-row">Noch nicht veröffentlicht</div>';
       row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+(restaurant.logo_url?'<img class="logo-image" src="'+escapeHtml(restaurant.logo_url)+'" alt="">':escapeHtml(label))+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'

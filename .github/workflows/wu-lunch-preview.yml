@@ -1,10 +1,10 @@
 name: WU Food Webvorschau prüfen
 on:
   pull_request:
-    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
+    paths: ['wu-lunch/**', 'wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
   push:
     branches: [master]
-    paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
+    paths: ['wu-lunch/**', 'wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
 permissions:
   contents: read
 jobs:
@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '24'
       - run: node --check wu-lunch-app/preview/app.js
-      - run: node --test wu-lunch-app/scripts/preview-gestures.test.mjs
+      - run: node --test wu-lunch-app/scripts/preview-gestures.test.mjs wu-lunch-app/scripts/website-presentation.test.mjs
   native-source:
     runs-on: ubuntu-latest
     defaults:
