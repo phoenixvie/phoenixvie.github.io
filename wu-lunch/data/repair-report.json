@@ -1,70 +1,44 @@
 {
-  "checked_at": "2026-11-13T14:31:37+01:00",
+  "checked_at": "2026-11-13T14:49:25+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
-  "api_calls": 2,
+  "api_calls": 1,
   "results": [
-    {
-      "restaurant": "losteria",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Quelle bestätigt nicht, dass diese Saisonkarte in der gesuchten Woche gültig ist.",
-        "Keine separat ausgewiesenen Menü-Kombinationen oder zusätzlichen Tagesgerichte in der Quelle."
-      ],
-      "ai_only_items": 4,
-      "parser_only_items": 0,
-      "ai_only_examples": [
-        "None: crema di patate con tartufo",
-        "None: pizza bianca tacchino e cipolletartufo di cielo",
-        "None: tagliatelle tartufo e funghi",
-        "None: tortina di mandorle"
-      ],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "d84bce9462074cef051117997451f04ee6fa066618661907333254e9233484d3"
-      },
-      "usage": {
-        "input_tokens": 1916,
-        "input_tokens_details": {
-          "cache_write_tokens": 1913,
-          "cached_tokens": 0
-        },
-        "output_tokens": 903,
-        "output_tokens_details": {
-          "reasoning_tokens": 149
-        },
-        "total_tokens": 2819
-      }
-    },
     {
       "restaurant": "karmafood",
       "issues": [],
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die aufgeführten Extras (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai) haben keine ausgewiesenen Preise und sind keinem Wochentag zugeordnet; daher nicht als datierte Einzelgerichte aufgenommen.",
-        "Keine separat angebotenen Tagessuppen, Salate oder Nachspeisen mit belegtem Einzelpreis ausgewiesen. Angaben wie vegan oder glutenfrei sind keine Allergen-Codes."
+        "Für die einzelnen Hauptgerichte ist kein Einzelpreis angegeben.",
+        "„Lassi & Lunch“ wird ohne zuordenbaren Preis und ohne nähere Angaben zu den enthaltenen Bestandteilen genannt.",
+        "Die undatierten Extras Samosas, Sweets & Mango Lassi, Spice it up: Kashmiri Chili Crisp und Masala Chai wurden keinem Tag zugeordnet.",
+        "Es sind keine separat ausgewiesenen Tagessuppen oder Salate erkennbar."
       ],
-      "ai_only_items": 0,
+      "ai_only_items": 5,
       "parser_only_items": 0,
-      "ai_only_examples": [],
+      "ai_only_examples": [
+        "2026-11-09: lunch combo",
+        "2026-11-10: lunch combo",
+        "2026-11-11: lunch combo",
+        "2026-11-12: lunch combo",
+        "2026-11-13: lunch combo"
+      ],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "41cf350275828d884f9d151db0e88102a66da76c69777a4041e8bf9c3914c6a7"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "37e091e30cc2f6605b848bda452d503d2de4b57273947c0b10116049f731b55d"
       },
       "usage": {
-        "input_tokens": 2601,
+        "input_tokens": 2600,
         "input_tokens_details": {
-          "cache_write_tokens": 2598,
+          "cache_write_tokens": 2597,
           "cached_tokens": 0
         },
-        "output_tokens": 2665,
+        "output_tokens": 3936,
         "output_tokens_details": {
-          "reasoning_tokens": 735
+          "reasoning_tokens": 1088
         },
-        "total_tokens": 5266
+        "total_tokens": 6536
       }
     },
     {
