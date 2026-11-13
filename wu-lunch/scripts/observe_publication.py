@@ -5,6 +5,7 @@ Nur Metadaten, normierte Inhaltshashes und Zeitpunkte werden gespeichert.
 Ändert keine Menüdatei und ist unabhängig vom veröffentlichten Lunch-Frontend.
 """
 from __future__ import annotations
+import sys
 import hashlib
 import json
 import os

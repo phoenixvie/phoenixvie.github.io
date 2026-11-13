@@ -273,6 +273,7 @@
             if(value!==null&&(!Number.isFinite(value)||value<0||value>=150))throw new Error('Preise müssen zwischen 0 und 149,99 € liegen.');
           }
         }
+        if(menuRestaurant.value==='finn')for(const dish of dishes)if(Number.isFinite(dish.price))dish.menu_options=[{label:'Hauptgericht mit Suppe',total_price:dish.price}];
         const record={week_start:currentMenu.weekStart,restaurant_id:menuRestaurant.value,menu_date:menuDate.value,dishes};
         const response=await api('/rest/v1/menu_day_overrides?on_conflict=week_start,restaurant_id,menu_date',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(record)});
         if(!response.ok)throw new Error('Tagesmenü konnte nicht gespeichert werden.');
