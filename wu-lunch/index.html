@@ -598,6 +598,7 @@ html,body,.page { background:#fff; }
     }
 function restaurantDisplayRules(id,raw){
   const rows=raw.map(item=>({...item,allergens:[],name:item.name.replace(/\s*\([ABCDEFGHLMNOPR](?:\s*[,/]\s*[ABCDEFGHLMNOPR])*\)/g,'')}));
+  if(id==='campus')return rows.map(item=>({...item,description:'Suppe oder Salat · Dessert',included_choices:[],menu_options:[]}));
   if(id==='lia')return rows.map(item=>({...item,name:item.name.replace(/\s+(?:und|mit)\s+grünem\s+Salat\s*$/i,''),description:'',included_choices:[],menu_options:[]}));
   if(id==='finn')return rows.filter(item=>! /suppe|salat|soup|salad|dessert/i.test(item.category||'')).map(item=>{
     const combo=(item.menu_options||[]).find(option=>/suppe/i.test(option.label||'')&&Number.isFinite(option.total_price));
