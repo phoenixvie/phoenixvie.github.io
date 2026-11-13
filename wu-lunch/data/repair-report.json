@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T14:49:25+01:00",
+  "checked_at": "2026-11-13T14:52:56+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,23 +10,16 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die einzelnen Hauptgerichte ist kein Einzelpreis angegeben.",
-        "„Lassi & Lunch“ wird ohne zuordenbaren Preis und ohne nähere Angaben zu den enthaltenen Bestandteilen genannt.",
-        "Die undatierten Extras Samosas, Sweets & Mango Lassi, Spice it up: Kashmiri Chili Crisp und Masala Chai wurden keinem Tag zugeordnet.",
-        "Es sind keine separat ausgewiesenen Tagessuppen oder Salate erkennbar."
+        "Auf der Seite sind keine separat bepreisten Tagessuppen, Salate oder Nachspeisen ausgewiesen.",
+        "Die Extras (Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai) stehen ohne Tageszuordnung und Preis unter „Extras“; sie sind daher nicht als datierte Gerichte aufgenommen.",
+        "Die Seite nennt Ernährungskennzeichnungen, aber keine Allergene aus der vorgegebenen Allergenliste."
       ],
-      "ai_only_items": 5,
+      "ai_only_items": 0,
       "parser_only_items": 0,
-      "ai_only_examples": [
-        "2026-11-09: lunch combo",
-        "2026-11-10: lunch combo",
-        "2026-11-11: lunch combo",
-        "2026-11-12: lunch combo",
-        "2026-11-13: lunch combo"
-      ],
+      "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "37e091e30cc2f6605b848bda452d503d2de4b57273947c0b10116049f731b55d"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "24e12263c4e24ef6762985a742a8cb1adb8b53301438f97761f5c09e80b64675"
       },
       "usage": {
         "input_tokens": 2600,
@@ -34,17 +27,18 @@
           "cache_write_tokens": 2597,
           "cached_tokens": 0
         },
-        "output_tokens": 3936,
+        "output_tokens": 2994,
         "output_tokens_details": {
-          "reasoning_tokens": 1088
+          "reasoning_tokens": 1034
         },
-        "total_tokens": 6536
+        "total_tokens": 5594
       }
     },
     {
       "restaurant": "mensa",
       "issues": [
-        "missing_price"
+        "missing_price",
+        "source_error"
       ],
       "action": "dedicated_pdf_ai",
       "repairs": []
