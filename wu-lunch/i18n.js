@@ -4,7 +4,7 @@
   const language=/^de(?:[-_]|$)/i.test(root.WU_SYSTEM_LANGUAGE||root.navigator?.language||'en')?'de':'en';
   const ui={
     'Impressum – WU Lunch':'Legal notice – WU Lunch','WU Food · App-Vorschau':'WU Food · App preview','E-Mail-Adresse':'Email address','Deutschen oder englischen Text suchen':'Search German or English text','Navigation':'Navigation','Tagesnavigation: nach links oder rechts wischen':'Day navigation: swipe left or right','Karte der Restaurants':'Restaurant map','Interaktive Karte der Restaurants rund um den WU Campus':'Interactive map of restaurants around WU Campus','Menütage':'Menu days','Wischanzeige':'Swipe indicator','Standort':'Location','Menü':'Menu','Restaurant':'Restaurant','Restaurantansichten':'Restaurant views','Zurück':'Back','Weiter':'Next','Zurück zur Liste':'Back to list',
-    'Telefon':'Phone','E-Mail':'Email','Webseite':'Website','Webseite – Mittagsmenü':'Website – lunch menu','Adresse':'Address','Öffnungszeiten':'Opening hours','Standort':'Location',
+    'Kontaktdaten':'Contact details','Telefon':'Phone','E-Mail':'Email','Webseite':'Website','Webseite – Mittagsmenü':'Website – lunch menu','Adresse':'Address','Öffnungszeiten':'Opening hours','Standort':'Location',
     'Nicht hinterlegt':'Not provided','Noch nicht hinterlegt':'Not provided','Noch nicht veröffentlicht':'Not published yet','In Google Maps öffnen':'Open in Google Maps','Auf Google Maps öffnen':'Open in Google Maps',
     'Karte wird geladen …':'Loading map …','Karte wird geladen':'Loading map','Menüs werden geladen …':'Loading menus …','Erneut versuchen':'Try again','Restaurantwebseite':'restaurant website',
     'Angaben ohne Gewähr. Bitte auf der':'Information may change. Please check the','prüfen.':'for confirmation.',

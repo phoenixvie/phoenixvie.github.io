@@ -14,7 +14,7 @@ Die englischen Clients laden zunächst gespeicherte Übersetzungen, dann neue Da
 
 ## GitHub Actions und KI
 
-`wu-lunch-english.yml` läuft nach erfolgreichen Menüimporten, Änderungen an finalen Menüdaten und relevanter Übersetzungslogik sowie zusätzlich stündlich um Minute 27 für manuelle deutsche Änderungen. Manueller Start ist möglich. Feature-PRs führen ausschließlich Offline-Tests aus. Für die Produktion werden nur die bereits vorhandenen GitHub-Secrets `OPENAI_API_KEY` und `SUPABASE_SERVICE_ROLE_KEY` verwendet. Keine geheimen Schlüssel in Browser oder APK.
+`wu-lunch-english.yml` läuft nach abgeschlossenen Menüimporten (auch wenn eine andere Quelle einen Prüffehler meldet), Änderungen an finalen Menüdaten und relevanter Übersetzungslogik sowie zusätzlich stündlich um Minute 27 für manuelle deutsche Änderungen. Gelesen werden ausschließlich die bereits freigegebenen Menüdaten. Manueller Start ist möglich. Feature-PRs führen ausschließlich Offline-Tests aus. Für die Produktion werden nur die bereits vorhandenen GitHub-Secrets `OPENAI_API_KEY` und `SUPABASE_SERVICE_ROLE_KEY` verwendet. Keine geheimen Schlüssel in Browser oder APK.
 
 `collect_translation_texts.cjs` sammelt Rohtexte und die finalen Darstellungsformen mit denselben Restaurantregeln wie App/Webseite. Aktuelle Woche, archivierte Wochen, manuelle Tagesfassungen, Restauranttyp, Öffnungszeiten und Ankündigungen werden berücksichtigt. Die automatische Übersetzung liest öffentlich angezeigte Geschäftsinformationen; Passwörter, Auth-Daten und interne Zugangsdaten werden nicht an das Modell gesendet.
 
