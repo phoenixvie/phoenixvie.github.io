@@ -1,6 +1,11 @@
 // Only deliberate native app usage enters this bounded event catalog.
 type Props = Record<string,string | number>;
 type Sender = (event: string, props: Props) => void;
+export function isAnalyticsDevice(platform: string, input: unknown){
+  const constants=(input&&typeof input==='object'?input:{}) as {isTesting?: boolean; Model?: string; Fingerprint?: string};
+  if(constants.isTesting||!['android','ios'].includes(platform))return false;
+  return platform!=='android'||!/(?:sdk_gphone|google_sdk|android sdk built for|emulator|generic)/i.test((constants.Model||'')+' '+(constants.Fingerprint||''));
+}
 const restaurants=new Set(['mensa','baschly','finn','lia','campus','karmafood','topfdeckel','omakueche','gruenehuette','glashaus','losteria']);
 export function validateUsage(event: unknown, input: unknown): {event: string; props: Props} | null {
   if(!input||typeof input!=='object'||Array.isArray(input))return null;
