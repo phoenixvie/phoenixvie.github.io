@@ -122,7 +122,7 @@ class SideAndPriceTests(unittest.TestCase):
     def test_shared_frontend_sorting(self):
         html=(ROOT/"index.html").read_text()
         self.assertIn("function mealPosition(item)",html)
-        self.assertIn("const sorted=[...raw].sort((a,b)=>mealPosition(a)-mealPosition(b));",html)
+        self.assertIn("const sorted=[...raw].sort((a,b)=>rank(a)-rank(b));",html)
         self.assertIn("menu_options||[]",html)
 
 if __name__=="__main__":
