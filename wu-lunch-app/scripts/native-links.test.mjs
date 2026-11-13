@@ -33,3 +33,10 @@ test('foreign origins, other repository paths and malformed events cannot invoke
   for (const raw of ['bad json', 'null', '[]', '{}', JSON.stringify({type:'open-source',url:'javascript:alert(1)'}), JSON.stringify({type:'open-external',url:'intent://app'}), JSON.stringify({type:'share',text:42})]) routeAppMessage(origin, raw, base, handlers);
   assert.deepEqual(calls, []);
 });
+
+test('only the trusted app can select supported native interface languages',()=>{
+  const languages=[],handlers={...fixture().handlers,setLanguage:value=>languages.push(value)};
+  for(const language of ['en','de','fr',null])routeAppMessage(base,JSON.stringify({type:'language-changed',language}),base,handlers);
+  routeAppMessage('https://example.test',JSON.stringify({type:'language-changed',language:'en'}),base,handlers);
+  assert.deepEqual(languages,['en','de']);
+});

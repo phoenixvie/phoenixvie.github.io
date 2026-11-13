@@ -2,7 +2,9 @@
 
 ## Auswahl und Darstellung
 
-Die primäre Sprache entscheidet: `de`, `de-AT`, `de-DE`, `de-CH` usw. verwenden Deutsch; alle anderen Sprachen Englisch. Im Browser ist dies `navigator.language`. Die Android-Hülle übergibt ihre über `Intl` ermittelte Systemsprache ausdrücklich an die eingebettete Oberfläche. Namen, Anschriften, Telefonnummern, E-Mail-Adressen und Linkziele bleiben unverändert. Eigene Bedienoberflächen, Datumsanzeigen und Hinweise werden lokalisiert. Externe Restaurantseiten und Original-PDF-Inhalte bleiben Originalquellen.
+Ohne gespeicherte Auswahl entscheidet die primäre Sprache: `de`, `de-AT`, `de-DE`, `de-CH` usw. verwenden Deutsch; alle anderen Sprachen Englisch. Im Browser ist dies `navigator.language`. Die Android-Hülle übergibt ihre über `Intl` ermittelte Systemsprache ausdrücklich an die eingebettete Oberfläche. Namen, Anschriften, Telefonnummern, E-Mail-Adressen und Linkziele bleiben unverändert. Eigene Bedienoberflächen, Datumsanzeigen und Hinweise werden lokalisiert. Externe Restaurantseiten und Original-PDF-Inhalte bleiben Originalquellen.
+
+Der Link „Change Language“ neben dem Impressum wechselt sofort zwischen Deutsch und Englisch. Die Auswahl wird lokal gespeichert und hat beim nächsten Öffnen Vorrang vor der Systemsprache. Aktuelles Restaurant und ausgewählter Tag bleiben erhalten. Die native Hülle übernimmt die gewählte Sprache auch für eigene Zurück-/Fehleranzeigen und den PDF-Betrachter.
 
 `i18n.js` wird von Webseite, Admin und App-Vorschau gemeinsam genutzt und für Android mit eingebettet. Fehlende englische Menütexte heißen „English translation pending“; es gibt keinen stillen Rückfall auf ein altes englisches Gericht oder eine erfundene Übersetzung. Deutsch bleibt die maßgebliche Quelle. Übersetzung verändert weder Preise, Wochen-/Tageszuordnung, Aktivierung noch Reihenfolge.
 

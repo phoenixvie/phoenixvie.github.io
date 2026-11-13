@@ -19,6 +19,7 @@ type LinkHandlers = {
   openExternal: (url: string) => void;
   share: (text: string) => void;
   exit: () => void;
+  setLanguage?: (language: 'de' | 'en') => void;
 };
 
 export function routeAppMessage(source: unknown, raw: unknown, baseUrl: string, handlers: LinkHandlers): void {
@@ -26,7 +27,8 @@ export function routeAppMessage(source: unknown, raw: unknown, baseUrl: string, 
   let item;
   try {item = JSON.parse(raw);} catch {return;}
   if (!item || typeof item !== 'object') return;
-  if (item.type === 'open-source' || item.type === 'open-external') {
+  if (item.type === 'language-changed' && (item.language === 'de' || item.language === 'en')) {handlers.setLanguage?.(item.language);}
+  else if (item.type === 'open-source' || item.type === 'open-external') {
     const url = webUrl(item.url);
     if (url) handlers.openSource(url, item.type === 'open-source' && typeof item.title === 'string' ? item.title : 'Restaurant');
     else if (item.type === 'open-external' && typeof item.url === 'string' && /^(mailto:|tel:)/i.test(item.url)) handlers.openExternal(item.url);

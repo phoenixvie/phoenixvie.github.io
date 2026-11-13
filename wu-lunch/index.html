@@ -313,14 +313,14 @@ html,body,.page { background:#fff; }
         <span id="nextUpdate" aria-live="polite"></span>
         <span>Angaben ohne Gewähr – bitte Menü auf der Restaurant-Website prüfen.</span>
         <span>Diese Website verwendet keine Cookies.</span>
-        <span><a href="impressum.html">Impressum</a><span aria-hidden="true"> · </span><a href="admin.html">Admin</a></span>
+        <span><a href="impressum.html">Impressum</a><span aria-hidden="true"> · </span><a href="#" data-change-language>Change Language</a><span aria-hidden="true"> · </span><a href="admin.html">Admin</a></span>
       </footer>
     </main>
 
     
   </div>
 
-  <script src="i18n.js?v=20261113-en3"></script><script src="data.js?v=5"></script>
+  <script src="i18n.js?v=20261113-switch1"></script><script src="data.js?v=5"></script>
   <script src="supabase-config.js?v=1"></script>
   <script>
   (async function initializeLunchPage() {
@@ -337,7 +337,7 @@ html,body,.page { background:#fff; }
     } catch(error) {
       console.warn('Live-Menüs nicht abrufbar; statisches Fallback verwendet:', error);
     }
-    const LANG=window.WULunchI18n.language,LOCALE=window.WULunchI18n.locale;
+    let LANG=window.WULunchI18n.language,LOCALE=window.WULunchI18n.locale;
     const DATA = freshData;
     const announcementElement=document.getElementById('lunchAnnouncement');
     let announcement={desktop_message:'',mobile_message:''};
@@ -890,6 +890,7 @@ function mensaStations(raw){
       }
     }
 
+    window.addEventListener('wu-language-change',()=>{LANG=window.WULunchI18n.language;LOCALE=window.WULunchI18n.locale;update();renderAnnouncement();renderNextUpdate();});
     update();
     renderNextUpdate();
     let liveRefreshing=false,liveSignature=JSON.stringify(DATA);
