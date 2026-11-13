@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-13T16:11:09+01:00",
+  "checked_at": "2026-11-13T16:15:36+01:00",
   "week_start": "2026-11-09",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,27 +10,27 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die Hauptgerichte außer Protein Power Chili ist kein Einzelpreis angegeben.",
-        "Die Quelle nennt keine separat bepreisten Tagessuppen, Salate oder Nachspeisen."
+        "Keine separat angebotenen Tagessuppen, Salate oder Nachspeisen mit Einzelpreis sind für die Woche belegt.",
+        "„Lassi & Lunch“ wird genannt, aber ohne eigenen Preis oder nähere Zuordnung."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "9b51fcf3be464bd8f4187cb1bb9bb99d32ae416ee35c0dcec4637f933ffafecc"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "a45b33456afc7fdd7e90f2b620244d1f1713973b3e5ba3f98530dfa12b7149b7"
       },
       "usage": {
-        "input_tokens": 2600,
+        "input_tokens": 2603,
         "input_tokens_details": {
-          "cache_write_tokens": 2597,
+          "cache_write_tokens": 2600,
           "cached_tokens": 0
         },
-        "output_tokens": 3298,
+        "output_tokens": 3289,
         "output_tokens_details": {
-          "reasoning_tokens": 769
+          "reasoning_tokens": 923
         },
-        "total_tokens": 5898
+        "total_tokens": 5892
       }
     },
     {
