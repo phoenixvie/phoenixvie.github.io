@@ -7,6 +7,7 @@ import {encodePdf, pdfViewerHtml} from './src/pdfViewer';
 import {routeAppMessage, webUrl} from './src/nativeLinks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {languagePreferences} from './src/preferences';
+import {usage} from './src/analytics';
 
 const baseUrl = 'https://phoenixvie.github.io/wu-lunch-app/preview/';
 const nativeLanguage = /^de(?:-|$)/i.test(Intl.DateTimeFormat().resolvedOptions().locale) ? 'de' : 'en';
@@ -25,6 +26,7 @@ function AppContent() {
   const nativeText = (de: string, en: string) => texts[de]??(language === 'de' ? de : en);
   const openExternalLink = (url: string) => openExternal(url, language,texts);
   useEffect(()=>{let active=true;void preferences.load().then(saved=>{if(!active)return;if(saved)setLanguage(saved);setHtmlSource(saved?{html:previewHtml.replace('<head>',`<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';window.WU_SAVED_LANGUAGE='${saved}';</script>`),baseUrl}:defaultHtmlSource);});return()=>{active=false};},[]);
+  const languageRef=useRef(language);languageRef.current=language;
   const main = useRef<WebView<{}>>(null);
   const browser = useRef<WebView<{}>>(null);
   const [page, setPage] = useState<{url: string; title: string; loading?: boolean; pdf?: string} | null>(null);
@@ -52,11 +54,14 @@ function AppContent() {
   };
   const browserBack = () => {if (canGoBack) browser.current?.goBack(); else closePage();};
   useEffect(() => {
+    if(!htmlSource)return;
+    usage.state(AppState.currentState||'active',languageRef.current);
     const listener=AppState.addEventListener('change',state=>{
+      usage.state(state,languageRef.current);
       if(state==='active')main.current?.injectJavaScript('window.wuFoodRefresh?.();true;');
     });
     return ()=>listener.remove();
-  },[]);
+  },[htmlSource]);
   useEffect(() => {
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (page) {if (canGoBack) browser.current?.goBack(); else closePage();}
@@ -67,9 +72,10 @@ function AppContent() {
   }, [page, canGoBack]);
   const message = ({nativeEvent}: WebViewMessageEvent) => {
     routeAppMessage(nativeEvent.url, nativeEvent.data, baseUrl, {
-      openSource: (url, title) => {void openSource(url, title);}, openExternal: openExternalLink, setLanguage:(next,copy,manual)=>{setLanguage(next);if(copy)setTexts(previous=>JSON.stringify(previous)===JSON.stringify(copy)?previous:copy);if(manual)void preferences.save(next).catch(()=>{});},
+      openSource: (url, title) => {void openSource(url, title);}, openExternal: openExternalLink, setLanguage:(next,copy,manual)=>{setLanguage(next);languageRef.current=next;if(copy)setTexts(previous=>JSON.stringify(previous)===JSON.stringify(copy)?previous:copy);if(manual)void preferences.save(next).catch(()=>{});},
       share: text => {Share.share({message: text}).catch(() => {});},
       exit: () => BackHandler.exitApp(),
+      usage:(event,props)=>usage.event(event,props),
     });
   };
   return <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>

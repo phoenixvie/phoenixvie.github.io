@@ -32,9 +32,13 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
     assert.equal(request.options.cache,'no-store');
     assert.ok([...new URL(request.url).searchParams.keys()].every(key=>['select','week_start','order','limit','offset','updated_at'].includes(key)),'PostgREST accepts only supported query parameters');
   }
+  assert.equal(messages.filter(item=>item.type==='usage').length,0,'initial data load does not count restaurant usage');
+  await refresh();assert.equal(messages.filter(item=>item.type==='usage').length,0,'polling does not count restaurant usage');
   const click=dataset=>actions.get('click')({target:{closest:selector=>selector==='a[href]'?null:{dataset}}});
   await click({restaurant:'mensa'});
   assert.match(app.innerHTML,/previous-restaurant/);
+  assert.equal(messages.filter(item=>item.type==='usage').at(-1).event,'restaurant_open');
+  assert.equal(messages.filter(item=>item.type==='usage').at(-1).props.restaurant_id,'mensa');
   await click({action:'open-menu-source'});
   assert.deepEqual(messages.at(-1),{type:'open-source',url:'https://www.wumensa.at/menuplan-deutsch/',title:'WU Mensa'});
   assert.ok(!app.innerHTML.includes('<iframe'));

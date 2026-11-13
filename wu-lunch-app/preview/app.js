@@ -15,6 +15,7 @@ let data=null,selectedId=new URLSearchParams(location.search).get('restaurant'),
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const safeUrl=value=>{try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}};
 const icon=(name,extra='')=>`<span class="material-symbols-outlined ${extra}" aria-hidden="true">${esc(name)}</span>`;
+const trackUsage=(event,props={})=>nativePost('usage',{event,props:{...props,language:localize.language}});
 const dateValue=(date,opts)=>new Intl.DateTimeFormat(localize.locale,{timeZone:'UTC',...opts}).format(new Date(date+'T12:00:00Z'));
 const googleMapsUrl=r=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.name+' '+(r.address||addresses[r.id]||'Wien'));
 const dates=()=>Array.from({length:5},(_,i)=>{const d=new Date(data.weekStart+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+i);return d.toISOString().slice(0,10)});
@@ -113,16 +114,16 @@ app.addEventListener('click',async e=>{
   const link=e.target.closest('a[href]');if(link?.hasAttribute?.('data-change-language'))return;if(link){const url=safeUrl(link.href);if(url){e.preventDefault();if(!nativePost('open-source',{url,title:currentRestaurant()?.name||'Restaurant'})){sourceViewUrl=url;render()}return}if(window.ReactNativeWebView){e.preventDefault();nativePost('open-external',{url:link.href});return}}
   const target=e.target.closest('[data-action],[data-restaurant],[data-map-restaurant],[data-home],[data-detail],[data-day]');
   if(!target)return;
-  if(target.dataset.restaurant||target.dataset.mapRestaurant){selectedId=target.dataset.restaurant||target.dataset.mapRestaurant;selectedMapId=null;sourceViewUrl=null;dayIndex=initialDayIndex();detailTab='menu';render();return}
+  if(target.dataset.restaurant||target.dataset.mapRestaurant){selectedId=target.dataset.restaurant||target.dataset.mapRestaurant;selectedMapId=null;sourceViewUrl=null;dayIndex=initialDayIndex();detailTab='menu';trackUsage('restaurant_open',{restaurant_id:selectedId,entry:target.dataset.mapRestaurant?'map':'list',view:detailTab});render();return}
   if(target.dataset.home){if(homeTab==='map'&&target.dataset.home==='map'){selectedMapId=null;updateMapSelection();return}homeTab=target.dataset.home;selectedMapId=null;render();return}
-  if(target.dataset.detail){detailTab=target.dataset.detail;render();return}
-  if(target.dataset.day!==undefined){dayIndex=Number(target.dataset.day);render();return}
+  if(target.dataset.detail){if(detailTab!==target.dataset.detail)trackUsage('restaurant_view',{restaurant_id:selectedId,view:target.dataset.detail});detailTab=target.dataset.detail;render();return}
+  if(target.dataset.day!==undefined){const nextDay=Number(target.dataset.day);if(nextDay!==dayIndex)trackUsage('menu_day_changed',{restaurant_id:selectedId,weekday:nextDay+1});dayIndex=nextDay;render();return}
   switch(target.dataset.action){
     case'back':selectedId=null;selectedMapId=null;sourceViewUrl=null;render();break;
     case'open-menu-source':{const r=currentRestaurant(),url=safeUrl(r?.menuSourceUrl||r?.url);if(!url)break;if(!nativePost('open-source',{url,title:r.name})){sourceViewUrl=url;render()}break}
     case'close-source':sourceViewUrl=null;render();break;
     case'previous-restaurant':
-    case'next-restaurant':selectedId=adjacentRestaurantId(target.dataset.action==='next-restaurant'?1:-1);sourceViewUrl=null;render();break;
+    case'next-restaurant':selectedId=adjacentRestaurantId(target.dataset.action==='next-restaurant'?1:-1);sourceViewUrl=null;trackUsage('restaurant_open',{restaurant_id:selectedId,entry:target.dataset.action==='next-restaurant'?'next':'previous',view:detailTab});render();break;
     case'share':{const message='Gehen wir heute '+currentRestaurant()?.name+' zu Mittag?';if(nativePost('share',{text:message}))break;if(navigator.share)try{await navigator.share({text:message})}catch{}else navigator.clipboard?.writeText(message);break}
     case'retry':load();break;
   }
@@ -137,7 +138,7 @@ app.addEventListener('touchend',e=>{
   swipeStart=null;
   if(Math.abs(deltaX)>60&&Math.abs(deltaX)>Math.abs(deltaY)*1.2){
     e.preventDefault();
-    dayIndex=Math.max(0,Math.min(4,dayIndex+(deltaX<0?1:-1)));render();
+    const nextDay=Math.max(0,Math.min(4,dayIndex+(deltaX<0?1:-1)));if(nextDay!==dayIndex)trackUsage('menu_day_changed',{restaurant_id:selectedId,weekday:nextDay+1});dayIndex=nextDay;render();
   }
 },{passive:false});
 app.addEventListener('touchcancel',()=>{swipeStart=null},{passive:true});
@@ -149,6 +150,6 @@ window.wuFoodBack=()=>{if(sourceViewUrl){sourceViewUrl=null;render()}else if(sel
 try{const cached=JSON.parse(localStorage.getItem('wu-food-live-v1')||'null');if(Array.isArray(cached)&&cached.length===4&&cached[0]?.weekStart&&Array.isArray(cached[0].restaurants))applyPayload(...cached)}catch{}
 window.wuFoodRefresh=load;load();setInterval(load,3000);window.addEventListener?.('focus',()=>load());document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 
-window.addEventListener?.('wu-language-change',()=>render());
+window.addEventListener?.('wu-language-change',()=>{trackUsage('language_changed');render();});
 
 window.addEventListener?.('wu-ui-texts',()=>render());
