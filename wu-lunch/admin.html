@@ -91,10 +91,11 @@
     </section>
     <p class="footer">WU Lunch · <a href="impressum.html">Impressum</a></p>
   </main>
-  <script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261113-en2"></script><script src="admin-menu-rules.js"></script>
+  <script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261113-en3"></script><script src="admin-menu-rules.js"></script>
   <script>
   (()=>{
     const config=window.WU_LUNCH_SUPABASE;
+    const LOCALE=window.WULunchI18n?.locale||'de-AT';
     const email=document.getElementById('email'),password=document.getElementById('password');
     const loginButton=document.getElementById('loginButton'),setupButton=document.getElementById('setupButton');
     const loginNotice=document.getElementById('loginNotice'),loginPanel=document.getElementById('loginPanel'),adminPanel=document.getElementById('adminPanel');
@@ -108,8 +109,8 @@
     const api=(path,options={})=>fetch(config.url+path,{...options,headers:{apikey:config.publishableKey,Authorization:'Bearer '+(accessToken||config.publishableKey),...(options.headers||{})}});
     const text=(element,message,kind='')=>{element.textContent=message;element.className='notice '+kind;};
     const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-    const money=value=>value==null?'':Number(value).toLocaleString('de-AT',{style:'currency',currency:'EUR'});
-    const formatWeek=date=>{const start=new Date(date+'T12:00:00Z'),end=new Date(start);end.setUTCDate(start.getUTCDate()+4);return 'KW '+String(Math.ceil((((start-new Date(Date.UTC(start.getUTCFullYear(),0,1)))/86400000)+new Date(Date.UTC(start.getUTCFullYear(),0,1)).getUTCDay()+1)/7)).padStart(2,'0')+' · '+start.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit'})+'–'+end.toLocaleDateString('de-AT',{day:'2-digit',month:'2-digit',year:'numeric'});};
+    const money=value=>value==null?'':Number(value).toLocaleString(LOCALE,{style:'currency',currency:'EUR'});
+    const formatWeek=date=>{const start=new Date(date+'T12:00:00Z'),end=new Date(start);end.setUTCDate(start.getUTCDate()+4);return (LOCALE==='de-AT'?'KW ':'Week ')+String(Math.ceil((((start-new Date(Date.UTC(start.getUTCFullYear(),0,1)))/86400000)+new Date(Date.UTC(start.getUTCFullYear(),0,1)).getUTCDay()+1)/7)).padStart(2,'0')+' · '+start.toLocaleDateString(LOCALE,{day:'2-digit',month:'2-digit'})+'–'+end.toLocaleDateString(LOCALE,{day:'2-digit',month:'2-digit',year:'numeric'});};
     function setBusy(busy){loginButton.disabled=busy;setupButton.disabled=busy;}
     async function signIn(){
       if(!password.value){text(loginNotice,'Bitte Passwort eingeben.','error');return;}
@@ -241,7 +242,7 @@
       if(!response.ok)throw new Error('Manuelle Menüs konnten nicht geladen werden.');
       dayOverrides=await response.json();
       const previousDate=menuDate.value; const days=Array.from({length:5},(_,i)=>{const d=new Date(currentMenu.weekStart+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+i);return d.toISOString().slice(0,10)});
-      menuDate.replaceChildren(...days.map(day=>{const option=document.createElement('option');option.value=day;option.textContent=new Date(day+'T12:00:00Z').toLocaleDateString('de-AT',{weekday:'long',day:'2-digit',month:'2-digit'});return option;}));
+      menuDate.replaceChildren(...days.map(day=>{const option=document.createElement('option');option.value=day;option.textContent=new Date(day+'T12:00:00Z').toLocaleDateString(LOCALE,{weekday:'long',day:'2-digit',month:'2-digit'});return option;}));
       if(days.includes(previousDate))menuDate.value=previousDate;else {const today=new Date().toLocaleDateString('en-CA',{timeZone:'Europe/Vienna'});if(days.includes(today))menuDate.value=today;}
       renderSelectedMenu();
     }
@@ -309,7 +310,7 @@
     }
     async function loadPublicationHistory(){
       try{const response=await fetch('./data/publication-observations.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('Verlauf nicht abrufbar');const data=await response.json();
-      document.getElementById('publicationHistory').innerHTML='<p class="muted">Erstmals beim Abruf gesehen; kein bestätigter Veröffentlichungszeitpunkt. Zeiten in Wien. Änderungen können auch Seitenänderungen sein.</p>'+Object.entries(data.sources||{}).map(([id,entry])=>'<details><summary>'+escape(restaurants.find(r=>r.restaurant_id===id||id.startsWith(r.restaurant_id+'-'))?.name||id)+' · '+(entry.changes||[]).length+' Änderungen</summary>'+(entry.changes||[]).slice().reverse().map(change=>'<p>Änderung zwischen '+escape(new Date(change.previous_seen_at).toLocaleString('de-AT',{timeZone:'Europe/Vienna'}))+' und '+escape(new Date(change.first_seen_at).toLocaleString('de-AT',{timeZone:'Europe/Vienna'}))+'</p>').join('')+[...(entry.observations||[])].reverse().map(o=>'<p class="muted">'+escape(new Date(o.at).toLocaleString('de-AT',{timeZone:'Europe/Vienna'}))+' · '+escape(o.error?'Abruffehler':o.changed?'Änderung erkannt':'geprüft')+'</p>').join('')+'</details>').join('');
+      document.getElementById('publicationHistory').innerHTML='<p class="muted">Erstmals beim Abruf gesehen; kein bestätigter Veröffentlichungszeitpunkt. Zeiten in Wien. Änderungen können auch Seitenänderungen sein.</p>'+Object.entries(data.sources||{}).map(([id,entry])=>'<details><summary>'+escape(restaurants.find(r=>r.restaurant_id===id||id.startsWith(r.restaurant_id+'-'))?.name||id)+' · '+(entry.changes||[]).length+' Änderungen</summary>'+(entry.changes||[]).slice().reverse().map(change=>'<p>Änderung zwischen '+escape(new Date(change.previous_seen_at).toLocaleString(LOCALE,{timeZone:'Europe/Vienna'}))+' und '+escape(new Date(change.first_seen_at).toLocaleString(LOCALE,{timeZone:'Europe/Vienna'}))+'</p>').join('')+[...(entry.observations||[])].reverse().map(o=>'<p class="muted">'+escape(new Date(o.at).toLocaleString(LOCALE,{timeZone:'Europe/Vienna'}))+' · '+escape(o.error?'Abruffehler':o.changed?'Änderung erkannt':'geprüft')+'</p>').join('')+'</details>').join('');
       }catch(e){document.getElementById('publicationHistory').textContent=e.message;}
     }
     async function fetchHistory(){
@@ -348,7 +349,7 @@
       }catch(error){historyContent.textContent=error.message||'Archiv konnte nicht vollständig geladen werden.';return;}
       const byDay=new Map(manual.map(item=>[item.restaurant_id+'|'+item.menu_date,item.dishes]));
       const dates=Object.keys(menu.restaurants?.[0]?.days||{});const date=dates[0];
-      const tab='<div class="history-tabs">'+dates.map((value,index)=>'<button class="history-tab '+(index===0?'active':'')+'" type="button" data-date="'+value+'">'+new Date(value+'T12:00:00Z').toLocaleDateString('de-AT',{weekday:'short',day:'2-digit',month:'2-digit'})+'</button>').join('')+'</div>';
+      const tab='<div class="history-tabs">'+dates.map((value,index)=>'<button class="history-tab '+(index===0?'active':'')+'" type="button" data-date="'+value+'">'+new Date(value+'T12:00:00Z').toLocaleDateString(LOCALE,{weekday:'short',day:'2-digit',month:'2-digit'})+'</button>').join('')+'</div>';
       historyContent.innerHTML=tab+'<div id="archiveList"></div>';
       const display=selected=>{const list=document.getElementById('archiveList');list.innerHTML=(menu.restaurants||[]).map(restaurant=>{const dishes=byDay.get(restaurant.id+'|'+selected)??restaurant.days?.[selected]??[];return '<section class="day"><h3>'+escape(restaurant.name)+'</h3>'+(dishes.length?dishes.map(item=>'<div class="dish"><span>'+escape(item.name)+'</span><span>'+money(item.price)+'</span></div>').join(''):'<p class="muted">Noch nicht veröffentlicht</p>')+'</section>';}).join('');};
       historyContent.querySelectorAll('.history-tab').forEach(button=>button.addEventListener('click',()=>{historyContent.querySelectorAll('.history-tab').forEach(item=>item.classList.toggle('active',item===button));display(button.dataset.date);}));display(date);
