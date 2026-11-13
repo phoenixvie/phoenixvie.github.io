@@ -17,7 +17,7 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   const app = {innerHTML: '', addEventListener: (type, callback) => actions.set(type, callback)};
   const mapElement={innerHTML:''};
   const restaurants = [{id:'mensa',name:'WU Mensa',url:'https://www.wumensa.at/menuplan-deutsch/',days:{}},{id:'finn',name:'Finn',url:'https://finn.wien/blogs/news/mittagsmenu',days:{}}];
-  const context = {URL, URLSearchParams, Intl, Date, console, localStorage, navigator:{}, location:{hostname:'phoenixvie.github.io',search:''},
+  const context = {URL, URLSearchParams, Intl, Date, console, localStorage, navigator:{language:'de-AT'}, location:{hostname:'phoenixvie.github.io',search:''},
     document:{getElementById:id=>id==='map'?mapElement:app,addEventListener:(type,callback)=>events.set(type,callback)},
     setInterval:(callback,ms)=>{refresh=callback;refreshMs=ms;return 0}, setTimeout:()=>0,
     ReactNativeWebView:{postMessage:value=>messages.push(JSON.parse(value))},

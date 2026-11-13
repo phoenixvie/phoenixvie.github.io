@@ -26,7 +26,7 @@
       <p class="notice" id="loginNotice" aria-live="polite"></p>
     </section>
 
-    <section class="hidden" id="adminPanel">
+    <section class="hidden" id="adminPanel"><section class="panel"><label for="editLanguage">Texte bearbeiten / Edit texts</label><select id="editLanguage"><option value="de">Deutsch</option><option value="en">English</option></select><p class="muted">Neue Speisen und Struktur zuerst auf Deutsch anlegen. English bearbeitet nur Übersetzungen; Preise und Menüzuordnung bleiben unverändert.</p></section>
       <section class="panel">
         <h2>Automatische Menüprüfung</h2><div id="publicationHistory"></div>
         <p class="muted">Geplante Prüfungen durch GitHub Actions, jeweils Wiener Zeit:</p>
@@ -82,7 +82,7 @@
         <p class="notice" id="announcementNotice" aria-live="polite"></p>
       </section>
       <section class="panel">
-        <h2>Archivierte Mittagsmenüs</h2>
+        <h2>Englische Texte bearbeiten</h2><input id="translationSearch" placeholder="Deutschen oder englischen Text suchen"><p class="muted">Eine Korrektur gilt für identische deutsche Texte überall. Manuelle Übersetzungen werden nicht durch die KI überschrieben.</p><button id="reloadTranslations" type="button" class="secondary">Übersetzungen aktualisieren</button><div id="translationList"></div></section><section class="panel"><h2>Archivierte Mittagsmenüs</h2>
         <label for="weekSelect">Kalenderwoche</label>
         <select id="weekSelect"><option>Archiv wird geladen …</option></select>
         <div id="historyContent"></div>
@@ -91,7 +91,7 @@
     </section>
     <p class="footer">WU Lunch · <a href="impressum.html">Impressum</a></p>
   </main>
-  <script src="supabase-config.js?v=1"></script><script src="admin-menu-rules.js"></script>
+  <script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261113-en1"></script><script src="admin-menu-rules.js"></script>
   <script>
   (()=>{
     const config=window.WU_LUNCH_SUPABASE;
@@ -104,6 +104,7 @@
     const profileRestaurant=document.getElementById('profileRestaurant'),menuRestaurant=document.getElementById('menuRestaurant'),menuDate=document.getElementById('menuDate');
     const menuEditor=document.getElementById('menuEditor');
     let accessToken='',restaurants=[],history=[],currentMenu=null,dayOverrides=[];
+    let editLanguage='de',englishRows=new Map(),germanAnnouncement={};
     const api=(path,options={})=>fetch(config.url+path,{...options,headers:{apikey:config.publishableKey,Authorization:'Bearer '+(accessToken||config.publishableKey),...(options.headers||{})}});
     const text=(element,message,kind='')=>{element.textContent=message;element.className='notice '+kind;};
     const escape=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -134,7 +135,7 @@
       if(!response.ok||!Array.isArray(rows)||rows.length!==1){accessToken='';throw new Error('Dieses Konto hat keinen Admin-Zugang.');}
       loginPanel.classList.add('hidden');adminPanel.classList.remove('hidden');
       await Promise.all([loadRestaurants(),loadAnnouncementSettings(),loadHistory()]);
-      await loadMenuEditor();await loadPublicationHistory();
+      await loadEnglishRows();await loadMenuEditor();await loadPublicationHistory();
     }
     function renderRestaurants(){
       restaurantList.replaceChildren();
@@ -177,11 +178,14 @@
       const fields={profileName:item.display_name||item.name,profileType:item.restaurant_type,profilePhone:item.phone,profileEmail:item.email,profileWebsite:item.website_url,profileMenuUrl:item.menu_url,profileHours:(item.opening_hours||[]).join("\n"),profileSource:item.contact_source,profileColor:item.brand_color,profileLogoUrl:item.logo_url,profileAddress:item.address,profileLatitude:item.latitude,profileLongitude:item.longitude};
       for(const [id,value] of Object.entries(fields))document.getElementById(id).value=value??'';
       document.getElementById('profileLogo').value='';
+      for(const input of document.querySelectorAll('[id^="profile"]'))if(input.tagName!=='SELECT')input.disabled=editLanguage==='en'&&!['profileType','profileHours'].includes(input.id);
+      if(editLanguage==='en'){const type=document.getElementById('profileType');type.dataset.german=type.value;type.value=englishValue(type.value);const hours=document.getElementById('profileHours');hours.dataset.german=hours.value;hours.value=hours.value.split('\n').map(englishValue).join('\n');}
     }
     async function saveProfile(){
       const button=document.getElementById('saveProfileButton'),notice=document.getElementById('profileNotice');
       button.disabled=true;text(notice,'Speichert …');
       try{
+        if(editLanguage==='en'){const type=document.getElementById('profileType'),hours=document.getElementById('profileHours'),german=(hours.dataset.german||'').split('\n'),english=hours.value.split('\n');if(german.length!==english.length)throw new Error('Bitte die gleiche Zahl von Öffnungszeiten-Zeilen verwenden.');await saveEnglishPairs([[type.dataset.german,type.value],...german.map((value,i)=>[value,english[i]])]);text(notice,'English gespeichert.','success');return;}
         const id=profileRestaurant.value,file=document.getElementById('profileLogo').files[0];
         const selected=restaurants.find(row=>row.restaurant_id===id);
         const change={display_name:document.getElementById('profileName').value.trim(),restaurant_type:document.getElementById('profileType').value.trim(),phone:document.getElementById('profilePhone').value.trim(),email:document.getElementById('profileEmail').value.trim(),website_url:document.getElementById('profileWebsite').value.trim(),address:document.getElementById('profileAddress').value.trim(),latitude:document.getElementById('profileLatitude').value?Number(document.getElementById('profileLatitude').value):null,longitude:document.getElementById('profileLongitude').value?Number(document.getElementById('profileLongitude').value):null};
@@ -211,7 +215,7 @@
         else if(/^Mit (?:Tagessuppe|Suppe|Salat)/i.test(dish.description||'')&&!dish.included_starter){dish.included_starter=dish.description.replace(/^Mit /,'').replace(/kleinem Salat/g,'kleiner Salat').replace(/grünem Salat/g,'grüner Salat');dish.description='';}
         if(menuRestaurant.value==='mensa'&&/^Ausgabe (1\+2|3\+4)$/.test(dish.category||'')&&dish.name.includes('\n')&&!dish.included_starter){const lines=dish.name.split('\n');dish.included_starter=lines.shift();dish.name=lines.join('\n');}
         const item=document.createElement('div');item.className='day';item.dataset.index=index;
-        item.innerHTML='<label>Speise '+(index+1)+' · Name</label><input class="dish-name" maxlength="300" required><label>Preis in € (leer = X €)</label><input class="dish-price-input" type="number" min="0" max="149.99" step="0.01"><label>Preis klein in € (optional)</label><input class="dish-price-small" type="number" min="0" max="149.99" step="0.01"><label>Preis groß in € (optional)</label><input class="dish-price-large" type="number" min="0" max="149.99" step="0.01"><label>Kategorie</label><input class="dish-category" maxlength="80"><label>Beschreibung</label><textarea class="dish-description" maxlength="1000"></textarea><label>Vorspeise (Suppe / Salat)</label><input class="dish-soup" maxlength="150"><label>Inklusive Wahlmöglichkeiten (durch Komma getrennt)</label><input class="dish-choices" maxlength="300"><label>Dessert inklusive</label><input class="dish-dessert" maxlength="150"><label>Allergene (durch Komma getrennt)</label><input class="dish-allergens" maxlength="200"><button class="secondary dish-remove" type="button">Entfernen</button>';
+        item.innerHTML='<label>Speise '+(index+1)+' · Name</label><textarea class="dish-name" maxlength="1200" required></textarea><label>Preis in € (leer = X €)</label><input class="dish-price-input" type="number" min="0" max="149.99" step="0.01"><label>Preis klein in € (optional)</label><input class="dish-price-small" type="number" min="0" max="149.99" step="0.01"><label>Preis groß in € (optional)</label><input class="dish-price-large" type="number" min="0" max="149.99" step="0.01"><label>Kategorie</label><input class="dish-category" maxlength="80"><label>Beschreibung</label><textarea class="dish-description" maxlength="1000"></textarea><label>Vorspeise (Suppe / Salat)</label><input class="dish-soup" maxlength="150"><label>Inklusive Wahlmöglichkeiten (durch Komma getrennt)</label><input class="dish-choices" maxlength="300"><label>Dessert inklusive</label><input class="dish-dessert" maxlength="150"><label>Allergene (durch Komma getrennt)</label><input class="dish-allergens" maxlength="200"><button class="secondary dish-remove" type="button">Entfernen</button>';
         item.querySelector('.dish-name').value=dish.name||'';
         item.querySelector('.dish-price-input').value=dish.price??'';
         item.querySelector('.dish-price-small').value=dish.price_small??'';
@@ -226,6 +230,7 @@
         const raw=document.createElement('details');raw.innerHTML='<summary>Alle Daten / Menüoptionen (JSON)</summary><textarea class="dish-extra"></textarea>';raw.querySelector('textarea').value=JSON.stringify(dish,null,2);item.append(raw);
         for(const input of item.querySelectorAll('input,textarea'))input.addEventListener('input',()=>{menuEditor.dataset.dirty='true'});
         item._sourceDish=dish;
+        if(editLanguage==='en'){for(const input of item.querySelectorAll('input,textarea')){if(['dish-name','dish-description','dish-soup','dish-dessert','dish-category'].some(name=>input.classList.contains(name))){input.dataset.german=input.value;input.value=englishValue(input.value);input.placeholder='English translation pending';input.maxLength=12000;}else input.readOnly=true;}item.querySelector('.dish-remove').disabled=true;}
         menuEditor.append(item);
       });
     }
@@ -266,6 +271,7 @@
     async function saveMenu(){
       const notice=document.getElementById('menuNotice'),button=document.getElementById('saveMenuButton');button.disabled=true;
       try{
+        if(editLanguage==='en'){await saveEnglishPairs([...menuEditor.querySelectorAll('[data-german]')].map(input=>[input.dataset.german,input.value]));menuEditor.dataset.dirty='false';text(notice,'English gespeichert – die deutsche Menüstruktur bleibt erhalten.','success');return;}
         const dishes=[...menuEditor.children].map(row=>readDraftDish(row));
         for(const dish of dishes){
           if(!dish.name)throw new Error('Jede Speise braucht einen Namen.');
@@ -290,14 +296,15 @@
     async function loadAnnouncementSettings(){
       const response=await api('/rest/v1/lunch_announcement?id=eq.true&select=desktop_message,mobile_message');
       const rows=await response.json();if(!response.ok||!Array.isArray(rows)||!rows[0])throw new Error('Ankündigung konnte nicht geladen werden.');
-      desktopAnnouncement.value=rows[0].desktop_message||'';mobileAnnouncement.value=rows[0].mobile_message||'';
+      germanAnnouncement=rows[0];renderAnnouncementLanguage();
     }
     async function saveAnnouncement(){
       saveAnnouncementButton.disabled=true;text(announcementNotice,'Speichert …');
       try{
+        if(editLanguage==='en'){await saveEnglishPairs([[germanAnnouncement.desktop_message,desktopAnnouncement.value],[germanAnnouncement.mobile_message,mobileAnnouncement.value]]);text(announcementNotice,'English gespeichert.','success');return;}
         const response=await api('/rest/v1/lunch_announcement?id=eq.true',{method:'PATCH',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({desktop_message:desktopAnnouncement.value.trim(),mobile_message:mobileAnnouncement.value.trim()})});
         if(!response.ok)throw new Error('Änderung konnte nicht gespeichert werden.');
-        text(announcementNotice,'Gespeichert.','success');
+        germanAnnouncement={desktop_message:desktopAnnouncement.value,mobile_message:mobileAnnouncement.value};text(announcementNotice,'Gespeichert.','success');
       }catch(error){text(announcementNotice,error.message||'Änderung konnte nicht gespeichert werden.','error');}finally{saveAnnouncementButton.disabled=false;}
     }
     async function loadPublicationHistory(){
@@ -346,6 +353,14 @@
       const display=selected=>{const list=document.getElementById('archiveList');list.innerHTML=(menu.restaurants||[]).map(restaurant=>{const dishes=byDay.get(restaurant.id+'|'+selected)??restaurant.days?.[selected]??[];return '<section class="day"><h3>'+escape(restaurant.name)+'</h3>'+(dishes.length?dishes.map(item=>'<div class="dish"><span>'+escape(item.name)+'</span><span>'+money(item.price)+'</span></div>').join(''):'<p class="muted">Noch nicht veröffentlicht</p>')+'</section>';}).join('');};
       historyContent.querySelectorAll('.history-tab').forEach(button=>button.addEventListener('click',()=>{historyContent.querySelectorAll('.history-tab').forEach(item=>item.classList.toggle('active',item===button));display(button.dataset.date);}));display(date);
     }
+    const englishValue=source=>englishRows.get(source)?.english_text||window.WULunchI18n.english(source)||'';
+    function renderAnnouncementLanguage(){desktopAnnouncement.value=editLanguage==='de'?(germanAnnouncement.desktop_message||''):englishValue(germanAnnouncement.desktop_message||'');mobileAnnouncement.value=editLanguage==='de'?(germanAnnouncement.mobile_message||''):englishValue(germanAnnouncement.mobile_message||'');}
+    async function loadEnglishRows(){let rows=[];for(let offset=0;;offset+=1000){const response=await api('/rest/v1/lunch_translations?select=*&order=source_text&limit=1000&offset='+offset);if(!response.ok)throw new Error('Übersetzungen konnten nicht geladen werden.');const batch=await response.json();rows.push(...batch);if(batch.length<1000)break;}englishRows=new Map(rows.map(row=>[row.source_text,row]));renderTranslationList();}
+    async function saveEnglishPairs(pairs){const unique=new Map();for(const [source,english] of pairs)if(source?.trim()&&english?.trim()){unique.set(source,english.trim());if(source.includes('\n')){const de=source.split('\n'),en=english.trim().split('\n');if(de.length!==en.length)throw new Error('Bitte die Zeilenstruktur der deutschen Fassung beibehalten.');de.forEach((line,i)=>{if(line.trim()&&en[i].trim())unique.set(line.trim(),en[i].trim());});}}if(!unique.size)throw new Error('Bitte mindestens einen englischen Text eingeben.');const records=await Promise.all([...unique].map(async([source_text,english_text])=>({source_text,english_text,source_sha256:[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source_text)))].map(b=>b.toString(16).padStart(2,'0')).join(''),origin:'manual',model:null,updated_at:new Date().toISOString()})));const response=await api('/rest/v1/lunch_translations?on_conflict=source_sha256',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(records)});if(!response.ok)throw new Error('English konnte nicht gespeichert werden.');for(const row of records)englishRows.set(row.source_text,row);renderTranslationList();}
+    function renderTranslationList(){const list=document.getElementById('translationList');if(!list)return;const filter=document.getElementById('translationSearch').value.toLowerCase();list.replaceChildren();for(const row of [...englishRows.values()].filter(row=>(row.source_text+' '+row.english_text).toLowerCase().includes(filter)).slice(0,100)){const item=document.createElement('div');item.className='day';item.innerHTML='<p style="white-space:pre-line"></p><textarea></textarea><button type="button">English speichern</button><span class="notice"></span>';item.querySelector('p').textContent=row.source_text+' · '+(row.origin==='manual'?'manuell':'KI');item.querySelector('textarea').value=row.english_text;item.querySelector('button').onclick=async()=>{try{await saveEnglishPairs([[row.source_text,item.querySelector('textarea').value]]);}catch(e){item.querySelector('.notice').textContent=e.message;}};list.append(item);}}
+    document.getElementById('editLanguage').onchange=async event=>{if(menuEditor.dataset.dirty==='true'&&!confirm('Nicht gespeicherte Menüänderungen verwerfen?')){event.target.value=editLanguage;return;}editLanguage=event.target.value;await loadEnglishRows();renderProfile();renderSelectedMenu();renderAnnouncementLanguage();document.getElementById('addDishButton').disabled=editLanguage==='en';document.getElementById('resetMenuButton').disabled=editLanguage==='en';};
+    document.getElementById('translationSearch').oninput=renderTranslationList;
+    document.getElementById('reloadTranslations').onclick=()=>loadEnglishRows().catch(e=>alert(e.message));
     document.getElementById('logoutButton').addEventListener('click',()=>{accessToken='';password.value='';adminPanel.classList.add('hidden');loginPanel.classList.remove('hidden');text(loginNotice,'Abgemeldet.');});
     loginButton.addEventListener('click',signIn);setupButton.addEventListener('click',setup);password.addEventListener('keydown',event=>{if(event.key==='Enter')signIn();});
     saveAnnouncementButton.addEventListener('click',saveAnnouncement);

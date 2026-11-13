@@ -11,8 +11,8 @@ export function encodePdf(bytes: Uint8Array): string {
 }
 
 // The original PDF is downloaded by native networking, avoiding browser CORS restrictions.
-export function pdfViewerHtml(base64: string): string {
-  return `<!doctype html><html lang="de"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Menü-PDF</title><style>body{margin:0;background:#edf0f4;font:14px Arial;color:#556}#status{padding:12px;text-align:center}canvas{display:block;margin:0 auto 12px;background:white;max-width:100%}</style><div id="status" role="status">PDF wird geladen …</div><main id="pages"></main><script type="module">
+export function pdfViewerHtml(base64: string, language: 'de' | 'en' = 'de'): string {
+  const html = `<!doctype html><html lang="de"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Menü-PDF</title><style>body{margin:0;background:#edf0f4;font:14px Arial;color:#556}#status{padding:12px;text-align:center}canvas{display:block;margin:0 auto 12px;background:white;max-width:100%}</style><div id="status" role="status">PDF wird geladen …</div><main id="pages"></main><script type="module">
   const status=document.getElementById('status');
   try {
     const pdfjs=await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@5.7.284/legacy/build/pdf.mjs');
@@ -29,4 +29,5 @@ export function pdfViewerHtml(base64: string): string {
     status.textContent='PDF geladen · '+pdf.numPages+(pdf.numPages===1?' Seite':' Seiten');
   } catch(error){status.textContent='PDF konnte nicht angezeigt werden. '+error.message;}
   </script></html>`;
+  return language==='de'?html:html.replace('lang="de"','lang="en"').replace('Menü-PDF','Menu PDF').replace('PDF wird geladen …','Loading PDF …').replace('PDF-Seite ','PDF page ').replace('PDF geladen · ','PDF loaded · ').replace("' Seite'","' page'").replace("' Seiten'","' pages'").replace('PDF konnte nicht angezeigt werden. ','The PDF could not be displayed. ');
 }
