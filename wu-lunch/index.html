@@ -285,7 +285,7 @@ html,body,.page { background:#fff; }
 .selected-day-heading{font-size:14px;text-align:center;color:#444;margin:3px 0 0;font-weight:400}
 .dish-text{font-weight:700}.dish-detail{font-weight:400;color:#555;display:block}
 .row:not(.restaurant-losteria) .dish-text{font-weight:400}.mensa-station{font-weight:700}.dish-detail{white-space:pre-line}.dish-detail.inline{display:inline}
-</style>
+ .restaurant-title h3{font-size:17px!important;font-weight:400!important} </style>
 </head>
 <body>
   <div class="page">
@@ -374,7 +374,9 @@ html,body,.page { background:#fff; }
       }catch(error){console.warn('Ankündigung nicht abrufbar:',error);}
       renderAnnouncement();
     }
+    let profileFetchSucceeded=false;
     async function applyRestaurantOverrides(){
+      profileFetchSucceeded=false;
       const config=window.WU_LUNCH_SUPABASE;
       if(!config?.url||!config?.publishableKey)return;
       try{
@@ -384,16 +386,16 @@ html,body,.page { background:#fff; }
         if(!response.ok)throw new Error('HTTP '+response.status);
         const overrides=await response.json();
         if(!Array.isArray(overrides))throw new Error('Ungültiges Einstellungsformat');
-        const byId=new Map(overrides.map(value=>[value.restaurant_id,value]));
+        profileFetchSucceeded=true;const byId=new Map(overrides.map(value=>[value.restaurant_id,value]));
         DATA.restaurants=DATA.restaurants.filter(restaurant=>byId.get(restaurant.id)?.is_enabled!==false);
         DATA.restaurants.forEach(restaurant=>{
           const profile=byId.get(restaurant.id);
           if(!profile)return;
           restaurant.name=profile.display_name||restaurant.name;
-          restaurant.url=profile.website_url||restaurant.url;
+          restaurant.url=profile.menu_url??restaurant.url;restaurant.homepage_url=profile.website_url;restaurant.opening_hours=profile.opening_hours;restaurant.brand_color=profile.brand_color;
           restaurant.logo_url=profile.logo_url||null;
           restaurant.restaurant_type=profile.restaurant_type||null;
-          restaurant.phone=profile.phone||null;
+          restaurant.phone=profile.phone??null;
           restaurant.email=profile.email||null;
           restaurant.address=profile.address||null;
           restaurant.latitude=profile.latitude;
@@ -408,7 +410,9 @@ html,body,.page { background:#fff; }
         console.warn('Restaurant-Einstellungen nicht abrufbar; Standardreihenfolge verwendet:',error);
       }
     }
+    let manualFetchSucceeded=false;
     async function applyManualMenus(){
+      manualFetchSucceeded=false;
       const config=window.WU_LUNCH_SUPABASE;
       if(!config?.url||!config?.publishableKey)return;
       try{
@@ -416,7 +420,7 @@ html,body,.page { background:#fff; }
           headers:{apikey:config.publishableKey,Authorization:'Bearer '+config.publishableKey},cache:'no-store'
         });
         if(!response.ok)throw new Error('HTTP '+response.status);
-        const rows=await response.json();
+        const rows=await response.json();manualFetchSucceeded=true;
         for(const row of rows){
           const restaurant=DATA.restaurants.find(item=>item.id===row.restaurant_id);
           if(restaurant&&Array.isArray(row.dishes)){
@@ -654,7 +658,7 @@ function mensaStations(raw){
   return [...out.filter(item=>!['Ausgabe 5','Ausgabe 6','Ausgabe 7'].includes(item.category)),...raw.filter(item=>!assigned.has(item)&&! /tagess?uppe|soup deal|menüoption|smart menü/i.test(item.category||item.name))];
 }
     function visibleDishes(restaurant){
-      const raw=restaurantDisplayRules(restaurant.id,dishesForRestaurant(restaurant));
+      const stored=dishesForRestaurant(restaurant);const manual=stored.length&&stored.every(d=>d.manual_presentation);const raw=manual?stored:restaurantDisplayRules(restaurant.id,stored);
       // Mensa's weekly soup is included in some menu lines, but an
       // independent sale/price is NOT documented. Don't invent a standalone
       // soup offer. Preserve the correct inclusion semantics for this source.
@@ -675,7 +679,7 @@ function mensaStations(raw){
           ? item.name.toLocaleLowerCase('it-IT').replace(/(^|[\\s-])([a-zà-ÿ])/g,(_,sep,letter)=>sep+letter.toLocaleUpperCase('it-IT'))
           : item.name;
         out.push({
-          name,detail:includedDetail(item),detailInline:item.detailInline,price:item.price,
+          name:manual&&restaurant.id==='mensa'&&item.category?item.category+'\n'+name:name,starter:item.included_starter||item.included_soup,dessert:item.included_dessert,detail:includedDetail(item),detailInline:item.detailInline,price:item.price,
           priceDisplay:item.priceLabel|| (restaurant.id==='topfdeckel' && (item.price_small!=null || item.price_large!=null)
             ? [item.price_small,item.price_large].map(v=>v==null?'–':v.toLocaleString('de-AT',{minimumFractionDigits:2,maximumFractionDigits:2})+' €').join(' / ')
             : (item.price==null?'X €':null))
@@ -695,6 +699,8 @@ function mensaStations(raw){
       return String(value??'').replace(/[&<>"']/g,chr=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[chr]));
     }
     function renderMenuDishText(restaurantId,item){
+      if(restaurantId==='mensa'&&item.starter&&/^Ausgabe/.test(item.name)){const lines=item.name.split('\n'),header=lines.shift();return '<span class="mensa-station">'+escapeHtml(header)+'</span><span class="dish-detail">'+escapeHtml(item.starter+'\n'+lines.join('\n'))+'</span>'+(item.dessert?'<span class="dish-detail">'+escapeHtml(item.dessert)+'</span>':'');}
+      if(item.starter||item.dessert)return (item.starter?'<span class="dish-detail">'+escapeHtml(item.starter)+'</span>':'')+escapeHtml(item.name)+(item.detail?'<span class="dish-detail">'+escapeHtml(item.detail)+'</span>':'')+(item.dessert?'<span class="dish-detail">'+escapeHtml(item.dessert)+'</span>':'');
       const cleanName=restaurantId==='losteria'?item.name:item.name.replace(/\s+Allergene:\s*.*$/i,'').replace(/:\s*[ABCDEFGHLMNOPR](?:\s*,\s*[ABCDEFGHLMNOPR])*\s*$/,'');
       const name=escapeHtml(cleanName), detail=String(item.detail||'').trim();
       if(restaurantId==='losteria')return name+(detail?'<span class="dish-detail'+(item.detailInline?' inline':'')+'">'+(item.detailInline?' ':'')+escapeHtml(detail)+'</span>':'');
@@ -714,7 +720,7 @@ function mensaStations(raw){
       const dishRows=items.length ? items.map(item=>
         '<div class="menu-line"><span class="dish-text">'+renderMenuDishText(restaurant.id,item)+'</span><span class="dish-price">'+(item.priceDisplay!=null?escapeHtml(item.priceDisplay):(item.price==null?'':escapeHtml(formatPrice(item.price))))+'</span></div>'
       ).join('') : '<div class="empty-row">Noch nicht veröffentlicht</div>';
-      row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+(restaurant.logo_url?'<img class="logo-image" src="'+escapeHtml(restaurant.logo_url)+'" alt="">':escapeHtml(label))+'</div></div>'
+      row.innerHTML='<div class="logo-cell"><div class="logo-box '+escapeHtml(brandClasses[restaurant.id]||'')+'" style="'+(restaurant.brand_color?'background:'+escapeHtml(restaurant.brand_color):'')+'" aria-label="'+escapeHtml(restaurant.name)+'">'+(restaurant.logo_url?'<img class="logo-image" src="'+escapeHtml(restaurant.logo_url)+'" alt="">':escapeHtml(label))+'</div></div>'
        +'<div class="menu-cell"><div class="restaurant-title"><h3>'+escapeHtml(restaurant.name)+'</h3></div>'
        +'<div class="menu-lines">'+dishRows+'</div>'
        +'<div class="restaurant-links"><a class="source-link" href="'+escapeHtml(restaurant.url)+'" target="_blank" rel="noopener noreferrer">Zum Restaurant</a>'
@@ -885,6 +891,9 @@ function mensaStations(raw){
 
     update();
     renderNextUpdate();
+    let liveRefreshing=false,liveSignature=JSON.stringify(DATA);
+    async function refreshLiveData(){if(liveRefreshing)return;liveRefreshing=true;const previous=JSON.parse(JSON.stringify(DATA));try{const response=await fetch('./data/menus.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return;const incoming=await response.json();Object.assign(DATA,incoming);await Promise.all([applyRestaurantOverrides(),loadAnnouncement(),applyManualMenus()]);if(!profileFetchSucceeded||!manualFetchSucceeded){Object.assign(DATA,previous);return;}const signature=JSON.stringify(DATA);if(signature!==liveSignature){liveSignature=signature;for(const r of DATA.restaurants){const info=locationInfo[r.id];if(info){info.address=r.address||info.address;info.color=r.brand_color||info.color;if(Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)){info.lat=r.latitude;info.lon=r.longitude;}}}update();if(realMap){realMap.remove();realMap=null;loadRealMap();}}}catch(e){Object.assign(DATA,previous);console.warn('Aktualisierung fehlgeschlagen',e)}finally{liveRefreshing=false}}
+    window.setInterval(refreshLiveData,3000);window.addEventListener('focus',refreshLiveData);
     window.setInterval(renderNextUpdate,30000);
 
     // Render all menus first. Load Leaflet and map tiles only after the whole

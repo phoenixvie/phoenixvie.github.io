@@ -7,7 +7,7 @@
   <title>Admin – WU Lunch</title>
   <style>
     :root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#20252b;background:#f7f8fa}*{box-sizing:border-box}body{margin:0}.page{max-width:900px;margin:0 auto;padding:28px 18px 48px}a{color:#176da8}.back{font-size:14px}.panel{background:#fff;border:1px solid #e1e5e9;border-radius:12px;padding:20px;margin-top:18px;box-shadow:0 2px 12px #18263a0a}h1{font-size:25px;margin:20px 0 4px}h2{font-size:18px;margin:0 0 14px}p{line-height:1.5}.muted{color:#66727e;font-size:14px}.notice{min-height:22px;color:#35566d;font-size:14px}.error{color:#b42318}.success{color:#087443}.schedule-list{margin:8px 0;padding-left:20px;line-height:1.7;font-size:14px}label{display:block;font-size:14px;font-weight:600;margin:12px 0 5px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:10px;border:1px solid #cdd5dd;border-radius:7px;background:#fff}textarea{min-height:78px;resize:vertical}button{cursor:pointer;border:1px solid #0d6ead;background:#1379bd;color:#fff;border-radius:7px;padding:9px 12px;margin:12px 7px 0 0}button.secondary{background:#fff;color:#176da8;border-color:#aeb9c3}button:disabled{opacity:.55;cursor:wait}.hidden{display:none!important}.restaurant{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #edf0f2;flex-wrap:wrap}.restaurant:first-of-type{border-top:0}.restaurant-name{flex:1;min-width:140px}.restaurant label{display:flex;align-items:center;gap:7px;margin:0;font-weight:500}.restaurant input{width:auto}.restaurant .restaurant-type-input{width:165px;padding:7px}.icon-button{padding:4px 9px;margin:0;background:#fff;color:#176da8;border-color:#cbd5dc}.history-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.history-tab{margin:0;background:#fff;color:#176da8;border-color:#cbd5dc}.history-tab.active{background:#1379bd;color:#fff;border-color:#1379bd}.day{margin-top:12px}.day h3{font-size:15px;margin:0 0 5px}.dish{display:flex;justify-content:space-between;gap:14px;padding:5px 0;border-top:1px solid #edf0f2;font-size:14px}.dish span:last-child{white-space:nowrap}.footer{margin-top:26px;color:#68737e;font-size:13px}@media(max-width:560px){.page{padding:20px 12px}.panel{padding:16px}.restaurant{align-items:flex-start}.restaurant-name{line-height:1.25}.icon-button{padding:4px 8px}}
-  </style>
+  .dish-editor{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;border:1px solid #e1e5e9;padding:12px;border-radius:8px}.dish-editor label{margin:4px 0}.dish-editor details{grid-column:1/-1}.dish-editor textarea{min-height:50px}.dish-editor details textarea{min-height:180px;font-family:monospace}@media(max-width:560px){.dish-editor{grid-template-columns:1fr}} </style>
 </head>
 <body>
   <main class="page">
@@ -28,7 +28,7 @@
 
     <section class="hidden" id="adminPanel">
       <section class="panel">
-        <h2>Automatische Menüprüfung</h2>
+        <h2>Automatische Menüprüfung</h2><div id="publicationHistory"></div>
         <p class="muted">Geplante Prüfungen durch GitHub Actions, jeweils Wiener Zeit:</p>
         <ul class="schedule-list">
           <li><strong>Montag:</strong> stündlich von 06:15 bis 18:15 Uhr</li>
@@ -40,13 +40,13 @@
       </section>
       <section class="panel">
         <h2>Restaurants</h2>
-        <p class="muted">Sichtbarkeit und Reihenfolge gelten sofort für neue Seitenaufrufe der Lunch-Übersicht.</p>
+        <p class="muted">Sichtbarkeit und Reihenfolge werden bei geöffneter Webseite und App automatisch nachgeladen.</p>
         <p class="notice" id="restaurantNotice" aria-live="polite"></p>
         <div id="restaurantList"></div>
       </section>
       <section class="panel">
         <h2>Restaurantdaten bearbeiten</h2>
-        <p class="muted">Die Änderungen erscheinen beim nächsten Laden der Website und beim nächsten Aktualisieren der App.</p>
+        <p class="muted">Gespeicherte Änderungen werden automatisch nachgeladen. Neue Darstellungsfunktionen benötigen eine aktuelle App-Version.</p>
         <label for="profileRestaurant">Restaurant</label><select id="profileRestaurant"></select>
         <label for="profileName">Name</label><input id="profileName" maxlength="100">
         <label for="profileType">Restauranttyp / Küche</label><input id="profileType" maxlength="100">
@@ -54,7 +54,7 @@
         <label for="profilePhone">Telefon</label><input id="profilePhone" type="tel">
         <label for="profileEmail">E-Mail</label><input id="profileEmail" type="email">
         <label for="profileWebsite">Website</label><input id="profileWebsite" type="url">
-        <label for="profileAddress">Adresse</label><input id="profileAddress">
+        <label for="profileMenuUrl">Webseite – Mittagsmenü</label><input id="profileMenuUrl" type="url"><label for="profileHours">Öffnungszeiten (eine Zeile je Angabe)</label><textarea id="profileHours"></textarea><label for="profileSource">Kontaktquelle</label><input id="profileSource" type="url"><label for="profileColor">Restaurantfarbe (z. B. #49654e)</label><input id="profileColor"><label for="profileLogoUrl">Logo-URL</label><input id="profileLogoUrl" type="url"><label for="profileAddress">Adresse</label><input id="profileAddress">
         <label for="profileLatitude">Breitengrad</label><input id="profileLatitude" type="number" step="any">
         <label for="profileLongitude">Längengrad</label><input id="profileLongitude" type="number" step="any">
         <button id="saveProfileButton" type="button">Restaurantdaten speichern</button>
@@ -65,7 +65,7 @@
         <p class="muted">Die gespeicherte Tagesliste hat Vorrang vor späteren automatischen Importen. Auch eine leere Liste ist möglich. „Automatik wiederherstellen“ entfernt diesen Vorrang.</p>
         <label for="menuRestaurant">Restaurant</label><select id="menuRestaurant"></select>
         <label for="menuDate">Tag</label><select id="menuDate"></select>
-        <div id="menuEditor"></div>
+        <button id="refreshMenus" type="button" class="secondary">Aktuelle Daten laden</button><div id="menuEditor"></div>
         <button id="addDishButton" class="secondary" type="button">Speise hinzufügen</button>
         <button id="saveMenuButton" type="button">Tagesmenü speichern</button>
         <button id="resetMenuButton" class="secondary" type="button">Automatik wiederherstellen</button>
@@ -91,7 +91,7 @@
     </section>
     <p class="footer">WU Lunch · <a href="impressum.html">Impressum</a></p>
   </main>
-  <script src="supabase-config.js?v=1"></script>
+  <script src="supabase-config.js?v=1"></script><script src="admin-menu-rules.js"></script>
   <script>
   (()=>{
     const config=window.WU_LUNCH_SUPABASE;
@@ -134,7 +134,7 @@
       if(!response.ok||!Array.isArray(rows)||rows.length!==1){accessToken='';throw new Error('Dieses Konto hat keinen Admin-Zugang.');}
       loginPanel.classList.add('hidden');adminPanel.classList.remove('hidden');
       await Promise.all([loadRestaurants(),loadAnnouncementSettings(),loadHistory()]);
-      await loadMenuEditor();
+      await loadMenuEditor();await loadPublicationHistory();
     }
     function renderRestaurants(){
       restaurantList.replaceChildren();
@@ -174,7 +174,7 @@
     }
     function renderProfile(){
       const item=restaurants.find(row=>row.restaurant_id===profileRestaurant.value);if(!item)return;
-      const fields={profileName:item.display_name||item.name,profileType:item.restaurant_type,profilePhone:item.phone,profileEmail:item.email,profileWebsite:item.website_url,profileAddress:item.address,profileLatitude:item.latitude,profileLongitude:item.longitude};
+      const fields={profileName:item.display_name||item.name,profileType:item.restaurant_type,profilePhone:item.phone,profileEmail:item.email,profileWebsite:item.website_url,profileMenuUrl:item.menu_url,profileHours:(item.opening_hours||[]).join("\n"),profileSource:item.contact_source,profileColor:item.brand_color,profileLogoUrl:item.logo_url,profileAddress:item.address,profileLatitude:item.latitude,profileLongitude:item.longitude};
       for(const [id,value] of Object.entries(fields))document.getElementById(id).value=value??'';
       document.getElementById('profileLogo').value='';
     }
@@ -185,6 +185,9 @@
         const id=profileRestaurant.value,file=document.getElementById('profileLogo').files[0];
         const selected=restaurants.find(row=>row.restaurant_id===id);
         const change={display_name:document.getElementById('profileName').value.trim(),restaurant_type:document.getElementById('profileType').value.trim(),phone:document.getElementById('profilePhone').value.trim(),email:document.getElementById('profileEmail').value.trim(),website_url:document.getElementById('profileWebsite').value.trim(),address:document.getElementById('profileAddress').value.trim(),latitude:document.getElementById('profileLatitude').value?Number(document.getElementById('profileLatitude').value):null,longitude:document.getElementById('profileLongitude').value?Number(document.getElementById('profileLongitude').value):null};
+        Object.assign(change,{menu_url:document.getElementById('profileMenuUrl').value.trim(),opening_hours:document.getElementById('profileHours').value.split('\n').map(x=>x.trim()).filter(Boolean),contact_source:document.getElementById('profileSource').value.trim(),brand_color:document.getElementById('profileColor').value.trim(),logo_url:document.getElementById('profileLogoUrl').value.trim()});
+        for(const field of ['menu_url','contact_source','logo_url'])if(change[field]&&!/^https?:\/\//i.test(change[field]))throw new Error('Links müssen mit https:// beginnen.');
+        if(change.brand_color&&!/^#[0-9a-f]{6}$/i.test(change.brand_color))throw new Error('Farbe bitte als #RRGGBB eingeben.');
         if(change.website_url&&!/^https?:\/\//i.test(change.website_url))throw new Error('Website muss mit https:// beginnen.');
         if(change.email&&!document.getElementById('profileEmail').checkValidity())throw new Error('Bitte gültige E-Mail eingeben.');
         if(file){
@@ -201,49 +204,61 @@
       }catch(error){text(notice,error.message||'Speichern fehlgeschlagen.','error');}finally{button.disabled=false;}
     }
     function renderDishEditor(dishes){
-      menuEditor.replaceChildren();
+      menuEditor.replaceChildren();menuEditor.dataset.dirty='false';
       dishes.forEach((dish,index)=>{
+        dish={...dish};
+        if(dish.description==='Suppe oder Salat · Dessert'){dish.included_starter='Suppe oder Salat';dish.included_dessert='Dessert';dish.description='';}
+        else if(/^Mit (?:Tagessuppe|Suppe|Salat)/i.test(dish.description||'')&&!dish.included_starter){dish.included_starter=dish.description.replace(/^Mit /,'').replace(/kleinem Salat/g,'kleiner Salat').replace(/grünem Salat/g,'grüner Salat');dish.description='';}
+        if(menuRestaurant.value==='mensa'&&/^Ausgabe (1\+2|3\+4)$/.test(dish.category||'')&&dish.name.includes('\n')&&!dish.included_starter){const lines=dish.name.split('\n');dish.included_starter=lines.shift();dish.name=lines.join('\n');}
         const item=document.createElement('div');item.className='day';item.dataset.index=index;
-        item.innerHTML='<label>Speise '+(index+1)+' · Name</label><input class="dish-name" maxlength="300" required><label>Preis in € (leer = X €)</label><input class="dish-price-input" type="number" min="0" max="149.99" step="0.01"><label>Preis klein in € (optional)</label><input class="dish-price-small" type="number" min="0" max="149.99" step="0.01"><label>Preis groß in € (optional)</label><input class="dish-price-large" type="number" min="0" max="149.99" step="0.01"><label>Kategorie</label><input class="dish-category" maxlength="80"><label>Beschreibung</label><textarea class="dish-description" maxlength="1000"></textarea><label>Inklusive Suppe</label><input class="dish-soup" maxlength="150"><label>Inklusive Wahlmöglichkeiten (durch Komma getrennt)</label><input class="dish-choices" maxlength="300"><label>Allergene (durch Komma getrennt)</label><input class="dish-allergens" maxlength="200"><button class="secondary dish-remove" type="button">Entfernen</button>';
+        item.innerHTML='<label>Speise '+(index+1)+' · Name</label><input class="dish-name" maxlength="300" required><label>Preis in € (leer = X €)</label><input class="dish-price-input" type="number" min="0" max="149.99" step="0.01"><label>Preis klein in € (optional)</label><input class="dish-price-small" type="number" min="0" max="149.99" step="0.01"><label>Preis groß in € (optional)</label><input class="dish-price-large" type="number" min="0" max="149.99" step="0.01"><label>Kategorie</label><input class="dish-category" maxlength="80"><label>Beschreibung</label><textarea class="dish-description" maxlength="1000"></textarea><label>Vorspeise (Suppe / Salat)</label><input class="dish-soup" maxlength="150"><label>Inklusive Wahlmöglichkeiten (durch Komma getrennt)</label><input class="dish-choices" maxlength="300"><label>Dessert inklusive</label><input class="dish-dessert" maxlength="150"><label>Allergene (durch Komma getrennt)</label><input class="dish-allergens" maxlength="200"><button class="secondary dish-remove" type="button">Entfernen</button>';
         item.querySelector('.dish-name').value=dish.name||'';
         item.querySelector('.dish-price-input').value=dish.price??'';
         item.querySelector('.dish-price-small').value=dish.price_small??'';
         item.querySelector('.dish-price-large').value=dish.price_large??'';
         item.querySelector('.dish-category').value=dish.category||'';
         item.querySelector('.dish-description').value=dish.description||'';
-        item.querySelector('.dish-soup').value=dish.included_soup||'';
+        item.querySelector('.dish-soup').value=dish.included_starter||dish.included_soup||'';item.querySelector('.dish-dessert').value=dish.included_dessert||'';
         item.querySelector('.dish-choices').value=(dish.included_choices||[]).join(', ');
         item.querySelector('.dish-allergens').value=(dish.allergens||[]).join(', ');
         item.querySelector('.dish-remove').onclick=()=>item.remove();
+        item.classList.add('dish-editor');
+        const raw=document.createElement('details');raw.innerHTML='<summary>Alle Daten / Menüoptionen (JSON)</summary><textarea class="dish-extra"></textarea>';raw.querySelector('textarea').value=JSON.stringify(dish,null,2);item.append(raw);
+        for(const input of item.querySelectorAll('input,textarea'))input.addEventListener('input',()=>{menuEditor.dataset.dirty='true'});
         item._sourceDish=dish;
         menuEditor.append(item);
       });
     }
     async function loadMenuEditor(){
+      const latest=await fetch('./data/menus.json?t='+Date.now(),{cache:'no-store'});if(!latest.ok)throw new Error('Aktuelle Menüs konnten nicht geladen werden.');currentMenu=await latest.json();
       if(!currentMenu?.weekStart)return;
       const response=await api('/rest/v1/menu_day_overrides?week_start=eq.'+currentMenu.weekStart+'&select=restaurant_id,menu_date,dishes');
       if(!response.ok)throw new Error('Manuelle Menüs konnten nicht geladen werden.');
       dayOverrides=await response.json();
-      menuDate.replaceChildren(...Object.keys(currentMenu.restaurants?.[0]?.days||{}).map(day=>{const option=document.createElement('option');option.value=day;option.textContent=new Date(day+'T12:00:00Z').toLocaleDateString('de-AT',{weekday:'long',day:'2-digit',month:'2-digit'});return option;}));
+      const previousDate=menuDate.value; const days=Array.from({length:5},(_,i)=>{const d=new Date(currentMenu.weekStart+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+i);return d.toISOString().slice(0,10)});
+      menuDate.replaceChildren(...days.map(day=>{const option=document.createElement('option');option.value=day;option.textContent=new Date(day+'T12:00:00Z').toLocaleDateString('de-AT',{weekday:'long',day:'2-digit',month:'2-digit'});return option;}));
+      if(days.includes(previousDate))menuDate.value=previousDate;else {const today=new Date().toLocaleDateString('en-CA',{timeZone:'Europe/Vienna'});if(days.includes(today))menuDate.value=today;}
       renderSelectedMenu();
     }
     function renderSelectedMenu(){
       const source=currentMenu?.restaurants?.find(row=>row.id===menuRestaurant.value);
       const override=dayOverrides.find(row=>row.restaurant_id===menuRestaurant.value&&row.menu_date===menuDate.value);
-      renderDishEditor(override?.dishes??source?.days?.[menuDate.value]??[]);
+      let dishes=override?.dishes??source?.days?.[menuDate.value]??source?.seasonal??[];
+      if(!dishes.every(d=>d.manual_presentation)){dishes=menuRestaurant.value==='mensa'?WUMenuRules.mensaStations(dishes):WUMenuRules.restaurantDisplayRules(menuRestaurant.value,dishes);}
+      renderDishEditor(dishes);
       text(document.getElementById('menuNotice'),override?'Manuelle Fassung aktiv.':'Automatische Fassung.');
     }
     const priceOrNull=value=>value===''?null:Number(value);
     const commaList=value=>value.split(',').map(item=>item.trim()).filter(Boolean);
     function readDraftDish(row){
-      return {...row._sourceDish,
+      return {...JSON.parse(row.querySelector(".dish-extra").value),manual_presentation:true,
         name:row.querySelector('.dish-name').value.trim(),
         price:priceOrNull(row.querySelector('.dish-price-input').value),
         price_small:priceOrNull(row.querySelector('.dish-price-small').value),
         price_large:priceOrNull(row.querySelector('.dish-price-large').value),
         category:row.querySelector('.dish-category').value.trim(),
         description:row.querySelector('.dish-description').value.trim(),
-        included_soup:row.querySelector('.dish-soup').value.trim()||null,
+        included_soup:row.querySelector('.dish-soup').value.trim()||null,included_starter:row.querySelector('.dish-soup').value.trim()||null,included_dessert:row.querySelector('.dish-dessert').value.trim()||null,
         included_choices:commaList(row.querySelector('.dish-choices').value),
         allergens:commaList(row.querySelector('.dish-allergens').value)
       };
@@ -258,11 +273,12 @@
             if(value!==null&&(!Number.isFinite(value)||value<0||value>=150))throw new Error('Preise müssen zwischen 0 und 149,99 € liegen.');
           }
         }
+        if(menuRestaurant.value==='finn')for(const dish of dishes)if(Number.isFinite(dish.price))dish.menu_options=[{label:'Hauptgericht mit Suppe',total_price:dish.price}];
         const record={week_start:currentMenu.weekStart,restaurant_id:menuRestaurant.value,menu_date:menuDate.value,dishes};
         const response=await api('/rest/v1/menu_day_overrides?on_conflict=week_start,restaurant_id,menu_date',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(record)});
         if(!response.ok)throw new Error('Tagesmenü konnte nicht gespeichert werden.');
         dayOverrides=dayOverrides.filter(row=>row.restaurant_id!==record.restaurant_id||row.menu_date!==record.menu_date);dayOverrides.push(record);
-        text(notice,'Gespeichert – die manuelle Fassung ist live.','success');
+        menuEditor.dataset.dirty='false';text(notice,'Gespeichert – die manuelle Fassung ist live.','success');
       }catch(error){text(notice,error.message||'Speichern fehlgeschlagen.','error');}finally{button.disabled=false;}
     }
     async function resetMenu(){
@@ -283,6 +299,11 @@
         if(!response.ok)throw new Error('Änderung konnte nicht gespeichert werden.');
         text(announcementNotice,'Gespeichert.','success');
       }catch(error){text(announcementNotice,error.message||'Änderung konnte nicht gespeichert werden.','error');}finally{saveAnnouncementButton.disabled=false;}
+    }
+    async function loadPublicationHistory(){
+      try{const response=await fetch('./data/publication-observations.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error('Verlauf nicht abrufbar');const data=await response.json();
+      document.getElementById('publicationHistory').innerHTML='<p class="muted">Erstmals beim Abruf gesehen; kein bestätigter Veröffentlichungszeitpunkt. Zeiten in Wien. Änderungen können auch Seitenänderungen sein.</p>'+Object.entries(data.sources||{}).map(([id,entry])=>'<details><summary>'+escape(restaurants.find(r=>r.restaurant_id===id||id.startsWith(r.restaurant_id+'-'))?.name||id)+' · '+(entry.changes||[]).length+' Änderungen</summary>'+(entry.changes||[]).slice().reverse().map(change=>'<p>Änderung zwischen '+escape(new Date(change.previous_seen_at).toLocaleString('de-AT',{timeZone:'Europe/Vienna'}))+' und '+escape(new Date(change.first_seen_at).toLocaleString('de-AT',{timeZone:'Europe/Vienna'}))+'</p>').join('')+[...(entry.observations||[])].reverse().map(o=>'<p class="muted">'+escape(new Date(o.at).toLocaleString('de-AT',{timeZone:'Europe/Vienna'}))+' · '+escape(o.error?'Abruffehler':o.changed?'Änderung erkannt':'geprüft')+'</p>').join('')+'</details>').join('');
+      }catch(e){document.getElementById('publicationHistory').textContent=e.message;}
     }
     async function fetchHistory(){
       const response=await api('/rest/v1/menu_history?select=week_start,menu_data,captured_at&order=week_start.desc');
@@ -330,10 +351,11 @@
     saveAnnouncementButton.addEventListener('click',saveAnnouncement);
     profileRestaurant.addEventListener('change',renderProfile);
     document.getElementById('saveProfileButton').addEventListener('click',saveProfile);
-    menuRestaurant.addEventListener('change',renderSelectedMenu);menuDate.addEventListener('change',renderSelectedMenu);
+    menuRestaurant.addEventListener('change',()=>loadMenuEditor().catch(e=>text(document.getElementById('menuNotice'),e.message,'error')));document.getElementById('refreshMenus').onclick=()=>loadMenuEditor().catch(e=>text(document.getElementById('menuNotice'),e.message,'error')); menuDate.addEventListener('change',renderSelectedMenu);
     document.getElementById('addDishButton').addEventListener('click',()=>renderDishEditor([...menuEditor.children].map(readDraftDish).concat({name:'',price:null,category:'Hauptgericht'})));
     document.getElementById('saveMenuButton').addEventListener('click',saveMenu);
     document.getElementById('resetMenuButton').addEventListener('click',resetMenu);
+    setInterval(()=>{if(accessToken&&menuEditor.dataset.dirty!=='true'&&!menuEditor.contains(document.activeElement))loadMenuEditor().catch(console.warn)},15000);
     if(!config?.url||!config?.publishableKey)text(loginNotice,'Die Admin-Konfiguration fehlt.','error');
   })();
   </script>

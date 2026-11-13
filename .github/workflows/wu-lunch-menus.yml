@@ -160,6 +160,10 @@ jobs:
           # Dedicated Finn image, Mensa PDF and Topf browser workflows stay
           # separate. No artificial two-restaurants-per-day bottleneck.
           python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
+      - name: Veröffentlichungsänderungen mit Abrufzeit erfassen
+        if: steps.guard.outputs.skip == 'false'
+        continue-on-error: true
+        run: python wu-lunch/scripts/observe_publication.py --import-scan
       - name: Geprüfte Wochenkarte ins Admin-Archiv sichern
         if: steps.guard.outputs.skip == 'false'
         shell: bash
