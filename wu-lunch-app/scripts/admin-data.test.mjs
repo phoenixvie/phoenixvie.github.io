@@ -26,7 +26,7 @@ test('manual editor preserves source details and saves explicit menu structure',
 test('editor fetches current data and offers all five weekdays even if the first restaurant is empty',async()=>{
   const html=await readFile(new URL('../../wu-lunch/admin.html',import.meta.url),'utf8');
   let selected=false,options=[];
-  const c={Date,Intl,currentMenu:null,fetch:async()=>({ok:true,json:async()=>({weekStart:'2026-11-09',restaurants:[{days:{}}]})}),api:async()=>({ok:true,json:async()=>[]}),menuDate:{value:'2026-11-12',replaceChildren:(...items)=>{options=items}},document:{createElement:()=>({})},renderSelectedMenu:()=>{selected=true}};vm.createContext(c);
+  const c={Date,Intl,LOCALE:'en-GB',currentMenu:null,fetch:async()=>({ok:true,json:async()=>({weekStart:'2026-11-09',restaurants:[{days:{}}]})}),api:async()=>({ok:true,json:async()=>[]}),menuDate:{value:'2026-11-12',replaceChildren:(...items)=>{options=items}},document:{createElement:()=>({})},renderSelectedMenu:()=>{selected=true}};vm.createContext(c);
   vm.runInContext(html.slice(html.indexOf('    async function loadMenuEditor('),html.indexOf('    function renderSelectedMenu(')),c);
-  await c.loadMenuEditor();assert.equal(options.length,5);assert.equal(options[4].value,'2026-11-13');assert.equal(c.menuDate.value,'2026-11-12');assert.equal(selected,true);
+  await c.loadMenuEditor();assert.equal(options.length,5);assert.equal(options[4].value,'2026-11-13');assert.match(options[4].textContent,/Friday/);assert.equal(c.menuDate.value,'2026-11-12');assert.equal(selected,true);
 });

@@ -33,7 +33,9 @@ jobs:
           node-version: '24'
       - run: node --test wu-lunch-app/scripts/i18n.test.mjs
   translate:
-    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
+    # A source may fail after other verified menus were already published.
+    # Translate only the finalized data, even when the import reports that warning.
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' || github.event.workflow_run.conclusion == 'failure')
     needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 30

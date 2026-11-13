@@ -24,6 +24,15 @@ test('German primary locales use German; every other primary locale uses English
   for(const language of ['en-GB','en-US','fr-FR','es','it','nl-NL']){const c=context(language);assert.equal(c.WULunchI18n.language,'en');assert.equal(c.WULunchI18n.text('Zurück'),'Back');}
 });
 test('native system locale takes priority over WebView language',()=>{assert.equal(context('en-US',[],'de-AT').WULunchI18n.language,'de');assert.equal(context('de-DE',[],'en-US').WULunchI18n.language,'en');});
+
+test('empty announcements stay hidden in English; actual untranslated announcements remain explicit',async()=>{
+  const html=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');
+  const announcementElement={style:{},innerHTML:''},announcement={desktop_message:'',mobile_message:''};
+  const c={LANG:'en',announcementElement,announcement,announcementHtml:s=>s,window:{matchMedia:()=>({matches:false}),WULunchI18n:{text:()=>null}}};
+  vm.createContext(c);vm.runInContext(html.slice(html.indexOf('    function renderAnnouncement(){'),html.indexOf('    async function loadAnnouncement(){')),c);
+  c.renderAnnouncement();assert.equal(announcementElement.style.display,'none');assert.equal(announcementElement.innerHTML,'');
+  announcement.desktop_message='Neue Nachricht';c.renderAnnouncement();assert.equal(announcementElement.style.display,'block');assert.equal(announcementElement.innerHTML,'Announcement translation pending');
+});
 test('exact German source binding prevents stale menus and manual component translations compose correctly',()=>{
   const c=context('en',[['Suppe','Soup'],['Curry mit Reis','Curry with rice'],['Dessert','Dessert']]);
   assert.equal(c.WULunchI18n.english('Curry mit Reis'),'Curry with rice');
