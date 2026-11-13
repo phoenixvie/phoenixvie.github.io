@@ -33,6 +33,7 @@ SOURCES = {
     "gruenehuette": URLS["gruenehuette"],
     "lia": URLS["lia"],
     "finn": "https://finn.wien/blogs/news/mittagsmenu",
+    "karmafood": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
     "omakueche": "https://www.xn--omakche-q2a.at/",
 }
 def read_state():
