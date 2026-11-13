@@ -21,7 +21,7 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
     document:{getElementById:id=>id==='map'?mapElement:app,addEventListener:(type,callback)=>events.set(type,callback)},
     setInterval:(callback,ms)=>{refresh=callback;refreshMs=ms;return 0}, setTimeout:()=>0,
     ReactNativeWebView:{postMessage:value=>messages.push(JSON.parse(value))},
-    fetch:async (url,options)=>{requests.push({url,options});return {ok:true,json:async()=>url.includes('restaurant_overrides')?profiles:url.includes('menu_day_overrides')?manual:url.includes('restaurant-contact')?{restaurants:{mensa:{phone:'+43 123',email:'mensa@example.test',hours:['Mo–Fr 11:00–14:00']}}}:{weekStart:'2026-11-09',restaurants:JSON.parse(JSON.stringify(restaurants))}}}};
+    fetch:async (url,options)=>{requests.push({url,options});return {ok:true,json:async()=>url.includes('lunch_ui_texts')?[]:url.includes('restaurant_overrides')?profiles:url.includes('menu_day_overrides')?manual:url.includes('restaurant-contact')?{restaurants:{mensa:{phone:'+43 123',email:'mensa@example.test',hours:['Mo–Fr 11:00–14:00']}}}:{weekStart:'2026-11-09',restaurants:JSON.parse(JSON.stringify(restaurants))}}}};
   context.window=context;
   vm.runInNewContext(code,context);
   assert.ok(events.has('DOMContentLoaded'));
@@ -30,7 +30,7 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.match(app.innerHTML,/WU Food/);
   for(const request of requests.filter(r=>r.url.includes('/rest/v1/'))){
     assert.equal(request.options.cache,'no-store');
-    assert.ok([...new URL(request.url).searchParams.keys()].every(key=>['select','week_start'].includes(key)),'PostgREST accepts only supported query parameters');
+    assert.ok([...new URL(request.url).searchParams.keys()].every(key=>['select','week_start','order','limit','offset','updated_at'].includes(key)),'PostgREST accepts only supported query parameters');
   }
   const click=dataset=>actions.get('click')({target:{closest:selector=>selector==='a[href]'?null:{dataset}}});
   await click({restaurant:'mensa'});

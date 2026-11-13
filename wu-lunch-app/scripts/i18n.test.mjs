@@ -25,6 +25,16 @@ test('German primary locales use German; every other primary locale uses English
 });
 test('native system locale takes priority over WebView language',()=>{assert.equal(context('en-US',[],'de-AT').WULunchI18n.language,'de');assert.equal(context('de-DE',[],'en-US').WULunchI18n.language,'en');});
 
+test('admin UI texts update German and English without changing source keys or menu translations',async()=>{
+  const c=context('de-AT');c.Event=Event;c.dispatchEvent=()=>{};
+  const node={textContent:'Menü',parentElement:{closest:()=>null}},body={querySelectorAll:()=>[]};
+  c.document={body,documentElement:{setAttribute(){}},createTreeWalker:()=>{let seen=false;return {nextNode:()=>seen?null:(seen=true,node)}}};
+  c.fetch=async()=>({ok:true,json:async()=>[{text_key:'Menü',de_text:'Speisen',en_text:'Dishes',updated_at:'2026-11-13T18:00:00Z'}]});
+  await c.WULunchI18n.refreshUi();assert.equal(node.textContent,'Speisen');assert.equal(c.WULunchI18n.catalog().find(row=>row.text_key==='Menü').default_de,'Menü');
+  c.WULunchI18n.setLanguage('en');assert.equal(node.textContent,'Dishes');assert.equal(c.WULunchI18n.english('Unbekanntes Hauptgericht'),null);
+  c.WULunchI18n.setLanguage('de');assert.equal(node.textContent,'Speisen');
+});
+
 test('language toggle restores German text and accessibility labels and remembers the explicit choice',()=>{
   const saved=new Map(),events=[],messages=[];
   const node={textContent:'Zurück',parentElement:{closest:()=>null}};
@@ -73,4 +83,13 @@ test('English admin save routes text pairs to translations instead of overwritin
   const c={editLanguage:'en',document:{getElementById:id=>id==='saveMenuButton'?button:notice},menuEditor:{querySelectorAll:()=>fields,dataset:{dirty:'true'}},saveEnglishPairs:async rows=>pairs.push(...rows),text(){},api:()=>{writes++;throw new Error('German data must not change');}};
   vm.createContext(c);vm.runInContext(html.slice(html.indexOf('    async function saveMenu('),html.indexOf('    async function resetMenu(')),c);await c.saveMenu();
   assert.equal(writes,0);assert.equal(pairs[0][0],'Suppe');assert.equal(pairs[0][1],'Soup');assert.equal(c.menuEditor.dataset.dirty,'false');assert.equal(button.disabled,false);
+});
+
+test('admin app-text save updates only the chosen language and validates contact addresses and placeholders',async()=>{
+  const html=await readFile(new URL('../../wu-lunch/admin.html',import.meta.url),'utf8'),requests=[];
+  const c={editLanguage:'en',uiTextRows:new Map([['Menü',{text_key:'Menü',de_text:'Menü',en_text:'Menu'}]]),window:{WULunchI18n:{catalog:()=>[{text_key:'Menü',default_de:'Menü',default_en:'Menu'}],refreshUi(){}}},api:async(path,options)=>{requests.push({path,options});return {ok:true,json:async()=>[{text_key:'Menü',de_text:'Menü',en_text:'Meals'}]}}};
+  vm.createContext(c);vm.runInContext(html.slice(html.indexOf('    async function saveUiText('),html.indexOf('    function renderUiTexts(')),c);
+  await c.saveUiText('Menü','Meals');assert.equal(requests[0].options.method,'PATCH');assert.deepEqual(JSON.parse(requests[0].options.body),{en_text:'Meals'});
+  await assert.rejects(()=>c.saveUiText('Webseite von {restaurant}','Website'),/Platzhalter/);
+  await assert.rejects(()=>c.saveUiText('Kontakt-E-Mail','bad address'),/E-Mail/);assert.equal(requests.length,1);
 });

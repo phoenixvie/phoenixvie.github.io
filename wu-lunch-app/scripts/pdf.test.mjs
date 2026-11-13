@@ -14,3 +14,8 @@ test('PDF viewer renders downloaded bytes without a privileged app bridge', () =
   assert.match(html,/isEvalSupported:false/);
   assert.doesNotMatch(html,/ReactNativeWebView/);
 });
+
+test('admin PDF text is displayed as data and cannot break out of the viewer script',()=>{
+  const html=pdfViewerHtml('JVBERg==','en',{'PDF wird geladen …':'Please wait','PDF konnte nicht angezeigt werden.':'</script><img onerror="alert(1)">'});
+  assert.match(html,/Please wait/);assert.doesNotMatch(html,/<img onerror/);assert.equal((html.match(/<\/script>/g)||[]).length,1);
+});
