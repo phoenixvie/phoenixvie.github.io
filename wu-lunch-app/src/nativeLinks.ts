@@ -19,6 +19,7 @@ type LinkHandlers = {
   openExternal: (url: string) => void;
   share: (text: string) => void;
   exit: () => void;
+  usage?: (event: unknown, props: unknown) => void;
   setLanguage?: (language: 'de' | 'en', texts?: Record<string,string>, manual?: boolean) => void;
 };
 
@@ -33,5 +34,6 @@ export function routeAppMessage(source: unknown, raw: unknown, baseUrl: string, 
     if (url) handlers.openSource(url, item.type === 'open-source' && typeof item.title === 'string' ? item.title : 'Restaurant');
     else if (item.type === 'open-external' && typeof item.url === 'string' && /^(mailto:|tel:)/i.test(item.url)) handlers.openExternal(item.url);
   } else if (item.type === 'share' && typeof item.text === 'string') handlers.share(item.text);
+  else if (item.type === 'usage') handlers.usage?.(item.event,item.props);
   else if (item.type === 'exit') handlers.exit();
 }
