@@ -25,6 +25,18 @@ test('German primary locales use German; every other primary locale uses English
 });
 test('native system locale takes priority over WebView language',()=>{assert.equal(context('en-US',[],'de-AT').WULunchI18n.language,'de');assert.equal(context('de-DE',[],'en-US').WULunchI18n.language,'en');});
 
+test('language toggle restores German text and accessibility labels and remembers the explicit choice',()=>{
+  const saved=new Map(),events=[],messages=[];
+  const node={textContent:'Zurück',parentElement:{closest:()=>null}};
+  const child={label:'Zurück',getAttribute(name){return name==='aria-label'?this.label:null},setAttribute(name,value){this.label=value}};
+  const body={querySelectorAll:()=>[child]};
+  const c={Event,navigator:{language:'de-AT'},localStorage:{getItem:key=>saved.get(key)||null,setItem:(key,value)=>saved.set(key,value)},console,fetch:async()=>({ok:true,json:async()=>[]}),dispatchEvent:event=>events.push(event.type),ReactNativeWebView:{postMessage:value=>messages.push(JSON.parse(value))},document:{title:'WU Food',documentElement:{setAttribute(){}},body,addEventListener(){},createTreeWalker:()=>{let seen=false;return {nextNode:()=>seen?null:(seen=true,node)}}}};
+  c.window=c;vm.createContext(c);vm.runInContext(script,c);
+  c.WULunchI18n.toggleLanguage();assert.equal(c.WULunchI18n.language,'en');assert.equal(c.WULunchI18n.locale,'en-GB');assert.equal(node.textContent,'Back');assert.equal(child.label,'Back');assert.equal(saved.get('wu-lunch-language'),'en');assert.equal(messages.at(-1).language,'en');
+  const reboot={navigator:{language:'de-DE'},localStorage:c.localStorage,console};reboot.window=reboot;vm.runInNewContext(script,reboot);assert.equal(reboot.WULunchI18n.language,'en');
+  c.WULunchI18n.toggleLanguage();assert.equal(node.textContent,'Zurück');assert.equal(child.label,'Zurück');assert.equal(saved.get('wu-lunch-language'),'de');assert.deepEqual(events,['wu-language-change','wu-language-change']);
+});
+
 test('empty announcements stay hidden in English; actual untranslated announcements remain explicit',async()=>{
   const html=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');
   const announcementElement={style:{},innerHTML:''},announcement={desktop_message:'',mobile_message:''};

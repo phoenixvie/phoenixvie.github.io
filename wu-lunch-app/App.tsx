@@ -8,14 +8,17 @@ import {routeAppMessage, webUrl} from './src/nativeLinks';
 
 const baseUrl = 'https://phoenixvie.github.io/wu-lunch-app/preview/';
 const nativeLanguage = /^de(?:-|$)/i.test(Intl.DateTimeFormat().resolvedOptions().locale) ? 'de' : 'en';
-const nativeText = (de: string, en: string) => nativeLanguage === 'de' ? de : en;
+const nativeText = (de: string, en: string, language = nativeLanguage) => language === 'de' ? de : en;
 const htmlSource = {html: previewHtml.replace('<head>',`<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';</script>`), baseUrl};
-function openExternal(url: string) {
+function openExternal(url: string, language = nativeLanguage) {
   if (/^(https?:|mailto:|tel:)/i.test(url)) Linking.openURL(url).catch(() => {
-    Alert.alert(nativeText('Link konnte nicht geöffnet werden','Could not open link'),nativeText('Bitte prüfe, ob eine passende App installiert ist.','Please check that a suitable app is installed.'));
+    Alert.alert(nativeText('Link konnte nicht geöffnet werden','Could not open link',language),nativeText('Bitte prüfe, ob eine passende App installiert ist.','Please check that a suitable app is installed.',language));
   });
 }
 function AppContent() {
+  const [language, setLanguage] = useState<'de' | 'en'>(nativeLanguage);
+  const nativeText = (de: string, en: string) => language === 'de' ? de : en;
+  const openExternalLink = (url: string) => openExternal(url, language);
   const main = useRef<WebView<{}>>(null);
   const browser = useRef<WebView<{}>>(null);
   const [page, setPage] = useState<{url: string; title: string; loading?: boolean; pdf?: string} | null>(null);
@@ -34,7 +37,7 @@ function AppContent() {
       let pdf: string | undefined;
       if (response.ok && (response.headers.get('content-type') || '').includes('application/pdf')) {
         const bytes = new Uint8Array(await response.arrayBuffer());
-        pdf = pdfViewerHtml(encodePdf(bytes),nativeLanguage);
+        pdf = pdfViewerHtml(encodePdf(bytes),language);
       }
       if (request === sourceRequest.current) setPage({url, title, pdf});
     } catch {
@@ -58,7 +61,7 @@ function AppContent() {
   }, [page, canGoBack]);
   const message = ({nativeEvent}: WebViewMessageEvent) => {
     routeAppMessage(nativeEvent.url, nativeEvent.data, baseUrl, {
-      openSource: (url, title) => {void openSource(url, title);}, openExternal,
+      openSource: (url, title) => {void openSource(url, title);}, openExternal: openExternalLink, setLanguage,
       share: text => {Share.share({message: text}).catch(() => {});},
       exit: () => BackHandler.exitApp(),
     });
@@ -71,7 +74,7 @@ function AppContent() {
       onShouldStartLoadWithRequest={request => {
         if (request.isTopFrame === false || request.url === 'about:blank' || request.url.split('?')[0] === baseUrl || request.url.split('?')[0] === baseUrl+'index.html') return true;
         const url=webUrl(request.url);
-        if(url)void openSource(url,'Restaurant');else openExternal(request.url); return false;
+        if(url)void openSource(url,'Restaurant');else openExternalLink(request.url); return false;
       }} />
     <Modal visible={!!page} onRequestClose={browserBack} animationType="slide">
       <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
