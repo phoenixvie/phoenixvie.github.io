@@ -77,6 +77,10 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   const link={href:'https://www.google.com/maps/search/?api=1&query=WU'};
   actions.get('click')({preventDefault(){},target:{closest:selector=>selector==='a[href]'?link:null}});
   assert.deepEqual(messages.at(-1),{type:'open-source',url:link.href,title:'WU Mensa'});
+  for (const href of ['tel:+4367688488254','mailto:office@wumensa.at']) {
+    actions.get('click')({preventDefault(){},target:{closest:selector=>selector==='a[href]'?{href}:null}});
+    assert.deepEqual(messages.at(-1),{type:'open-external',url:href});
+  }
   assert.equal(refreshMs,3000);
   restaurants[0].days=Object.fromEntries(Array.from({length:5},(_,i)=>['2026-11-'+String(9+i).padStart(2,'0'),[{name:'Live aktualisiertes Gericht',category:'Meaty',price:6.4}]]));
   await refresh();
