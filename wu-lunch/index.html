@@ -320,7 +320,7 @@ html,body,.page { background:#fff; }
     
   </div>
 
-  <script src="data.js?v=5"></script>
+  <script src="i18n.js?v=20261113-en1"></script><script src="data.js?v=5"></script>
   <script src="supabase-config.js?v=1"></script>
   <script>
   (async function initializeLunchPage() {
@@ -337,6 +337,7 @@ html,body,.page { background:#fff; }
     } catch(error) {
       console.warn('Live-Menüs nicht abrufbar; statisches Fallback verwendet:', error);
     }
+    const LANG=window.WULunchI18n.language,LOCALE=window.WULunchI18n.locale;
     const DATA = freshData;
     const announcementElement=document.getElementById('lunchAnnouncement');
     let announcement={desktop_message:'',mobile_message:''};
@@ -358,7 +359,7 @@ html,body,.page { background:#fff; }
       return (html+escapeAnnouncement(message.slice(offset))).replace(/\n/g,'<br>');
     }
     function renderAnnouncement(){
-      const message=(window.matchMedia('(max-width:750px)').matches?announcement.mobile_message:announcement.desktop_message).trim();
+      const germanMessage=(window.matchMedia('(max-width:750px)').matches?announcement.mobile_message:announcement.desktop_message).trim();const message=LANG==='de'?germanMessage:(window.WULunchI18n.text(germanMessage)||'Announcement translation pending');
       announcementElement.style.display=message?'block':'none';
       announcementElement.innerHTML=message?announcementHtml(message):'';
     }
@@ -475,14 +476,14 @@ html,body,.page { background:#fff; }
 
     function formatDate(dateStr){
       const d = new Date(dateStr + 'T12:00:00');
-      return d.toLocaleDateString('de-AT',{weekday:'long', day:'numeric', month:'long'});
+      return d.toLocaleDateString(LOCALE,{weekday:'long', day:'numeric', month:'long'});
     }
     function formatShortDate(dateStr){
       const d = new Date(dateStr + 'T12:00:00');
-      return d.toLocaleDateString('de-AT',{day:'2-digit', month:'2-digit'});
+      return d.toLocaleDateString(LOCALE,{day:'2-digit', month:'2-digit'});
     }
     function formatPrice(value){
-      return value == null ? '' : value.toLocaleString('de-AT',{minimumFractionDigits:1, maximumFractionDigits:2}) + ' €';
+      return value == null ? '' : value.toLocaleString(LOCALE,{minimumFractionDigits:1, maximumFractionDigits:2}) + ' €';
     }
     function getStatusLabel(status){
       if(status==='verified') return 'bestätigt';
@@ -532,7 +533,7 @@ html,body,.page { background:#fff; }
         const weekday = date.getDay();
         const btn = document.createElement('button');
         btn.className = 'day-tab' + (iso === selectedDate ? ' active' : '');
-        btn.textContent = date.toLocaleDateString('de-AT',{weekday:'long'});
+        btn.textContent = date.toLocaleDateString(LOCALE,{weekday:'long'});
         btn.addEventListener('click',()=>{selectedDate = iso; update();});
         tabContainer.appendChild(btn);
       });
@@ -547,7 +548,7 @@ html,body,.page { background:#fff; }
         const active=iso===selectedDate;
         dot.type='button';
         dot.className='swipe-dot'+(active?' active':'');
-        dot.setAttribute('aria-label','Zeige '+SHORT_WEEKDAY[date.getDay()]+' '+formatShortDate(iso));
+        dot.setAttribute('aria-label',(LANG==='de'?'Zeige ':'Show ')+date.toLocaleDateString(LOCALE,{weekday:'long'})+' '+formatShortDate(iso));
         dot.setAttribute('aria-current',active?'date':'false');
         dot.addEventListener('click',()=>{selectedDate=iso;update();});
         swipeDots.appendChild(dot);
@@ -757,7 +758,7 @@ function mensaStations(raw){
       const next=nextScheduledUpdate();
       if(!next)return;
       const two=value=>String(value).padStart(2,'0');
-      nextUpdate.textContent='Nächste automatische Prüfung: '+WEEKDAY_SHORT[next.getUTCDay()]+' '+two(next.getUTCDate())+'.'+two(next.getUTCMonth()+1)+'. '+two(next.getUTCHours())+':15 Uhr';
+      nextUpdate.textContent=(LANG==='de'?'Nächste automatische Prüfung: ':'Next scheduled update: ')+(LANG==='de'?WEEKDAY_SHORT[next.getUTCDay()]:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][next.getUTCDay()])+' '+two(next.getUTCDate())+'.'+two(next.getUTCMonth()+1)+'. '+two(next.getUTCHours())+(LANG==='de'?':15 Uhr':':15 (Vienna time)');
     }
 
     function moveDay(step){
@@ -880,7 +881,7 @@ function mensaStations(raw){
     }
     function update(slideDirection=0){
       renderTabs();
-      renderList();
+      renderList();window.WULunchI18n.apply(document.body);
       if(slideDirection){
         const animation=slideDirection>0?'day-slide-next':'day-slide-previous';
         listView.classList.remove('day-slide-next','day-slide-previous');
@@ -892,7 +893,7 @@ function mensaStations(raw){
     update();
     renderNextUpdate();
     let liveRefreshing=false,liveSignature=JSON.stringify(DATA);
-    async function refreshLiveData(){if(liveRefreshing)return;liveRefreshing=true;const previous=JSON.parse(JSON.stringify(DATA));try{const response=await fetch('./data/menus.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return;const incoming=await response.json();Object.assign(DATA,incoming);await Promise.all([applyRestaurantOverrides(),loadAnnouncement(),applyManualMenus()]);if(!profileFetchSucceeded||!manualFetchSucceeded){Object.assign(DATA,previous);return;}const signature=JSON.stringify(DATA);if(signature!==liveSignature){liveSignature=signature;for(const r of DATA.restaurants){const info=locationInfo[r.id];if(info){info.address=r.address||info.address;info.color=r.brand_color||info.color;if(Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)){info.lat=r.latitude;info.lon=r.longitude;}}}update();if(realMap){realMap.remove();realMap=null;loadRealMap();}}}catch(e){Object.assign(DATA,previous);console.warn('Aktualisierung fehlgeschlagen',e)}finally{liveRefreshing=false}}
+    async function refreshLiveData(){void window.WULunchI18n.refresh();if(liveRefreshing)return;liveRefreshing=true;const previous=JSON.parse(JSON.stringify(DATA));try{const response=await fetch('./data/menus.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return;const incoming=await response.json();Object.assign(DATA,incoming);await Promise.all([applyRestaurantOverrides(),loadAnnouncement(),applyManualMenus()]);if(!profileFetchSucceeded||!manualFetchSucceeded){Object.assign(DATA,previous);return;}const signature=JSON.stringify(DATA);if(signature!==liveSignature){liveSignature=signature;for(const r of DATA.restaurants){const info=locationInfo[r.id];if(info){info.address=r.address||info.address;info.color=r.brand_color||info.color;if(Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)){info.lat=r.latitude;info.lon=r.longitude;}}}update();if(realMap){realMap.remove();realMap=null;loadRealMap();}}}catch(e){Object.assign(DATA,previous);console.warn('Aktualisierung fehlgeschlagen',e)}finally{liveRefreshing=false}}
     window.setInterval(refreshLiveData,3000);window.addEventListener('focus',refreshLiveData);
     window.setInterval(renderNextUpdate,30000);
 

@@ -7,10 +7,12 @@ import {encodePdf, pdfViewerHtml} from './src/pdfViewer';
 import {routeAppMessage, webUrl} from './src/nativeLinks';
 
 const baseUrl = 'https://phoenixvie.github.io/wu-lunch-app/preview/';
-const htmlSource = {html: previewHtml, baseUrl};
+const nativeLanguage = /^de(?:-|$)/i.test(Intl.DateTimeFormat().resolvedOptions().locale) ? 'de' : 'en';
+const nativeText = (de: string, en: string) => nativeLanguage === 'de' ? de : en;
+const htmlSource = {html: previewHtml.replace('<head>',`<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';</script>`), baseUrl};
 function openExternal(url: string) {
   if (/^(https?:|mailto:|tel:)/i.test(url)) Linking.openURL(url).catch(() => {
-    Alert.alert('Link konnte nicht geöffnet werden', 'Bitte prüfe, ob eine passende App installiert ist.');
+    Alert.alert(nativeText('Link konnte nicht geöffnet werden','Could not open link'),nativeText('Bitte prüfe, ob eine passende App installiert ist.','Please check that a suitable app is installed.'));
   });
 }
 function AppContent() {
@@ -32,7 +34,7 @@ function AppContent() {
       let pdf: string | undefined;
       if (response.ok && (response.headers.get('content-type') || '').includes('application/pdf')) {
         const bytes = new Uint8Array(await response.arrayBuffer());
-        pdf = pdfViewerHtml(encodePdf(bytes));
+        pdf = pdfViewerHtml(encodePdf(bytes),nativeLanguage);
       }
       if (request === sourceRequest.current) setPage({url, title, pdf});
     } catch {
@@ -86,8 +88,8 @@ function AppContent() {
             }
             openExternal(request.url); return false;
           }} /> : null}
-        {failed ? <View style={styles.failure}><Text>Die Restaurantseite konnte nicht geladen werden.</Text><Pressable onPress={() => {setFailed(false); browser.current?.reload();}}><Text style={styles.link}>Erneut versuchen</Text></Pressable></View> : null}
-        <View style={styles.browserFooter}><Pressable accessibilityLabel="Zurück zum Menü" onPress={closePage} style={styles.back}><Text style={styles.footerText}>Zurück</Text></Pressable></View>
+        {failed ? <View style={styles.failure}><Text>{nativeText('Die Restaurantseite konnte nicht geladen werden.','The restaurant website could not be loaded.')}</Text><Pressable onPress={() => {setFailed(false); browser.current?.reload();}}><Text style={styles.link}>{nativeText('Erneut versuchen','Try again')}</Text></Pressable></View> : null}
+        <View style={styles.browserFooter}><Pressable accessibilityLabel={nativeText('Zurück zum Menü','Back to menu')} onPress={closePage} style={styles.back}><Text style={styles.footerText}>{nativeText('Zurück','Back')}</Text></Pressable></View>
       </SafeAreaView>
     </Modal>
   </SafeAreaView>;

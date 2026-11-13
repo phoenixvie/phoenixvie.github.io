@@ -1,0 +1,52 @@
+name: WU Lunch – englische Menüs
+on:
+  workflow_dispatch:
+  schedule:
+    # Catch manual German menu/profile edits outside the source-import slots.
+    - cron: '27 * * * *'
+  workflow_run:
+    workflows: ['WU Lunch – Speisepläne aktualisieren']
+    types: [completed]
+    branches: [master]
+  push:
+    branches: [master]
+    paths:
+      - 'wu-lunch/data/menus.json'
+      - 'wu-lunch/scripts/translate_menus.mjs'
+      - 'wu-lunch/scripts/collect_translation_texts.cjs'
+      - 'wu-lunch-app/preview/app.js'
+      - '.github/workflows/wu-lunch-english.yml'
+  pull_request:
+    paths: ['wu-lunch/**', 'wu-lunch-app/**', '.github/workflows/wu-lunch-english.yml']
+permissions:
+  contents: read
+concurrency:
+  group: wu-lunch-english
+  cancel-in-progress: false
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --test wu-lunch-app/scripts/i18n.test.mjs
+  translate:
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success')
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Neue finale Texte mit Luna übersetzen und unabhängig prüfen
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: https://vswnqdqnohbuzbwmsdvv.supabase.co
+        run: node wu-lunch/scripts/translate_menus.mjs

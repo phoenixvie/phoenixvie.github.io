@@ -1,0 +1,68 @@
+/* Shared by the website and the embedded Android UI. Menu translations are
+ * exact-source matches: a changed German text never reuses an older English one. */
+(function(root){
+  const language=/^de(?:[-_]|$)/i.test(root.WU_SYSTEM_LANGUAGE||root.navigator?.language||'en')?'de':'en';
+  const ui={
+    'Impressum – WU Lunch':'Legal notice – WU Lunch','WU Food · App-Vorschau':'WU Food · App preview','E-Mail-Adresse':'Email address','Deutschen oder englischen Text suchen':'Search German or English text','Navigation':'Navigation','Tagesnavigation: nach links oder rechts wischen':'Day navigation: swipe left or right','Karte der Restaurants':'Restaurant map','Interaktive Karte der Restaurants rund um den WU Campus':'Interactive map of restaurants around WU Campus','Menütage':'Menu days','Wischanzeige':'Swipe indicator','Standort':'Location','Menü':'Menu','Restaurant':'Restaurant','Restaurantansichten':'Restaurant views','Zurück':'Back','Weiter':'Next','Zurück zur Liste':'Back to list',
+    'Telefon':'Phone','E-Mail':'Email','Webseite':'Website','Webseite – Mittagsmenü':'Website – lunch menu','Adresse':'Address','Öffnungszeiten':'Opening hours','Standort':'Location',
+    'Nicht hinterlegt':'Not provided','Noch nicht hinterlegt':'Not provided','Noch nicht veröffentlicht':'Not published yet','In Google Maps öffnen':'Open in Google Maps','Auf Google Maps öffnen':'Open in Google Maps',
+    'Karte wird geladen …':'Loading map …','Karte wird geladen':'Loading map','Menüs werden geladen …':'Loading menus …','Erneut versuchen':'Try again','Restaurantwebseite':'restaurant website',
+    'Angaben ohne Gewähr. Bitte auf der':'Information may change. Please check the','prüfen.':'for confirmation.',
+    'Angaben ohne Gewähr – bitte Menü auf der Restaurant-Website prüfen.':'Information may change – please check the menu on the restaurant website.',
+    'Diese Website verwendet keine Cookies.':'This website does not use cookies.','Impressum':'Legal notice','Admin':'Admin','Zum Restaurant':'Restaurant website','Karte':'Map','Liste':'List',
+    'Mittagsmenüs am WU Campus':'Lunch menus at WU Campus','Mittagsmenüs':'Lunch menus','Tagesmenüs':'Daily menus','WU Campus Mittagsmenüs':'WU Campus lunch menus',
+    'International':'International','Orientalisch':'Middle Eastern','Italienisch':'Italian','Österreichisch':'Austrian','Café':'Café',
+    'Suppe oder Salat':'Soup or salad','Tagessuppe':'Soup of the day','Tagessuppe oder kleiner Salat':'Soup of the day or small salad',
+    'Tagessuppe und grüner Salat':'Soup of the day and green salad','Tagessuppe oder kleinem Salat':'Soup of the day or small salad',
+    'Optional zum Tagesteller':'Optional with the daily special','Dessert':'Dessert','Suppe oder Salat · Dessert':'Soup or salad · Dessert',
+    '(klein / groß)':'(small / large)','Montag':'Monday','Dienstag':'Tuesday','Mittwoch':'Wednesday','Donnerstag':'Thursday','Freitag':'Friday','Samstag':'Saturday','Sonntag':'Sunday',
+    'Nicht verfügbar':'Unavailable','English translation pending':'English translation pending',
+    'Die interaktive Karte ist derzeit nicht verfügbar. Über die unten stehenden Links lassen sich die Standorte auf Google Maps öffnen.':'The map is currently unavailable. Use the links below to open locations in Google Maps.',
+    'Karte konnte nicht geladen werden. Die Restaurantlinks bleiben verfügbar.':'The map could not be loaded. Restaurant links remain available.',
+    'Menüs konnten nicht geladen werden':'Menus could not be loaded','Live-Änderungen konnten nicht geladen werden':'Updates could not be loaded','Menüdaten sind ungültig':'Invalid menu data','Laden fehlgeschlagen':'Loading failed',
+  };
+  Object.assign(ui,{"← Zur Lunch-Übersicht":"← Back to lunch overview","Zugang nur für den hinterlegten Administrator.":"Access for the registered administrator only.","Anmelden":"Sign in","Passwort":"Password","Erstzugang einrichten":"Set up access","Beim ersten Besuch bitte ein eigenes Passwort festlegen. Falls eine E-Mail-Bestätigung aktiviert ist, bestätige zuerst die Nachricht in deinem Postfach.":"For your first visit, set your own password. If email confirmation is enabled, confirm the email before signing in.","Texte bearbeiten / Edit texts":"Edit texts","Deutsch":"German","Neue Speisen und Struktur zuerst auf Deutsch anlegen. English bearbeitet nur Übersetzungen; Preise und Menüzuordnung bleiben unverändert.":"Create new dishes and their structure in German first. English mode edits translations only; prices and menu assignments stay unchanged.","Automatische Menüprüfung":"Automatic menu checks","Geplante Prüfungen durch GitHub Actions, jeweils Wiener Zeit:":"Scheduled GitHub Actions checks, all in Vienna time:","stündlich von 06:15 bis 18:15 Uhr":"hourly from 06:15 to 18:15","stündlich von 08:15 bis 12:15 Uhr":"hourly from 08:15 to 12:15","stündlich von 08:15 bis 18:15 Uhr":"hourly from 08:15 to 18:15","Dienstag bis Freitag:":"Tuesday to Friday:","keine automatische Prüfung":"no automatic checks","Zusätzliche Prüfungen können bei einer manuellen Auslösung des GitHub-Workflows erfolgen.":"Additional checks may run when the GitHub workflow is started manually.","Sichtbarkeit und Reihenfolge werden bei geöffneter Webseite und App automatisch nachgeladen.":"Visibility and order update automatically while the website or app is open.","Restaurantdaten bearbeiten":"Edit restaurant information","Gespeicherte Änderungen werden automatisch nachgeladen. Neue Darstellungsfunktionen benötigen eine aktuelle App-Version.":"Saved changes update automatically. New display features require an updated app.","Name":"Name","Restauranttyp / Küche":"Restaurant type / cuisine","Logo hochladen (PNG, JPEG oder WebP, max. 2 MB)":"Upload logo (PNG, JPEG or WebP, max. 2 MB)","Öffnungszeiten (eine Zeile je Angabe)":"Opening hours (one entry per line)","Kontaktquelle":"Contact source","Restaurantfarbe (z. B. #49654e)":"Restaurant colour (e.g. #49654e)","Breitengrad":"Latitude","Längengrad":"Longitude","Restaurantdaten speichern":"Save restaurant information","Menüs manuell bearbeiten":"Edit menus manually","Die gespeicherte Tagesliste hat Vorrang vor späteren automatischen Importen. Auch eine leere Liste ist möglich. „Automatik wiederherstellen“ entfernt diesen Vorrang.":"The saved daily list overrides later automatic imports. An empty list is allowed. Restore automatic data removes this override.","Tag":"Day","Aktuelle Daten laden":"Load current data","Speise hinzufügen":"Add dish","Tagesmenü speichern":"Save daily menu","Automatik wiederherstellen":"Restore automatic data","Ankündigung":"Announcement","Getrennte Texte für Desktop und Mobil. Links:":"Separate desktop and mobile text. Links:","Mobil":"Mobile","Ankündigung speichern":"Save announcement","Englische Texte bearbeiten":"Edit English texts","Eine Korrektur gilt für identische deutsche Texte überall. Manuelle Übersetzungen werden nicht durch die KI überschrieben.":"A correction applies wherever the same German text appears. AI does not overwrite manual translations.","Übersetzungen aktualisieren":"Refresh translations","Archivierte Mittagsmenüs":"Archived lunch menus","Kalenderwoche":"Calendar week","Archiv wird geladen …":"Loading archive …","Abmelden":"Sign out","Gespeichert.":"Saved.","Reihenfolge gespeichert.":"Order saved.","Speichert …":"Saving …","Manuelle Fassung aktiv.":"Manual version active.","Automatische Fassung.":"Automatic version.","Automatische Fassung wieder aktiv.":"Automatic version restored.","Kategorie":"Category","Beschreibung":"Description","Vorspeise (Suppe / Salat)":"Starter (soup / salad)","Inklusive Wahlmöglichkeiten (durch Komma getrennt)":"Included choices (separated by commas)","Dessert inklusive":"Included dessert","Allergene (durch Komma getrennt)":"Allergens (separated by commas)","Entfernen":"Remove","Alle Daten / Menüoptionen (JSON)":"All data / menu options (JSON)","Preis in € (leer = X €)":"Price in € (blank = X €)","Preis klein in € (optional)":"Small portion price in € (optional)","Preis groß in € (optional)":"Large portion price in € (optional)","English speichern":"Save English","English gespeichert.":"English saved.","English gespeichert – die deutsche Menüstruktur bleibt erhalten.":"English saved – German menu structure retained.","Noch keine archivierten Mittagsmenüs vorhanden.":"No archived lunch menus yet.","Keine archivierten Wochen":"No archived weeks","Marco Hans, Privatperson":"Marco Hans, private individual","Zurück zu WU Lunch":"Back to WU Lunch","Erstmals beim Abruf gesehen; kein bestätigter Veröffentlichungszeitpunkt. Zeiten in Wien. Änderungen können auch Seitenänderungen sein.":"First seen during a source check; not a confirmed publication time. Times are in Vienna time. Changes may also be page changes."});
+  let translations=new Map(),manuals=new Set(),cursor='',loading=false;
+  const originals=new WeakMap();
+  try{const cache=JSON.parse(root.localStorage?.getItem('wu-lunch-en-v1')||'[]');translations=new Map(cache.map(row=>[row[0],row[1]]));manuals=new Set(cache.filter(row=>row[2]==='manual').map(row=>row[0]));}catch{}
+  function english(source){
+    if(typeof source!=='string')return null;if(manuals.has(source))return translations.get(source);
+    if(source.includes('\n')){const lines=source.split('\n');const translated=lines.map(line=>!line.trim()?line:english(line.trim()));if(translated.every(x=>x!==null))return translated.join('\n');}
+    if(/^Optional: /.test(source)){const value=english(source.slice(10));if(value)return 'Optional: '+value;}
+    if(source.endsWith(':')&&ui[source.slice(0,-1)])return ui[source.slice(0,-1)]+':';
+    if(/^Speise \d+ · Name$/.test(source))return source.replace('Speise','Dish');
+    if(/^Standort von /.test(source))return source.replace('Standort von','Location of');
+    return translations.get(source)||ui[source]||(/^Ausgabe\s/.test(source)?source.replace(/^Ausgabe/,'Counter'):null);
+  }
+  const text=source=>language==='de'?source:english(source);
+  function apply(element){
+    if(language==='de'||!element||!root.document?.createTreeWalker)return;
+    const walker=document.createTreeWalker(element,4);let node;
+    while(node=walker.nextNode()){
+      const parent=node.parentElement;if(!parent||parent.closest('script,style,textarea,code,.material-symbols-outlined,.logo,.restaurant-name,.restaurant-title,.info-hero h2,.dish-price'))continue;
+      const old=originals.get(node),source=old&&node.textContent===old.rendered?old.source:node.textContent;
+      const trimmed=source.trim();if(!trimmed)continue;
+      let translated=text(trimmed);
+      if(!translated&&parent.closest('.dish-text,.dish-name,.dish-description,.dish-starter,.info-hours-list,.restaurant-type,.info-hero p,#archiveList .dish span:first-child'))translated='English translation pending';
+      if(translated){const rendered=source.replace(trimmed,translated);originals.set(node,{source,rendered});if(node.textContent!==rendered)node.textContent=rendered;}
+    }
+    for(const child of element.querySelectorAll?.('[aria-label],[placeholder]')||[])for(const attribute of ['aria-label','placeholder']){const label=child.getAttribute(attribute),translated=text(label);if(translated)child.setAttribute(attribute,translated);}
+  }
+  async function refresh(){
+    if(language==='de'||loading)return;loading=true;
+    try{
+      const config=root.WU_LUNCH_SUPABASE||{url:'https://vswnqdqnohbuzbwmsdvv.supabase.co',publishableKey:'sb_publishable__LAhcQOUGtE-ACAN-RPKkw_UB7Nrub2'};
+      let offset=0,newCursor=cursor;
+      for(;;){const query='select=source_text,english_text,updated_at,origin&order=updated_at.asc&limit=1000&offset='+offset+(cursor?'&updated_at=gte.'+encodeURIComponent(cursor):'');
+        const response=await fetch(config.url+'/rest/v1/lunch_translations?'+query,{cache:'no-store',headers:{apikey:config.publishableKey}});if(!response.ok)throw new Error('Translation download failed');
+        const rows=await response.json();if(!Array.isArray(rows))throw new Error('Invalid translations');
+        for(const row of rows){translations.set(row.source_text,row.english_text);if(row.origin==='manual')manuals.add(row.source_text);if(row.updated_at>newCursor)newCursor=row.updated_at;}
+        if(rows.length<1000)break;offset+=1000;
+      }
+      cursor=newCursor;try{root.localStorage?.setItem('wu-lunch-en-v1',JSON.stringify([...translations].map(([source,value])=>[source,value,manuals.has(source)?'manual':'ai'])));}catch{}
+      apply(document.body);root.dispatchEvent?.(new Event('wu-language-data'));
+    }catch(error){console.warn(error.message);}finally{loading=false;}
+  }
+  root.WULunchI18n={language,locale:language==='de'?'de-AT':'en-GB',text,english,apply,refresh,ui};
+  if(root.document){document.documentElement?.setAttribute('lang',language);if(language==='en'&&document.title)document.title=english(document.title)||document.title;document.addEventListener('DOMContentLoaded',()=>{apply(document.body);refresh();if(language==='en'&&root.MutationObserver)new MutationObserver(()=>apply(document.body)).observe(document.body,{subtree:true,childList:true,characterData:true});});}
+})(typeof window==='undefined'?globalThis:window);
