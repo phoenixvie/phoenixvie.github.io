@@ -2,9 +2,22 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {validateTranslations} from '../../wu-lunch/scripts/translate_menus.mjs';
+import {validateTranslations,translateBatch} from '../../wu-lunch/scripts/translate_menus.mjs';
 
 const script=await readFile(new URL('../../wu-lunch/i18n.js',import.meta.url),'utf8');
+test('translation review feedback is repaired and rechecked; persistent rejection never publishes',async()=>{
+  let calls=0;
+  const items=await translateBatch(['Überbackener Käse'],async(instructions,input)=>{
+    calls++;
+    if(calls===1)return {items:[{id:0,english:'Cheese'}]};
+    if(calls===2)return {faithful:false,problems:['Missing gratinated preparation']};
+    if(calls===3){assert.deepEqual(input.reviewNotes,['Missing gratinated preparation']);return {items:[{id:0,english:'Gratinated cheese'}]};}
+    return {faithful:true,problems:[]};
+  });assert.equal(calls,4);assert.equal(items[0].english,'Gratinated cheese');
+  let requests=0;
+  await assert.rejects(()=>translateBatch(['Käse'],async()=>++requests%2?{items:[{id:0,english:'Cheese'}]}:{faithful:false,problems:['Rejected']}),/after 3 attempts/);
+  assert.equal(requests,6);
+});
 function context(language,cache=[],systemLanguage){const c={WU_SYSTEM_LANGUAGE:systemLanguage,navigator:{language},console,localStorage:{getItem:()=>JSON.stringify(cache),setItem(){}},fetch:async()=>({ok:true,json:async()=>[]})};c.window=c;vm.createContext(c);vm.runInContext(script,c);return c;}
 test('German primary locales use German; every other primary locale uses English',()=>{
   for(const language of ['de','de-AT','de-DE','de-CH']){const c=context(language);assert.equal(c.WULunchI18n.language,'de');assert.equal(c.WULunchI18n.text('Zurück'),'Zurück');}
