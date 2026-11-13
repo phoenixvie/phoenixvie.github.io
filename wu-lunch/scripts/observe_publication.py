@@ -31,6 +31,8 @@ SOURCES = {
     "topfdeckel": URLS["topfdeckel"],
     "gruenehuette": URLS["gruenehuette"],
     "lia": URLS["lia"],
+    "finn": "https://finn.wien/blogs/news/mittagsmenu",
+    "omakueche": "https://www.xn--omakche-q2a.at/",
 }
 def read_state():
     try:
@@ -99,8 +101,8 @@ def main(now=None):
     now=now or datetime.now(TZ)
     state=read_state()
     state["started_at"]=state.get("started_at") or now.isoformat(timespec="seconds")
-    state["ends_after"]=UNTIL.isoformat()
-    names=scheduled_names(now)
+    state["ends_after"]=None if "--import-scan" in sys.argv else UNTIL.isoformat()
+    names=list(SOURCES) if "--import-scan" in sys.argv else scheduled_names(now)
     if not names:
         print("Außerhalb des Messfensters – keine Abrufe.")
         return 0
@@ -110,11 +112,16 @@ def main(now=None):
         try:
             raw=check_mensa(SOURCES[name]) if name=="mensa" else safe_get(SOURCES[name],12_000_000)
             digest,kind,valid=normalize(raw,name)
+            if name=="finn":
+                soup=BeautifulSoup(raw,"html.parser")
+                images=[urljoin(SOURCES[name],img.get("src", "")) for img in (soup.select("article img") or soup.select("main img") or soup.find_all("img"))]
+                image_hashes=[hashlib.sha256(safe_get(url,12_000_000)).hexdigest() for url in images[:3] if url.startswith("https://")]
+                if image_hashes:digest=hashlib.sha256((digest+"".join(image_hashes)).encode()).hexdigest()
             observations=entry["observations"]
             previous=next((x for x in reversed(observations) if x.get("sha256")),None)
             changed=bool(previous and previous["sha256"]!=digest)
             sample={"at":now.isoformat(timespec="seconds"),"sha256":digest,
-                    "format":kind,"validity":valid,"changed":changed}
+                    "format":kind,"validity":valid,"changed":changed,"source_url":SOURCES[name],"publication_time_confirmed":False}
             if changed:
                 entry["changes"].append({"first_seen_at":sample["at"],
                     "previous_seen_at":previous["at"],"validity":valid})

@@ -36,3 +36,5 @@
 .dish-heading{display:contents}.dish-name{grid-column:1;overflow-wrap:anywhere}.dish-price{grid-column:2;grid-row:1;text-align:right;line-height:1.3;font-size:14px}.dish-description,.dish-allergens{grid-column:1}.dish-starter{display:block;font-weight:400}
 
 .list-footer{margin-top:44px;padding:0 16px 28px;text-align:center}.list-footer a{display:inline-block;padding:8px;color:#9299a2;font-size:11px;text-decoration:none}.list-footer a:hover{text-decoration:underline}.list-footer a:focus-visible{outline:2px solid #087cf4;outline-offset:3px}
+
+.map-letter-pin{width:34px;height:38px;clip-path:polygon(0 0,100% 0,100% 75%,50% 100%,0 75%);border-radius:8px 8px 0 0;color:white;font:600 18px Arial;text-align:center;padding-top:5px;cursor:pointer;filter:drop-shadow(0 2px 2px #0005)}

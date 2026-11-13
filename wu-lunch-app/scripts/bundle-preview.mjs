@@ -15,3 +15,5 @@ const html = template
   .replace(/<script defer src="\.\/app\.js(?:\?[^"<>]*)?"><\/script>/, `<script>window.WU_FOOD_BUILD='${hash}';document.addEventListener('DOMContentLoaded',()=>{\n${js.replace(/<\/script/gi, '<\\/script')}\n});</script>`);
 await writeFile(resolve(root, 'src/previewHtml.ts'), `// Generated from preview sources; run npm run bundle:preview.\nexport const designHash = ${JSON.stringify(hash)};\nexport const previewHtml = ${JSON.stringify(html)};\n`);
 console.log('Bundled current preview design: ' + hash);
+
+await writeFile(resolve(root,'../wu-lunch/admin-menu-rules.js'),js.slice(js.indexOf('function restaurantDisplayRules('),js.indexOf('function dishes('))+'\nwindow.WUMenuRules={restaurantDisplayRules,mensaStations};');

@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from observe_publication import scheduled_names, normalize
+from observe_publication import scheduled_names, normalize, SOURCES
 
 TZ=ZoneInfo("Europe/Vienna")
 
@@ -13,7 +13,7 @@ class PublicationObserverTests(unittest.TestCase):
     def test_friday_sunday_monday_tuesday_samples(self):
         for day in ("2026-11-06","2026-11-08","2026-11-09","2026-11-10"):
             for hour in (7,10,13,17):
-                self.assertEqual(len(scheduled_names(self.moment(day,hour))),9)
+                self.assertEqual(len(scheduled_names(self.moment(day,hour))),len(SOURCES))
         self.assertEqual(scheduled_names(self.moment("2026-11-07",10)),[])
 
     def test_midweek_only_baschly(self):
