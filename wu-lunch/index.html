@@ -359,7 +359,7 @@ html,body,.page { background:#fff; }
       return (html+escapeAnnouncement(message.slice(offset))).replace(/\n/g,'<br>');
     }
     function renderAnnouncement(){
-      const germanMessage=(window.matchMedia('(max-width:750px)').matches?announcement.mobile_message:announcement.desktop_message).trim();const message=LANG==='de'?germanMessage:(window.WULunchI18n.text(germanMessage)||'Announcement translation pending');
+      const germanMessage=(window.matchMedia('(max-width:750px)').matches?announcement.mobile_message:announcement.desktop_message).trim();const message=!germanMessage?'':LANG==='de'?germanMessage:(window.WULunchI18n.text(germanMessage)||'Announcement translation pending');
       announcementElement.style.display=message?'block':'none';
       announcementElement.innerHTML=message?announcementHtml(message):'';
     }
