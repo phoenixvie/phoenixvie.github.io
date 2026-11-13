@@ -1,18 +1,17 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ActivityIndicator, AppState, BackHandler, Linking, Modal, Pressable, Share, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Alert, AppState, BackHandler, Linking, Modal, Pressable, Share, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {previewHtml} from './src/previewHtml';
 import {encodePdf, pdfViewerHtml} from './src/pdfViewer';
+import {routeAppMessage, webUrl} from './src/nativeLinks';
 
 const baseUrl = 'https://phoenixvie.github.io/wu-lunch-app/preview/';
 const htmlSource = {html: previewHtml, baseUrl};
-const webUrl = (value: unknown): string | null => {
-  if (typeof value !== 'string') return null;
-  try {const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) ? url.href : null;} catch {return null;}
-};
 function openExternal(url: string) {
-  if (/^(https?:|mailto:|tel:)/i.test(url)) Linking.openURL(url).catch(() => {});
+  if (/^(https?:|mailto:|tel:)/i.test(url)) Linking.openURL(url).catch(() => {
+    Alert.alert('Link konnte nicht geöffnet werden', 'Bitte prüfe, ob eine passende App installiert ist.');
+  });
 }
 function AppContent() {
   const main = useRef<WebView<{}>>(null);
@@ -56,25 +55,11 @@ function AppContent() {
     return () => handler.remove();
   }, [page, canGoBack]);
   const message = ({nativeEvent}: WebViewMessageEvent) => {
-    // Restaurant pages never receive this privileged bridge.
-    try {
-      if(nativeEvent.url!=='about:blank') {
-      const origin=new URL(nativeEvent.url);
-      if(origin.origin!==new URL(baseUrl).origin || ![new URL(baseUrl).pathname,new URL(baseUrl).pathname+'index.html'].includes(origin.pathname))return;
-      }
-    } catch {return;}
-    try {
-      const item = JSON.parse(nativeEvent.data);
-      if (item.type === 'open-source') {
-        const url = webUrl(item.url);
-        if (url) void openSource(url, typeof item.title === 'string' ? item.title : 'Restaurant');
-      } else if (item.type === 'open-external' && typeof item.url === 'string') {
-        const url=webUrl(item.url);
-        if(url)void openSource(url,'Restaurant');else openExternal(item.url);
-      }
-      else if (item.type === 'share' && typeof item.text === 'string') Share.share({message: item.text}).catch(() => {});
-      else if (item.type === 'exit') BackHandler.exitApp();
-    } catch { /* Ignore invalid messages. */ }
+    routeAppMessage(nativeEvent.url, nativeEvent.data, baseUrl, {
+      openSource: (url, title) => {void openSource(url, title);}, openExternal,
+      share: text => {Share.share({message: text}).catch(() => {});},
+      exit: () => BackHandler.exitApp(),
+    });
   };
   return <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
     <StatusBar barStyle="light-content" />
