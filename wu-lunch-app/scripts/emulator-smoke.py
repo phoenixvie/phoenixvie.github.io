@@ -1,3 +1,4 @@
+import json
 import re
 import subprocess
 import sys
@@ -45,14 +46,15 @@ def failure(kind, value, traceback):
         sys.__excepthook__(kind, value, traceback)
 sys.excepthook = failure
 
-adb('install', '-r', 'android/app/build/outputs/apk/release/WU-Food-0.3.0.apk')
+version=json.loads(Path('app.json').read_text())['expo']['version']
+adb('install', '-r', f'android/app/build/outputs/apk/release/WU-Food-{version}.apk')
 adb('shell', 'am', 'start', '-n', 'at.startit.wulunch/.MainActivity')
 wait_for('WU Food', 'WU Mensa')
 capture('01-list')
 tap('WU Mensa')
 wait_for('WU Mensa')
 english='Next' in snapshot()
-words={'Weiter':'Next','Zur\u00fcck':'Back','Montag':'Monday','Webseite':'Website','\u00d6ffnungszeiten':'Opening hours','Adresse':'Address','Men\u00fc':'Menu','Zur\u00fcck zum Men\u00fc':'Back to menu'}
+words={'Weiter':'Next','Zur\u00fcck':'Back','Montag':'Monday','Zur\u00fcck zur Liste':'Back to list','Webseite':'Website','\u00d6ffnungszeiten':'Opening hours','Adresse':'Address','Men\u00fc':'Menu','Zur\u00fcck zum Men\u00fc':'Back to menu'}
 label=lambda value:words.get(value,value) if english else value
 wait_for(label('Weiter'),label('Zur\u00fcck'),label('Montag'))
 capture('02-menu')
@@ -70,6 +72,16 @@ tap(label('Zur\u00fcck zum Men\u00fc'))
 wait_for(label('Webseite'),label('\u00d6ffnungszeiten'),label('Adresse'))
 tap(label('Men\u00fc'))
 wait_for('WU Mensa',label('Weiter'))
+tap(label('Zur\u00fcck zur Liste'))
+wait_for('WU Food')
+tap('Change Language')
+english=not english
+list_label='List' if english else 'Liste'
+wait_for(list_label)
+adb('shell','am','force-stop','at.startit.wulunch')
+adb('shell','am','start','-n','at.startit.wulunch/.MainActivity')
+wait_for('WU Food',list_label)
+capture('05-language-after-restart')
 adb('shell', 'input', 'keyevent', 'KEYCODE_HOME')
 time.sleep(1)
 try:

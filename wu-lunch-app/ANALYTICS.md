@@ -20,6 +20,8 @@ Die native Nachrichtenbrücke akzeptiert Statistik nur aus der eigenen App-Oberf
 
 Unit-Tests prüfen Zählung, Feldbegrenzung, ungültige Wochentage, fremde Quellen und Fehlerisolation. Der integrierte Vorschautest prüft, dass Laden/Polling keine Restaurantaufrufe erzeugt. Am 13.11.2026 nahm der EU-Ereignisendpunkt ein ausdrücklich als Debug markiertes `integration_test` mit HTTP 200 an. Das bestätigt den Eingabeschlüssel und die Erreichbarkeit, nicht die Anzeige einer neuen Android-App auf einem echten Gerät.
 
-Die installierte ältere APK sendet diese Ereignisse noch nicht. Erst eine ausdrücklich gewünschte neue APK enthält das SDK und die Zählung. Bei einer späteren Geräteprüfung im Aptabase-Dashboard auf den passenden Debug-/Release-Modus achten. Es wurde für diese Anbindung keine APK gebaut.
+Die installierte ältere APK sendet diese Ereignisse noch nicht. Erst eine ausdrücklich gewünschte neue APK enthält das SDK und die Zählung. Bei einer späteren Geräteprüfung im Aptabase-Dashboard auf den passenden Debug-/Release-Modus achten. Die Anbindung selbst wurde ohne APK umgesetzt. Der ausdrücklich beauftragte nachfolgende Build 0.4.0 enthält diese Funktion.
 
 Anbieter: https://aptabase.com/docs und https://aptabase.com/legal/privacy
+
+Android-Emulatoren mit üblichen SDK-/Generic-Modellkennungen sowie als automatisierte Tests markierte Geräte initialisieren Aptabase nicht. Daher senden die Release-APK-Prüfungen im GitHub-Emulator keine Produktionsereignisse. Für echte Geräte enthält jedes Ereignis app_language=de/en; automatische Spracherkennung und manuelle Auswahl werden gleich behandelt.

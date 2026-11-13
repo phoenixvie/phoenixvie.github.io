@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {createUsage,validateUsage} from '../src/usage.ts';
+import {createUsage,validateUsage,isAnalyticsDevice} from '../src/usage.ts';
 import {routeAppMessage} from '../src/nativeLinks.ts';
 
 test('app opens count cold start and real foreground return, never inactive overlays or repeated refresh',()=>{
@@ -21,4 +21,16 @@ test('untrusted frames cannot send usage; analytics errors never break app navig
   const handlers={openSource(){},openExternal(){},share(){},exit(){},usage:(event,props)=>usage.event(event,props)};
   routeAppMessage('https://restaurant.example',raw,base,handlers);assert.equal(sent,0);
   assert.doesNotThrow(()=>routeAppMessage(base,raw,base,handlers));assert.equal(sent,1);
+});
+
+test('German and English usage is measured regardless of automatic or manual selection',()=>{
+  const calls=[],usage=createUsage((event,props)=>calls.push({event,props}));
+  usage.state('active','de');usage.event('language_changed',{language:'en'});usage.state('background','en');usage.state('active','en');
+  assert.deepEqual(calls.map(x=>x.props.app_language),['de','en','en']);
+});
+test('Android emulator and automated tests never enter production usage statistics',()=>{
+  assert.equal(isAnalyticsDevice('android',{Model:'sdk_gphone64_x86_64',Fingerprint:'google/sdk_gphone64_x86_64/emulator'}),false);
+  assert.equal(isAnalyticsDevice('android',{isTesting:true,Model:'SM-S918B'}),false);
+  assert.equal(isAnalyticsDevice('web',{}),false);
+  assert.equal(isAnalyticsDevice('android',{Model:'SM-S918B',Fingerprint:'samsung/dm3qxeea/dm3q'}),true);
 });
