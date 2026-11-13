@@ -5,20 +5,26 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {previewHtml} from './src/previewHtml';
 import {encodePdf, pdfViewerHtml} from './src/pdfViewer';
 import {routeAppMessage, webUrl} from './src/nativeLinks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {languagePreferences} from './src/preferences';
 
 const baseUrl = 'https://phoenixvie.github.io/wu-lunch-app/preview/';
 const nativeLanguage = /^de(?:-|$)/i.test(Intl.DateTimeFormat().resolvedOptions().locale) ? 'de' : 'en';
 const nativeText = (de: string, en: string, language = nativeLanguage) => language === 'de' ? de : en;
-const htmlSource = {html: previewHtml.replace('<head>',`<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';</script>`), baseUrl};
-function openExternal(url: string, language = nativeLanguage) {
+const preferences=languagePreferences(AsyncStorage);
+const defaultHtmlSource = {html: previewHtml.replace('<head>',`<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';</script>`), baseUrl};
+function openExternal(url: string, language = nativeLanguage, texts: Record<string,string> = {}) {
   if (/^(https?:|mailto:|tel:)/i.test(url)) Linking.openURL(url).catch(() => {
-    Alert.alert(nativeText('Link konnte nicht geöffnet werden','Could not open link',language),nativeText('Bitte prüfe, ob eine passende App installiert ist.','Please check that a suitable app is installed.',language));
+    Alert.alert(texts['Link konnte nicht geöffnet werden']??nativeText('Link konnte nicht geöffnet werden','Could not open link',language),texts['Bitte prüfe, ob eine passende App installiert ist.']??nativeText('Bitte prüfe, ob eine passende App installiert ist.','Please check that a suitable app is installed.',language));
   });
 }
 function AppContent() {
   const [language, setLanguage] = useState<'de' | 'en'>(nativeLanguage);
-  const nativeText = (de: string, en: string) => language === 'de' ? de : en;
-  const openExternalLink = (url: string) => openExternal(url, language);
+  const [texts,setTexts]=useState<Record<string,string>>({});
+  const [htmlSource,setHtmlSource]=useState<typeof defaultHtmlSource|null>(null);
+  const nativeText = (de: string, en: string) => texts[de]??(language === 'de' ? de : en);
+  const openExternalLink = (url: string) => openExternal(url, language,texts);
+  useEffect(()=>{let active=true;void preferences.load().then(saved=>{if(!active)return;if(saved)setLanguage(saved);setHtmlSource(saved?{html:previewHtml.replace('<head>',`<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';window.WU_SAVED_LANGUAGE='${saved}';</script>`),baseUrl}:defaultHtmlSource);});return()=>{active=false};},[]);
   const main = useRef<WebView<{}>>(null);
   const browser = useRef<WebView<{}>>(null);
   const [page, setPage] = useState<{url: string; title: string; loading?: boolean; pdf?: string} | null>(null);
@@ -37,7 +43,7 @@ function AppContent() {
       let pdf: string | undefined;
       if (response.ok && (response.headers.get('content-type') || '').includes('application/pdf')) {
         const bytes = new Uint8Array(await response.arrayBuffer());
-        pdf = pdfViewerHtml(encodePdf(bytes),language);
+        pdf = pdfViewerHtml(encodePdf(bytes),language,texts);
       }
       if (request === sourceRequest.current) setPage({url, title, pdf});
     } catch {
@@ -61,21 +67,21 @@ function AppContent() {
   }, [page, canGoBack]);
   const message = ({nativeEvent}: WebViewMessageEvent) => {
     routeAppMessage(nativeEvent.url, nativeEvent.data, baseUrl, {
-      openSource: (url, title) => {void openSource(url, title);}, openExternal: openExternalLink, setLanguage,
+      openSource: (url, title) => {void openSource(url, title);}, openExternal: openExternalLink, setLanguage:(next,copy,manual)=>{setLanguage(next);if(copy)setTexts(previous=>JSON.stringify(previous)===JSON.stringify(copy)?previous:copy);if(manual)void preferences.save(next).catch(()=>{});},
       share: text => {Share.share({message: text}).catch(() => {});},
       exit: () => BackHandler.exitApp(),
     });
   };
   return <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
     <StatusBar barStyle="light-content" />
-    <WebView<{}> ref={main} source={htmlSource} originWhitelist={['*']} onMessage={message}
+    {htmlSource ? <WebView<{}> ref={main} source={htmlSource} originWhitelist={['*']} onMessage={message}
       cacheEnabled={false}
       javaScriptEnabled domStorageEnabled setSupportMultipleWindows={false} style={styles.web}
       onShouldStartLoadWithRequest={request => {
         if (request.isTopFrame === false || request.url === 'about:blank' || request.url.split('?')[0] === baseUrl || request.url.split('?')[0] === baseUrl+'index.html') return true;
         const url=webUrl(request.url);
         if(url)void openSource(url,'Restaurant');else openExternalLink(request.url); return false;
-      }} />
+      }} /> : <View style={[styles.web,{justifyContent:'center'}]}><ActivityIndicator color="#087cf4" /></View>}
     <Modal visible={!!page} onRequestClose={browserBack} animationType="slide">
       <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
         <StatusBar barStyle="light-content" />
@@ -89,7 +95,7 @@ function AppContent() {
               if(request.isTopFrame!==false && request.url!==page.url){void openSource(request.url,page.title);return false;}
               return true;
             }
-            openExternal(request.url); return false;
+            openExternalLink(request.url); return false;
           }} /> : null}
         {failed ? <View style={styles.failure}><Text>{nativeText('Die Restaurantseite konnte nicht geladen werden.','The restaurant website could not be loaded.')}</Text><Pressable onPress={() => {setFailed(false); browser.current?.reload();}}><Text style={styles.link}>{nativeText('Erneut versuchen','Try again')}</Text></Pressable></View> : null}
         <View style={styles.browserFooter}><Pressable accessibilityLabel={nativeText('Zurück zum Menü','Back to menu')} onPress={closePage} style={styles.back}><Text style={styles.footerText}>{nativeText('Zurück','Back')}</Text></Pressable></View>
