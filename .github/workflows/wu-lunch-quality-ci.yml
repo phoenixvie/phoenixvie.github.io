@@ -5,6 +5,9 @@ on:
     paths:
       - '.github/workflows/wu-lunch-quality-ci.yml'
       - 'wu-lunch/scripts/repair_menus_ai.py'
+      - 'wu-lunch/scripts/menu_sanity.py'
+      - 'wu-lunch/scripts/test_menu_sanity.py'
+      - 'wu-lunch/ai-pilot/**'
       - 'wu-lunch/scripts/test_repair_menus_ai.py'
       - 'wu-lunch/scripts/update_mensa_ai.py'
       - 'wu-lunch/scripts/update_menus.py'
@@ -17,6 +20,7 @@ on:
     paths:
       - '.github/workflows/wu-lunch-quality-ci.yml'
       - 'wu-lunch/scripts/**'
+      - 'wu-lunch/ai-pilot/**'
       - '.github/workflows/wu-lunch-menus.yml'
       - 'wu-lunch/index.html'
       - 'wu-lunch/data/menus.json'
@@ -44,8 +48,11 @@ jobs:
           python -m py_compile wu-lunch/scripts/update_new_restaurants.py
           python -m py_compile wu-lunch/scripts/update_topf_browser.py
           python -m py_compile wu-lunch/ai-pilot/ai_direct.py
+          python -m py_compile wu-lunch/scripts/menu_sanity.py
       - name: Regression tests (no network, no model calls)
         run: python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v
+      - name: Final menu sanity checks on current data (read-only, no model calls)
+        run: python wu-lunch/scripts/menu_sanity.py --offline
       - name: Check inline frontend JavaScript syntax
         run: |
           python - <<'PY'

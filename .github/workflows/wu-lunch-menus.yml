@@ -157,6 +157,19 @@ jobs:
           # Dedicated Finn image, Mensa PDF and Topf browser workflows stay
           # separate. No artificial two-restaurants-per-day bottleneck.
           python wu-lunch/scripts/run_step.py html_ai python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
+      - name: Finale Menüfreigabe (Redundanzen und unabhängiger Luna-Sanity-Check)
+        if: steps.guard.outputs.skip == 'false'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python wu-lunch/scripts/run_step.py menu_sanity python wu-lunch/scripts/menu_sanity.py
+      - name: Sanity-Bericht bei blockierter Freigabe sichern
+        if: failure() && steps.guard.outputs.skip == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: menu-sanity-blocked
+          path: wu-lunch/data/menu-sanity-report.json
+          if-no-files-found: ignore
+          retention-days: 30
       - name: Veröffentlichungsänderungen mit Abrufzeit erfassen
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
@@ -205,6 +218,7 @@ jobs:
           for attempt in 1 2 3; do
             git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
             git add wu-lunch/data/update-status.json wu-lunch/source-archive
+            if [[ -f wu-lunch/data/menu-sanity-report.json ]]; then git add wu-lunch/data/menu-sanity-report.json; fi
             if [[ -f wu-lunch/data/mensa-ai-candidate.json ]]; then git add wu-lunch/data/mensa-ai-candidate.json; fi
             if [[ -f wu-lunch/data/repair-report.json ]]; then git add wu-lunch/data/repair-report.json; fi
             if [[ -f wu-lunch/data/publication-observations.json ]]; then git add wu-lunch/data/publication-observations.json; fi
@@ -225,6 +239,7 @@ jobs:
             python wu-lunch/scripts/run_step.py finn_karma_retry python wu-lunch/scripts/update_new_restaurants.py
             python wu-lunch/scripts/run_step.py mensa_ai_retry python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
             python wu-lunch/scripts/run_step.py html_ai_retry python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
+            python wu-lunch/scripts/run_step.py menu_sanity_retry python wu-lunch/scripts/menu_sanity.py
             python wu-lunch/scripts/run_step.py observe python wu-lunch/scripts/observe_publication.py --import-scan
             python wu-lunch/scripts/run_step.py source_archive python wu-lunch/scripts/source_archive.py
             python wu-lunch/scripts/run_step.py finish
