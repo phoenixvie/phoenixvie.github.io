@@ -34,6 +34,16 @@
   const defaultDe=key=>key==='Kontakt-E-Mail'?'campusmenue@gmail.com':key;
   function label(key,lang=language){const row=uiRows.get(key);return lang==='de'?(row?.de_text??defaultDe(key)):(row?.en_text??ui[key]??key);}
   function catalog(){return Object.keys(ui).sort().map(key=>({text_key:key,de_text:label(key,'de'),en_text:label(key,'en'),default_de:defaultDe(key),default_en:ui[key]}));}
+  Object.assign(ui,{'Alle App-Bereiche':'All app areas','Navigation & Tage':'Navigation & weekdays','Restaurantinformationen':'Restaurant information','Laden, Hinweise & Fehler':'Loading, messages & errors','Webseiten & PDF':'Websites & PDF','Fußzeile & Kontakt':'Footer & contact','Datenschutz':'Privacy','Allgemein':'General','Nur eigene App-Texte. Menüinhalte und Restaurantdaten bearbeitest du in den jeweiligen Bereichen.':'App interface text only. Edit menu content and restaurant data in their respective sections.'});
+  const appGroups={
+    navigation:['Liste','Karte','Menü','Restaurant','Zurück','Weiter','Zurück zur Liste','Change Language','Menütage','Wischanzeige','Restaurantansichten','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'],
+    restaurant:['Kontaktdaten','Telefon','E-Mail','Webseite','Webseite – Mittagsmenü','Adresse','Öffnungszeiten','Standort','Nicht hinterlegt','Noch nicht hinterlegt','In Google Maps öffnen','Auf Google Maps öffnen','Standort von {restaurant}'],
+    status:['Noch nicht veröffentlicht','Karte wird geladen …','Karte wird geladen','Menüs werden geladen …','Erneut versuchen','X €','English translation pending','Menüs konnten nicht geladen werden','Live-Änderungen konnten nicht geladen werden','Menüdaten sind ungültig','Laden fehlgeschlagen','Link konnte nicht geöffnet werden','Bitte prüfe, ob eine passende App installiert ist.','Die Restaurantseite konnte nicht geladen werden.','Webseite von {restaurant}'],
+    pdf:['Menü-PDF','PDF wird geladen …','PDF-Seite','PDF geladen ·','Seite','Seiten','PDF konnte nicht angezeigt werden.','Zurück zum Menü'],
+    footer:['Impressum','Kontakt','Kontakt-E-Mail','Angaben ohne Gewähr. Bitte auf der','Restaurantwebseite','prüfen.'],
+    general:['WU Food','WU Food · App-Vorschau'],
+  };
+  function appCatalog(){return catalog().flatMap(row=>{const category=Object.keys(appGroups).find(id=>appGroups[id].includes(row.text_key))||(/^Datenschutz der App$|^App-Versionen mit Nutzungsstatistik |^Wir senden keine Namen|^Die gewählte Sprache wird lokal |^Datenschutzinformationen von Aptabase$/.test(row.text_key)?'privacy':null);return category?[{...row,category}]:[];});}
   const originals=new WeakMap(),originalAttributes=new WeakMap();
   try{const cache=JSON.parse(root.localStorage?.getItem('wu-lunch-en-v1')||'[]');translations=new Map(cache.map(row=>[row[0],row[1]]));manuals=new Set(cache.filter(row=>row[2]==='manual').map(row=>row[0]));}catch{}
   function english(source){
@@ -97,6 +107,6 @@
     if(root.document)document.title=language==='de'?originalTitle:(english(originalTitle)||originalTitle);
     apply(root.document?.body);root.dispatchEvent?.(new Event('wu-language-change'));notifyNative();void refresh();
   }
-  root.WULunchI18n={get language(){return language;},get locale(){return language==='de'?'de-AT':'en-GB';},setLanguage,toggleLanguage:()=>setLanguage(language==='de'?'en':'de'),text,english,label,catalog,apply,refresh,refreshUi,ui};
+  root.WULunchI18n={get language(){return language;},get locale(){return language==='de'?'de-AT':'en-GB';},setLanguage,toggleLanguage:()=>setLanguage(language==='de'?'en':'de'),text,english,label,catalog,appCatalog,apply,refresh,refreshUi,ui};
   if(root.document){document.documentElement?.setAttribute('lang',language);if(language==='en'&&document.title)document.title=english(document.title)||document.title;document.addEventListener('click',event=>{if(event.target.closest?.('[data-change-language]')){event.preventDefault();root.WULunchI18n.toggleLanguage();}});document.addEventListener('DOMContentLoaded',()=>{apply(document.body);refresh();notifyNative();if(root.MutationObserver)new MutationObserver(()=>apply(document.body)).observe(document.body,{subtree:true,childList:true,characterData:true});});}
 })(typeof window==='undefined'?globalThis:window);

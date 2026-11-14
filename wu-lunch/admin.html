@@ -81,7 +81,7 @@
         <button id="saveAnnouncementButton" type="button">Ankündigung speichern</button>
         <p class="notice" id="announcementNotice" aria-live="polite"></p>
       </section>
-<section class="panel"><h2>App-Texte bearbeiten</h2><p class="muted">Diese Texte werden ohne neue App-Version nachgeladen. Menüs und Restaurantdaten bearbeitest du in den jeweiligen Bereichen.</p><p class="muted">Texte gelten für alle Nutzer der gewählten Sprache. Platzhalter wie {restaurant} beibehalten.</p><input id="uiTextSearch" placeholder="App-Texte durchsuchen"><button id="reloadUiTexts" class="secondary" type="button">App-Texte aktualisieren</button><div id="uiTextList"></div></section>
+<section class="panel"><h2>App-Texte bearbeiten</h2><p class="muted">Diese Texte werden ohne neue App-Version nachgeladen. Menüs und Restaurantdaten bearbeitest du in den jeweiligen Bereichen.</p><p class="muted">Texte gelten für alle Nutzer der gewählten Sprache. Platzhalter wie {restaurant} beibehalten.</p><p class="muted">Nur eigene App-Texte. Menüinhalte und Restaurantdaten bearbeitest du in den jeweiligen Bereichen.</p><label for="uiTextCategory">Kategorie</label><select id="uiTextCategory"><option value="all">Alle App-Bereiche</option><option value="navigation">Navigation &amp; Tage</option><option value="restaurant">Restaurantinformationen</option><option value="status">Laden, Hinweise &amp; Fehler</option><option value="pdf">Webseiten &amp; PDF</option><option value="footer">Fußzeile &amp; Kontakt</option><option value="privacy">Datenschutz</option><option value="general">Allgemein</option></select><input id="uiTextSearch" placeholder="App-Texte durchsuchen"><button id="reloadUiTexts" class="secondary" type="button">App-Texte aktualisieren</button><div id="uiTextList"></div></section>
       <section class="panel">
         <h2>Englische Texte bearbeiten</h2><input id="translationSearch" placeholder="Deutschen oder englischen Text suchen"><p class="muted">Eine Korrektur gilt für identische deutsche Texte überall. Manuelle Übersetzungen werden nicht durch die KI überschrieben.</p><button id="reloadTranslations" type="button" class="secondary">Übersetzungen aktualisieren</button><div id="translationList"></div></section><section class="panel"><h2>Archivierte Mittagsmenüs</h2>
         <label for="weekSelect">Kalenderwoche</label>
@@ -92,7 +92,7 @@
     </section>
     <p class="footer">WU Lunch · <a href="impressum.html">Impressum</a></p>
   </main>
-  <script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261113-analytics1"></script><script src="admin-menu-rules.js"></script>
+  <script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261114-weekend1"></script><script src="admin-menu-rules.js"></script>
   <script>
   (()=>{
     const config=window.WU_LUNCH_SUPABASE;
@@ -376,11 +376,12 @@
     }
     function renderUiTexts(){
       const list=document.getElementById('uiTextList');if(!list)return;const filter=document.getElementById('uiTextSearch').value.toLowerCase(),field=editLanguage==='en'?'en_text':'de_text';list.replaceChildren();
-      const entries=window.WULunchI18n.catalog().map(defaults=>({...defaults,...uiTextRows.get(defaults.text_key)})).filter(row=>(row.text_key+' '+row.de_text+' '+row.en_text).toLowerCase().includes(filter));
+      const category=document.getElementById('uiTextCategory').value;
+      const entries=window.WULunchI18n.appCatalog().filter(row=>category==='all'||row.category===category).map(defaults=>({...defaults,...uiTextRows.get(defaults.text_key)})).filter(row=>(row.text_key+' '+row.de_text+' '+row.en_text).toLowerCase().includes(filter));
       for(const row of entries.slice(0,50)){const item=document.createElement('div');item.className='day';item.innerHTML='<label data-ui-literal></label><textarea maxlength="4000"></textarea><button type="button">Text speichern</button><button type="button" class="secondary">Standard wiederherstellen</button><span class="notice" aria-live="polite"></span>';item.querySelector('label').textContent=row.text_key;const input=item.querySelector('textarea');input.value=row[field];input.setAttribute('aria-label',row.text_key+' · '+editLanguage);const buttons=item.querySelectorAll('button');const save=async value=>{buttons.forEach(b=>b.disabled=true);try{await saveUiText(row.text_key,value);input.value=value;text(item.querySelector('.notice'),'App-Texte gespeichert.','success');}catch(error){text(item.querySelector('.notice'),error.message,'error');}finally{buttons.forEach(b=>b.disabled=false);}};buttons[0].onclick=()=>save(input.value);buttons[1].onclick=()=>save(editLanguage==='en'?row.default_en:row.default_de);list.append(item);}
       const count=document.createElement('p');count.className='muted';count.textContent=Math.min(50,entries.length)+' / '+entries.length;list.append(count);
     }
-    document.getElementById('uiTextSearch').oninput=renderUiTexts;
+    document.getElementById('uiTextSearch').oninput=renderUiTexts;document.getElementById('uiTextCategory').onchange=renderUiTexts;
     document.getElementById('reloadUiTexts').onclick=()=>loadUiTexts().catch(error=>alert(error.message));
     document.getElementById('editLanguage').onchange=async event=>{if(menuEditor.dataset.dirty==='true'&&!confirm('Nicht gespeicherte Menüänderungen verwerfen?')){event.target.value=editLanguage;return;}editLanguage=event.target.value;await loadEnglishRows();renderProfile();renderSelectedMenu();renderAnnouncementLanguage();renderUiTexts();document.getElementById('addDishButton').disabled=editLanguage==='en';document.getElementById('resetMenuButton').disabled=editLanguage==='en';};
     document.getElementById('translationSearch').oninput=renderTranslationList;
