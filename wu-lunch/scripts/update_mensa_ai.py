@@ -26,7 +26,7 @@ JS = ROOT / "data.js"
 STATUS = ROOT / "status.json"
 CANDIDATE = ROOT / "data" / "mensa-ai-candidate.json"
 TZ = ZoneInfo("Europe/Vienna")
-REVIEW_VERSION = "ai-pdf-7-merged-offer-panels"
+REVIEW_VERSION = "ai-pdf-8-absent-allergen-metadata"
 EXTRACTION_VERSION = "pdf-layout-v3-merged-groups"
 SOURCE_FILE = ROOT / "ai-pilot" / "ai_direct.py"
 
@@ -176,6 +176,15 @@ def content_terms(text):
 
 def money_values(text):
     return {float((a or b).replace(',','.')) for a,b in re.findall(r'€\s*(\d+[,.]\d{1,2})|(\d+[,.]\d{1,2})\s*€',text)}
+
+
+def confirmed_absent_allergen_notice(warning, result, native_text):
+    """Allow one explicit absence notice only when source and output agree."""
+    if normalize(warning) != 'für die tagesgerichte sind keine allergene als buchstabencodes angegeben':
+        return False
+    if any(item.get('allergens') for item in result.get('items') or []):
+        return False
+    return not re.search(r'(?i:\ballergene?\b)|\([A-Z](?:[\s,;/]+[A-Z])*\)', native_text)
 
 
 def same_source_word(a,b,terms=()):
@@ -464,6 +473,8 @@ def extract_for_week(monday, key, model, prepared=None):
     # compatible with null fields. Ambiguity/conflicts still block publication.
     for warning in result.get('warnings') or []:
         text=warning.casefold()
+        if confirmed_absent_allergen_notice(warning,result,native_text):
+            continue
         if ('smart' in text and ('nicht eindeutig' in text or 'nicht sicher' in text) and
             any(s['category']=='Menüoption' for s in layout) and
             all(any(r['category']=='Menüoption' and 'deal' in r['name'].casefold() for r in rows) for rows in days.values())):
