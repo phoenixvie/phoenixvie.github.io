@@ -4,6 +4,10 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 const policy=JSON.parse(await readFile(new URL('../../wu-lunch/update-policy.json',import.meta.url)));
 const source=await readFile(new URL('../../wu-lunch/update-info.js',import.meta.url),'utf8'),context={Intl,Date};vm.runInNewContext(source,context);
+test('original third-party pages remain downloadable from GitHub and are excluded from the app/Admin site build',async()=>{
+  const configuration=await readFile(new URL('../../_config.yml',import.meta.url),'utf8');
+  assert.ok(JSON.parse(configuration.match(/^exclude:\s*(\[.*\])/m)[1]).includes('wu-lunch/source-archive'));
+});
 test('next displayed checks follow Vienna windows in winter, summer and after a Saturday final slot',()=>{
   const next=(at,task='menus')=>context.WULunchUpdateInfo.nextRun(policy,task,new Date(at))?.toISOString();
   assert.equal(next('2026-11-14T17:16:00Z'),'2026-11-16T05:15:00.000Z');

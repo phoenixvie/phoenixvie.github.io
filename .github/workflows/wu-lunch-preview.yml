@@ -1,10 +1,10 @@
 name: WU Food Webvorschau prüfen
 on:
   pull_request:
-    paths: ['wu-lunch/**', 'wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
+    paths: ['_config.yml', 'wu-lunch/**', 'wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
   push:
     branches: [master]
-    paths: ['wu-lunch/**', 'wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
+    paths: ['_config.yml', 'wu-lunch/**', 'wu-lunch-app/**', '.github/workflows/wu-lunch-preview.yml']
 permissions:
   contents: read
 jobs:
