@@ -11,6 +11,15 @@ MON = date(2026, 11, 16)
 
 
 class MensaMergedLayoutTests(unittest.TestCase):
+    def test_absent_allergen_metadata_is_distinct_from_uncertain_or_omitted_codes(self):
+        notice = 'Für die Tagesgerichte sind keine Allergene als Buchstabencodes angegeben.'
+        result = {'items':[{'allergens':[]}]}
+        self.assertTrue(mensa.confirmed_absent_allergen_notice(notice,result,'Klare Gemüsesuppe'))
+        self.assertFalse(mensa.confirmed_absent_allergen_notice('Allergene nicht eindeutig angegeben',result,'Klare Gemüsesuppe'))
+        self.assertFalse(mensa.confirmed_absent_allergen_notice(notice,result,'Klare Gemüsesuppe (A,C)'))
+        self.assertFalse(mensa.confirmed_absent_allergen_notice(notice,{'items':[{'allergens':['A']}]},'Klare Gemüsesuppe'))
+        self.assertFalse(mensa.confirmed_absent_allergen_notice(notice,result,'Allergene: A, C'))
+
     def test_actual_kw47_pdf_retains_weekday_dishes_and_shared_offer_panels(self):
         raw = (Path(__file__).parent/'fixtures/mensa-2026-11-16.pdf').read_bytes()
         self.assertEqual(hashlib.sha256(raw).hexdigest(),
