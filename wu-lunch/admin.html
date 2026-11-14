@@ -28,15 +28,9 @@
 
     <section class="hidden" id="adminPanel"><section class="panel"><label for="editLanguage">Texte bearbeiten / Edit texts</label><select id="editLanguage"><option value="de">Deutsch</option><option value="en">English</option></select><p class="muted">Neue Speisen und Struktur zuerst auf Deutsch anlegen. English bearbeitet nur Übersetzungen; Preise und Menüzuordnung bleiben unverändert.</p></section>
       <section class="panel">
-        <h2>Automatische Menüprüfung</h2><div id="publicationHistory"></div>
-        <p class="muted">Geplante Prüfungen durch GitHub Actions, jeweils Wiener Zeit:</p>
-        <ul class="schedule-list">
-          <li><strong>Montag:</strong> stündlich von 06:15 bis 18:15 Uhr</li>
-          <li><strong>Dienstag bis Freitag:</strong> stündlich von 08:15 bis 12:15 Uhr</li>
-          <li><strong>Samstag:</strong> stündlich von 08:15 bis 18:15 Uhr</li>
-          <li><strong>Sonntag:</strong> keine automatische Prüfung</li>
-        </ul>
-        <p class="muted">Zusätzliche Prüfungen können bei einer manuellen Auslösung des GitHub-Workflows erfolgen.</p>
+        <h2>Automatische Menüprüfung</h2>
+        <div id="updateProcess" data-ui-literal></div>
+        <details><summary>Beobachtete Quellenänderungen</summary><div id="publicationHistory"></div></details>
       </section>
       <section class="panel">
         <h2>Restaurants</h2>
@@ -92,7 +86,7 @@
     </section>
     <p class="footer">WU Lunch · <a href="impressum.html">Impressum</a></p>
   </main>
-  <script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261114-weekend1"></script><script src="admin-menu-rules.js"></script>
+  <script src="update-info.js?v=20261114-policy1"></script><script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261114-weekend1"></script><script src="admin-menu-rules.js"></script>
   <script>
   (()=>{
     const config=window.WU_LUNCH_SUPABASE;
@@ -314,6 +308,7 @@
       document.getElementById('publicationHistory').innerHTML='<p class="muted">Erstmals beim Abruf gesehen; kein bestätigter Veröffentlichungszeitpunkt. Zeiten in Wien. Änderungen können auch Seitenänderungen sein.</p>'+Object.entries(data.sources||{}).map(([id,entry])=>'<details><summary>'+escape(restaurants.find(r=>r.restaurant_id===id||id.startsWith(r.restaurant_id+'-'))?.name||id)+' · '+(entry.changes||[]).length+' Änderungen</summary>'+(entry.changes||[]).slice().reverse().map(change=>'<p>Änderung zwischen '+escape(new Date(change.previous_seen_at).toLocaleString(LOCALE,{timeZone:'Europe/Vienna'}))+' und '+escape(new Date(change.first_seen_at).toLocaleString(LOCALE,{timeZone:'Europe/Vienna'}))+'</p>').join('')+[...(entry.observations||[])].reverse().map(o=>'<p class="muted">'+escape(new Date(o.at).toLocaleString(LOCALE,{timeZone:'Europe/Vienna'}))+' · '+escape(o.error?'Abruffehler':o.changed?'Änderung erkannt':'geprüft')+'</p>').join('')+'</details>').join('');
       }catch(e){document.getElementById('publicationHistory').textContent=e.message;}
     }
+    setInterval(()=>{if(!document.getElementById('adminPanel').classList.contains('hidden'))void loadPublicationHistory();},60000);
     async function fetchHistory(){
       const response=await api('/rest/v1/menu_history?select=week_start,menu_data,captured_at&order=week_start.desc');
       const result=await response.json();if(!response.ok)throw new Error('Archiv konnte nicht geladen werden.');return result;

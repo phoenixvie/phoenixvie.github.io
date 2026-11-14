@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "timezone": "Europe/Vienna",
+  "tasks": {
+    "menus": {"workflow":"wu-lunch-menus.yml","cron":["15 4-17 * * 1","15 6-11 * * 2-5","15 6-17 * * 6"],"minute":15,"hours":{"1":[6,7,8,9,10,11,12,13,14,15,16,17,18],"2":[8,9,10,11,12],"3":[8,9,10,11,12],"4":[8,9,10,11,12],"5":[8,9,10,11,12],"6":[8,9,10,11,12,13,14,15,16,17,18]},"label_de":"Quellenabruf und Menüimport","label_en":"Source checks and menu import"},
+    "topf_browser": {"parent":"menus","minute":15,"hours":{"1":[7,11],"2":[11],"3":[11],"4":[11],"5":[11],"6":[11]},"label_de":"Topf & Deckel: alle Browser-Tagesansichten","label_en":"Topf & Deckel: all browser weekday views"},
+    "mensa_snapshot": {"workflow":"wu-lunch-mensa-pdf.yml","cron":["40 6-10 * * 1-5"],"minute":40,"hours":{"1":[8,10],"2":[8,10],"3":[8,10],"4":[8,10],"5":[8,10]},"label_de":"Mensa-PDF-Sicherung (kein Menüimport)","label_en":"Mensa PDF snapshot (no menu import)"},
+    "observation": {"workflow":"wu-lunch-publication-monitor.yml","cron":["0 6,9,12,16 * * *"],"minute":0,"utc_hours":[6,9,12,16],"hours":{"0":[7,10,13,17],"1":[7,10,13,17],"2":[7,10,13,17],"3":[7,10,13,17],"4":[7,10,13,17],"5":[7,10,13,17],"6":[7,10,13,17]},"ends_before":"2026-12-04","label_de":"Veröffentlichungsbeobachtung (Mi/Do nur Baschly; kein Menüimport)","label_en":"Publication observation (Wed/Thu Baschly only; no menu import)"},
+    "english": {"workflow":"wu-lunch-english.yml","cron":["27 * * * *"],"minute":27,"hours":{"0":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"1":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"2":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"3":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"4":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"5":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"6":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]},"label_de":"Englische Übersetzung: zusätzlich nach jedem Import und bei Textänderungen","label_en":"English translation: also after each import and on text changes"}
+  }
+}

@@ -17,11 +17,12 @@ import requests
 from bs4 import BeautifulSoup
 
 from update_menus import URLS, html_lines, period, safe_get
+from update_schedule import policy
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "publication-observations.json"
 TZ = ZoneInfo("Europe/Vienna")
-UNTIL = date(2026, 12, 4)
+UNTIL = date.fromisoformat(policy()['tasks']['observation']['ends_before'])
 SOURCES = {
     "mensa": URLS["mensa"],
     "campus": URLS["campus"],

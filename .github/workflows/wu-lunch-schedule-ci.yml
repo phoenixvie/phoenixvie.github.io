@@ -1,0 +1,22 @@
+name: WU Lunch – Zeitplan-Konsistenz
+on:
+  pull_request:
+    paths: ['.github/workflows/**','wu-lunch/update-policy.json','wu-lunch/update-info.js','wu-lunch/scripts/update_schedule.py']
+  push:
+    branches: [master]
+    paths: ['.github/workflows/**','wu-lunch/update-policy.json','wu-lunch/update-info.js','wu-lunch/scripts/update_schedule.py']
+permissions:
+  contents: read
+jobs:
+  schedule-consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: python wu-lunch/scripts/update_schedule.py --check
+      - run: node --test wu-lunch-app/scripts/update-info.test.mjs

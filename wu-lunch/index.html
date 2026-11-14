@@ -310,7 +310,7 @@ html,body,.page { background:#fff; }
         </div>
       </section>
       <footer class="site-footer">
-        <span id="nextUpdate" aria-live="polite"></span><span id="lastImport" aria-live="polite"></span>
+        <span id="nextUpdate" data-ui-literal aria-live="polite"></span><span id="lastImport" data-ui-literal aria-live="polite"></span>
         <span>Angaben ohne Gewähr – bitte Menü auf der Restaurant-Website prüfen.</span>
         <span>Diese Website verwendet keine Cookies.</span>
         <span><a href="impressum.html">Impressum</a><span aria-hidden="true"> · </span><a href="#" data-change-language>Change Language</a><span aria-hidden="true"> · </span><a href="admin.html">Admin</a></span>
@@ -320,7 +320,7 @@ html,body,.page { background:#fff; }
     
   </div>
 
-  <script src="i18n.js?v=20261114-weekend1"></script><script src="data.js?v=5"></script>
+  <script src="update-info.js?v=20261114-policy1"></script><script src="i18n.js?v=20261114-weekend1"></script><script src="data.js?v=5"></script>
   <script src="supabase-config.js?v=1"></script>
   <script>
   (async function initializeLunchPage() {
@@ -741,42 +741,8 @@ function mensaStations(raw){
       DATA.restaurants.forEach(r => list.appendChild(renderRow(r)));
     }
 
-    // Same slots as wu-lunch-menus.yml after its Europe/Vienna guard:
-    // Mon 06:15–18:15, Tue–Fri 08:15–12:15, Sat 08:15–18:15.
-    const IMPORT_SLOTS={1:[6,7,8,9,10,11,12,13,14,15,16,17,18],2:[8,9,10,11,12],3:[8,9,10,11,12],4:[8,9,10,11,12],5:[8,9,10,11,12],6:[8,9,10,11,12,13,14,15,16,17,18]};
-    const WEEKDAY_SHORT=['So.','Mo.','Di.','Mi.','Do.','Fr.','Sa.'];
-    function viennaClockParts(now){
-      const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Vienna',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now);
-      return Object.fromEntries(parts.filter(part=>part.type!=='literal').map(part=>[part.type,Number(part.value)]));
-    }
-    function nextScheduledUpdate(){
-      const now=viennaClockParts(new Date());
-      // This UTC date intentionally represents Vienna wall-clock time so the
-      // weekly schedule stays correct across daylight-saving changes.
-      const candidate=new Date(Date.UTC(now.year,now.month-1,now.day,now.hour,now.minute+1));
-      for(let minute=0;minute<8*24*60;minute++,candidate.setUTCMinutes(candidate.getUTCMinutes()+1)){
-        const slots=IMPORT_SLOTS[candidate.getUTCDay()];
-        if(slots?.includes(candidate.getUTCHours())&&candidate.getUTCMinutes()===15)return candidate;
-      }
-      return null;
-    }
-    function renderNextUpdate(){
-      const next=nextScheduledUpdate();
-      if(!next)return;
-      const two=value=>String(value).padStart(2,'0');
-      nextUpdate.textContent=(LANG==='de'?'Nächste geplante Prüfung: ':'Next scheduled check: ')+(LANG==='de'?WEEKDAY_SHORT[next.getUTCDay()]:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][next.getUTCDay()])+' '+two(next.getUTCDate())+'.'+two(next.getUTCMonth()+1)+'. '+two(next.getUTCHours())+(LANG==='de'?':15 Uhr':':15 (Vienna time)');
-    }
-
-    let importStatus=null;
-    function renderImportStatus(){
-      const element=document.getElementById('lastImport');if(!element)return;
-      if(!importStatus?.checked_at){element.textContent=LANG==='de'?'Importstatus nicht verfügbar':'Import status unavailable';return;}
-      const at=new Date(importStatus.checked_at);if(!Number.isFinite(at.getTime()))return;
-      const failures=Object.values(importStatus.sources||{}).filter(source=>source.state==='error').length;
-      element.textContent=(LANG==='de'?'Letzter Importversuch: ':'Last import attempt: ')+at.toLocaleString(LOCALE,{timeZone:'Europe/Vienna',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+(failures?(LANG==='de'?' · Quellenfehler: ':' · Source errors: ')+failures:'');
-      element.title=LANG==='de'?'Zeitpunkt aus dem veröffentlichten Importprotokoll. Ein geplanter Termin bestätigt keinen Abruf.':'Time from the published import log. A scheduled time does not confirm a source check.';
-    }
-    async function loadImportStatus(){try{const response=await fetch('./status.json?t='+Date.now(),{cache:'no-store'});if(response.ok)importStatus=await response.json();}catch{}renderImportStatus();}
+    function renderNextUpdate(){window.WULunchUpdateInfo?.render();}
+    function renderImportStatus(){window.WULunchUpdateInfo?.render();}
     function moveDay(step){
       const index=weekDates.findIndex(day=>day.iso===selectedDate);
       const next=weekDates[index+step];
@@ -912,8 +878,8 @@ function mensaStations(raw){
     let liveRefreshing=false,liveSignature=JSON.stringify(DATA);
     async function refreshLiveData(){void window.WULunchI18n.refresh();if(liveRefreshing)return;liveRefreshing=true;const previous=JSON.parse(JSON.stringify(DATA));try{const response=await fetch('./data/menus.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return;const incoming=await response.json();Object.assign(DATA,incoming);await Promise.all([applyRestaurantOverrides(),loadAnnouncement(),applyManualMenus()]);if(!profileFetchSucceeded||!manualFetchSucceeded){Object.assign(DATA,previous);return;}const signature=JSON.stringify(DATA);if(signature!==liveSignature){liveSignature=signature;for(const r of DATA.restaurants){const info=locationInfo[r.id];if(info){info.address=r.address||info.address;info.color=r.brand_color||info.color;if(Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)){info.lat=r.latitude;info.lon=r.longitude;}}}update();if(realMap){realMap.remove();realMap=null;loadRealMap();}}}catch(e){Object.assign(DATA,previous);console.warn('Aktualisierung fehlgeschlagen',e)}finally{liveRefreshing=false}}
     window.setInterval(refreshLiveData,3000);window.addEventListener('focus',refreshLiveData);
-    window.setInterval(renderNextUpdate,30000);
-    void loadImportStatus();window.setInterval(loadImportStatus,60000);
+
+
 
     // Render all menus first. Load Leaflet and map tiles only after the whole
     // page, fonts and images have loaded; do not block the initial restaurant
