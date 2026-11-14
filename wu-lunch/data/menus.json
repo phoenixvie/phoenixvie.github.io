@@ -1,18 +1,18 @@
 {
-  "weekStart": "2026-11-09",
-  "weekEnd": "2026-11-13",
+  "weekStart": "2026-11-16",
+  "weekEnd": "2026-11-20",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-13T16:15:02+01:00",
+  "checkedAt": "2026-11-14T10:55:35+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
       "id": "mensa",
       "name": "WU Mensa",
       "url": "https://www.wumensa.at/menuplan-deutsch/",
-      "status": "ai_checked",
+      "status": "verified",
       "note": "Original PDF KW45 direkt als Dokument gelesen, SHA256 9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-20"
     },
     {
       "id": "baschly",
@@ -27,19 +27,19 @@
       "id": "finn",
       "name": "Finn",
       "url": "https://finn.wien/blogs/news/mittagsmenu",
-      "status": "ai_crosschecked",
+      "status": "empty",
       "note": "Original-Wochenkarte als Bild; automatischer Bildimport nur nach aktueller Wochenprüfung",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": null,
+      "validUntil": null
     },
     {
       "id": "lia",
       "name": "Lia Coffee WU",
       "url": "https://lia.coffee/",
-      "status": "verified",
+      "status": "not_published",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": null,
+      "validUntil": null
     },
     {
       "id": "campus",
@@ -47,8 +47,8 @@
       "url": "https://www.dascampus.at/dc-mittagsmenues",
       "status": "verified",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-12"
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-19"
     },
     {
       "id": "karmafood",
@@ -56,17 +56,17 @@
       "url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
       "status": "verified",
       "note": "Wochenmenü der Wiener Standorte; Messe/Prater, Ausstellungsstraße 63",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-20"
     },
     {
       "id": "topfdeckel",
       "name": "Topf & Deckel",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "verified",
+      "status": "empty",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": null,
+      "validUntil": null
     },
     {
       "id": "omakueche",
@@ -83,8 +83,8 @@
       "url": "https://www.zurgruenenhuette.com/mittags-menu",
       "status": "verified",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-20"
     },
     {
       "id": "glashaus",
@@ -92,8 +92,8 @@
       "url": "https://www.dasglashaus.at/menues",
       "status": "verified",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-20"
     },
     {
       "id": "losteria",
@@ -111,1005 +111,219 @@
       "name": "WU Mensa",
       "monogram": "WU",
       "url": "https://www.wumensa.at/menuplan-deutsch/",
-      "status": "ai_checked",
+      "status": "verified",
       "note": "KI-PDF-Auswertung; Datums-, Text- und Schema-Prüfung bestanden",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13",
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-20",
       "days": {
-        "2026-11-09": [
+        "2026-11-16": [
           {
-            "name": "Klare Gemüsesuppe mit Einlage",
+            "name": "Klare Gemüsesuppe Einlage",
             "price": null,
             "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "MONTAG – Tagesuppe: „Klare Gemüsesuppe | Einlage“",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Soup Deal (Inhalt laut Tagesaushang)",
-            "price": 4.25,
-            "category": "Soup Deal",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Soup Deal € 4,25; Montag bis Freitag: „laut Tagesaushang“",
-            "ai_confidence": "medium",
-            "details_unpublished": true
-          },
-          {
-            "name": "Tofu-Mais-Buchweizen-Laibchen mit cremigem Kohlrabi",
+            "name": "\"Plant\"bullar schwedische vegane Fleischbällchen Erdäpfelpüree Röstzwiebel",
             "price": 5.8,
             "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Montag, Powered by plants / Veggie: „Tofu-Mais-Buchweizen Laibchen | cremiger Kohlrabi“ € 5,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "„One Pot“ Beef & Cheese mit Maccaroni",
+            "name": "Köttbullar schwedische Fleischbällchen in Rahmsauce Erdäpfelpüree Röstzwiebel",
             "price": 6.4,
             "category": "Meaty",
             "diet": "meat",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Montag, Meaty: „One Pot“ Beef & Cheese, Maccaroni – € 6,40",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Smart Menü (Deal des Tages + Suppe + Beilagensalat)",
-            "price": 7.3,
-            "category": "Menüoption",
-            "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,30“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Create your own: Bowl, Wrap oder Salad",
-            "price": 7.9,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Special Topping € 2,00, Fleisch Topping € 2,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Create your own...Bowl | Wrap | Salad € 7,90“; „Special Topping € 2,00 | Fleisch Topping € 2,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Salad Deal",
-            "price": 4.25,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Salad Deal € 4,25“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Pasta",
-            "price": 7.9,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Montag, Pasta & Co: „Hausgemachte Pasta“; Tarifspalte € 7,90; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Gnocchi",
-            "price": 8.2,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Montag, Pasta & Co: „Hausgemachte Gnocchi“; Tarifspalte € 8,20; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Spezialpasta laut Aushang",
-            "price": null,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Montag, Pasta & Co: „Spezialpasta laut Aushang“",
-            "ai_confidence": "high",
-            "details_unpublished": true
-          },
-          {
-            "name": "Halbes Grillhuhn mit Semmelfülle, Reis und Natursaft",
+            "name": "Kung Pao Chicken mit Jasminreis",
             "price": 9.8,
             "category": "Global & Grill",
             "diet": "unknown",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Montag, Global & Grill: „Halbes Grillhuhn mit Semmelfülle | Reis | Natursaft“ € 9,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           }
         ],
-        "2026-11-10": [
+        "2026-11-17": [
           {
-            "name": "Karfiolcremesuppe",
+            "name": "Burgenländische Zwiebelcremesuppe",
             "price": null,
             "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "DIENSTAG – Tagesuppe: „Karfiolcremesuppe“",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Soup Deal (Inhalt laut Tagesaushang)",
-            "price": 4.25,
-            "category": "Soup Deal",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Soup Deal € 4,25; Dienstag: „laut Tagesaushang“",
-            "ai_confidence": "medium",
-            "details_unpublished": true
-          },
-          {
-            "name": "Gratinierte Spinat-Tortillas mit Tomatenbulgur",
+            "name": "Thai Pineapple Fried Rice (vegan)",
             "price": 6.3,
             "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Dienstag, Powered by plants / Veggie: „Gratinierte Spinat-Tortillas | Tomatenbulgur“ € 6,30",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Bratwurst mit Speckkraut und Braterdäpfeln",
+            "name": "Hühnerstreifen in Honig Senfsauce Karotten Spiralen",
             "price": 5.8,
             "category": "Meaty",
             "diet": "meat",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Dienstag, Meaty: „Bratwurst | Speckkraut | Braterdäpfel“ € 5,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Smart Menü (Deal des Tages + Suppe + Beilagensalat)",
-            "price": 7.3,
-            "category": "Menüoption",
-            "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,30“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Create your own: Bowl, Wrap oder Salad",
-            "price": 7.9,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Special Topping € 2,00, Fleisch Topping € 2,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Create your own...Bowl | Wrap | Salad € 7,90“; „Special Topping € 2,00 | Fleisch Topping € 2,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Salad Deal",
-            "price": 4.25,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Salad Deal € 4,25“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Pasta",
-            "price": 7.9,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Dienstag, Pasta & Co: „Hausgemachte Pasta“; Tarifspalte € 7,90; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Gnocchi",
-            "price": 8.2,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Dienstag, Pasta & Co: „Hausgemachte Gnocchi“; Tarifspalte € 8,20; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Spezialpasta laut Aushang",
-            "price": null,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Dienstag, Pasta & Co: „Spezialpasta laut Aushang“",
-            "ai_confidence": "high",
-            "details_unpublished": true
-          },
-          {
-            "name": "„Phat Kraphao Gai“ – scharfes Huhn mit grünen Bohnen, Thai Basil und gedämpftem Reis",
+            "name": "Lachs-Teriyaki Broccoli Jasminreis",
             "price": 9.8,
             "category": "Global & Grill",
             "diet": "unknown",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Dienstag, Global & Grill: „Phat Kraphao Gai“ Scharfes Huhn | grüne Bohnen | Thai Basil | gedämpfter Reis € 9,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           }
         ],
-        "2026-11-11": [
+        "2026-11-18": [
           {
-            "name": "Klare Gemüsesuppe mit Einlage",
+            "name": "Klare Gemüsesuppe Einlage",
             "price": null,
             "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "MITTWOCH – Tagesuppe: „Klare Gemüsesuppe | Einlage“",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Soup Deal (Inhalt laut Tagesaushang)",
-            "price": 4.25,
-            "category": "Soup Deal",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Soup Deal € 4,25; Mittwoch: „laut Tagesaushang“",
-            "ai_confidence": "medium",
-            "details_unpublished": true
-          },
-          {
-            "name": "Soja-Geschnetzeltes in Woksauce mit Basmatireis",
+            "name": "Nasi Goreng veganes indonesisches Reisgericht (vegan)",
             "price": 6.3,
             "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Mittwoch, Powered by plants / Veggie: „Soja-Geschnetzeltes in Woksauce | Basmatireis“ € 6,30",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Gebackenes Hühnerschnitzel mit Petersilkartoffeln",
+            "name": "Gebackenes Hühnerschnitzel Petersilkartoffel",
             "price": 5.8,
             "category": "Meaty",
             "diet": "meat",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Mittwoch, Meaty: „Gebackenes Hühnerschnitzel | Petersilkartoffel“ € 5,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Smart Menü (Deal des Tages + Suppe + Beilagensalat)",
-            "price": 7.3,
-            "category": "Menüoption",
-            "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,30“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Create your own: Bowl, Wrap oder Salad",
-            "price": 7.9,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Special Topping € 2,00, Fleisch Topping € 2,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Create your own...Bowl | Wrap | Salad € 7,90“; „Special Topping € 2,00 | Fleisch Topping € 2,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Salad Deal",
-            "price": 4.25,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Salad Deal € 4,25“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Pasta",
-            "price": 7.9,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Mittwoch, Pasta & Co: „Hausgemachte Pasta“; Tarifspalte € 7,90; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Gnocchi",
-            "price": 8.2,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Mittwoch, Pasta & Co: „Hausgemachte Gnocchi“; Tarifspalte € 8,20; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Spezialpasta laut Aushang",
-            "price": null,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Mittwoch, Pasta & Co: „Spezialpasta laut Aushang“",
-            "ai_confidence": "high",
-            "details_unpublished": true
-          },
-          {
-            "name": "Bao Buns mit Pulled Pork oder Planted Pulled BBQ",
+            "name": "Bao Buns Pulled Pork oder Planted Pulled BBQ",
             "price": 9.8,
             "category": "Global & Grill",
             "diet": "unknown",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Mittwoch, Global & Grill: „Bao Buns Pulled Pork oder Planted Pulled BBQ“ € 9,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           }
         ],
-        "2026-11-12": [
+        "2026-11-19": [
           {
-            "name": "Kokos-Currycremesuppe",
+            "name": "Süß saure Suppe",
             "price": null,
             "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "DONNERSTAG – Tagesuppe: „Kokos-Currycremesuppe“",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Soup Deal (Inhalt laut Tagesaushang)",
-            "price": 4.25,
-            "category": "Soup Deal",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Soup Deal € 4,25; Donnerstag: „laut Tagesaushang“",
-            "ai_confidence": "medium",
-            "details_unpublished": true
-          },
-          {
-            "name": "Pikantes Cajun-Gemüse mit cremiger Curcuma-Polenta",
+            "name": "Eiernudeln mit Pilzen und Gemüse, dazu Koriander",
             "price": 5.8,
             "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Powered by plants / Veggie: „Pikantes Cajun-Gemüse | cremige Curcuma-Polenta“ € 5,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Schweinskotelette mit Speckfisolen, Reis und Natursaft",
+            "name": "\"Pastitsio\" Griechischer Nudelauflauf mit Faschiertem (Schwein & Rind) Tomatensauce",
             "price": 6.4,
             "category": "Meaty",
             "diet": "meat",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Meaty: „Schweinskotelette | Speckfisolen | Reis | Natursaft“ € 6,40",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Smart Menü (Deal des Tages + Suppe + Beilagensalat)",
-            "price": 7.3,
-            "category": "Menüoption",
-            "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,30“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Pizza Margherita",
-            "price": 7.9,
-            "category": "Pizza & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Pizza & Co: „Pizza Margherita“; Tarifspalte € 7,90",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Pizza Speciale (Salami, Cardinale oder vegetaria)",
-            "price": 8.2,
-            "category": "Pizza & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Pizza & Co: „Pizza Speciale (Salami, Cardinale, vegetaria)“; Tarifspalte € 8,20",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Pizza Provenciale mit Speck, Pfefferoni und Mais",
-            "price": 8.2,
-            "category": "Weekly Special",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Weekly Special: „Pizza Provenciale | Speck, Pfefferoni, Mais“ € 8,20",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Pinsa Prosciutto oder Mozzarella",
-            "price": 8.2,
-            "category": "Weekly Special",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Weekly Special: „Pinsa Prosciutto oder Mozzarella“; Tarifspalte € 8,20",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Create your own: Bowl, Wrap oder Salad",
-            "price": 7.9,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Special Topping € 2,00, Fleisch Topping € 2,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Create your own...Bowl | Wrap | Salad € 7,90“; „Special Topping € 2,00 | Fleisch Topping € 2,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Salad Deal",
-            "price": 4.25,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Salad Deal € 4,25“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Pasta",
-            "price": 7.9,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Pasta & Co: „Hausgemachte Pasta“; Tarifspalte € 7,90; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Gnocchi",
-            "price": 8.2,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Pasta & Co: „Hausgemachte Gnocchi“; Tarifspalte € 8,20; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Spezialpasta laut Aushang",
-            "price": null,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Pasta & Co: „Spezialpasta laut Aushang“",
-            "ai_confidence": "high",
-            "details_unpublished": true
-          },
-          {
-            "name": "Mensa Burger mit Pommes – Beef",
+            "name": "Mensa Burger Pommes Beef oder Planted 'Crispy Chicken style'",
             "price": 9.8,
             "category": "Global & Grill",
             "diet": "unknown",
             "description": "",
-            "allergens": [
-              "A",
-              "C",
-              "G"
-            ],
-            "energy_kcal": null,
+            "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Global & Grill: „Mensa Burger | Pommes Beef A,C,G“ € 9,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Mensa Burger mit Pommes – Planted 'Crispy Chicken style'",
-            "price": 9.8,
-            "category": "Global & Grill",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [
-              "A"
-            ],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Donnerstag, Global & Grill: „Planted 'Crispy Chicken style' A“; Tarifpreis € 9,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           }
         ],
-        "2026-11-13": [
+        "2026-11-20": [
           {
-            "name": "Klare Gemüsesuppe mit Einlage",
+            "name": "Klare Gemüsesuppe Einlage",
             "price": null,
             "category": "Tagessuppe",
             "diet": "unknown",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "FREITAG – Tagesuppe: „Klare Gemüsesuppe | Einlage“",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Soup Deal (Inhalt laut Tagesaushang)",
-            "price": 4.25,
-            "category": "Soup Deal",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Soup Deal € 4,25; Freitag: „laut Tagesaushang“",
-            "ai_confidence": "medium",
-            "details_unpublished": true
-          },
-          {
-            "name": "Penne Pomodoro mit Tomatensauce, Babymozzarella und Rucola",
+            "name": "Zucchini-Cottage Cheese Pie warme Schnittlauchsauce",
             "price": 5.8,
             "category": "Powered by plants / Veggie",
             "diet": "veggie",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Powered by plants / Veggie: „Penne Pomodoro | Tomatensauce | Babymozzarella | Rucola“ € 5,80",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Gebackener Seelachs mit Petersil-Erdäpfeln, Sauce und Tartare",
+            "name": "Gebackener Seelachs Petersil-Erdäpfel Sc. Tartare",
             "price": 6.4,
             "category": "Meaty",
             "diet": "meat",
             "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Meaty: „Gebackener Seelachs | Petersil-Erdäpfel | Sc. Tartare“ € 6,40",
-            "ai_confidence": "high",
-            "details_unpublished": false
+            "included_choices": []
           },
           {
-            "name": "Smart Menü (Deal des Tages + Suppe + Beilagensalat)",
-            "price": 7.3,
-            "category": "Menüoption",
-            "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,30“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Pizza Margherita",
-            "price": 7.9,
-            "category": "Pizza & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Pizza & Co: „Pizza Margherita“; Tarifspalte € 7,90",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Pizza Speciale (Salami, Cardinale oder vegetaria)",
-            "price": 8.2,
-            "category": "Pizza & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Pizza & Co: „Pizza Speciale (Salami, Cardinale, vegetaria)“; Tarifspalte € 8,20",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Pizza Provenciale mit Speck, Pfefferoni und Mais",
-            "price": 8.2,
-            "category": "Weekly Special",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Weekly Special: „Pizza Provenciale | Speck, Pfefferoni, Mais“ € 8,20",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Pinsa Prosciutto oder Mozzarella",
-            "price": 8.2,
-            "category": "Weekly Special",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Weekly Special: „Pinsa Prosciutto oder Mozzarella“; Tarifspalte € 8,20",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Create your own: Bowl, Wrap oder Salad",
-            "price": 7.9,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Special Topping € 2,00, Fleisch Topping € 2,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Create your own...Bowl | Wrap | Salad € 7,90“; „Special Topping € 2,00 | Fleisch Topping € 2,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Salad Deal",
-            "price": 4.25,
-            "category": "Bowls & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Bowls & Co (ganze Woche): „Salad Deal € 4,25“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Pasta",
-            "price": 7.9,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Pasta & Co: „Hausgemachte Pasta“; Tarifspalte € 7,90; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Hausgemachte Gnocchi",
-            "price": 8.2,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "Zusatzkosten: Wahlweise Tomatensauce oder Pesto, Rinder Bolognese Aufpreis € 1,50",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Pasta & Co: „Hausgemachte Gnocchi“; Tarifspalte € 8,20; „wahlweise Tomatensauce oder Pesto“, „Rinder Bolognese Aufpreis € 1,50“",
-            "ai_confidence": "high",
-            "details_unpublished": false
-          },
-          {
-            "name": "Spezialpasta laut Aushang",
-            "price": null,
-            "category": "Pasta & Co",
-            "diet": "unknown",
-            "description": "",
-            "allergens": [],
-            "energy_kcal": null,
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Pasta & Co: „Spezialpasta laut Aushang“",
-            "ai_confidence": "high",
-            "details_unpublished": true
-          },
-          {
-            "name": "Stop Food Waste Day",
+            "name": "Stop Food Waste'",
             "price": null,
             "category": "Global & Grill",
             "diet": "unknown",
-            "description": "Konkrete Speise und Preis noch nicht veröffentlicht.",
+            "description": "",
             "allergens": [],
-            "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-            "evidence_excerpt": "Freitag, Global & Grill: „Stop Food Waste Day“",
-            "ai_confidence": "low",
-            "details_unpublished": true
+            "included_choices": []
           }
         ]
       }
@@ -1124,7 +338,7 @@
       "validFrom": null,
       "validUntil": null,
       "days": {
-        "2026-11-09": [
+        "2026-11-16": [
           {
             "name": "Knackiger Gemüse-Wok mit Jasminreis, Frühlingsrolle und Sweet-Chili-Sauce, laktosefrei",
             "price": 9.5,
@@ -1152,7 +366,7 @@
             ]
           }
         ],
-        "2026-11-10": [
+        "2026-11-17": [
           {
             "name": "Thai-Kokos Gemüsecurry mit Basmatireis",
             "price": 9.5,
@@ -1180,7 +394,7 @@
             ]
           }
         ],
-        "2026-11-11": [
+        "2026-11-18": [
           {
             "name": "Linsen-Spinat-Gemüse-Curry mit Basmatireis",
             "price": 9.5,
@@ -1208,7 +422,7 @@
             ]
           }
         ],
-        "2026-11-12": [
+        "2026-11-19": [
           {
             "name": "Kürbisrisotee: A, G",
             "price": 9.5,
@@ -1236,7 +450,7 @@
             ]
           }
         ],
-        "2026-11-13": [
+        "2026-11-20": [
           {
             "name": "Falafel-Bowl mit Reis, Hummus, frischem Salat & Gemüse",
             "price": 9.5,
@@ -1272,393 +486,33 @@
       "monogram": "FI",
       "url": "https://finn.wien/blogs/news/mittagsmenu",
       "note": "Wochenbild, Wochenkennzeichnung und zwei KI-Modellprüfungen",
-      "status": "ai_crosschecked",
+      "status": "not_published",
       "days": {
-        "2026-11-09": [
-          {
-            "name": "Tagessuppe oder Salat",
-            "price": 3.5,
-            "category": "Suppe/Salat",
-            "diet": "unknown",
-            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "ai_confidence": "two-model-price-agreement"
-          },
-          {
-            "name": "Gebackener Emmentaler mit Preiselbeeren und grünem Salat",
-            "price": 10,
-            "category": "Veggie",
-            "diet": "veggie",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "VEGGIE Gebackener Emmentaler mit Preiselbeeren und grünem Salat",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          },
-          {
-            "name": "Cevapcici mit Pommes und Ajvar",
-            "price": 10,
-            "category": "Fleisch",
-            "diet": "meat",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "FLEISCH Cevapcici mit Pommes und Ajvar",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          }
-        ],
-        "2026-11-10": [
-          {
-            "name": "Tagessuppe oder Salat",
-            "price": 3.5,
-            "category": "Suppe/Salat",
-            "diet": "unknown",
-            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "ai_confidence": "two-model-price-agreement"
-          },
-          {
-            "name": "Pasta Pomodoro mit Parmesan und grünem Salat",
-            "price": 10,
-            "category": "Veggie",
-            "diet": "veggie",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "VEGGIE Pasta Pomodoro mit Parmesan und grünem Salat",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          },
-          {
-            "name": "Pasta Bolognese mit Parmesan und grünem Salat",
-            "price": 10,
-            "category": "Fleisch",
-            "diet": "meat",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "FLEISCH Pasta Bolognese mit Parmesan und grünem Salat",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          }
-        ],
-        "2026-11-11": [
-          {
-            "name": "Tagessuppe oder Salat",
-            "price": 3.5,
-            "category": "Suppe/Salat",
-            "diet": "unknown",
-            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "ai_confidence": "two-model-price-agreement"
-          },
-          {
-            "name": "Spinat-Kichererbsen-Eintopf mit Gemüselaibchen",
-            "price": 10,
-            "category": "Veggie",
-            "diet": "veggie",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "VEGGIE Spinat-Kichererbsen-Eintopf mit Gemüselaibchen",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          },
-          {
-            "name": "Rindergeschnetzeltes „Stroganoff“ mit Serviettenknödeln",
-            "price": 10,
-            "category": "Fleisch",
-            "diet": "meat",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "FLEISCH Rindergeschnetzeltes „Stroganoff“ mit Serviettenknödeln",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          }
-        ],
-        "2026-11-12": [
-          {
-            "name": "Tagessuppe oder Salat",
-            "price": 3.5,
-            "category": "Suppe/Salat",
-            "diet": "unknown",
-            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "ai_confidence": "two-model-price-agreement"
-          },
-          {
-            "name": "Gefüllte Paprika mit Tomatensauce",
-            "price": 10,
-            "category": "Veggie",
-            "diet": "veggie",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "VEGGIE Gefüllte Paprika mit Tomatensauce",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          },
-          {
-            "name": "Hühnerschnitzel mit Petersilkartoffeln",
-            "price": 10,
-            "category": "Fleisch",
-            "diet": "meat",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "FLEISCH Hühnerschnitzel mit Petersilkartoffeln",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          }
-        ],
-        "2026-11-13": [
-          {
-            "name": "Tagessuppe oder Salat",
-            "price": 3.5,
-            "category": "Suppe/Salat",
-            "diet": "unknown",
-            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "ai_confidence": "two-model-price-agreement"
-          },
-          {
-            "name": "Kaiserschmarrn mit Apfelmus",
-            "price": 10,
-            "category": "Veggie",
-            "diet": "veggie",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "VEGGIE Kaiserschmarrn mit Apfelmus",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          },
-          {
-            "name": "Gegrillte Scholle mit geschmortem Spinat, Zwiebeln und Kartoffelpüree",
-            "price": 10,
-            "category": "Fisch",
-            "diet": "meat",
-            "description": "",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
-            "evidence_excerpt": "FISCH Gegrillte Scholle mit geschmortem Spinat, Zwiebeln und Kartoffelpüree",
-            "ai_confidence": "two-model-agreement",
-            "menu_options": [
-              {
-                "label": "Hauptgericht mit Suppe",
-                "total_price": 11.0
-              }
-            ]
-          }
-        ]
+        "2026-11-16": [],
+        "2026-11-17": [],
+        "2026-11-18": [],
+        "2026-11-19": [],
+        "2026-11-20": []
       },
       "seasonal": [],
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": null,
+      "validUntil": null
     },
     {
       "id": "lia",
       "name": "Lia Coffee WU",
       "monogram": "L",
       "url": "https://lia.coffee/",
-      "status": "verified",
+      "status": "not_published",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13",
+      "validFrom": null,
+      "validUntil": null,
       "days": {
-        "2026-11-09": [
-          {
-            "name": "Cevapcici mit Pommes und Ajvar",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Gebackener Emmentaler mit Preiselbeeren und grünem Salat",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          }
-        ],
-        "2026-11-10": [
-          {
-            "name": "Pasta Bolognese mit Parmesan und grünem Salat",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Pasta Pomodoro mit Parmesan und grünem Salat",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          }
-        ],
-        "2026-11-11": [
-          {
-            "name": "Rindergeschnetzeltes „Stroganoff“ mit Serviettenknödeln",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Spinat-Kichererbsen-Eintopf mit Gemüselaibchen",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          }
-        ],
-        "2026-11-12": [
-          {
-            "name": "Hühnerschnitzel mit Petersilkartoffeln",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Gefüllte Paprika mit Tomatensauce",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          }
-        ],
-        "2026-11-13": [
-          {
-            "name": "Gegrillte Scholle mit geschmortem Spinat, Zwiebeln und Kartoffelpüree",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          },
-          {
-            "name": "Kaiserschmarrn mit Apfelmus",
-            "price": 10.0,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": []
-          }
-        ]
+        "2026-11-16": [],
+        "2026-11-17": [],
+        "2026-11-18": [],
+        "2026-11-19": [],
+        "2026-11-20": []
       }
     },
     {
@@ -1668,12 +522,12 @@
       "url": "https://www.dascampus.at/dc-mittagsmenues",
       "status": "verified",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-12",
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-19",
       "days": {
-        "2026-11-09": [
+        "2026-11-16": [
           {
-            "name": "Faschierter Braten mit Senfzwiebelsauce und Süßkartoffelpüree",
+            "name": "Überbackene Schinkenfleckerl mit Sauerrahm",
             "price": 13.9,
             "category": "Menü mit Fleisch",
             "diet": "meat",
@@ -1684,7 +538,7 @@
             "price_source": "admin_tariff"
           },
           {
-            "name": "Kürbis-Ravioli in Weißweinsauce mit Grana und Rucola",
+            "name": "Steinpilz-Ravioli mit Butteroberssauce und Rucola",
             "price": 12.9,
             "category": "Vegetarisches Menü",
             "diet": "veggie",
@@ -1695,9 +549,9 @@
             "price_source": "admin_tariff"
           }
         ],
-        "2026-11-10": [
+        "2026-11-17": [
           {
-            "name": "Gekochtes Rindfleisch mit Kartoffeln und Kochsalat mit Erbsen",
+            "name": "Wildragout mit Preiselbeeren und Kartoffelknödeln",
             "price": 13.9,
             "category": "Menü mit Fleisch",
             "diet": "meat",
@@ -1708,7 +562,7 @@
             "price_source": "admin_tariff"
           },
           {
-            "name": "Gnocchi in Pilzsauce mit Thymian",
+            "name": "Kürbis-Kartoffel Gulasch mit Öfferl Brot",
             "price": 12.9,
             "category": "Vegetarisches Menü",
             "diet": "veggie",
@@ -1719,9 +573,9 @@
             "price_source": "admin_tariff"
           }
         ],
-        "2026-11-11": [
+        "2026-11-18": [
           {
-            "name": "Gebackene Hühnerkeulen mit Kartoffel-Vogerlsalat",
+            "name": "Berner Würstel mit Zwiebelsenf und Bratkartoffeln",
             "price": 13.9,
             "category": "Menü mit Fleisch",
             "diet": "meat",
@@ -1732,7 +586,7 @@
             "price_source": "admin_tariff"
           },
           {
-            "name": "Gemüse-Quiche mit Feta-Joghurtsauce",
+            "name": "Gemüsestrudel mit Kräutersauce und Ofentomaten",
             "price": 12.9,
             "category": "Vegetarisches Menü",
             "diet": "veggie",
@@ -1743,9 +597,9 @@
             "price_source": "admin_tariff"
           }
         ],
-        "2026-11-12": [
+        "2026-11-19": [
           {
-            "name": "Znaimer Rindschnitzel mit Serviettenknödel und Sauerrahm",
+            "name": "Putenragout mit Gemüse und Pilavreis",
             "price": 13.9,
             "category": "Menü mit Fleisch",
             "diet": "meat",
@@ -1756,7 +610,7 @@
             "price_source": "admin_tariff"
           },
           {
-            "name": "Wiener Krautfleckerl mit grünem Salat",
+            "name": "Hausgemachte Gnocchi mit Käseoberssauce und Spinat",
             "price": 12.9,
             "category": "Vegetarisches Menü",
             "diet": "veggie",
@@ -1767,7 +621,7 @@
             "price_source": "admin_tariff"
           }
         ],
-        "2026-11-13": []
+        "2026-11-20": []
       }
     },
     {
@@ -1778,9 +632,9 @@
       "note": "HTML-Tageskarte + unabhängiger Original-PDF-Tarifabgleich",
       "status": "verified",
       "days": {
-        "2026-11-09": [
+        "2026-11-16": [
           {
-            "name": "Tajín Süßkartoffel Quinoa Bowl mit Tomato Dip",
+            "name": "Orientalische Couscous Bowl mit Harissa Dip",
             "price": 10.5,
             "category": "Hauptgericht",
             "diet": "vegan",
@@ -1789,11 +643,11 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           },
           {
-            "name": "Shahi Paneer Veggie Curry",
+            "name": "Coconut Mango Veggie Curry",
             "price": 10.5,
             "category": "Hauptgericht",
             "diet": "veggie",
@@ -1802,11 +656,11 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           },
           {
-            "name": "Kurkuma Linsen Dal",
+            "name": "Dal Makhni mit veganer Butter",
             "price": 10.5,
             "category": "Hauptgericht",
             "diet": "vegan",
@@ -1815,93 +669,11 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           }
         ],
-        "2026-11-10": [
-          {
-            "name": "Indian Ratatouille Lasagne mit Salat",
-            "price": 10.5,
-            "category": "Hauptgericht",
-            "diet": "veggie",
-            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
-          },
-          {
-            "name": "Cremiges Erbsen Minz Curry",
-            "price": 10.5,
-            "category": "Hauptgericht",
-            "diet": "vegan",
-            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
-          },
-          {
-            "name": "Chana Linsen Dal",
-            "price": 10.5,
-            "category": "Hauptgericht",
-            "diet": "vegan",
-            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
-          }
-        ],
-        "2026-11-11": [
-          {
-            "name": "Kichererbsen Masala Veggie Biryani mit pink Raita",
-            "price": 10.5,
-            "category": "Hauptgericht",
-            "diet": "vegan",
-            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
-          },
-          {
-            "name": "Baingan Bharta Style Curry",
-            "price": 10.5,
-            "category": "Hauptgericht",
-            "diet": "vegan",
-            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
-          },
-          {
-            "name": "Protein Power Chili mit Quinoa",
-            "price": 11.5,
-            "category": "Special",
-            "diet": "vegan",
-            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
-          }
-        ],
-        "2026-11-12": [
+        "2026-11-17": [
           {
             "name": "Veggie Bolognese Lasagne mit Salat",
             "price": 10.5,
@@ -1912,11 +684,11 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           },
           {
-            "name": "Schmorgemüse Quinoa Bowl mit Hummus Dip",
+            "name": "Vegan Butter Veggie Curry",
             "price": 10.5,
             "category": "Hauptgericht",
             "diet": "vegan",
@@ -1925,11 +697,11 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           },
           {
-            "name": "Karotten Linsen Dal",
+            "name": "Dal mit Punjabi Gewürz Tadka",
             "price": 10.5,
             "category": "Hauptgericht",
             "diet": "vegan",
@@ -1938,13 +710,13 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           }
         ],
-        "2026-11-13": [
+        "2026-11-18": [
           {
-            "name": "Zitronen Veggie Biryani mit Salzzitronen Raita",
+            "name": "Kaffir Lime Kokos Biryani mit Raita",
             "price": 10.5,
             "category": "Hauptgericht",
             "diet": "vegan",
@@ -1953,11 +725,11 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           },
           {
-            "name": "Cremiges Korma Veggie Curry",
+            "name": "Vindaloo Veggie Curry",
             "price": 10.5,
             "category": "Hauptgericht",
             "diet": "vegan",
@@ -1966,11 +738,39 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           },
           {
-            "name": "Mama Masala Linsen Dal",
+            "name": "Veggie Parmesan (M)eatballs",
+            "price": 11.5,
+            "category": "Special",
+            "diet": "vegan",
+            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
+          }
+        ],
+        "2026-11-19": [
+          {
+            "name": "White Bean Pesto Lasagne mit Salat",
+            "price": 10.5,
+            "category": "Hauptgericht",
+            "diet": "veggie",
+            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
+          },
+          {
+            "name": "Kashmiri Kokos Süßkartoffel Curry",
             "price": 10.5,
             "category": "Hauptgericht",
             "diet": "vegan",
@@ -1979,680 +779,84 @@
             "included_soup": null,
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
-            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_Lunch_Menu_vegan_KW_46.pdf?v=1793979367",
-            "source_sha256": "77dd1963a5789346e4620e804f1be4087c059b94708990b791231ccae75ae9c3"
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
+          },
+          {
+            "name": "South Indian Dal mit Kürbis",
+            "price": 10.5,
+            "category": "Hauptgericht",
+            "diet": "vegan",
+            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
+          }
+        ],
+        "2026-11-20": [
+          {
+            "name": "Bean Power Biryani mit Röstzwiebel",
+            "price": 10.5,
+            "category": "Hauptgericht",
+            "diet": "vegan",
+            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
+          },
+          {
+            "name": "Gelbes Thai Veggie Curry",
+            "price": 10.5,
+            "category": "Hauptgericht",
+            "diet": "vegan",
+            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
+          },
+          {
+            "name": "Green Palak Dal",
+            "price": 10.5,
+            "category": "Hauptgericht",
+            "diet": "vegan",
+            "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+            "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
+            "source_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886"
           }
         ]
       },
       "seasonal": [],
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13"
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-20"
     },
     {
       "id": "topfdeckel",
       "name": "Topf & Deckel",
       "monogram": "T",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "verified",
+      "status": "empty",
       "note": "Alle fünf Wochentage über echte Browser-Tabs der offiziellen Wochenmenü-Seite geprüft.",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13",
+      "validFrom": null,
+      "validUntil": null,
       "days": {
-        "2026-11-09": [
-          {
-            "name": "Karottencremesuppe",
-            "price": 3.9,
-            "category": "Suppe",
-            "diet": "unknown",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "Haussalat",
-            "price": 3.9,
-            "category": "Salat",
-            "diet": "veggie",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "Tan Tan Faschiertes mit Asian Slaw, Basmatireis, Limetten-Sesam-Mayo & Nori Crunch.",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "Quiche Lorraine aus dem Ofen mit würzigem Speck & Käse",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "(Allergene: A, C, F, G, L, M, O)",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "veggie",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "Red Thai Curry in cremiger Kokos Sauce & Wokgemüse",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "Kürbisrisotto mit Feta, gerösteten Walnüssen",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "Dessert des Tages",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 9.5,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum kleinen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          },
-          {
-            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 13.9,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum großen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-09",
-            "source_sha256": "c30a858d3ac86173e49571169aa45fd4f8cb29fee6144ad9a743edd5fdc40b9a"
-          }
-        ],
-        "2026-11-10": [
-          {
-            "name": "Paprika Suppe",
-            "price": 3.9,
-            "category": "Suppe",
-            "diet": "unknown",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          },
-          {
-            "name": "Haussalat",
-            "price": 3.9,
-            "category": "Salat",
-            "diet": "veggie",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          },
-          {
-            "name": "Mediterrane Hühnerpfanne mit Ofengemüse, getrockneten Tomaten & Basilikum-Zitronen-Creme",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          },
-          {
-            "name": "Chicken-Stroganoff in Senf-Rahmsauce mit Waldpilzen",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          },
-          {
-            "name": "Sweetpotato Quesadillas mit Chili Sin Carne & Sour Cream Dip",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          },
-          {
-            "name": "Cremiges Brokkoli-Kokoscurry mit gerösteten Erdnüssen",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          },
-          {
-            "name": "Dessert des Tages",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          },
-          {
-            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 9.5,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum kleinen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          },
-          {
-            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 13.9,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum großen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-10",
-            "source_sha256": "d7a138b678d2dc7041929eb318ec163f06a344e65890c48c3135adeadf97d60d"
-          }
-        ],
-        "2026-11-11": [
-          {
-            "name": "Kürbiscremesuppe",
-            "price": 3.9,
-            "category": "Suppe",
-            "diet": "unknown",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          },
-          {
-            "name": "Haussalat",
-            "price": 3.9,
-            "category": "Salat",
-            "diet": "veggie",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          },
-          {
-            "name": "Ofenfrische Burritos mit Chili con Carne, geschmolzenem Käse, Guacamole Dip",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          },
-          {
-            "name": "Rindsgeschnetzeltes in cremiger Pilzrahmsauce",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          },
-          {
-            "name": "Tomaten-Mozzarella Lasagne mit Spinat und frischem Salat",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          },
-          {
-            "name": "Cremiges Eierschwammerl-Risotto mit Parmesan, Spinat",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          },
-          {
-            "name": "Dessert des Tages",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          },
-          {
-            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 9.5,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum kleinen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          },
-          {
-            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 13.9,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum großen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-11",
-            "source_sha256": "21dfef4abbae100461e817364d82bf1e696323ef5b23e8f6e423f48a585e09a4"
-          }
-        ],
-        "2026-11-12": [
-          {
-            "name": "Karfiolsuppe",
-            "price": 3.9,
-            "category": "Suppe",
-            "diet": "unknown",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          },
-          {
-            "name": "Haussalat",
-            "price": 3.9,
-            "category": "Salat",
-            "diet": "veggie",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          },
-          {
-            "name": "Gebratenes Lachsfilet auf cremigem Zitronen-Zucchini-Risotto mit Feta",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          },
-          {
-            "name": "Indisches Chicken Tikka in cremiger Masalasauce",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          },
-          {
-            "name": "Süßkartoffel-Feta Gratin aus dem Ofen mit Spinat",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          },
-          {
-            "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          },
-          {
-            "name": "Dessert des Tages",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          },
-          {
-            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 9.5,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum kleinen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          },
-          {
-            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 13.9,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum großen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-12",
-            "source_sha256": "49425b9b131ad8a13383049dcda3c089d284f9b397ed36753971d1b826ddcd5a"
-          }
-        ],
-        "2026-11-13": [
-          {
-            "name": "Weißwein-Brokkoli Suppe",
-            "price": 3.9,
-            "category": "Suppe",
-            "diet": "unknown",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "904306c0cb2649ae5670407479edabd6c837714d91c3722547c18f90f6423381"
-          },
-          {
-            "name": "Haussalat",
-            "price": 3.9,
-            "category": "Salat",
-            "diet": "veggie",
-            "description": "Vorspeise, separat erhältlich; klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "904306c0cb2649ae5670407479edabd6c837714d91c3722547c18f90f6423381"
-          },
-          {
-            "name": "Alt Wiener Schinkenfleckerl mit überbackenem Käse",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "904306c0cb2649ae5670407479edabd6c837714d91c3722547c18f90f6423381"
-          },
-          {
-            "name": "Grünes Thai Curry mit Huhn Wokgemüse in Kokos-Zitronensauce",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "904306c0cb2649ae5670407479edabd6c837714d91c3722547c18f90f6423381"
-          },
-          {
-            "name": "Kürbis-Ricotta-Gratin aus dem Ofen",
-            "price": 7.5,
-            "category": "Hauptgericht",
-            "diet": "unknown",
-            "description": "Preis klein / groß",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "904306c0cb2649ae5670407479edabd6c837714d91c3722547c18f90f6423381"
-          },
-          {
-            "name": "Dessert des Tages",
-            "price": 2.9,
-            "category": "Nachspeise",
-            "diet": "unknown",
-            "description": "Separat erhältlich",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "904306c0cb2649ae5670407479edabd6c837714d91c3722547c18f90f6423381"
-          },
-          {
-            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 9.5,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum kleinen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "904306c0cb2649ae5670407479edabd6c837714d91c3722547c18f90f6423381"
-          },
-          {
-            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
-            "price": 13.9,
-            "category": "Menükombo",
-            "diet": "unknown",
-            "description": "Eine Option zum großen Hauptgericht wählbar",
-            "allergens": [],
-            "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-13",
-            "source_sha256": "904306c0cb2649ae5670407479edabd6c837714d91c3722547c18f90f6423381"
-          }
-        ]
+        "2026-11-16": [],
+        "2026-11-17": [],
+        "2026-11-18": [],
+        "2026-11-19": [],
+        "2026-11-20": []
       },
       "browser_verified_at": "2026-11-13T16:15:36+01:00"
     },
@@ -2666,7 +870,7 @@
       "validFrom": null,
       "validUntil": null,
       "days": {
-        "2026-11-09": [
+        "2026-11-16": [
           {
             "name": "All-you-can-eat-Buffet (Erwachsene)",
             "price": 10.9,
@@ -2678,7 +882,7 @@
             "included_choices": []
           }
         ],
-        "2026-11-10": [
+        "2026-11-17": [
           {
             "name": "All-you-can-eat-Buffet (Erwachsene)",
             "price": 10.9,
@@ -2690,7 +894,7 @@
             "included_choices": []
           }
         ],
-        "2026-11-11": [
+        "2026-11-18": [
           {
             "name": "All-you-can-eat-Buffet (Erwachsene)",
             "price": 10.9,
@@ -2702,7 +906,7 @@
             "included_choices": []
           }
         ],
-        "2026-11-12": [
+        "2026-11-19": [
           {
             "name": "All-you-can-eat-Buffet (Erwachsene)",
             "price": 10.9,
@@ -2714,7 +918,7 @@
             "included_choices": []
           }
         ],
-        "2026-11-13": [
+        "2026-11-20": [
           {
             "name": "Chinesisches All-you-can-eat-Buffet (Erwachsene)",
             "price": 10.9,
@@ -2735,12 +939,12 @@
       "url": "https://www.zurgruenenhuette.com/mittags-menu",
       "status": "verified",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13",
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-20",
       "days": {
-        "2026-11-09": [
+        "2026-11-16": [
           {
-            "name": "Schweinsschnitzel auf “Pariser Art” mit Erdäpfel-Vogerlsalat",
+            "name": "Schweinsbraten mit Gabelkraut und gebratenen Serviettenknödel",
             "price": 13.5,
             "category": "Tagesteller",
             "diet": "unknown",
@@ -2750,7 +954,7 @@
             "included_choices": []
           },
           {
-            "name": "Gebackener Kürbis aus dem Ofen mit cremiger Polenta gefüllt, Jungkohl, Bio-Spiegelei und Kresse",
+            "name": "Käsespätzle mit Bergkäse und Röstzwiebel dazu Blattsalat",
             "price": 13.5,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -2760,7 +964,7 @@
             "included_choices": []
           },
           {
-            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
             "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
@@ -2770,9 +974,9 @@
             "included_choices": []
           }
         ],
-        "2026-11-10": [
+        "2026-11-17": [
           {
-            "name": "Pannonisches Reisfleisch mit Paprika und Champignons, Käse und Blattsalat",
+            "name": "Hühnerfrikassee mit Champignons, Wurzelgemüse, Erbsen und Reis",
             "price": 13.5,
             "category": "Tagesteller",
             "diet": "unknown",
@@ -2782,7 +986,7 @@
             "included_choices": []
           },
           {
-            "name": "Palatschinken mit Frischkäse und Jungspinat gefüllt auf Kräutersosse und Blattsalat",
+            "name": "Erdäpfelpuffer mit Bio-Spiegelei, Chiliöl, Kresse und Rote Rübensalat",
             "price": 13.5,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -2792,7 +996,7 @@
             "included_choices": []
           },
           {
-            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
             "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
@@ -2802,9 +1006,9 @@
             "included_choices": []
           }
         ],
-        "2026-11-11": [
+        "2026-11-18": [
           {
-            "name": "Moussaka mit Rindsfaschiertem, Erdäpfel, Melanzani, Paradeiser, Parmesan und Salat",
+            "name": "Gekochtes Rindsschulterscherzel mit Kohlrabigemüse und Erdäpfelschmarrn",
             "price": 13.5,
             "category": "Tagesteller",
             "diet": "unknown",
@@ -2814,7 +1018,7 @@
             "included_choices": []
           },
           {
-            "name": "Frische Pasta mit Karfiol-Mozzarellabällchen, Tomatensauce und Basilikumpesto dazu Blattsalat",
+            "name": "Gebackene Champignons mit Sc.Tartare und Petersilerdäpfel",
             "price": 13.5,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -2824,7 +1028,7 @@
             "included_choices": []
           },
           {
-            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
             "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
@@ -2834,9 +1038,9 @@
             "included_choices": []
           }
         ],
-        "2026-11-12": [
+        "2026-11-19": [
           {
-            "name": "Geschmortes Rindsschnitzel mit Wurzelgemüse und Spiralnudeln",
+            "name": "Surschnitzel vom Schwein mit ERdäpfel-Gurkensalat",
             "price": 13.5,
             "category": "Tagesteller",
             "diet": "unknown",
@@ -2846,7 +1050,7 @@
             "included_choices": []
           },
           {
-            "name": "Couscousauflauf mit Gemüse, Joghurt-Schafkäseguss und Vogerlsalat mit Kürbiskernöl",
+            "name": "“Wiener Krautfleckerl mit buntem Blattsalat",
             "price": 13.5,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -2856,7 +1060,7 @@
             "included_choices": []
           },
           {
-            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
             "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
@@ -2866,9 +1070,9 @@
             "included_choices": []
           }
         ],
-        "2026-11-13": [
+        "2026-11-20": [
           {
-            "name": "Frischer Kabeljau gebacken mit Erdäpfelsalat",
+            "name": "Frischer Kabeljau gebacken mit Mayonnaisesalat",
             "price": 14.5,
             "category": "Tagesteller",
             "diet": "unknown",
@@ -2878,7 +1082,7 @@
             "included_choices": []
           },
           {
-            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Champignoncremesuppe",
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
             "price": 2.0,
             "category": "Suppe (Aufpreis)",
             "diet": "unknown",
@@ -2897,12 +1101,12 @@
       "url": "https://www.dasglashaus.at/menues",
       "status": "verified",
       "note": "",
-      "validFrom": "2026-11-09",
-      "validUntil": "2026-11-13",
+      "validFrom": "2026-11-16",
+      "validUntil": "2026-11-20",
       "days": {
-        "2026-11-09": [
+        "2026-11-16": [
           {
-            "name": "Kartoffel-Brokkoli Gratin",
+            "name": "Geröstete Knödel mit Ei",
             "price": 14.9,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -2915,7 +1119,7 @@
             ]
           },
           {
-            "name": "Tikka Masala mit Basmati-Reis",
+            "name": "Grillhendlkeule mit Erdäpfel-Gemüse Gröstl und Thymian Jus",
             "price": 15.9,
             "category": "Fisch / Fleisch",
             "diet": "meat",
@@ -2928,9 +1132,9 @@
             ]
           }
         ],
-        "2026-11-10": [
+        "2026-11-17": [
           {
-            "name": "Gebackene Champignons mit Sauce Tartare",
+            "name": "Gnocchi in Gorgonzola-Basilikum-Sauce",
             "price": 14.9,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -2943,7 +1147,7 @@
             ]
           },
           {
-            "name": "Schulterbraten mit Spätzle und Rotkraut",
+            "name": "Fiakergulasch mit Nockerln",
             "price": 15.9,
             "category": "Fisch / Fleisch",
             "diet": "meat",
@@ -2956,9 +1160,9 @@
             ]
           }
         ],
-        "2026-11-11": [
+        "2026-11-18": [
           {
-            "name": "Schwammerlgulasch mit Serviettenknödel",
+            "name": "Hokkaido-Quiche mit Bergkäse",
             "price": 14.9,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -2971,7 +1175,7 @@
             ]
           },
           {
-            "name": "Hühnerschnitzel mit Erdäpfelsalat",
+            "name": "Hühnerschnitzel in Kürbispanade",
             "price": 15.9,
             "category": "Fisch / Fleisch",
             "diet": "meat",
@@ -2984,9 +1188,9 @@
             ]
           }
         ],
-        "2026-11-12": [
+        "2026-11-19": [
           {
-            "name": "Linseneintopf mit Tofu",
+            "name": "Griechischer Spinatstrudel mit Blattsalat und Kräuterrahm",
             "price": 14.9,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -2999,7 +1203,7 @@
             ]
           },
           {
-            "name": "Hühnergeschnetzeltes mit Basmati-Reis",
+            "name": "Tagliatelle Carbonara",
             "price": 15.9,
             "category": "Fisch / Fleisch",
             "diet": "meat",
@@ -3012,9 +1216,9 @@
             ]
           }
         ],
-        "2026-11-13": [
+        "2026-11-20": [
           {
-            "name": "Gnocchi im Basilikum-Spinat-Sauce",
+            "name": "Shakshuka mit pochiertem Ei",
             "price": 14.9,
             "category": "Vegetarisch",
             "diet": "veggie",
@@ -3027,7 +1231,7 @@
             ]
           },
           {
-            "name": "Gebackenes Seelachsfilet mit Petersilienerdäpfeln",
+            "name": "Spinat-Lachs-Lasagne",
             "price": 15.9,
             "category": "Fisch / Fleisch",
             "diet": "meat",
@@ -3052,11 +1256,11 @@
       "validFrom": null,
       "validUntil": null,
       "days": {
-        "2026-11-09": [],
-        "2026-11-10": [],
-        "2026-11-11": [],
-        "2026-11-12": [],
-        "2026-11-13": []
+        "2026-11-16": [],
+        "2026-11-17": [],
+        "2026-11-18": [],
+        "2026-11-19": [],
+        "2026-11-20": []
       },
       "seasonal": [
         {
