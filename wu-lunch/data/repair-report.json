@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-14T12:07:36+01:00",
+  "checked_at": "2026-11-14T14:29:48+01:00",
   "week_start": "2026-11-16",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -9,32 +9,29 @@
       "issues": [],
       "action": "review_only",
       "repairs": [],
-      "validation_issues": [
-        "Die Extras Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai stehen ohne Tageszuordnung im Abschnitt „Extras“; sie wurden daher keinem Wochentag zugeordnet.",
-        "Bei „Veggie Parmesan (M)eatballs“ ist der Einzelpreis von 11,50 € ausdrücklich angegeben. Die Quelle erläutert nicht, wie dieser Preis zum global ausgewiesenen Lunch-Combo-Preis steht."
-      ],
+      "validation_issues": [],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "eb57b6c606baf7c73177bda54577106154271a4635f9c007dccdf0ec8e2cd846"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "70f605fdd926d289f160df77299c80f8b023a237e988f119922a899262ab8127"
       },
       "usage": {
-        "input_tokens": 2557,
+        "input_tokens": 2555,
         "input_tokens_details": {
-          "cache_write_tokens": 2554,
+          "cache_write_tokens": 2552,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2554
+            "ttl_30m_tokens": 2552
           },
           "cached_tokens": 0
         },
-        "output_tokens": 3425,
+        "output_tokens": 3190,
         "output_tokens_details": {
-          "reasoning_tokens": 974
+          "reasoning_tokens": 733
         },
-        "total_tokens": 5982
+        "total_tokens": 5745
       }
     },
     {
