@@ -5,6 +5,7 @@
 `scripts/menu_sanity.py` läuft nach den Extraktionen, vor dem Datenbank-Archiv und vor der Veröffentlichung – auch nach einem Import-Neustart wegen paralleler Commits.
 
 - Eindeutige Wiederholungen werden verlustfrei bereinigt: Steht „Erdäpfelpüree, Röstzwiebel“ bereits im Gerichtnamen, erscheinen diese Angaben nicht nochmals als „Inklusive“. Gerichtname, Preis, Originalbeleg und echte zusätzliche Vorspeisen/Desserts bleiben erhalten.
+- Explizite einfache Wortformen wie „Pilze/Pilzen“, „warme/warmer Schnittlauchsauce“ und „Erdäpfel/Erdäpfeln“ werden ebenfalls erkannt. Keine Synonymvermutungen: „Salat“ wird nicht als „Blattsalat“ gleichgesetzt. Salat als Beilage und „Suppe oder Salat“ als zusätzliche Wahlvorspeise bleiben getrennte, zulässige Menübestandteile.
 - Harte Prüfungen erkennen gleiche Angebote am selben Tag und derselben Station/Portion, ungültige Preise, falsche Wochen sowie dieselbe Leistung als inklusive und zugleich aufpreispflichtig. Andere Tage, Stationen, Portionsgrößen und Menüvarianten bleiben unterscheidbar.
 - Ein zusätzlicher, separater Luna-Aufruf prüft die finalen Kandidaten auf interne Widersprüche und semantische Wiederholungen. Alle vorhandenen Quellen-, Wochen-, Preis- und Vollständigkeitsprüfungen bleiben notwendig; die Plausibilitätsprüfung ersetzt keinen Quellenbeleg.
 - Geprüfte Restaurantdaten werden mit Woche, vollständigem Inhalt, Belegen und Prüfer-Version gehasht. Änderungen erzwingen eine neue Prüfung; identische, bereits freigegebene Daten kosten keinen weiteren KI-Aufruf.

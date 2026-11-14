@@ -16,7 +16,7 @@ import unicodedata
 import requests
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = 'menu-sanity-v1'
+VERSION = 'menu-sanity-v2-word-forms-and-courses'
 MODEL = 'gpt-6-luna'
 REPORT = ROOT / 'data/menu-sanity-report.json'
 
@@ -26,8 +26,20 @@ def normalized(value):
 
 
 def contains(text, phrase):
-    phrase = normalized(phrase)
-    return bool(phrase) and (' ' + phrase + ' ') in (' ' + normalized(text) + ' ')
+    words = normalized(text).split()
+    terms = normalized(phrase).split()
+    if not terms:
+        return False
+    def same_word(word, term):
+        if word == term:
+            return True
+        # Conservative explicit German inflections only; no substring or synonym
+        # matching (Salat != Blattsalat; Erdäpfel != Erdäpfelpüree).
+        if len(term) >= 5 and term.endswith('e') and word in {term+'n', term+'r', term+'m', term+'s'}:
+            return True
+        return len(term) >= 5 and term.endswith('el') and word == term+'n'
+    return any(all(same_word(word, term) for word, term in zip(words[i:i+len(terms)], terms))
+               for i in range(len(words)-len(terms)+1))
 
 
 def clean_item(item):
@@ -155,6 +167,12 @@ def review_with_luna(restaurants, week, key):
        für exakt dasselbe Angebot; keine Preisvermutungen aus Allgemeinwissen.
     Verschiedene Stationen/Portionen, echte Einzel-/Menüvarianten, wiederkehrende
     Wochengerichte an anderen Tagen und Suppe als Vorspeise sind KEINE Duplikate.
+    WICHTIG: Salat als Beilage zur Hauptspeise und zusätzlich 'Suppe ODER Salat'
+    als Wahl-Vorspeise sind zulässige unterschiedliche Menübestandteile.
+    'Salat' und 'Blattsalat' allein sind KEIN Beleg einer Wiederholung. So eine
+    Wahl-Vorspeise darf nicht wegen Salat im Hauptgericht beanstandet werden.
+    Entsprechend ist Gemüse/Sauce als Zutat nicht mit einer zusätzlichen
+    Vorspeise gleichzusetzen. Nur eindeutig derselbe Menübestandteil zählt.
     Prüfe keine Vollständigkeit anhand von Allgemeinwissen. Keine historischen
     Restaurantregeln erfinden. Fehlende Preise dürfen null sein. Index ist nullbasiert.
     Prüfe ALLE übergebenen Restaurants und deren sämtliche Tage/Angebote.
