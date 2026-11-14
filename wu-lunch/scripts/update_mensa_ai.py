@@ -26,8 +26,8 @@ JS = ROOT / "data.js"
 STATUS = ROOT / "status.json"
 CANDIDATE = ROOT / "data" / "mensa-ai-candidate.json"
 TZ = ZoneInfo("Europe/Vienna")
-REVIEW_VERSION = "ai-pdf-6-explicit-notices"
-EXTRACTION_VERSION = "pdf-layout-v2-continuations"
+REVIEW_VERSION = "ai-pdf-7-merged-offer-panels"
+EXTRACTION_VERSION = "pdf-layout-v3-merged-groups"
 SOURCE_FILE = ROOT / "ai-pilot" / "ai_direct.py"
 
 spec = importlib.util.spec_from_file_location("mensa_ai_direct", SOURCE_FILE)
@@ -139,14 +139,31 @@ def pdf_layout(raw, monday):
                 bottom = headings[i+1][1] if i+1 < len(headings) else box.y1
                 middle = (top+bottom)/2
                 separated = [any(abs((r.x0+r.x1)/2-edge)<3 and r.y0 <= middle <= r.y1 for r in vertical) for edge in edges[1:-1]]
-                if any(separated) and not all(separated):
-                    raise ValueError("Mensa: teilweise zusammengeführte Tageszellen nicht unterstützt")
                 def region(left,right):
                     return "\n".join(v[2] for v in legacy.pdf_cell_word_lines(page,left,right,top,bottom))
-                shared = not any(separated)
-                result.append({"category":category,"scope":"whole_week" if shared else "weekday_cells",
+                # Bowls has three offer panels rather than five weekday cells:
+                # base offer, optional toppings, and Salad Deal. An off-grid
+                # divider plus all three explicit labels prove this layout;
+                # a partial weekday divider alone never makes a weekly offer.
+                row_text = normalize(region(edges[0],edges[-1]))
+                off_grid = any(edges[0]+3 < (r.x0+r.x1)/2 < edges[-1]-3
+                               and r.y0 <= middle <= r.y1
+                               and all(abs((r.x0+r.x1)/2-edge)>=3 for edge in edges)
+                               for r in vertical)
+                offer_panels = (category == 'Bowls & Co' and off_grid
+                                and all(term in row_text for term in ('create your own','topping','salad deal')))
+                shared = not any(separated) or offer_panels
+                cells = {}
+                for d in range(5):
+                    # A real merged weekday group applies only to its own days.
+                    first = max([0]+[j+1 for j in range(d) if separated[j]])
+                    last = min([5]+[j+1 for j in range(d,4) if separated[j]])
+                    cells[(monday+timedelta(days=d)).isoformat()] = region(
+                        edges[0] if shared else edges[first],edges[-1] if shared else edges[last])
+                result.append({"category":category,"scope":"whole_week" if shared else "weekday_cells" if all(separated) else "merged_weekday_cells",
+                    "scope_basis":"shared_offer_panels" if offer_panels else "measured_dividers",
                     "tariff_text":region(box.x0,edges[0]),
-                    "cells":{(monday+timedelta(days=d)).isoformat():region(edges[0] if shared else edges[d],edges[-1] if shared else edges[d+1]) for d in range(5)}})
+                    "cells":cells})
     if not result:
         raise ValueError("Mensa: kein verifizierbares Tabellenlayout")
     return result
@@ -390,6 +407,8 @@ def extract_for_week(monday, key, model, prepared=None):
               "XXX bedeutet kein Angebot, niemals als Gericht erfassen. "
               "Die zusätzliche Layout-Messung benennt echte zusammengeführte Wochenzeilen als whole_week. "
               "ALLE Angebote solcher Zeilen gelten an ALLEN fünf Tagen; horizontale Textpositionen sind dort KEINE Tageszuordnung. "
+              "Bei merged_weekday_cells gelten die gemessenen cells nur für die dort angegebenen Tage. "
+              "shared_offer_panels bezeichnet gemeinsam angebotene Grundgerichte, optionale Toppings und Salad Deal, keine wechselnden Tagesgerichte. "
               "Toppings nur als extra_costs zum Grundangebot, keine eigenen Hauptgerichte. "
               "Alle Saucenoptionen und Bolognese-Aufpreise aus Pasta & Co übernehmen. "
               "Smart Menü ist ein separates bedingtes Wochenangebot: 'Deal des Tages + Suppe + Beilagensalat', "
