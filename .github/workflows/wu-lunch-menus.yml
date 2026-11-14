@@ -203,6 +203,7 @@ jobs:
             git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
             if [[ -f wu-lunch/data/mensa-ai-candidate.json ]]; then git add wu-lunch/data/mensa-ai-candidate.json; fi
             if [[ -f wu-lunch/data/repair-report.json ]]; then git add wu-lunch/data/repair-report.json; fi
+            if [[ -f wu-lunch/data/publication-observations.json ]]; then git add wu-lunch/data/publication-observations.json; fi
             if git diff --cached --quiet; then
               echo "Keine Datenänderungen"
               exit 0
@@ -218,6 +219,7 @@ jobs:
             python wu-lunch/scripts/update_new_restaurants.py
             python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
             python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
+            python wu-lunch/scripts/observe_publication.py --import-scan
           done
           echo "::error::Menüimport konnte nach drei Konfliktversuchen nicht veröffentlicht werden."
           exit 1
