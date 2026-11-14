@@ -1133,5 +1133,6 @@
   },
   "origin_run_id": "43583673161",
   "extraction_version": "pdf-layout-v3-merged-groups",
-  "attempted_validator_version": "ai-pdf-7-merged-offer-panels"
+  "attempted_validator_version": "ai-pdf-8-absent-allergen-metadata",
+  "validated_by": "ai-pdf-8-absent-allergen-metadata"
 }

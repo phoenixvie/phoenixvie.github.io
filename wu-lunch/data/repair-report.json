@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-14T11:08:23+01:00",
+  "checked_at": "2026-11-14T11:15:24+01:00",
   "week_start": "2026-11-16",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,38 +10,37 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die Tagesgerichte außer dem ausdrücklich bepreisten Special ist kein Einzelpreis belegt.",
-        "Im Bereich „Extras“ stehen keine datierten Gerichte und keine Einzelpreise."
+        "Für „Lassi & Lunch“ ist im lesbaren HTML kein Preis angegeben.",
+        "Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai stehen im undatierten Extras-Bereich und wurden nicht als datierte Tagesgerichte erfasst.",
+        "Keine separat bestellbaren Tagessuppen, Salate oder Nachspeisen mit belegtem Einzelpreis ausgewiesen."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "2a6c7232f60f9db81cf97323cea6e2199cbf07c42301be09ed10cc200ddd0925"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "bbd9179ba46c36696c26302e716dced3bc4df64fc176475617f45e552e8f2b59"
       },
       "usage": {
-        "input_tokens": 2558,
+        "input_tokens": 2557,
         "input_tokens_details": {
-          "cache_write_tokens": 2555,
+          "cache_write_tokens": 2554,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2555
+            "ttl_30m_tokens": 2554
           },
           "cached_tokens": 0
         },
-        "output_tokens": 3987,
+        "output_tokens": 3563,
         "output_tokens_details": {
-          "reasoning_tokens": 1433
+          "reasoning_tokens": 1259
         },
-        "total_tokens": 6545
+        "total_tokens": 6120
       }
     },
     {
       "restaurant": "mensa",
-      "issues": [
-        "source_error"
-      ],
+      "issues": [],
       "action": "dedicated_pdf_ai",
       "repairs": []
     },
