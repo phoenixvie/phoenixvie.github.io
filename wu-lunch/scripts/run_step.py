@@ -15,6 +15,8 @@ def save(data):
 
 def start():
     previous=archive.read_json(PATH,{})
+    archive.STAGING.mkdir(parents=True,exist_ok=True)
+    (archive.STAGING/'requests.jsonl').write_text('',encoding='utf-8')
     save({'version':1,'previous_completed':previous.get('last_completed'),
           'menus_updated_at':previous.get('menus_updated_at'),
           'menu_sha256':previous.get('menu_sha256') or menu_digest(),
@@ -26,7 +28,7 @@ def run(name, command):
     if not record.get('run'):
         start();record=archive.read_json(PATH,{})
     began=archive.stamp()
-    env={**os.environ,'WU_SOURCE_STAGE':name}
+    env={**os.environ,'WU_SOURCE_STAGE':name,'WU_SOURCE_CAPTURE':'1'}
     try:
         result=subprocess.run(command,env=env,check=False).returncode
     except OSError:

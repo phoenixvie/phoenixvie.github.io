@@ -58,7 +58,9 @@ class SourceArchiveTests(unittest.TestCase):
             root=Path(folder);(root/'data').mkdir();(root/'data/menus.json').write_text(json.dumps(self.fixture()),encoding='utf-8')
             with patch.multiple(run_step,ROOT=root,PATH=root/'data/update-status.json'),patch.object(archive,'STAGING',root/'stage'),patch.object(run_step.subprocess,'run') as command:
                 command.return_value.returncode=2
-                run_step.start();self.assertEqual(run_step.run('parser',['fake']),2);run_step.finish()
+                (root/'stage').mkdir();(root/'stage/requests.jsonl').write_text('{"stale_test_record":true}\n',encoding='utf-8')
+                run_step.start();self.assertEqual(archive.requests(),[])
+                self.assertEqual(run_step.run('parser',['fake']),2);run_step.finish()
                 facts=json.loads((root/'data/update-status.json').read_text())
                 self.assertEqual(facts['run']['steps'][0]['exit_code'],2)
                 self.assertIsNone(facts['last_source_fetch'])
