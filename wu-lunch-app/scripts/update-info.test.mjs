@@ -8,6 +8,22 @@ test('original third-party pages remain downloadable from GitHub and are exclude
   const configuration=await readFile(new URL('../../_config.yml',import.meta.url),'utf8');
   assert.ok(JSON.parse(configuration.match(/^exclude:\s*(\[.*\])/m)[1]).includes('wu-lunch/source-archive'));
 });
+test('every displayed minute/window has an actual workflow cron slot in winter and summer',()=>{
+  const matches=(expression,value)=>expression==='*'||expression.split(',').some(part=>{const [a,b]=part.split('-').map(Number);return b===undefined?value===a:value>=a&&value<=b;});
+  for(const [id,rule]of Object.entries(policy.tasks)){
+    if(rule.parent){const parent=policy.tasks[rule.parent];assert.equal(rule.minute,parent.minute);for(const [day,hours]of Object.entries(rule.hours))for(const hour of hours)assert.ok(parent.hours[day]?.includes(hour),id+' parent slot');continue;}
+    for(const cron of rule.cron)assert.equal(cron.split(' ')[0],String(rule.minute),id+' minute');
+    for(const start of ['2026-11-15T00:00:00Z','2027-07-04T00:00:00Z']){
+      if(rule.ends_before&&start.slice(0,10)>=rule.ends_before)continue;
+      const covered=new Set(),at=new Date(start),formatter=new Intl.DateTimeFormat('en-CA',{timeZone:policy.timezone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'});
+      at.setUTCMinutes(rule.minute);
+      for(let h=0;h<8*24;h++,at.setUTCHours(at.getUTCHours()+1))if(rule.cron.some(cron=>{const f=cron.split(' ');return matches(f[1],at.getUTCHours())&&matches(f[4],at.getUTCDay());})){
+        const p=Object.fromEntries(formatter.formatToParts(at).filter(p=>p.type!=='literal').map(p=>[p.type,Number(p.value)]));covered.add(new Date(Date.UTC(p.year,p.month-1,p.day)).getUTCDay()+'-'+p.hour);
+      }
+      if(!rule.utc_hours)for(const [day,hours]of Object.entries(rule.hours))for(const hour of hours)assert.ok(covered.has(day+'-'+hour),id+' missing cron slot '+start+' '+day+' '+hour);
+    }
+  }
+});
 test('next displayed checks follow Vienna windows in winter, summer and after a Saturday final slot',()=>{
   const next=(at,task='menus')=>context.WULunchUpdateInfo.nextRun(policy,task,new Date(at))?.toISOString();
   assert.equal(next('2026-11-14T17:16:00Z'),'2026-11-16T05:15:00.000Z');
