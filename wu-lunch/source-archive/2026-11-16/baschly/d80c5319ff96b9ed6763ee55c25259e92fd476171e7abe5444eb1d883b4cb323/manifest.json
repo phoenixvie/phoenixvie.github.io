@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "restaurant_id": "baschly",
+  "week_start": "2026-11-16",
+  "menu_sha256": "d80c5319ff96b9ed6763ee55c25259e92fd476171e7abe5444eb1d883b4cb323",
+  "captured_at": "2026-11-14T11:08:16+00:00",
+  "run_id": "43588380624",
+  "code_commit": "f98b04a717c9a11bc7514e8f002e91d3e7f368aa",
+  "menu_status": "undated",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "cached",
+    "last_success": "2026-11-14T10:55:35+01:00",
+    "consecutive_failures": 0,
+    "parser_version": null,
+    "content_sha256": "fdbec78a31c1358c9d7042b3ef7b6b74edbdefd8690d93d90edd9f190ca51e44"
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-14T10:56:07+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-16",
+    "source_fingerprint": "fdbec78a31c1358c9d7042b3ef7b6b74edbdefd8690d93d90edd9f190ca51e44",
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "baschly",
+      "url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie",
+      "at": "2026-11-14T11:06:21+00:00",
+      "sha256": "e9f2d0fb06283f3af53bc264ff60f4fe55ae4cc15372d059a390404ee4b3373f",
+      "bytes": 241505,
+      "format": "html",
+      "blob": "e9f2d0fb06283f3af53bc264ff60f4fe55ae4cc15372d059a390404ee4b3373f.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "baschly",
+      "url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch",
+      "at": "2026-11-14T11:06:21+00:00",
+      "sha256": "271ab72d4d66fd947139edf3013598b58a19cec940ff692b1271cc8b72567e31",
+      "bytes": 242427,
+      "format": "html",
+      "blob": "271ab72d4d66fd947139edf3013598b58a19cec940ff692b1271cc8b72567e31.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "baschly",
+      "url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie",
+      "at": "2026-11-14T11:07:31+00:00",
+      "sha256": "e9539c489b65dfe4d5806c3beb505e5be9e2c4317258a9965b62ea11c9608796",
+      "bytes": 241505,
+      "format": "html",
+      "blob": "e9539c489b65dfe4d5806c3beb505e5be9e2c4317258a9965b62ea11c9608796.html",
+      "stage": "parser_retry",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "baschly",
+      "url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch",
+      "at": "2026-11-14T11:07:31+00:00",
+      "sha256": "90eca5b9efc305c1d7e7d1f0fb1ea9a70c040900a725b9f497427b857b08138a",
+      "bytes": 242427,
+      "format": "html",
+      "blob": "90eca5b9efc305c1d7e7d1f0fb1ea9a70c040900a725b9f497427b857b08138a.html",
+      "stage": "parser_retry",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [
+        {
+          "name": "Knackiger Gemüse-Wok mit Jasminreis, Frühlingsrolle und Sweet-Chili-Sauce, laktosefrei",
+          "price": 9.5,
+          "category": "Veggie",
+          "diet": "veggie",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        },
+        {
+          "name": "Butter-Chicken-Masala-Curry mit Basmatireis Allergene: Glutenfrei, laktosefrei",
+          "price": 9.5,
+          "category": "Fleisch",
+          "diet": "meat",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        }
+      ],
+      "2026-11-17": [
+        {
+          "name": "Thai-Kokos Gemüsecurry mit Basmatireis",
+          "price": 9.5,
+          "category": "Veggie",
+          "diet": "veggie",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        },
+        {
+          "name": "Hühnerschnitzel mit Erdäpfelsalat",
+          "price": 9.5,
+          "category": "Fleisch",
+          "diet": "meat",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        }
+      ],
+      "2026-11-18": [
+        {
+          "name": "Linsen-Spinat-Gemüse-Curry mit Basmatireis",
+          "price": 9.5,
+          "category": "Veggie",
+          "diet": "veggie",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        },
+        {
+          "name": "Teriyaki-Crispy-Chicken im Burgerbun mit Pommes",
+          "price": 9.5,
+          "category": "Fleisch",
+          "diet": "meat",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        }
+      ],
+      "2026-11-19": [
+        {
+          "name": "Kürbisrisotee: A, G",
+          "price": 9.5,
+          "category": "Veggie",
+          "diet": "veggie",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        },
+        {
+          "name": "Faschierte Laibchen (Rind) mit Kartoffel-Püree",
+          "price": 9.5,
+          "category": "Fleisch",
+          "diet": "meat",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        }
+      ],
+      "2026-11-20": [
+        {
+          "name": "Falafel-Bowl mit Reis, Hummus, frischem Salat & Gemüse",
+          "price": 9.5,
+          "category": "Veggie",
+          "diet": "veggie",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        },
+        {
+          "name": "Thai-Redkokos-Chicken-Curry mit Basmatireis",
+          "price": 9.5,
+          "category": "Fleisch",
+          "diet": "meat",
+          "description": "Mit Tagessuppe oder kleinem Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Tagessuppe",
+            "kleiner Salat"
+          ]
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": null,
+    "validUntil": null
+  }
+}

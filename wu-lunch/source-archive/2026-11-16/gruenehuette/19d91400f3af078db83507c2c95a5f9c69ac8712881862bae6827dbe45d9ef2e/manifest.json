@@ -1,0 +1,236 @@
+{
+  "version": 1,
+  "restaurant_id": "gruenehuette",
+  "week_start": "2026-11-16",
+  "menu_sha256": "19d91400f3af078db83507c2c95a5f9c69ac8712881862bae6827dbe45d9ef2e",
+  "captured_at": "2026-11-14T11:08:16+00:00",
+  "run_id": "43588380624",
+  "code_commit": "f98b04a717c9a11bc7514e8f002e91d3e7f368aa",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "ok",
+    "last_success": "2026-11-14T12:07:28+01:00",
+    "consecutive_failures": 0,
+    "parser_version": null,
+    "content_sha256": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53"
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-14T10:56:07+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-16",
+    "source_fingerprint": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53",
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "gruenehuette",
+      "url": "https://www.zurgruenenhuette.com/mittags-menu",
+      "at": "2026-11-14T11:06:21+00:00",
+      "sha256": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111",
+      "bytes": 97440,
+      "format": "html",
+      "blob": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "gruenehuette",
+      "url": "https://www.zurgruenenhuette.com/mittags-menu",
+      "at": "2026-11-14T11:06:22+00:00",
+      "sha256": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111",
+      "bytes": 97440,
+      "format": "html",
+      "blob": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "gruenehuette",
+      "url": "https://www.zurgruenenhuette.com/mittags-menu",
+      "at": "2026-11-14T11:07:31+00:00",
+      "sha256": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111",
+      "bytes": 97440,
+      "format": "html",
+      "blob": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111.html",
+      "stage": "parser_retry",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "gruenehuette",
+      "url": "https://www.zurgruenenhuette.com/mittags-menu",
+      "at": "2026-11-14T11:07:31+00:00",
+      "sha256": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111",
+      "bytes": 97440,
+      "format": "html",
+      "blob": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111.html",
+      "stage": "parser_retry",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [
+        {
+          "name": "Schweinsbraten mit Gabelkraut und gebratenen Serviettenknödel",
+          "price": 13.5,
+          "category": "Tagesteller",
+          "diet": "unknown",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Käsespätzle mit Bergkäse und Röstzwiebel dazu Blattsalat",
+          "price": 13.5,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
+          "price": 2.0,
+          "category": "Suppe (Aufpreis)",
+          "diet": "unknown",
+          "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-17": [
+        {
+          "name": "Hühnerfrikassee mit Champignons, Wurzelgemüse, Erbsen und Reis",
+          "price": 13.5,
+          "category": "Tagesteller",
+          "diet": "unknown",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Erdäpfelpuffer mit Bio-Spiegelei, Chiliöl, Kresse und Rote Rübensalat",
+          "price": 13.5,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
+          "price": 2.0,
+          "category": "Suppe (Aufpreis)",
+          "diet": "unknown",
+          "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-18": [
+        {
+          "name": "Gekochtes Rindsschulterscherzel mit Kohlrabigemüse und Erdäpfelschmarrn",
+          "price": 13.5,
+          "category": "Tagesteller",
+          "diet": "unknown",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Gebackene Champignons mit Sc.Tartare und Petersilerdäpfel",
+          "price": 13.5,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
+          "price": 2.0,
+          "category": "Suppe (Aufpreis)",
+          "diet": "unknown",
+          "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-19": [
+        {
+          "name": "Surschnitzel vom Schwein mit ERdäpfel-Gurkensalat",
+          "price": 13.5,
+          "category": "Tagesteller",
+          "diet": "unknown",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "“Wiener Krautfleckerl mit buntem Blattsalat",
+          "price": 13.5,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
+          "price": 2.0,
+          "category": "Suppe (Aufpreis)",
+          "diet": "unknown",
+          "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-20": [
+        {
+          "name": "Frischer Kabeljau gebacken mit Mayonnaisesalat",
+          "price": 14.5,
+          "category": "Tagesteller",
+          "diet": "unknown",
+          "description": "Suppe optional +2,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Süsserdäpfelsuppe mit Sauerrahm",
+          "price": 2.0,
+          "category": "Suppe (Aufpreis)",
+          "diet": "unknown",
+          "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-16",
+    "validUntil": "2026-11-20"
+  }
+}

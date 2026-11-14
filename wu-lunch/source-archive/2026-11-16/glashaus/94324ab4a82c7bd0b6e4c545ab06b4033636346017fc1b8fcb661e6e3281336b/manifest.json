@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "restaurant_id": "glashaus",
+  "week_start": "2026-11-16",
+  "menu_sha256": "94324ab4a82c7bd0b6e4c545ab06b4033636346017fc1b8fcb661e6e3281336b",
+  "captured_at": "2026-11-14T11:08:16+00:00",
+  "run_id": "43588380624",
+  "code_commit": "f98b04a717c9a11bc7514e8f002e91d3e7f368aa",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "ok",
+    "last_success": "2026-11-14T12:07:28+01:00",
+    "consecutive_failures": 0,
+    "parser_version": null,
+    "content_sha256": "c16a52f6d5cacbf878e1a261305dd486ea809576e04285964aa48be07ced791d"
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-14T10:56:07+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-16",
+    "source_fingerprint": "c16a52f6d5cacbf878e1a261305dd486ea809576e04285964aa48be07ced791d",
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "glashaus",
+      "url": "https://www.dasglashaus.at/menues",
+      "at": "2026-11-14T11:06:20+00:00",
+      "sha256": "4ab3f201df16cb0568a3faf23173e0de95a43382acaad8821800bac41df97671",
+      "bytes": 785228,
+      "format": "html",
+      "blob": "4ab3f201df16cb0568a3faf23173e0de95a43382acaad8821800bac41df97671.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "glashaus",
+      "url": "https://www.dasglashaus.at/menues",
+      "at": "2026-11-14T11:07:30+00:00",
+      "sha256": "4ab3f201df16cb0568a3faf23173e0de95a43382acaad8821800bac41df97671",
+      "bytes": 785228,
+      "format": "html",
+      "blob": "4ab3f201df16cb0568a3faf23173e0de95a43382acaad8821800bac41df97671.html",
+      "stage": "parser_retry",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [
+        {
+          "name": "Geröstete Knödel mit Ei",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Grillhendlkeule mit Erdäpfel-Gemüse Gröstl und Thymian Jus",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ],
+      "2026-11-17": [
+        {
+          "name": "Gnocchi in Gorgonzola-Basilikum-Sauce",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Fiakergulasch mit Nockerln",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ],
+      "2026-11-18": [
+        {
+          "name": "Hokkaido-Quiche mit Bergkäse",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Hühnerschnitzel in Kürbispanade",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ],
+      "2026-11-19": [
+        {
+          "name": "Griechischer Spinatstrudel mit Blattsalat und Kräuterrahm",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Tagliatelle Carbonara",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ],
+      "2026-11-20": [
+        {
+          "name": "Shakshuka mit pochiertem Ei",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Spinat-Lachs-Lasagne",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-16",
+    "validUntil": "2026-11-20"
+  }
+}

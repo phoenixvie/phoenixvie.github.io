@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "restaurant_id": "mensa",
+      "week_start": "2026-11-16",
+      "menu_sha256": "2fe341ba4dc0f1667c8452abb5f41746104547a5f5b46a51e3ad5a27c40cf1e6",
+      "captured_at": "2026-11-14T11:08:15+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/mensa/2fe341ba4dc0f1667c8452abb5f41746104547a5f5b46a51e3ad5a27c40cf1e6/manifest.json",
+      "source_count": 8
+    },
+    {
+      "restaurant_id": "baschly",
+      "week_start": "2026-11-16",
+      "menu_sha256": "d80c5319ff96b9ed6763ee55c25259e92fd476171e7abe5444eb1d883b4cb323",
+      "captured_at": "2026-11-14T11:08:16+00:00",
+      "menu_status": "undated",
+      "manifest": "2026-11-16/baschly/d80c5319ff96b9ed6763ee55c25259e92fd476171e7abe5444eb1d883b4cb323/manifest.json",
+      "source_count": 4
+    },
+    {
+      "restaurant_id": "campus",
+      "week_start": "2026-11-16",
+      "menu_sha256": "0228a9bdc0346f82d45f6d57683a84594137e9744f85e79877f7529095f721e6",
+      "captured_at": "2026-11-14T11:08:16+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/campus/0228a9bdc0346f82d45f6d57683a84594137e9744f85e79877f7529095f721e6/manifest.json",
+      "source_count": 2
+    },
+    {
+      "restaurant_id": "karmafood",
+      "week_start": "2026-11-16",
+      "menu_sha256": "114d10d0138bff26c306e20990ecae69520d1dcc41036bf7c9d14c7f67c7c715",
+      "captured_at": "2026-11-14T11:08:16+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/karmafood/114d10d0138bff26c306e20990ecae69520d1dcc41036bf7c9d14c7f67c7c715/manifest.json",
+      "source_count": 6
+    },
+    {
+      "restaurant_id": "omakueche",
+      "week_start": "2026-11-16",
+      "menu_sha256": "cdf81ffe266370bb30d8fcd518399e3df6f6e4653dbb2d2c1ed2e5e24d28abc0",
+      "captured_at": "2026-11-14T11:08:16+00:00",
+      "menu_status": "recurring",
+      "manifest": "2026-11-16/omakueche/cdf81ffe266370bb30d8fcd518399e3df6f6e4653dbb2d2c1ed2e5e24d28abc0/manifest.json",
+      "source_count": 2
+    },
+    {
+      "restaurant_id": "gruenehuette",
+      "week_start": "2026-11-16",
+      "menu_sha256": "19d91400f3af078db83507c2c95a5f9c69ac8712881862bae6827dbe45d9ef2e",
+      "captured_at": "2026-11-14T11:08:16+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/gruenehuette/19d91400f3af078db83507c2c95a5f9c69ac8712881862bae6827dbe45d9ef2e/manifest.json",
+      "source_count": 4
+    },
+    {
+      "restaurant_id": "glashaus",
+      "week_start": "2026-11-16",
+      "menu_sha256": "94324ab4a82c7bd0b6e4c545ab06b4033636346017fc1b8fcb661e6e3281336b",
+      "captured_at": "2026-11-14T11:08:16+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/glashaus/94324ab4a82c7bd0b6e4c545ab06b4033636346017fc1b8fcb661e6e3281336b/manifest.json",
+      "source_count": 2
+    }
+  ]
+}

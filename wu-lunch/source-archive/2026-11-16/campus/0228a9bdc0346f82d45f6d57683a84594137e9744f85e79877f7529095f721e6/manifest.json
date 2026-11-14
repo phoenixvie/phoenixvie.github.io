@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "restaurant_id": "campus",
+  "week_start": "2026-11-16",
+  "menu_sha256": "0228a9bdc0346f82d45f6d57683a84594137e9744f85e79877f7529095f721e6",
+  "captured_at": "2026-11-14T11:08:16+00:00",
+  "run_id": "43588380624",
+  "code_commit": "f98b04a717c9a11bc7514e8f002e91d3e7f368aa",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "cached",
+    "last_success": "2026-11-14T10:55:35+01:00",
+    "consecutive_failures": 0,
+    "parser_version": null,
+    "content_sha256": "24b15c299c556796e0019c5427774d6fcc26f291291e6d79c3e30e668a28e7ec"
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-14T10:56:07+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-16",
+    "source_fingerprint": "24b15c299c556796e0019c5427774d6fcc26f291291e6d79c3e30e668a28e7ec",
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "campus",
+      "url": "https://www.dascampus.at/dc-mittagsmenues",
+      "at": "2026-11-14T11:06:20+00:00",
+      "sha256": "2eea8d29a56df6684c9a6e9bca70e59ff1646289312923cea1ce8fe9691af9d6",
+      "bytes": 655781,
+      "format": "html",
+      "blob": "2eea8d29a56df6684c9a6e9bca70e59ff1646289312923cea1ce8fe9691af9d6.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "campus",
+      "url": "https://www.dascampus.at/dc-mittagsmenues",
+      "at": "2026-11-14T11:07:30+00:00",
+      "sha256": "2eea8d29a56df6684c9a6e9bca70e59ff1646289312923cea1ce8fe9691af9d6",
+      "bytes": 655781,
+      "format": "html",
+      "blob": "2eea8d29a56df6684c9a6e9bca70e59ff1646289312923cea1ce8fe9691af9d6.html",
+      "stage": "parser_retry",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [
+        {
+          "name": "Überbackene Schinkenfleckerl mit Sauerrahm",
+          "price": 13.9,
+          "category": "Menü mit Fleisch",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Steinpilz-Ravioli mit Butteroberssauce und Rucola",
+          "price": 12.9,
+          "category": "Vegetarisches Menü",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-17": [
+        {
+          "name": "Wildragout mit Preiselbeeren und Kartoffelknödeln",
+          "price": 13.9,
+          "category": "Menü mit Fleisch",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Kürbis-Kartoffel Gulasch mit Öfferl Brot",
+          "price": 12.9,
+          "category": "Vegetarisches Menü",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-18": [
+        {
+          "name": "Berner Würstel mit Zwiebelsenf und Bratkartoffeln",
+          "price": 13.9,
+          "category": "Menü mit Fleisch",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Gemüsestrudel mit Kräutersauce und Ofentomaten",
+          "price": 12.9,
+          "category": "Vegetarisches Menü",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-19": [
+        {
+          "name": "Putenragout mit Gemüse und Pilavreis",
+          "price": 13.9,
+          "category": "Menü mit Fleisch",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Hausgemachte Gnocchi mit Käseoberssauce und Spinat",
+          "price": 12.9,
+          "category": "Vegetarisches Menü",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-20": []
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-16",
+    "validUntil": "2026-11-19"
+  }
+}
