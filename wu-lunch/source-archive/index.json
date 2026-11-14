@@ -63,6 +63,15 @@
       "menu_status": "verified",
       "manifest": "2026-11-16/glashaus/94324ab4a82c7bd0b6e4c545ab06b4033636346017fc1b8fcb661e6e3281336b/manifest.json",
       "source_count": 2
+    },
+    {
+      "restaurant_id": "mensa",
+      "week_start": "2026-11-16",
+      "menu_sha256": "87cf67d2f83cbe7022b0847cdb40ed4a581ff47b3280e20ed876b4b221b269d7",
+      "captured_at": "2026-11-14T17:25:25+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/mensa/87cf67d2f83cbe7022b0847cdb40ed4a581ff47b3280e20ed876b4b221b269d7/manifest.json",
+      "source_count": 8
     }
   ]
 }

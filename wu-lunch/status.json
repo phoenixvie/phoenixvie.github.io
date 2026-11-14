@@ -1,15 +1,15 @@
 {
-  "checked_at": "2026-11-14T14:29:39+01:00",
+  "checked_at": "2026-11-14T18:24:39+01:00",
   "week_start": "2026-11-16",
   "week_end": "2026-11-20",
   "health": "healthy",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-14T14:29:47+01:00",
-      "checked_at": "2026-11-14T14:29:47+01:00",
+      "last_success": "2026-11-14T18:24:44+01:00",
+      "checked_at": "2026-11-14T18:24:44+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3",
+      "content_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7",
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-16",
@@ -18,7 +18,7 @@
     "finn": {
       "state": "not_published",
       "last_success": "2026-11-09T20:02:48+01:00",
-      "checked_at": "2026-11-14T14:29:47+01:00",
+      "checked_at": "2026-11-14T18:24:44+01:00",
       "consecutive_failures": 0,
       "content_sha256": "bd30bff3a4d5807cb0a5c7a37a8a97cc76d07194a5e40f9ae773e959e2f9d0ae",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
@@ -29,20 +29,20 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-14T14:29:39+01:00",
+      "last_success": "2026-11-14T18:24:39+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
     "mensa": {
       "state": "cached",
-      "last_success": "2026-11-14T14:29:39+01:00",
+      "last_success": "2026-11-14T18:24:39+01:00",
       "consecutive_failures": 0,
       "parser_version": "ai-pdf-8-absent-allergen-metadata",
       "content_sha256": "1f8db507732cd8b3c15b4ff50234e7dc79181b107e7bda24b893bd4be3f7c061"
     },
     "glashaus": {
       "state": "ok",
-      "last_success": "2026-11-14T14:29:39+01:00",
+      "last_success": "2026-11-14T18:24:39+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "c16a52f6d5cacbf878e1a261305dd486ea809576e04285964aa48be07ced791d"
@@ -77,7 +77,7 @@
     },
     "gruenehuette": {
       "state": "ok",
-      "last_success": "2026-11-14T14:29:39+01:00",
+      "last_success": "2026-11-14T18:24:39+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53"
@@ -154,10 +154,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-14T14:29:48+01:00",
+      "last_checked": "2026-11-14T18:24:46+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-16",
-      "source_fingerprint": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3",
+      "source_fingerprint": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -195,7 +195,7 @@
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-14T14:29:45+01:00",
+    "checked_at": "2026-11-14T18:24:45+01:00",
     "source_sha256": "1f8db507732cd8b3c15b4ff50234e7dc79181b107e7bda24b893bd4be3f7c061",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
     "week_start": "2026-11-16",

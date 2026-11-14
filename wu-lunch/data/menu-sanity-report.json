@@ -1,0 +1,163 @@
+{
+  "version": "menu-sanity-v2-word-forms-and-courses",
+  "model": "gpt-6-luna",
+  "week_start": "2026-11-16",
+  "checked_at": "2026-11-14T17:25:18.345353+00:00",
+  "cleanup": [
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-16",
+      "index": 2,
+      "name": "„Plant“bullar – schwedische vegane Fleischbällchen, Erdäpfelpüree, Röstzwiebel",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-16",
+      "index": 3,
+      "name": "Köttbullar – schwedische Fleischbällchen in Rahmsauce, Erdäpfelpüree, Röstzwiebel",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-16",
+      "index": 4,
+      "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-16",
+      "index": 7,
+      "name": "Tex Mex Pizza mit Rinderfaschiertem, Bohnen, Mais und Chili",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-16",
+      "index": 14,
+      "name": "Kung Pao Chicken mit Jasminreis",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-17",
+      "index": 3,
+      "name": "Hühnerstreifen in Honig-Senfsauce, Karotten, Spiralen",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-17",
+      "index": 4,
+      "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-17",
+      "index": 7,
+      "name": "Tex Mex Pizza mit Rinderfaschiertem, Bohnen, Mais und Chili",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-17",
+      "index": 14,
+      "name": "Lachs-Teriyaki mit Broccoli und Jasminreis",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-18",
+      "index": 3,
+      "name": "Gebackenes Hühnerschnitzel mit Petersilkartoffel",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-18",
+      "index": 4,
+      "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-19",
+      "index": 2,
+      "name": "Eiernudeln mit Pilzen und Gemüse, dazu Koriander",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-19",
+      "index": 3,
+      "name": "„Pastitsio“ – griechischer Nudelauflauf mit Faschiertem (Schwein & Rind), Tomatensauce",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-19",
+      "index": 4,
+      "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-19",
+      "index": 7,
+      "name": "Tex Mex Pizza mit Rinderfaschiertem, Bohnen, Mais und Chili",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-19",
+      "index": 14,
+      "name": "Mensa Burger mit Pommes – Beef oder Planted 'Crispy Chicken style'",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-20",
+      "index": 2,
+      "name": "Zucchini-Cottage Cheese-Pie mit warmer Schnittlauchsauce",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-20",
+      "index": 3,
+      "name": "Gebackener Seelachs mit Petersil-Erdäpfeln und Sauce Tartare",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-20",
+      "index": 4,
+      "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+      "rule": "redundant_inclusions"
+    },
+    {
+      "restaurant": "mensa",
+      "day": "2026-11-20",
+      "index": 7,
+      "name": "Tex Mex Pizza mit Rinderfaschiertem, Bohnen, Mais und Chili",
+      "rule": "redundant_inclusions"
+    }
+  ],
+  "issues": [],
+  "state": "passed",
+  "reviewed": {
+    "mensa": "914104407b0a94e1fe63d8f95e63ab17bdacebe11c161617e316db0bda0b1c4b",
+    "baschly": "ea7c96a4ab4f6315479ee07f8d4b4dd4f250da37d0c5ae72323ac3cf8b8a2b02",
+    "finn": "79b5e097c780bee354f055253a39f0a66fce60a6515cf7507356514a19f27971",
+    "lia": "941212b363c76833770c877f1cb2eb180ea6d87f540adaf612d77fb95fe81489",
+    "campus": "155790f95d26731a4ed4463ed38ea1e339683e392e5134480c4d0525ed7eaa38",
+    "karmafood": "2b39e4f38c448020cf05fb4518ad38426c9258b2e1a9fc9ddd9618c41bc15a27",
+    "topfdeckel": "b68d27a04faba546d41fe5f1190a645db52b2582da12cda61995de8404d4b0ca",
+    "omakueche": "dea7d33b1ef3d776acbabb1627c2a23f7efcf96f8e2f1ca6333a61ada014e870",
+    "gruenehuette": "da40245d6f14d040836db6870615257cea8c2087d6d864b003d670e2781995e8",
+    "glashaus": "02b40feeafd1bb0f2401f1db0f8f6ee24506270d8b4c0fa123e225e3863d6c69",
+    "losteria": "dd78575117f13f5679257e2b68aba83fd402cf045b05ba1d738a24f9f71c4aa8"
+  }
+}

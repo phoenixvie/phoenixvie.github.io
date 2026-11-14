@@ -2,7 +2,7 @@
   "weekStart": "2026-11-16",
   "weekEnd": "2026-11-20",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-14T14:29:39+01:00",
+  "checkedAt": "2026-11-14T18:24:39+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -152,14 +152,11 @@
             "price": 5.8,
             "category": "Powered by plants / Veggie",
             "diet": "veggie",
-            "description": "Inklusive: Erdäpfelpüree, Röstzwiebel",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Erdäpfelpüree",
-              "Röstzwiebel"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Montag, Powered by plants / Veggie: „Plant“bullar … € 5,80",
             "ai_confidence": "high",
@@ -170,14 +167,11 @@
             "price": 6.4,
             "category": "Meaty",
             "diet": "meat",
-            "description": "Inklusive: Erdäpfelpüree, Röstzwiebel",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Erdäpfelpüree",
-              "Röstzwiebel"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Montag, Meaty: „Köttbullar … Rahmsauce | Erdäpfelpüree | Röstzwiebel“ € 6,40",
             "ai_confidence": "high",
@@ -188,15 +182,11 @@
             "price": 7.6,
             "category": "Menüoption",
             "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,60“",
             "ai_confidence": "high",
@@ -237,15 +227,11 @@
             "price": 8.2,
             "category": "Weekly Special",
             "diet": "unknown",
-            "description": "Inklusive: Bohnen, Mais, Chili",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Bohnen",
-              "Mais",
-              "Chili"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Montag, Weekly Special: „Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“ € 8,20",
             "ai_confidence": "high",
@@ -346,13 +332,11 @@
             "price": 9.8,
             "category": "Global & Grill",
             "diet": "unknown",
-            "description": "Inklusive: Jasminreis",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Jasminreis"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Montag, Global & Grill: „Kung Pao Chicken mit Jasminreis“ € 9,80",
             "ai_confidence": "high",
@@ -410,14 +394,11 @@
             "price": 5.8,
             "category": "Meaty",
             "diet": "meat",
-            "description": "Inklusive: Karotten, Spiralen",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Karotten",
-              "Spiralen"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Dienstag, Meaty: „Hühnerstreifen in Honig-Senfsauce | Karotten | Spiralen“ € 5,80",
             "ai_confidence": "high",
@@ -428,15 +409,11 @@
             "price": 7.6,
             "category": "Menüoption",
             "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,60“",
             "ai_confidence": "high",
@@ -477,15 +454,11 @@
             "price": 8.2,
             "category": "Weekly Special",
             "diet": "unknown",
-            "description": "Inklusive: Bohnen, Mais, Chili",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Bohnen",
-              "Mais",
-              "Chili"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Dienstag, Weekly Special: „Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“ € 8,20",
             "ai_confidence": "high",
@@ -586,14 +559,11 @@
             "price": 9.8,
             "category": "Global & Grill",
             "diet": "unknown",
-            "description": "Inklusive: Broccoli, Jasminreis",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Broccoli",
-              "Jasminreis"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Dienstag, Global & Grill: „Lachs-Teriyaki | Broccoli | Jasminreis“ € 9,80",
             "ai_confidence": "high",
@@ -651,13 +621,11 @@
             "price": 5.8,
             "category": "Meaty",
             "diet": "meat",
-            "description": "Inklusive: Petersilkartoffel",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Petersilkartoffel"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Mittwoch, Meaty: „Gebackenes Hühnerschnitzel | Petersilkartoffel“ € 5,80",
             "ai_confidence": "high",
@@ -668,15 +636,11 @@
             "price": 7.6,
             "category": "Menüoption",
             "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,60“",
             "ai_confidence": "high",
@@ -809,15 +773,11 @@
             "price": 5.8,
             "category": "Powered by plants / Veggie",
             "diet": "veggie",
-            "description": "Inklusive: Pilze, Gemüse, Koriander",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Pilze",
-              "Gemüse",
-              "Koriander"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Donnerstag, Powered by plants / Veggie: „Eiernudeln mit Pilzen und Gemüse, dazu Koriander“ € 5,80",
             "ai_confidence": "high",
@@ -828,13 +788,11 @@
             "price": 6.4,
             "category": "Meaty",
             "diet": "meat",
-            "description": "Inklusive: Tomatensauce",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Tomatensauce"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Donnerstag, Meaty: „Pastitsio“ – Griechischer Nudelauflauf mit Faschiertem (Schwein & Rind) | Tomatensauce € 6,40",
             "ai_confidence": "high",
@@ -845,15 +803,11 @@
             "price": 7.6,
             "category": "Menüoption",
             "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,60“",
             "ai_confidence": "high",
@@ -894,15 +848,11 @@
             "price": 8.2,
             "category": "Weekly Special",
             "diet": "unknown",
-            "description": "Inklusive: Bohnen, Mais, Chili",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Bohnen",
-              "Mais",
-              "Chili"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Donnerstag, Weekly Special: „Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“ € 8,20",
             "ai_confidence": "high",
@@ -1003,13 +953,11 @@
             "price": 9.8,
             "category": "Global & Grill",
             "diet": "unknown",
-            "description": "Inklusive: Pommes",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Pommes"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Donnerstag, Global & Grill: „Mensa Burger | Pommes Beef oder Planted 'Crispy Chicken style'“ € 9,80",
             "ai_confidence": "high",
@@ -1052,13 +1000,11 @@
             "price": 5.8,
             "category": "Powered by plants / Veggie",
             "diet": "veggie",
-            "description": "Inklusive: warme Schnittlauchsauce",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "warme Schnittlauchsauce"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Freitag, Powered by plants / Veggie: „Zucchini-Cottage Cheese-Pie | warme Schnittlauchsauce“ € 5,80",
             "ai_confidence": "high",
@@ -1069,14 +1015,11 @@
             "price": 6.4,
             "category": "Meaty",
             "diet": "meat",
-            "description": "Inklusive: Petersil-Erdäpfel, Sauce Tartare",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Petersil-Erdäpfel",
-              "Sauce Tartare"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Freitag, Meaty: „Gebackener Seelachs | Petersil-Erdäpfel | Sc. Tartare“ € 6,40",
             "ai_confidence": "high",
@@ -1087,15 +1030,11 @@
             "price": 7.6,
             "category": "Menüoption",
             "diet": "unknown",
-            "description": "Inklusive: Deal des Tages, Suppe, Beilagensalat",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Deal des Tages",
-              "Suppe",
-              "Beilagensalat"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,60“",
             "ai_confidence": "high",
@@ -1136,15 +1075,11 @@
             "price": 8.2,
             "category": "Weekly Special",
             "diet": "unknown",
-            "description": "Inklusive: Bohnen, Mais, Chili",
+            "description": "",
             "allergens": [],
             "energy_kcal": null,
             "included_soup": null,
-            "included_choices": [
-              "Bohnen",
-              "Mais",
-              "Chili"
-            ],
+            "included_choices": [],
             "source_url": "https://www.wumensa.at/menuplan-deutsch/",
             "evidence_excerpt": "Freitag, Weekly Special: „Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“ € 8,20",
             "ai_confidence": "high",
@@ -1574,7 +1509,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Coconut Mango Veggie Curry",
@@ -1587,7 +1522,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Dal Makhni mit veganer Butter",
@@ -1600,7 +1535,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           }
         ],
         "2026-11-17": [
@@ -1615,7 +1550,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Vegan Butter Veggie Curry",
@@ -1628,7 +1563,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Dal mit Punjabi Gewürz Tadka",
@@ -1641,7 +1576,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           }
         ],
         "2026-11-18": [
@@ -1656,7 +1591,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Vindaloo Veggie Curry",
@@ -1669,7 +1604,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Veggie Parmesan (M)eatballs",
@@ -1682,7 +1617,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           }
         ],
         "2026-11-19": [
@@ -1697,7 +1632,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Kashmiri Kokos Süßkartoffel Curry",
@@ -1710,7 +1645,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "South Indian Dal mit Kürbis",
@@ -1723,7 +1658,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           }
         ],
         "2026-11-20": [
@@ -1738,7 +1673,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Gelbes Thai Veggie Curry",
@@ -1751,7 +1686,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           },
           {
             "name": "Green Palak Dal",
@@ -1764,7 +1699,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma-Food-vegan-Menu-KW47.pdf?v=1794585068",
-            "source_sha256": "3e3196be14d2eb08c12fe3428900d645871b88d7e4800efe15862f2143d2c8f3"
+            "source_sha256": "31de2118b196fef642f8a40c25c64ffc2672aa954b49b551480a1d829984a3a7"
           }
         ]
       },
