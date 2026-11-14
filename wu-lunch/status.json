@@ -1,15 +1,15 @@
 {
-  "checked_at": "2026-11-14T10:55:35+01:00",
+  "checked_at": "2026-11-14T11:06:33+01:00",
   "week_start": "2026-11-16",
   "week_end": "2026-11-20",
   "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-14T10:55:44+01:00",
-      "checked_at": "2026-11-14T10:55:44+01:00",
+      "last_success": "2026-11-14T11:08:04+01:00",
+      "checked_at": "2026-11-14T11:08:04+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886",
+      "content_sha256": "549c7d991d9535c990a8dea1f5eec27c8b381128d39d2d4361aac12dce043c18",
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-16",
@@ -18,7 +18,7 @@
     "finn": {
       "state": "not_published",
       "last_success": "2026-11-09T20:02:48+01:00",
-      "checked_at": "2026-11-14T10:55:44+01:00",
+      "checked_at": "2026-11-14T11:08:04+01:00",
       "consecutive_failures": 0,
       "content_sha256": "bd30bff3a4d5807cb0a5c7a37a8a97cc76d07194a5e40f9ae773e959e2f9d0ae",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw46.jpg?v=1794150305",
@@ -29,34 +29,34 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-14T10:55:35+01:00",
+      "last_success": "2026-11-14T11:06:33+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
     "mensa": {
       "state": "error",
-      "last_success": "2026-11-14T10:55:35+01:00",
+      "last_success": "2026-11-14T11:06:33+01:00",
       "consecutive_failures": 0,
       "parser_version": "ai-pdf-6-explicit-notices",
       "content_sha256": "1c0b1f73ba49eb17d7a152a17861b9888bb0f7258a73ebb00a0019712a2b440c",
-      "error": "Mensa: teilweise zusammengeführte Tageszellen nicht unterstützt"
+      "error": "Mensa: offene KI-Warnung: Für die Tagesgerichte sind keine Allergene als Buchstabencodes angegeben."
     },
     "glashaus": {
       "state": "ok",
-      "last_success": "2026-11-14T10:55:35+01:00",
+      "last_success": "2026-11-14T11:06:33+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "c16a52f6d5cacbf878e1a261305dd486ea809576e04285964aa48be07ced791d"
     },
     "campus": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-14T10:55:35+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "24b15c299c556796e0019c5427774d6fcc26f291291e6d79c3e30e668a28e7ec"
     },
     "baschly": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-14T10:55:35+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
@@ -78,7 +78,7 @@
     },
     "gruenehuette": {
       "state": "ok",
-      "last_success": "2026-11-14T10:55:35+01:00",
+      "last_success": "2026-11-14T11:06:33+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53"
@@ -91,7 +91,7 @@
     }
   },
   "problems": [
-    "mensa: Mensa: teilweise zusammengeführte Tageszellen nicht unterstützt"
+    "mensa: Mensa: offene KI-Warnung: Für die Tagesgerichte sind keine Allergene als Buchstabencodes angegeben."
   ],
   "next_run": "Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 (Europe/Vienna, GitHub Actions: zeitliche Abweichung möglich)",
   "format_version": 1,
@@ -157,10 +157,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-14T10:56:07+01:00",
+      "last_checked": "2026-11-14T11:08:23+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-16",
-      "source_fingerprint": "f9702dd578054d4b2584da290deba9f95e972860df880a4be80047bbf17ca886",
+      "source_fingerprint": "549c7d991d9535c990a8dea1f5eec27c8b381128d39d2d4361aac12dce043c18",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -198,14 +198,14 @@
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-14T10:55:43+01:00",
+    "checked_at": "2026-11-14T11:06:42+01:00",
     "source_sha256": "1f8db507732cd8b3c15b4ff50234e7dc79181b107e7bda24b893bd4be3f7c061",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
     "week_start": "2026-11-16",
-    "version": "ai-pdf-6-explicit-notices",
-    "last_attempt_at": "2026-11-14T10:55:43+01:00",
+    "version": "ai-pdf-7-merged-offer-panels",
+    "last_attempt_at": "2026-11-14T11:06:42+01:00",
     "state": "error",
-    "error": "Mensa: teilweise zusammengeführte Tageszellen nicht unterstützt",
+    "error": "Mensa: offene KI-Warnung: Für die Tagesgerichte sind keine Allergene als Buchstabencodes angegeben.",
     "last_success": "2026-11-09T20:46:15+01:00",
     "published_days_sha256": "74dcd75d32df65f241d99ab8eebfbd983a324e941867cdaebdd782882dab93ff"
   },

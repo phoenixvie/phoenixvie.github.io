@@ -1,264 +1,40 @@
 {
-  "checked_at": "2026-11-14T10:56:07+01:00",
+  "checked_at": "2026-11-14T11:08:23+01:00",
   "week_start": "2026-11-16",
   "model": "gpt-6-luna",
-  "api_calls": 7,
+  "api_calls": 1,
   "results": [
-    {
-      "restaurant": "lia",
-      "issues": [
-        "source_not_published"
-      ],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Seite nennt die Tage ohne Jahr; anhand des angegebenen heutigen Datums liegt die sichtbare Menüwoche vor der gesuchten Woche.",
-        "Keine eindeutig veröffentlichte aktuelle Karte"
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://lia.coffee/": "53b92c7c4e117199d80f8dfcca1e6d6f2274a4a630ece129a632a2ddd0af6c70"
-      },
-      "usage": {
-        "input_tokens": 7173,
-        "input_tokens_details": {
-          "cache_write_tokens": 7170,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 7170
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 259,
-        "output_tokens_details": {
-          "reasoning_tokens": 126
-        },
-        "total_tokens": 7432
-      }
-    },
-    {
-      "restaurant": "campus",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die ausgewiesene Menüperiode endet am 19.11.2026 und deckt die angefragte Woche nicht vollständig ab.",
-        "Für keines der Gerichte ist ein Preis belegt."
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://www.dascampus.at/dc-mittagsmenues": "4717d386b11a7f24a92271ccea5eaf049dc7313598368a62eb00c79c29cc67d7"
-      },
-      "usage": {
-        "input_tokens": 2242,
-        "input_tokens_details": {
-          "cache_write_tokens": 2239,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2239
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 1179,
-        "output_tokens_details": {
-          "reasoning_tokens": 156
-        },
-        "total_tokens": 3421
-      }
-    },
-    {
-      "restaurant": "glashaus",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Kennzeichnung „FEIERTAG“ erscheint im Quelltext an allen fünf Wochentagen, obwohl für jeden Tag Gerichte aufgeführt sind."
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://www.dasglashaus.at/menues": "2ebfb09c35c58b43fe63b048f2279a58f3a6adbfb3fb32257597623108aef6b7"
-      },
-      "usage": {
-        "input_tokens": 2728,
-        "input_tokens_details": {
-          "cache_write_tokens": 2725,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2725
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 2333,
-        "output_tokens_details": {
-          "reasoning_tokens": 911
-        },
-        "total_tokens": 5061
-      }
-    },
-    {
-      "restaurant": "gruenehuette",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Für Suppen ist kein Einzelpreis ausgewiesen; 2,00 EUR wird nur als Aufpreis zum Tagesteller genannt.",
-        "Die Suppenliste enthält keine einzelnen Tagesangaben. Ihre Zuordnung zu den Wochentagen ist daher nicht ausdrücklich durch die Quelle bestätigt.",
-        "Take-out-Preise sind alternative Preise, keine zusätzlichen Aufpreise."
-      ],
-      "ai_only_items": 22,
-      "parser_only_items": 7,
-      "ai_only_examples": [
-        "2026-11-16: frittatensuppe",
-        "2026-11-16: griessnockerlsuppe",
-        "2026-11-16: käsespätzle mit bergkäse und röstzwiebel",
-        "2026-11-16: leberknödelsuppe",
-        "2026-11-16: süsserdäpfelsuppe mit sauerrahm"
-      ],
-      "parser_only_examples": [
-        "2026-11-16: käsespätzle mit bergkäse und röstzwiebel dazu blattsalat",
-        "2026-11-16: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder süsserdäpfelsuppe mit sauerrahm",
-        "2026-11-17: erdäpfelpuffer mit bio spiegelei chiliöl kresse und rote rübensalat",
-        "2026-11-17: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder süsserdäpfelsuppe mit sauerrahm",
-        "2026-11-18: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder süsserdäpfelsuppe mit sauerrahm"
-      ],
-      "source_hashes": {
-        "https://www.zurgruenenhuette.com/mittags-menu": "82cc09b4e9527438135febf90b11db61f01915d775bbaf0f001991e60884c111"
-      },
-      "usage": {
-        "input_tokens": 2210,
-        "input_tokens_details": {
-          "cache_write_tokens": 2207,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2207
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 6260,
-        "output_tokens_details": {
-          "reasoning_tokens": 999
-        },
-        "total_tokens": 8470
-      }
-    },
-    {
-      "restaurant": "baschly",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Seiten zeigen lediglich Produktbezeichnungen und Bild-URLs; der Inhalt der eingebetteten Bilder ist in der übergebenen Quelle nicht lesbar.",
-        "Aus den Seiten lässt sich weder ein gültiges Tagesangebot noch eine Preiszuordnung für die gesuchte Woche bestätigen.",
-        "Keine eindeutig veröffentlichte aktuelle Karte"
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 10,
-      "ai_only_examples": [],
-      "parser_only_examples": [
-        "2026-11-16: butter chicken masala curry mit basmatireis allergene glutenfrei laktosefrei",
-        "2026-11-16: knackiger gemüse wok mit jasminreis frühlingsrolle und sweet chili sauce laktosefrei",
-        "2026-11-17: hühnerschnitzel mit erdäpfelsalat",
-        "2026-11-17: thai kokos gemüsecurry mit basmatireis",
-        "2026-11-18: linsen spinat gemüse curry mit basmatireis"
-      ],
-      "source_hashes": {
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "f7d5215d538b7b1799d60b967e6fd4c8c5ea0514e2d43f5cf65b89aceac79b89",
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "ef792a4a4dc968df9a42477fbf354bfa90c529acd9a0bdd4681ad4103fc3c596"
-      },
-      "usage": {
-        "input_tokens": 2702,
-        "input_tokens_details": {
-          "cache_write_tokens": 2699,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2699
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 332,
-        "output_tokens_details": {
-          "reasoning_tokens": 205
-        },
-        "total_tokens": 3034
-      }
-    },
-    {
-      "restaurant": "losteria",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Saisonkarte bestätigt nicht, dass die Gerichte vom 16. bis 20.11.2026 verfügbar sind."
-      ],
-      "ai_only_items": 4,
-      "parser_only_items": 0,
-      "ai_only_examples": [
-        "None: crema di patate con tartufo",
-        "None: pizza bianca tacchino e cipolletartufo di cielo",
-        "None: tagliatelle tartufo e funghi",
-        "None: tortina di mandorle"
-      ],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "b363589b1641fd6eb4a8205d3bbfe358e22b25037999ca917e648965576a7c36"
-      },
-      "usage": {
-        "input_tokens": 1921,
-        "input_tokens_details": {
-          "cache_write_tokens": 1918,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 1918
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 848,
-        "output_tokens_details": {
-          "reasoning_tokens": 130
-        },
-        "total_tokens": 2769
-      }
-    },
     {
       "restaurant": "karmafood",
       "issues": [],
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Seite nennt „Lassi & Lunch“, aber keinen dazugehörigen Preis oder nähere Angaben zur Kombination.",
-        "Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai stehen undatiert unter „Extras“; für sie ist kein Preis angegeben."
+        "Für die Tagesgerichte außer dem ausdrücklich bepreisten Special ist kein Einzelpreis belegt.",
+        "Im Bereich „Extras“ stehen keine datierten Gerichte und keine Einzelpreise."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "c9f48bdb44228fc792c9c5aeb4a72f212ce22b91cc3f8a78cdeb073839bd2902"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "2a6c7232f60f9db81cf97323cea6e2199cbf07c42301be09ed10cc200ddd0925"
       },
       "usage": {
-        "input_tokens": 2560,
+        "input_tokens": 2558,
         "input_tokens_details": {
-          "cache_write_tokens": 2557,
+          "cache_write_tokens": 2555,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2557
+            "ttl_30m_tokens": 2555
           },
           "cached_tokens": 0
         },
-        "output_tokens": 3045,
+        "output_tokens": 3987,
         "output_tokens_details": {
-          "reasoning_tokens": 670
+          "reasoning_tokens": 1433
         },
-        "total_tokens": 5605
+        "total_tokens": 6545
       }
     },
     {
