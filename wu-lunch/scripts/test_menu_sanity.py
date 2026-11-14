@@ -42,6 +42,23 @@ class MenuSanityTests(unittest.TestCase):
         source = meal(name='Salat mit Erdäpfelpüree', included_choices=['Erdäpfel', 'Salatdessert'], description='')
         self.assertEqual(sanity.clean_item(source), source)
 
+    def test_real_mensa_inflections_do_not_repeat_inclusions(self):
+        for name, component in [
+            ('Eiernudeln mit Pilzen und Gemüse', 'Pilze'),
+            ('Zucchini-Pie mit warmer Schnittlauchsauce', 'warme Schnittlauchsauce'),
+            ('Seelachs mit Petersil-Erdäpfeln', 'Petersil-Erdäpfel')]:
+            with self.subTest(component=component):
+                cleaned = sanity.clean_item(meal(name=name, included_choices=[component], description='Inklusive: '+component))
+                self.assertEqual(cleaned['name'], name)
+                self.assertEqual(cleaned['included_choices'], [])
+                self.assertEqual(cleaned['description'], '')
+
+    def test_salad_side_and_choice_of_starter_are_distinct_courses(self):
+        source = meal(name='Griechischer Spinatstrudel mit Blattsalat und Kräuterrahm',
+                      included_choices=['Suppe', 'Salat'], description='Mit Suppe oder Salat')
+        self.assertEqual(sanity.clean_item(source), source)
+        self.assertEqual(sanity.row_issues([source]), [])
+
     def test_unicode_punctuation_case_do_not_hide_duplicates_or_price_conflicts(self):
         source = sanity.clean_item(meal())
         duplicate = {**source, 'name': 'PLANTBULLAR | ERDÄPFELPÜREE | RÖSTZWIEBEL', 'price': 6.4}
