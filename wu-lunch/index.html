@@ -42,7 +42,7 @@
     .day-tab:first-child{border-radius:4px 0 0 4px}
     .day-tab:last-child{border-right:1px solid #bfc6cf;border-radius:0 4px 4px 0}
     .day-tab.active{background:var(--blue);color:#fff;border-color:#6c95d5;z-index:1}
-    .day-tab .small-date{display:block;font-size:10px;margin-top:4px;opacity:.95;letter-spacing:.02em}
+    .day-tab .small-date{display:block;font-size:12px;margin-top:5px;opacity:.95;letter-spacing:.02em}
     .day-tab:not(.active) .small-date{color:#888}
 
     .view-tabs{gap:0}
@@ -295,7 +295,6 @@ html,body,.page { background:#fff; }
 
     <section class="toolbar" aria-label="Navigation">
       <div class="day-tabs" id="dayTabs"></div>
-      <div class="selected-day-heading" id="selectedDayHeading" aria-live="polite"></div>
       <div class="swipe-dots" id="swipeDots" aria-label="Tagesnavigation: nach links oder rechts wischen"></div>
 
       
@@ -480,7 +479,7 @@ html,body,.page { background:#fff; }
     }
     function formatShortDate(dateStr){
       const d = new Date(dateStr + 'T12:00:00');
-      return d.toLocaleDateString(LOCALE,{day:'2-digit', month:'2-digit'});
+      return String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0')+'.';
     }
     function formatPrice(value){
       return value == null ? '' : value.toLocaleString(LOCALE,{minimumFractionDigits:1, maximumFractionDigits:2}) + ' €';
@@ -540,10 +539,14 @@ function displayWeekStart(now=new Date()){
         const btn = document.createElement('button');
         btn.className = 'day-tab' + (iso === selectedDate ? ' active' : '');
         btn.textContent = date.toLocaleDateString(LOCALE,{weekday:'long'});
+        const shortDate = document.createElement('span');
+        shortDate.className = 'small-date';
+        shortDate.textContent = formatShortDate(iso);
+        btn.appendChild(shortDate);
+        btn.setAttribute('aria-current',iso === selectedDate ? 'date' : 'false');
         btn.addEventListener('click',()=>{selectedDate = iso; update();});
         tabContainer.appendChild(btn);
       });
-      document.getElementById('selectedDayHeading').textContent=formatDate(selectedDate);
       renderSwipeDots();
     }
 

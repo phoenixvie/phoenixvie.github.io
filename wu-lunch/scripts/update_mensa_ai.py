@@ -18,6 +18,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import fitz
+from menu_sanity import clean_item
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "ai-pilot" / "results"
@@ -331,6 +332,7 @@ def validate_menu(result, original_text, monday, pdf_url):
         included = item.get("included_items") or []
         if not isinstance(included, list) or any(not isinstance(x, str) for x in included):
             raise ValueError("Mensa: ungültige inkludierte Leistungen")
+        included = clean_item({'name': name, 'included_items': included})['included_items']
         if category == "Global & Grill" and any("suppe" in x.casefold() for x in included):
             raise ValueError("Mensa: Global & Grill darf keine inkludierte Suppe erhalten")
         if category == "Tagessuppe" and "suppe" not in name.casefold():
@@ -426,6 +428,8 @@ def extract_for_week(monday, key, model, prepared=None):
               "Unbekannter Preis/laut Aushang bleibt null; keinen Nachbartagespreis übernehmen. "
               "Preise der Pizza/Pasta aus der linken Tarifspalte korrekt zuordnen. "
               "Kombinationen und Aufpreise in extra_costs angeben, keine Gratis-Suppe erfinden. "
+              "Prüfe vor der Ausgabe auf Duplikate: keine wiederholten Gerichte je Tag/Station/Portion. "
+              "Beilagen/Zutaten, die im Namen stehen, nicht nochmals als included_items anführen. "
               "evidence_excerpt zitiert Gericht UND Preis mit Tagen/Kategorie, sofern sichtbar. "
               "source_url exakt wie oben. Unsichere Zuordnung als Warnung; keine erfundenen Inhalte.")
     inputs = [{"role": "user", "content": [

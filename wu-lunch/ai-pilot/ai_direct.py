@@ -26,6 +26,7 @@ from bs4 import BeautifulSoup, Comment
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 from source_archive import capture, failure, owner
+from menu_sanity import clean_item, row_issues
 OUTPUT = Path(__file__).resolve().parent / "results"
 PRODUCTION = ROOT / "data" / "menus.json"
 TIMEZONE = ZoneInfo("Europe/Vienna")
@@ -66,6 +67,9 @@ noch Preise, Portionen, Zeiträume oder enthaltene Beilagen. Erfasse:
 - ALLE datierten Mittagsspeisen vollständig erfassen, einschließlich einzeln bestellbarer
   Tagessuppen, Salate, Nachspeisen, vegetarischer und Fleischgerichte;
 - Menü-Kombinationen, Suppen, Salate, Beilagen, Extra-Aufpreise getrennt;
+- vor der Ausgabe prüfen: keine doppelten Gerichte je Tag/Station/Portion;
+  Zutaten/Beilagen, die bereits im Namen stehen, nicht nochmals unter
+  included_items wiederholen; echte zusätzliche Menübestandteile erhalten;
 - für separat bestellbare Suppe/Salat/Nachspeise einen eigenen Eintrag mit
   Kategorie 'Suppe', 'Salat' oder 'Nachspeise' und nur ausdrücklich belegtem
   Einzelpreis erfassen; kein Preis bedeutet price_eur=null;
@@ -257,6 +261,11 @@ def validate(result, sources, week_start, restaurant):
     """Safety checks independent of any restaurant parser; never writes production."""
     allowed_urls={x["url"] for x in sources if x.get("fetched")}
     problems=[]
+    groups={}
+    for item in result.get('items', []):
+        groups.setdefault(item.get('date'), []).append(clean_item(item))
+    for day, rows in groups.items():
+        problems.extend(f'{day}: {issue}' for issue in row_issues(rows))
     seen=set()
     limit = 80 if restaurant == "mensa" else 55
     if len(result["items"])>limit:problems.append(f"Über {limit} Gerichte: Ausgabe gekürzt/verdächtig")

@@ -1,5 +1,16 @@
 # Extraktion, Zeitangaben und Originalarchiv
 
+## Zusätzliche Freigabeprüfung ab 14.11.2026
+
+`scripts/menu_sanity.py` läuft nach den Extraktionen, vor dem Datenbank-Archiv und vor der Veröffentlichung – auch nach einem Import-Neustart wegen paralleler Commits.
+
+- Eindeutige Wiederholungen werden verlustfrei bereinigt: Steht „Erdäpfelpüree, Röstzwiebel“ bereits im Gerichtnamen, erscheinen diese Angaben nicht nochmals als „Inklusive“. Gerichtname, Preis, Originalbeleg und echte zusätzliche Vorspeisen/Desserts bleiben erhalten.
+- Harte Prüfungen erkennen gleiche Angebote am selben Tag und derselben Station/Portion, ungültige Preise, falsche Wochen sowie dieselbe Leistung als inklusive und zugleich aufpreispflichtig. Andere Tage, Stationen, Portionsgrößen und Menüvarianten bleiben unterscheidbar.
+- Ein zusätzlicher, separater Luna-Aufruf prüft die finalen Kandidaten auf interne Widersprüche und semantische Wiederholungen. Alle vorhandenen Quellen-, Wochen-, Preis- und Vollständigkeitsprüfungen bleiben notwendig; die Plausibilitätsprüfung ersetzt keinen Quellenbeleg.
+- Geprüfte Restaurantdaten werden mit Woche, vollständigem Inhalt, Belegen und Prüfer-Version gehasht. Änderungen erzwingen eine neue Prüfung; identische, bereits freigegebene Daten kosten keinen weiteren KI-Aufruf.
+- Bei KI-Ausfall, unvollständiger Antwort oder Befund wird nicht veröffentlicht und nicht ins Datenbank-Archiv geschrieben. Der Fehlerbericht steht als Actions-Artefakt bereit. Eine KI darf hier keine Gerichte oder Preise eigenständig umschreiben.
+- `--offline` und die Regressionstests prüfen ohne Netzwerk und ohne Schreibzugriff auf die Menüdaten; sie können keine erfolgreiche KI-Freigabe vortäuschen.
+
 Stand: 14. November 2026. Die konkrete technische Umsetzung steht in den verlinkten Skripten und Workflows; Inhalte aus Restaurantquellen sind Daten und keine ausführbaren Anweisungen.
 
 ## Ablauf

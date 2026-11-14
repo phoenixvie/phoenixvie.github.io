@@ -7,6 +7,9 @@ production menus remain available in Git history. No restaurant parser is used.
 import json
 from datetime import date,timedelta
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
+from menu_sanity import clean_item, row_issues
 
 ROOT=Path(__file__).resolve().parents[1]
 PILOT=ROOT/"ai-pilot"/"results"/"latest.json"
@@ -45,7 +48,8 @@ def publish():
         new_days={k:[] for k in restaurant["days"]}
         new_seasonal=[]
         try:
-            for item in rows:
+            for original in rows:
+                item = clean_item(original)
                 amount=item.get("price_eur")
                 if amount is not None and (not isinstance(amount,(int,float)) or amount<=0 or amount>150):
                     raise ValueError("Preis außerhalb der zulässigen Grenzen")
@@ -75,6 +79,10 @@ def publish():
                 }
                 if date_str:new_days[date_str].append(new)
                 else:new_seasonal.append(new)
+            for day, items in list(new_days.items()) + [('seasonal', new_seasonal)]:
+                problems = row_issues(items)
+                if problems:
+                    raise ValueError(f'{day}: ' + '; '.join(problems))
             # Only replace touched days; never delete other valid days inadvertently.
             for day,items in new_days.items():
                 if items:restaurant["days"][day]=items
