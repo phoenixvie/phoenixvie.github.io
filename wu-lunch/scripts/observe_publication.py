@@ -43,13 +43,13 @@ def read_state():
         return {"started_at": None, "ends_after": UNTIL.isoformat(), "sources": {}}
 
 def scheduled_names(now):
+    # Cron steuert die Uhrzeit; verspätete Starts nicht als erfolgreichen Leerjob verwerfen.
     # Hauptmessfenster Freitag bis Dienstag; Mittwoch/Donnerstag nur Baschly.
     day = now.weekday()
-    hour = now.hour
     if now.date() >= UNTIL: return []
-    if day in (4, 6, 0, 1) and hour in (7, 10, 13, 17):
+    if day in (4, 5, 6, 0, 1):
         return list(SOURCES)
-    if day in (2, 3) and hour in (7, 10):
+    if day in (2, 3):
         return ["baschly-veggie", "baschly-fleisch"]
     return []
 

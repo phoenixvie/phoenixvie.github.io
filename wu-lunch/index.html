@@ -251,7 +251,7 @@ html,body,.page { background:#fff; }
 .leaflet-popup-tip{width:12px;height:12px;background:#fff;transform:rotate(45deg);position:absolute;top:-8px;left:4px}
 .leaflet-popup-close-button{position:absolute;right:6px;top:4px;font-size:18px;color:#444;z-index:5}
 .leaflet-div-icon{background:transparent;border:0}
-.map-pin{display:grid;place-items:center;width:38px;height:38px;border:3px solid #fff;border-radius:50%;color:#fff;font-size:18px;font-weight:800;box-shadow:0 3px 9px #0004}
+.map-letter-pin{display:block;box-sizing:border-box;width:34px;height:38px;clip-path:polygon(0 0,100% 0,100% 75%,50% 100%,0 75%);border-radius:8px 8px 0 0;color:white;font:600 18px Arial;text-align:center;padding-top:5px;cursor:pointer;filter:drop-shadow(0 2px 2px #0005)}
 .logo-box{font-size:34px!important;font-weight:800!important;letter-spacing:0!important;color:#fff!important;border-radius:9px!important;box-shadow:none!important;text-transform:uppercase!important}
 .logo-mensa{background:#e30613!important}
 .logo-campus{background:#387dda!important}
@@ -310,7 +310,7 @@ html,body,.page { background:#fff; }
         </div>
       </section>
       <footer class="site-footer">
-        <span id="nextUpdate" aria-live="polite"></span>
+        <span id="nextUpdate" aria-live="polite"></span><span id="lastImport" aria-live="polite"></span>
         <span>Angaben ohne Gewähr – bitte Menü auf der Restaurant-Website prüfen.</span>
         <span>Diese Website verwendet keine Cookies.</span>
         <span><a href="impressum.html">Impressum</a><span aria-hidden="true"> · </span><a href="#" data-change-language>Change Language</a><span aria-hidden="true"> · </span><a href="admin.html">Admin</a></span>
@@ -320,7 +320,7 @@ html,body,.page { background:#fff; }
     
   </div>
 
-  <script src="i18n.js?v=20261113-analytics1"></script><script src="data.js?v=5"></script>
+  <script src="i18n.js?v=20261114-weekend1"></script><script src="data.js?v=5"></script>
   <script src="supabase-config.js?v=1"></script>
   <script>
   (async function initializeLunchPage() {
@@ -417,7 +417,7 @@ html,body,.page { background:#fff; }
       const config=window.WU_LUNCH_SUPABASE;
       if(!config?.url||!config?.publishableKey)return;
       try{
-        const response=await fetch(config.url+'/rest/v1/menu_day_overrides?week_start=eq.'+encodeURIComponent(DATA.weekStart)+'&select=restaurant_id,menu_date,dishes',{
+        const response=await fetch(config.url+'/rest/v1/menu_day_overrides?week_start=eq.'+encodeURIComponent(displayWeekStart())+'&select=restaurant_id,menu_date,dishes',{
           headers:{apikey:config.publishableKey,Authorization:'Bearer '+config.publishableKey},cache:'no-store'
         });
         if(!response.ok)throw new Error('HTTP '+response.status);
@@ -495,6 +495,12 @@ html,body,.page { background:#fff; }
     }
     function getStatusClass(status){ return status || ''; }
 
+function displayWeekStart(now=new Date()){
+  const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Vienna',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
+  const date=new Date(today+'T12:00:00Z'),day=date.getUTCDay();
+  date.setUTCDate(date.getUTCDate()+(day===6?2:day===0?1:1-day));
+  return date.toISOString().slice(0,10);
+}
     function viennaTodayIso(){
       return new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Vienna',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
     }
@@ -758,9 +764,19 @@ function mensaStations(raw){
       const next=nextScheduledUpdate();
       if(!next)return;
       const two=value=>String(value).padStart(2,'0');
-      nextUpdate.textContent=(LANG==='de'?'Nächste automatische Prüfung: ':'Next scheduled update: ')+(LANG==='de'?WEEKDAY_SHORT[next.getUTCDay()]:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][next.getUTCDay()])+' '+two(next.getUTCDate())+'.'+two(next.getUTCMonth()+1)+'. '+two(next.getUTCHours())+(LANG==='de'?':15 Uhr':':15 (Vienna time)');
+      nextUpdate.textContent=(LANG==='de'?'Nächste geplante Prüfung: ':'Next scheduled check: ')+(LANG==='de'?WEEKDAY_SHORT[next.getUTCDay()]:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][next.getUTCDay()])+' '+two(next.getUTCDate())+'.'+two(next.getUTCMonth()+1)+'. '+two(next.getUTCHours())+(LANG==='de'?':15 Uhr':':15 (Vienna time)');
     }
 
+    let importStatus=null;
+    function renderImportStatus(){
+      const element=document.getElementById('lastImport');if(!element)return;
+      if(!importStatus?.checked_at){element.textContent=LANG==='de'?'Importstatus nicht verfügbar':'Import status unavailable';return;}
+      const at=new Date(importStatus.checked_at);if(!Number.isFinite(at.getTime()))return;
+      const failures=Object.values(importStatus.sources||{}).filter(source=>source.state==='error').length;
+      element.textContent=(LANG==='de'?'Letzter Importversuch: ':'Last import attempt: ')+at.toLocaleString(LOCALE,{timeZone:'Europe/Vienna',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})+(failures?(LANG==='de'?' · Quellenfehler: ':' · Source errors: ')+failures:'');
+      element.title=LANG==='de'?'Zeitpunkt aus dem veröffentlichten Importprotokoll. Ein geplanter Termin bestätigt keinen Abruf.':'Time from the published import log. A scheduled time does not confirm a source check.';
+    }
+    async function loadImportStatus(){try{const response=await fetch('./status.json?t='+Date.now(),{cache:'no-store'});if(response.ok)importStatus=await response.json();}catch{}renderImportStatus();}
     function moveDay(step){
       const index=weekDates.findIndex(day=>day.iso===selectedDate);
       const next=weekDates[index+step];
@@ -814,8 +830,8 @@ function mensaStations(raw){
     function addRestaurantPin(restaurant,info){
       const icon=L.divIcon({
         className:'leaflet-div-icon',
-        html:'<span class="map-pin" style="background:'+info.color+'">'+info.letter+'</span>',
-        iconSize:[38,38],iconAnchor:[restaurant.id==='omakueche'?7:restaurant.id==='topfdeckel'?31:19,19],popupAnchor:[0,-18]
+        html:'<span class="map-letter-pin" style="background:'+(/^#[0-9a-f]{6}$/i.test(restaurant.brand_color||info.color)?(restaurant.brand_color||info.color):'#087cf4')+'">'+escapeHtml((restaurant.name.replace(/^WU\s+/i,'').trim()[0]||'?').toUpperCase())+'</span>',
+        iconSize:[34,38],iconAnchor:[restaurant.id==='omakueche'?5:restaurant.id==='topfdeckel'?29:17,38],popupAnchor:[0,-38]
       });
       const marker=L.marker([info.lat,info.lon],{icon,title:restaurant.name}).addTo(realMap);
       const content=document.createElement('div');
@@ -890,13 +906,14 @@ function mensaStations(raw){
       }
     }
 
-    window.addEventListener('wu-language-change',()=>{LANG=window.WULunchI18n.language;LOCALE=window.WULunchI18n.locale;update();renderAnnouncement();renderNextUpdate();});
+    window.addEventListener('wu-language-change',()=>{LANG=window.WULunchI18n.language;LOCALE=window.WULunchI18n.locale;update();renderAnnouncement();renderNextUpdate();renderImportStatus();});
     update();
     renderNextUpdate();
     let liveRefreshing=false,liveSignature=JSON.stringify(DATA);
     async function refreshLiveData(){void window.WULunchI18n.refresh();if(liveRefreshing)return;liveRefreshing=true;const previous=JSON.parse(JSON.stringify(DATA));try{const response=await fetch('./data/menus.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return;const incoming=await response.json();Object.assign(DATA,incoming);await Promise.all([applyRestaurantOverrides(),loadAnnouncement(),applyManualMenus()]);if(!profileFetchSucceeded||!manualFetchSucceeded){Object.assign(DATA,previous);return;}const signature=JSON.stringify(DATA);if(signature!==liveSignature){liveSignature=signature;for(const r of DATA.restaurants){const info=locationInfo[r.id];if(info){info.address=r.address||info.address;info.color=r.brand_color||info.color;if(Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)){info.lat=r.latitude;info.lon=r.longitude;}}}update();if(realMap){realMap.remove();realMap=null;loadRealMap();}}}catch(e){Object.assign(DATA,previous);console.warn('Aktualisierung fehlgeschlagen',e)}finally{liveRefreshing=false}}
     window.setInterval(refreshLiveData,3000);window.addEventListener('focus',refreshLiveData);
     window.setInterval(renderNextUpdate,30000);
+    void loadImportStatus();window.setInterval(loadImportStatus,60000);
 
     // Render all menus first. Load Leaflet and map tiles only after the whole
     // page, fonts and images have loaded; do not block the initial restaurant

@@ -1113,7 +1113,7 @@ def run(today):
         "health":"healthy" if not problems else ("failed" if len(problems)==8 else "degraded"),
         "sources":operations,
         "problems":problems,
-        "next_run":"Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 Europe/Vienna (GitHub Actions Zeitabweichung möglich)",
+        "next_run":"Geplant: Mo 06:15–18:15, Di–Fr 08:15–12:15, Sa 08:15–18:15 stündlich Europe/Vienna (GitHub Actions Zeitabweichung möglich)",
         "format_version":1,
     }
     # The repair agent writes its own check history after the parser run.

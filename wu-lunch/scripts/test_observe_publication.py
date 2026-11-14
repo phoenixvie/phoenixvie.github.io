@@ -24,16 +24,17 @@ class PublicationObserverTests(unittest.TestCase):
     def moment(self,day,hour):
         return datetime.fromisoformat(day+"T"+f"{hour:02d}:00:00").replace(tzinfo=TZ)
 
-    def test_friday_sunday_monday_tuesday_samples(self):
-        for day in ("2026-11-06","2026-11-08","2026-11-09","2026-11-10"):
+    def test_friday_through_tuesday_samples(self):
+        for day in ("2026-11-06","2026-11-07","2026-11-08","2026-11-09","2026-11-10"):
             for hour in (7,10,13,17):
                 self.assertEqual(len(scheduled_names(self.moment(day,hour))),len(SOURCES))
-        self.assertEqual(scheduled_names(self.moment("2026-11-07",10)),[])
 
     def test_midweek_only_baschly(self):
         self.assertEqual(scheduled_names(self.moment("2026-11-11",10)),
                          ["baschly-veggie","baschly-fleisch"])
-        self.assertEqual(scheduled_names(self.moment("2026-11-11",17)),[])
+        # Cron sets the sampling hours; delayed executions still check Baschly.
+        self.assertEqual(scheduled_names(self.moment("2026-11-11",17)),
+                         ["baschly-veggie","baschly-fleisch"])
 
     def test_stop_after_four_weeks(self):
         self.assertEqual(scheduled_names(self.moment("2026-12-04",7)),[])
