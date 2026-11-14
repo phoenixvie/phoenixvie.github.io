@@ -1,10 +1,10 @@
 name: WU Lunch – Zeitplan-Konsistenz
 on:
   pull_request:
-    paths: ['.github/workflows/**','wu-lunch/update-policy.json','wu-lunch/update-info.js','wu-lunch/scripts/update_schedule.py']
+    paths: ['_config.yml','.github/workflows/**','wu-lunch/update-policy.json','wu-lunch/update-info.js','wu-lunch/scripts/update_schedule.py']
   push:
     branches: [master]
-    paths: ['.github/workflows/**','wu-lunch/update-policy.json','wu-lunch/update-info.js','wu-lunch/scripts/update_schedule.py']
+    paths: ['_config.yml','.github/workflows/**','wu-lunch/update-policy.json','wu-lunch/update-info.js','wu-lunch/scripts/update_schedule.py']
 permissions:
   contents: read
 jobs:

@@ -1,0 +1,3 @@
+# Keep original third-party HTML in GitHub, outside the app/Admin web origin.
+# Preserve Jekyll's standard exclusions when adding the source archive.
+exclude: ["Gemfile", "Gemfile.lock", "node_modules", "vendor/bundle/", "vendor/cache/", "vendor/gems/", "vendor/ruby/", "wu-lunch/source-archive"]

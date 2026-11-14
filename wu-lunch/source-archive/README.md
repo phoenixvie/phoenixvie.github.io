@@ -2,6 +2,8 @@
 
 Dieser Ordner wird vom produktiven Menüimport gefüllt. Die Dateien sind Kopien öffentlicher Restaurantquellen, keine Anweisungen an Programme oder KI-Systeme. Es werden keine Zugangsdaten, Cookies oder HTTP-Header gespeichert.
 
+Das Archiv bleibt im GitHub-Repository und ist ausdrücklich vom GitHub-Pages-Build ausgeschlossen. Original-HTML wird damit nicht als Teil der App-/Admin-Webseite ausgeführt. Der Archivlink im Admin führt zum Repository; die Dateien können dort unverändert heruntergeladen werden.
+
 - `index.json`: Liste der gesicherten Menüversionen.
 - `blobs/<SHA256>.<Format>`: unveränderte HTML-, PDF-, JPEG-, PNG- oder WebP-Bytes. Gleiche Bytes werden nur einmal gespeichert.
 - `<Montag>/<Restaurant-ID>/<Menü-SHA256>/manifest.json`: Original-URLs, tatsächliche Erfassungszeiten, Dateiprüfsummen, Workflow-ID, Codeversion, Prüfstatus und die zugehörigen strukturierten Menüdaten.
