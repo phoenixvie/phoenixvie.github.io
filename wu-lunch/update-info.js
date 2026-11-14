@@ -1,0 +1,49 @@
+/* Website and Admin share both the policy and the recorded execution facts. */
+(function(root){
+  const clock=(value,zone)=>Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(value).filter(p=>p.type!=='literal').map(p=>[p.type,Number(p.value)]));
+  function nextRun(config,task,now=new Date()){
+    const rule=config.tasks[task],at=new Date(now);at.setUTCSeconds(0,0);at.setUTCMinutes(rule.minute);
+    if(at<=now)at.setUTCHours(at.getUTCHours()+1);
+    for(let i=0;i<8*24;i++,at.setUTCHours(at.getUTCHours()+1)){
+      const p=clock(at,config.timezone),day=new Date(Date.UTC(p.year,p.month-1,p.day)).getUTCDay();
+      if(rule.ends_before&&`${p.year}-${String(p.month).padStart(2,'0')}-${String(p.day).padStart(2,'0')}`>=rule.ends_before)return null;
+      if(rule.utc_hours?rule.utc_hours.includes(at.getUTCHours()):rule.hours[String(day)]?.includes(p.hour))return new Date(at);
+    }return null;
+  }
+  const format=(value,language)=>value?new Date(value).toLocaleString(language==='de'?'de-AT':'en-GB',{timeZone:policy?.timezone||'Europe/Vienna',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'—';
+  let policy=null,record=null,status=null,observations=null,pdfSnapshot=null,profiles=[];
+  const latest=values=>values.filter(value=>value&&Number.isFinite(new Date(value).getTime())).sort((a,b)=>new Date(b)-new Date(a))[0]||null;
+  function lastFetched(id){return latest([record?.source_checks?.[id]?.last_fetched,...Object.entries(observations?.sources||{}).filter(([key])=>key===id||key.startsWith(id+'-')).flatMap(([,row])=>(row.observations||[]).filter(o=>!o.error&&o.sha256).map(o=>o.at)),id==='mensa'&&pdfSnapshot?.http_status===200?pdfSnapshot.fetched_at:null]);}
+  const lang=()=>root.WULunchI18n?.language||'de';
+  const word=(de,en)=>lang()==='de'?de:en;
+  function description(rule){
+    const dayNames=lang()==='de'?['So','Mo','Di','Mi','Do','Fr','Sa']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const groups=new Map();
+    for(const day of [1,2,3,4,5,6,0]){const hours=rule.utc_hours?rule.utc_hours.map(hour=>{const at=new Date();at.setUTCHours(hour,rule.minute,0,0);return clock(at,policy?.timezone||'Europe/Vienna').hour;}):rule.hours[String(day)];if(!hours?.length)continue;const key=hours.join(',');if(!groups.has(key))groups.set(key,{hours,days:[]});groups.get(key).days.push(dayNames[day]);}
+    const time=h=>String(h).padStart(2,'0')+':'+String(rule.minute).padStart(2,'0');
+    return [...groups.values()].map(({hours,days})=>days.join(', ')+' '+(hours.length===24?word('stündlich um :','hourly at :')+String(rule.minute).padStart(2,'0'):hours.length>2&&hours.every((hour,i)=>i===0||hour===hours[i-1]+1)?time(hours[0])+'–'+time(hours.at(-1))+word(' stündlich',' hourly'):hours.map(time).join(', '))).join(' · ');
+  }
+  function render(){
+    const nextElement=document.getElementById('nextUpdate'),last=document.getElementById('lastImport'),admin=document.getElementById('updateProcess');
+    if(nextElement){const next=policy&&nextRun(policy,'menus');nextElement.textContent=next?word('Nächster geplanter Menücheck: ','Next planned menu check: ')+format(next,lang())+word(' Uhr (Wien)',' (Vienna)'):word('Zeitplan nicht verfügbar','Schedule unavailable');nextElement.title=word('GitHub kann geplante Läufe verspäten oder auslassen. Der Termin ist kein Abrufbeleg.','GitHub may delay or skip scheduled runs. A planned time is not proof of a source check.');}
+    if(last){const fetched=latest(Object.keys(status?.sources||{}).map(lastFetched));last.textContent=fetched?word('Letzter Quellenabruf: ','Last source fetch: ')+format(fetched,lang()):status?.checked_at?word('Letzter protokollierter Importbeginn: ','Last recorded import start: ')+format(status.checked_at,lang()):word('Noch kein Abrufprotokoll verfügbar','No source-check log available');if(record?.menus_updated_at)last.textContent+=word(' · Importdaten geändert: ',' · Imported data changed: ')+format(record.menus_updated_at,lang());}
+    if(!admin)return;admin.replaceChildren();
+    const add=(tag,text,parent=admin)=>{const el=document.createElement(tag);el.textContent=text;parent.append(el);return el;};
+    add('p',word('Zeitplan und Ausführungsfenster kommen aus derselben Konfiguration wie die Workflows. Zeiten in Wien. Geplant bedeutet nicht ausgeführt.','Schedule and execution windows use the workflow configuration. Vienna time. Planned does not mean executed.')).className='muted';
+    if(policy){for(const [id,rule]of Object.entries(policy.tasks)){const line=add('p',(lang()==='de'?rule.label_de:rule.label_en));line.style.fontWeight='600';const next=nextRun(policy,id);add('p',description(rule)+(rule.ends_before?' · '+word('bis ','until ')+rule.ends_before:'')+' · '+word('Nächster Termin: ','Next planned run: ')+(next?format(next,lang()):word('beendet','finished'))).className='muted';}}
+    else add('p',word('Zeitplan nicht verfügbar','Schedule unavailable'));
+    add('p',word('Manuelle Auslösungen und passende Codeänderungen können zusätzliche Läufe starten. Ein Quellenabruf ist keine KI-Freigabe; Übersetzung und PDF-Sicherung sind kein Menüimport.','Manual triggers and relevant code changes can start additional runs. A source fetch is not AI approval; translation and PDF snapshots are not menu imports.')).className='muted';
+    if(record?.run){const r=record.run;add('p',word('Letzter Import abgeschlossen: ','Last import completed: ')+format(r.completed_at,lang()));if(r.id){const a=add('a',word('Ausführungsprotokoll auf GitHub','GitHub execution log'));a.href='https://github.com/phoenixvie/phoenixvie.github.io/actions/runs/'+encodeURIComponent(r.id);a.target='_blank';a.rel='noopener noreferrer';}const detail=add('details','');add('summary',word('Einzelne Arbeitsschritte','Individual steps'),detail);for(const step of r.steps||[])add('p',step.name+' · '+format(step.completed_at,lang())+' · '+word('Exit-Code ','exit code ')+step.exit_code,detail).className='muted';}
+    const table=add('table','');table.style.width='100%';table.style.fontSize='13px';
+    const header=add('tr','',table);for(const title of [word('Restaurant','Restaurant'),word('Letzter Quellenabruf','Last source fetch'),word('Import / KI-Prüfung','Import / AI check')]){const cell=add('th',title,header);cell.style.textAlign='left';}
+    const labels={ok:['Quellendaten übernommen','Source data accepted'],ok_browser:['Browserdaten übernommen','Browser data accepted'],cached:['Unverändert / bereits geprüft','Unchanged / previously checked'],recurring:['Dauerangebot','Recurring offer'],not_published:['Noch nicht veröffentlicht','Not published yet'],error:['Fehler','Error'],empty:['Keine Daten','No data'],review_only:['Kontrollbericht; keine automatische Änderung','Review report; no automatic change'],review_needed:['Prüfbedarf','Review needed'],live_repaired:['Geprüfte Korrektur übernommen','Verified correction applied']};
+    const state=value=>labels[value]?.[lang()==='de'?0:1]||value||'—';
+    const byId=new Map(profiles.map(p=>[p.restaurant_id,p]));
+    for(const [id,source]of Object.entries(status?.sources||{}).sort((a,b)=>(byId.get(a[0])?.sort_order??999)-(byId.get(b[0])?.sort_order??999))){const tr=add('tr','',table);const names={mensa:'WU Mensa',campus:'Das Campus',glashaus:'Das Glashaus',baschly:'Baschly',finn:'Finn',lia:'Lia Coffee',karmafood:'Karma Food',topfdeckel:'Topf & Deckel',gruenehuette:'Zur Grünen Hütte',omakueche:'Oma Küche',losteria:"L’Osteria"};add('td',byId.get(id)?.display_name||names[id]||id,tr);add('td',format(lastFetched(id),lang()),tr);const audit=id==='mensa'?status.mensa_luna_audit:id==='topfdeckel'?status.topf_luna_audit:status.ai_repair?.[id];const auditState=audit?.state==='ok'?word('bestanden','passed'):state(audit?.state||audit?.action);add('td',state(source.state)+(audit?' · KI: '+auditState+' '+format(audit.checked_at||audit.last_checked,lang()):''),tr);}
+    if(record)add('p',word('Gesicherte Menüversionen im Quellenarchiv: ','Menu versions in source archive: ')+(record.archive_entries||0));
+    const link=add('a',word('Originalquellen-Archiv öffnen','Open original source archive'));link.href='https://github.com/phoenixvie/phoenixvie.github.io/tree/master/wu-lunch/source-archive';link.target='_blank';link.rel='noopener noreferrer';
+  }
+  async function refresh(){const get=async(path)=>{const response=await fetch(path+'?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw new Error(path);return response.json();};const config=root.WU_LUNCH_SUPABASE;const profileRequest=config?.url&&config?.publishableKey?fetch(config.url+'/rest/v1/restaurant_overrides?select=restaurant_id,display_name,sort_order',{cache:'no-store',headers:{apikey:config.publishableKey}}).then(response=>{if(!response.ok)throw new Error('profiles');return response.json();}):Promise.resolve(profiles);const values=await Promise.allSettled([get('update-policy.json'),get('data/update-status.json'),get('status.json'),get('data/publication-observations.json'),get('ai-pilot/source/mensa-latest.json'),profileRequest]);if(values[0].status==='fulfilled')policy=values[0].value;if(values[1].status==='fulfilled')record=values[1].value;if(values[2].status==='fulfilled')status=values[2].value;if(values[3].status==='fulfilled')observations=values[3].value;if(values[4].status==='fulfilled')pdfSnapshot=values[4].value;if(values[5].status==='fulfilled'&&Array.isArray(values[5].value))profiles=values[5].value;render();}
+  root.WULunchUpdateInfo={nextRun,description,refresh,render};
+  if(root.document){document.addEventListener('DOMContentLoaded',()=>{void refresh();setInterval(refresh,60000);setInterval(render,30000);});root.addEventListener('wu-language-change',render);}
+})(typeof window==='undefined'?globalThis:window);

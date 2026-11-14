@@ -15,6 +15,7 @@ on:
     paths:
       - 'wu-lunch/scripts/**'
       - 'wu-lunch/requirements.txt'
+      - 'wu-lunch/update-policy.json'
       - '.github/workflows/wu-lunch-menus.yml'
   pull_request:
     paths:
@@ -23,6 +24,7 @@ on:
       - 'wu-lunch/supabase-config.js'
       - 'wu-lunch/scripts/**'
       - 'wu-lunch/requirements.txt'
+      - 'wu-lunch/update-policy.json'
       - '.github/workflows/wu-lunch-menus.yml'
 
 permissions:
@@ -48,9 +50,11 @@ jobs:
         run: pip install -r wu-lunch/requirements.txt
       - name: Offline- und Regressionstests
         run: |
+          python wu-lunch/scripts/update_schedule.py --check
           python wu-lunch/scripts/update_menus.py --smoke-test
           python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v
   sync:
+    needs: test
     # A feature-branch push must NEVER run the production importer or publish to master.
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
@@ -64,16 +68,10 @@ jobs:
         name: Lokale Wiener Uhrzeit prüfen
         shell: bash
         run: |
-          day="$(TZ=Europe/Vienna date +%u)"
-          hour="$(TZ=Europe/Vienna date +%H)"
-          if [[ "${{ github.event_name }}" == "schedule" ]] && ! (
-            { [[ "$day" == "1" ]] && [[ "$hour" =~ ^(06|07|08|09|10|11|12|13|14|15|16|17|18)$ ]]; } ||
-            { [[ "$day" =~ ^[2-5]$ ]] && [[ "$hour" =~ ^(08|09|10|11|12)$ ]]; } ||
-            { [[ "$day" == "6" ]] && [[ "$hour" =~ ^(08|09|10|11|12|13|14|15|16|17|18)$ ]]; }
-          ); then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
+          if python wu-lunch/scripts/update_schedule.py menus "${{ github.event_name }}"; then
             echo "skip=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=true" >> "$GITHUB_OUTPUT"
           fi
       - uses: actions/setup-python@v5
         if: steps.guard.outputs.skip == 'false'
@@ -96,7 +94,8 @@ jobs:
         shell: bash
         run: |
           set +e
-          python wu-lunch/scripts/update_menus.py
+          python wu-lunch/scripts/run_step.py start
+          python wu-lunch/scripts/run_step.py parser python wu-lunch/scripts/update_menus.py
           result=$?
           echo "exit_code=$result" >> "$GITHUB_OUTPUT"
           exit 0
@@ -108,7 +107,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
+          python wu-lunch/scripts/run_step.py mensa_ai python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
       - name: Mensa-Original und KI-Kandidat zur Prüfung sichern
         if: always() && steps.guard.outputs.skip == 'false'
         uses: actions/upload-artifact@v4
@@ -127,7 +126,7 @@ jobs:
           # On first merge also import Finn's current menu once.
           # A verified unchanged image is cached; failed images are capped
           # to one paid attempt per image/day.
-          python wu-lunch/scripts/update_new_restaurants.py
+          python wu-lunch/scripts/run_step.py finn_karma python wu-lunch/scripts/update_new_restaurants.py
       - name: Topf Wochenkarte – Browser plus Luna-Kontrolle aller Tabs
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
@@ -138,15 +137,13 @@ jobs:
           set -euo pipefail
           # Geplante Quellenanalyse Mo 07:15 und 11:15, Di–Sa um 11:15 Wien.
           # Bei Code-Änderungen sofort als Integrationstest ausführen.
-          hour="$(TZ=Europe/Vienna date +%H)"
-          day="$(TZ=Europe/Vienna date +%u)"
-          if [[ "${{ github.event_name }}" == "schedule" && "$hour" != "11" && ! ( "$day" == "1" && "$hour" == "07" ) ]]; then
-            echo "Topf Browser regulär Mo 07:15 und 11:15, Di–Sa 11:15."
+          if ! python wu-lunch/scripts/update_schedule.py topf_browser "${{ github.event_name }}"; then
+            echo "Topf Browser: außerhalb des konfigurierten Ausführungsfensters; kein Browserabruf."
             exit 0
           fi
           pip install 'playwright>=1.50,<2'
           python -m playwright install --with-deps chromium
-          python wu-lunch/scripts/update_topf_browser.py
+          python wu-lunch/scripts/run_step.py topf_browser python wu-lunch/scripts/update_topf_browser.py
       - name: Luna prüft jede neue/geänderte Mittagsspeisekarte
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
@@ -159,11 +156,17 @@ jobs:
           # complete Luna audit; unchanged successful audits are cached.
           # Dedicated Finn image, Mensa PDF and Topf browser workflows stay
           # separate. No artificial two-restaurants-per-day bottleneck.
-          python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
+          python wu-lunch/scripts/run_step.py html_ai python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
       - name: Veröffentlichungsänderungen mit Abrufzeit erfassen
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
-        run: python wu-lunch/scripts/observe_publication.py --import-scan
+        run: python wu-lunch/scripts/run_step.py observe python wu-lunch/scripts/observe_publication.py --import-scan
+      - name: Verwendete Originalquellen bei Menüänderung dauerhaft sichern
+        if: always() && steps.guard.outputs.skip == 'false'
+        run: python wu-lunch/scripts/run_step.py source_archive python wu-lunch/scripts/source_archive.py
+      - name: Tatsächliche Abrufe und Datenänderungen protokollieren
+        if: always() && steps.guard.outputs.skip == 'false'
+        run: python wu-lunch/scripts/run_step.py finish
       - name: Geprüfte Wochenkarte ins Admin-Archiv sichern
         if: steps.guard.outputs.skip == 'false'
         shell: bash
@@ -201,6 +204,7 @@ jobs:
           # Nie konflikthafte JSON-Dateien blind zusammenführen oder force-pushen.
           for attempt in 1 2 3; do
             git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
+            git add wu-lunch/data/update-status.json wu-lunch/source-archive
             if [[ -f wu-lunch/data/mensa-ai-candidate.json ]]; then git add wu-lunch/data/mensa-ai-candidate.json; fi
             if [[ -f wu-lunch/data/repair-report.json ]]; then git add wu-lunch/data/repair-report.json; fi
             if [[ -f wu-lunch/data/publication-observations.json ]]; then git add wu-lunch/data/publication-observations.json; fi
@@ -214,12 +218,16 @@ jobs:
             fi
             echo "Push-Konflikt, versuche erneuten Import ($attempt/3)"
             git fetch origin "$branch"
+            cp wu-lunch/data/update-status.json wu-lunch/.source-capture/update-status-retry.json
             git reset --hard "origin/$branch"
-            python wu-lunch/scripts/update_menus.py
-            python wu-lunch/scripts/update_new_restaurants.py
-            python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
-            python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
-            python wu-lunch/scripts/observe_publication.py --import-scan
+            cp wu-lunch/.source-capture/update-status-retry.json wu-lunch/data/update-status.json
+            python wu-lunch/scripts/run_step.py parser_retry python wu-lunch/scripts/update_menus.py
+            python wu-lunch/scripts/run_step.py finn_karma_retry python wu-lunch/scripts/update_new_restaurants.py
+            python wu-lunch/scripts/run_step.py mensa_ai_retry python wu-lunch/scripts/update_mensa_ai.py --model gpt-6-luna
+            python wu-lunch/scripts/run_step.py html_ai_retry python wu-lunch/scripts/repair_menus_ai.py --max-calls 7
+            python wu-lunch/scripts/run_step.py observe python wu-lunch/scripts/observe_publication.py --import-scan
+            python wu-lunch/scripts/run_step.py source_archive python wu-lunch/scripts/source_archive.py
+            python wu-lunch/scripts/run_step.py finish
           done
           echo "::error::Menüimport konnte nach drei Konfliktversuchen nicht veröffentlicht werden."
           exit 1

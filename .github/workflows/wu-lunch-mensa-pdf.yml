@@ -18,22 +18,22 @@ concurrency:
 
 jobs:
   capture:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 7
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Wiener Uhrzeit prüfen
         id: guard
         shell: bash
         run: |
-          if [[ "${{ github.event_name }}" == "schedule" && ! "$(TZ=Europe/Vienna date +%H)" =~ ^(08|10)$ ]]; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          else
+          if python wu-lunch/scripts/update_schedule.py mensa_snapshot "${{ github.event_name }}"; then
             echo "skip=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=true" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/checkout@v4
-        if: steps.guard.outputs.skip == 'false'
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         if: steps.guard.outputs.skip == 'false'
         with:

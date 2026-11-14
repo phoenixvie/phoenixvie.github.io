@@ -19,6 +19,7 @@ from zoneinfo import ZoneInfo
 import fitz
 import requests
 from bs4 import BeautifulSoup
+from source_archive import capture, failure
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_PATH = ROOT / "data.js"
@@ -135,11 +136,13 @@ def safe_get(url, max_size=4_000_000):
                         body.extend(chunk)
                         if len(body)>max_size: raise ValueError("Datei über Größenlimit")
                     if not body: raise ValueError("Leere Antwort")
+                    capture(u,bytes(body))
                     return bytes(body)
             raise ValueError("Zu viele Redirects")
         except (requests.RequestException, ValueError) as exc:
             last_error=exc
             if attempt<2: time.sleep(1+2*attempt)
+    failure(url,last_error)
     raise RuntimeError(f"Abruf fehlgeschlagen: {str(last_error)[:180]}")
 
 def html_lines(raw):
@@ -1113,7 +1116,7 @@ def run(today):
         "health":"healthy" if not problems else ("failed" if len(problems)==8 else "degraded"),
         "sources":operations,
         "problems":problems,
-        "next_run":"Geplant: Mo 06:15–18:15, Di–Fr 08:15–12:15, Sa 08:15–18:15 stündlich Europe/Vienna (GitHub Actions Zeitabweichung möglich)",
+        "schedule_url":"update-policy.json",
         "format_version":1,
     }
     # The repair agent writes its own check history after the parser run.

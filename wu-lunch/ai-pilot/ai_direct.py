@@ -24,6 +24,8 @@ import requests
 from bs4 import BeautifulSoup, Comment
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'scripts'))
+from source_archive import capture, failure, owner
 OUTPUT = Path(__file__).resolve().parent / "results"
 PRODUCTION = ROOT / "data" / "menus.json"
 TIMEZONE = ZoneInfo("Europe/Vienna")
@@ -133,6 +135,7 @@ def safe_source_get(url, max_bytes=8_000_000):
                 response.close()
                 raise ValueError("Quelldatei überschreitet das Größenlimit")
         response.close()
+        capture(url,bytes(content))
         return url,bytes(content)
     raise ValueError("Zu viele URL-Weiterleitungen")
 
@@ -182,6 +185,8 @@ def build_inputs(restaurant, now, week_start):
     for source in SOURCES[restaurant]:
         try:
             url,raw=safe_source_get(source)
+            if owner(url)!=restaurant:
+                capture(url,raw,restaurant,context='luna_input')
             if restaurant=="mensa":
                 url,raw=find_mensa_pdf(url,raw)
             sha=hashlib.sha256(raw).hexdigest()
@@ -199,6 +204,7 @@ def build_inputs(restaurant, now, week_start):
             source_info.append({"url":url,"sha256":sha,"type":src_type,"bytes":len(raw),
                                 "truncated":truncated,"fetched":True})
         except (ValueError,requests.RequestException) as exc:
+            failure(source,exc)
             source_info.append({"url":source,"fetched":False,"error":str(exc)[:240]})
     if not content:
         raise ValueError("Keine der Originalquellen erreichbar")

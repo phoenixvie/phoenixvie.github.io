@@ -16,6 +16,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from playwright.sync_api import sync_playwright
+from source_archive import capture
 from update_menus import ROOT, target_week_monday, topf_starters, topf_main_items, topf_desserts, topf_combo_items, html_lines, quality_warnings, validate_meal_components
 
 URL="https://topfdeckel.at/wochenmenu"
@@ -55,6 +56,8 @@ def collect_week(monday, *, with_snapshots=False):
                 button.click(timeout=5000)
                 page.wait_for_timeout(350)
                 html=page.locator("main").inner_html()
+                capture(URL,page.content().encode('utf-8'),'topfdeckel',context=day)
+                capture(URL,page.screenshot(full_page=True),'topfdeckel',kind='png',context=day)
                 lines=html_lines(html.encode("utf-8"))
                 verify_week(" ".join(lines),monday)
                 starters=topf_starters(lines)
