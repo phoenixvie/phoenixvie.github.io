@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "restaurant_id": "losteria",
+  "week_start": "2026-11-16",
+  "menu_sha256": "b079a3cf511b72aac5e4bd2c71645a43b2932bd49a10c0aa7587899fdf4d9c8a",
+  "captured_at": "2026-11-15T05:29:08+00:00",
+  "run_id": "43680927918",
+  "code_commit": "1e13849965dd4ec06e3a262eff1b28980a04b3c8",
+  "menu_status": "seasonal",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "cached",
+    "last_success": "2026-11-06T10:40:36+01:00",
+    "consecutive_failures": 0,
+    "parser_version": null,
+    "content_sha256": null
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-15T06:28:12+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-16",
+    "source_fingerprint": null,
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "losteria",
+      "url": "https://losteria.net/at/menue/menu-della-casa/",
+      "at": "2026-11-15T05:27:12+00:00",
+      "sha256": "b363589b1641fd6eb4a8205d3bbfe358e22b25037999ca917e648965576a7c36",
+      "bytes": 51190,
+      "format": "html",
+      "blob": "b363589b1641fd6eb4a8205d3bbfe358e22b25037999ca917e648965576a7c36.html",
+      "stage": "html_ai",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "losteria",
+      "url": "https://losteria.net/at/menue/menu-della-casa/",
+      "at": "2026-11-15T05:28:19+00:00",
+      "sha256": "b363589b1641fd6eb4a8205d3bbfe358e22b25037999ca917e648965576a7c36",
+      "bytes": 51190,
+      "format": "html",
+      "blob": "b363589b1641fd6eb4a8205d3bbfe358e22b25037999ca917e648965576a7c36.html",
+      "stage": "html_ai_retry",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [],
+      "2026-11-17": [],
+      "2026-11-18": [],
+      "2026-11-19": [],
+      "2026-11-20": []
+    },
+    "seasonal": [
+      {
+        "name": "Crema Di Patate Con Tartufo",
+        "price": 7.9,
+        "category": "Saisonkarte",
+        "diet": "unknown",
+        "description": "CREMA DI PATATE CON TARTUFO Kartoffelsuppe mit Sahne, Pfeffer und schwarzem Trüffel (7,90) jetzt probieren",
+        "allergens": [],
+        "included_soup": null,
+        "included_choices": []
+      },
+      {
+        "name": "Pizza Bianca Tacchino E Cipolletartufo Di Cielo",
+        "price": 21.95,
+        "category": "Saisonkarte",
+        "diet": "unknown",
+        "description": "PIZZA BIANCA TACCHINO E CIPOLLETARTUFO DI CIELO Pizza mit Mascarpone-Trüffel-Creme sowie Parmesan, Mozzarella, gebratenen Champignons, Rucola, ital. Hartkäse, Kornblumen, Trüffelöl",
+        "allergens": [],
+        "included_soup": null,
+        "included_choices": []
+      },
+      {
+        "name": "Tagliatelle Tartufo E Funghi",
+        "price": 17.9,
+        "category": "Saisonkarte",
+        "diet": "unknown",
+        "description": "TAGLIATELLE TARTUFO E FUNGHI Pasta mit Trüffel-Sahne-Sauce, Champignons, Steinpilzen, Pfeffer, Petersilie und schwarzem Trüffel (17,90)",
+        "allergens": [],
+        "included_soup": null,
+        "included_choices": []
+      }
+    ],
+    "validFrom": null,
+    "validUntil": null
+  }
+}

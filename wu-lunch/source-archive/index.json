@@ -72,6 +72,15 @@
       "menu_status": "verified",
       "manifest": "2026-11-16/mensa/87cf67d2f83cbe7022b0847cdb40ed4a581ff47b3280e20ed876b4b221b269d7/manifest.json",
       "source_count": 8
+    },
+    {
+      "restaurant_id": "losteria",
+      "week_start": "2026-11-16",
+      "menu_sha256": "b079a3cf511b72aac5e4bd2c71645a43b2932bd49a10c0aa7587899fdf4d9c8a",
+      "captured_at": "2026-11-15T05:29:08+00:00",
+      "menu_status": "seasonal",
+      "manifest": "2026-11-16/losteria/b079a3cf511b72aac5e4bd2c71645a43b2932bd49a10c0aa7587899fdf4d9c8a/manifest.json",
+      "source_count": 2
     }
   ]
 }
