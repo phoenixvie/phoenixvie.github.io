@@ -70,3 +70,17 @@ test('Vienna dates stay visible until 23:00 and registration closes after 12:05'
   current='2027-03-29T10:06:00Z';assert.equal(open('2027-03-29'),false);
 });
 
+
+test('Meet to eat icons are bundled as SVG and inherit their screen colours', async () => {
+  const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8');
+  const match=app.match(/const meetIcons=(\\{.*?\\});\\nconst icon=/);
+  assert.ok(match, 'bundled icon map exists');
+  const icons=JSON.parse(match[1]);
+  for(const name of ['calendar_today','directions_walk','school','lock','person','person_add']) {
+    assert.match(icons[name], /<svg/); assert.match(icons[name], /class="material-svg"/);
+  }
+  assert.match(css,/\\.meet-fact>\\.material-svg\\{[^}]*color:#6f8192/);
+  assert.match(css,/\\.meet-person \\.material-svg\\{[^}]*color:#8a98a5/);
+  assert.match(css,/\\.meet-brand-logo \\.material-svg\\{[^}]*width:34px/);
+});
