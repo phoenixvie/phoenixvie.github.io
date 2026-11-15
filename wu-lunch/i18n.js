@@ -9,7 +9,7 @@
     'Impressum – WU Lunch':'Legal notice – WU Lunch','WU Food · App-Vorschau':'WU Food · App preview','E-Mail-Adresse':'Email address','Deutschen oder englischen Text suchen':'Search German or English text','Navigation':'Navigation','Tagesnavigation: nach links oder rechts wischen':'Day navigation: swipe left or right','Karte der Restaurants':'Restaurant map','Interaktive Karte der Restaurants rund um den WU Campus':'Interactive map of restaurants around WU Campus','Menütage':'Menu days','Wischanzeige':'Swipe indicator','Standort':'Location','Menü':'Menu','Restaurant':'Restaurant','Restaurantansichten':'Restaurant views','Zurück':'Back','Weiter':'Next','Zurück zur Liste':'Back to list',
     'Kontaktdaten':'Contact details','Telefon':'Phone','E-Mail':'Email','Webseite':'Website','Webseite – Mittagsmenü':'Website – lunch menu','Adresse':'Address','Öffnungszeiten':'Opening hours','Standort':'Location',
     'Nicht hinterlegt':'Not provided','Noch nicht hinterlegt':'Not provided','Noch nicht veröffentlicht':'Not published yet','In Google Maps öffnen':'Open in Google Maps','Auf Google Maps öffnen':'Open in Google Maps',
-    'Karte wird geladen …':'Loading map …','Karte wird geladen':'Loading map','Menüs werden geladen …':'Loading menus …','Erneut versuchen':'Try again','Restaurantwebseite':'restaurant website',
+    'Karte wird geladen …':'Loading map …','Karte wird geladen':'Loading map','Menüs werden geladen …':'Loading menus …','Erneut versuchen':'Try again','Restaurantwebseite':'restaurant website','Jeden Montag und Mittwoch gemeinsam essen gehen':'Eat together every Monday and Wednesday',
     'Angaben ohne Gewähr. Bitte auf der':'Information may change. Please check the','prüfen.':'for confirmation.',
     'Angaben ohne Gewähr – bitte Menü auf der Restaurant-Website prüfen.':'Information may change – please check the menu on the restaurant website.',
     'Diese Website verwendet keine Cookies.':'This website does not use cookies.','Impressum':'Legal notice','Admin':'Admin','Zum Restaurant':'Restaurant website','Karte':'Map','Liste':'List',
@@ -40,7 +40,7 @@
     restaurant:['Kontaktdaten','Telefon','E-Mail','Webseite','Webseite – Mittagsmenü','Adresse','Öffnungszeiten','Standort','Nicht hinterlegt','Noch nicht hinterlegt','In Google Maps öffnen','Auf Google Maps öffnen','Standort von {restaurant}'],
     status:['Noch nicht veröffentlicht','Karte wird geladen …','Karte wird geladen','Menüs werden geladen …','Erneut versuchen','X €','English translation pending','Menüs konnten nicht geladen werden','Live-Änderungen konnten nicht geladen werden','Menüdaten sind ungültig','Laden fehlgeschlagen','Link konnte nicht geöffnet werden','Bitte prüfe, ob eine passende App installiert ist.','Die Restaurantseite konnte nicht geladen werden.','Webseite von {restaurant}'],
     pdf:['Menü-PDF','PDF wird geladen …','PDF-Seite','PDF geladen ·','Seite','Seiten','PDF konnte nicht angezeigt werden.','Zurück zum Menü'],
-    footer:['Impressum','Kontakt','Kontakt-E-Mail','Angaben ohne Gewähr. Bitte auf der','Restaurantwebseite','prüfen.'],
+    footer:['Impressum','Kontakt','Kontakt-E-Mail','Jeden Montag und Mittwoch gemeinsam essen gehen','Angaben ohne Gewähr. Bitte auf der','Restaurantwebseite','prüfen.'],
     general:['WU Food','WU Food · App-Vorschau'],
   };
   function appCatalog(){return catalog().flatMap(row=>{const category=Object.keys(appGroups).find(id=>appGroups[id].includes(row.text_key))||(/^Datenschutz der App$|^App-Versionen mit Nutzungsstatistik |^Wir senden keine Namen|^Die gewählte Sprache wird lokal |^Datenschutzinformationen von Aptabase$/.test(row.text_key)?'privacy':null);return category?[{...row,category}]:[];});}
@@ -110,3 +110,4 @@
   root.WULunchI18n={get language(){return language;},get locale(){return language==='de'?'de-AT':'en-GB';},setLanguage,toggleLanguage:()=>setLanguage(language==='de'?'en':'de'),text,english,label,catalog,appCatalog,apply,refresh,refreshUi,ui};
   if(root.document){document.documentElement?.setAttribute('lang',language);if(language==='en'&&document.title)document.title=english(document.title)||document.title;document.addEventListener('click',event=>{if(event.target.closest?.('[data-change-language]')){event.preventDefault();root.WULunchI18n.toggleLanguage();}});document.addEventListener('DOMContentLoaded',()=>{apply(document.body);refresh();notifyNative();if(root.MutationObserver)new MutationObserver(()=>apply(document.body)).observe(document.body,{subtree:true,childList:true,characterData:true});});}
 })(typeof window==='undefined'?globalThis:window);
+
