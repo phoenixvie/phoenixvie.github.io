@@ -84,3 +84,16 @@ test('Meet to eat icons are bundled as SVG and inherit their screen colours', as
   assert.match(css,/\.meet-person \.material-svg\{[^}]*color:#8a98a5/);
   assert.match(css,/\.meet-brand-logo \.material-svg\{[^}]*width:34px/);
 });
+
+test('Meet to eat keeps its scroll position during background redraws', async () => {
+  const source=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  const start=source.indexOf('function render(){');
+  const end=source.indexOf('const r=currentRestaurant();',start);
+  assert.ok(start>=0 && end>start);
+  let screen={scrollTop:540};
+  const app={querySelector:()=>screen, set innerHTML(value){screen={scrollTop:0};}};
+  const context={data:{},meetPreviewOpen:true,app,map:null,renderMeet:()=>'<div id="meet-screen"></div>',document:{getElementById:()=>null},Number};
+  vm.createContext(context);vm.runInContext(source.slice(start,end)+'}',context);
+  context.render();assert.equal(screen.scrollTop,540);
+  screen.scrollTop=320;context.render();assert.equal(screen.scrollTop,320);
+});
