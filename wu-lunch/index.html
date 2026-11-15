@@ -610,6 +610,8 @@ function displayWeekStart(now=new Date()){
       if(category.includes('menüoption') || category.includes('menükombo') || category.includes('kombination'))return 4;
       return 1;
     }
+function cleanDisplayText(value){return String(value||'').replace(/\s*\([ABCDEFGHLMNOPR](?:\s*[,/]\s*[ABCDEFGHLMNOPR])*\)/g,'').replace(/\s*[,;|–-]?\s*Allergene?\s*:[^\n|]*/gi,'').replace(/\s*[,;]?\s*\b(?:laktosefrei|glutenfrei)\b/gi,'').replace(/\s+([,;])/g,'$1').replace(/[,;]\s*$/,'').trim()}
+function cleanDisplayDish(d){return {...d,name:cleanDisplayText(d.name),description:cleanDisplayText(d.description),included_starter:cleanDisplayText(d.included_starter),included_soup:cleanDisplayText(d.included_soup),included_dessert:cleanDisplayText(d.included_dessert),allergens:[]}}
 function restaurantDisplayRules(id,raw){
   const rows=raw.map(item=>({...item,allergens:[],name:item.name.replace(/\s*\([ABCDEFGHLMNOPR](?:\s*[,/]\s*[ABCDEFGHLMNOPR])*\)/g,'')}));
   if(id==='campus')return rows.map(item=>({...item,description:'Suppe oder Salat · Dessert',included_choices:[],menu_options:[]}));
@@ -668,7 +670,7 @@ function mensaStations(raw){
   return [...out.filter(item=>!['Ausgabe 5','Ausgabe 6','Ausgabe 7'].includes(item.category)),...raw.filter(item=>!assigned.has(item)&&! /tagess?uppe|soup deal|menüoption|smart menü/i.test(item.category||item.name))];
 }
     function visibleDishes(restaurant){
-      const stored=dishesForRestaurant(restaurant);const manual=stored.length&&stored.every(d=>d.manual_presentation);const raw=manual?stored:restaurantDisplayRules(restaurant.id,stored);
+      const stored=dishesForRestaurant(restaurant).map(cleanDisplayDish);const manual=stored.length&&stored.every(d=>d.manual_presentation);const raw=manual?stored:restaurantDisplayRules(restaurant.id,stored);
       // Mensa's weekly soup is included in some menu lines, but an
       // independent sale/price is NOT documented. Don't invent a standalone
       // soup offer. Preserve the correct inclusion semantics for this source.
