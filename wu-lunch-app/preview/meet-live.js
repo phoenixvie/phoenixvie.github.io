@@ -16,7 +16,7 @@
     const {today,time}=viennaClock();
     const d = new Date(today + 'T12:00:00Z'), out = [];
     if (time >= '23:00') d.setUTCDate(d.getUTCDate() + 1);
-    while (out.length < 3) { if ([1, 3].includes(d.getUTCDay())) out.push(d.toISOString().slice(0, 10)); d.setUTCDate(d.getUTCDate() + 1); }
+    while (out.length < 5) { if ([1, 3].includes(d.getUTCDay())) out.push(d.toISOString().slice(0, 10)); d.setUTCDate(d.getUTCDate() + 1); }
     return out;
   };
   const date = () => slotDates()[meetSlot];
@@ -45,18 +45,18 @@
     const days = slotDates(), selected = days[meetSlot], own = state.own.find(item => item.meeting_date === selected);
     meetJoined = !!own;
     const error = state.error ? `<p class="meet-notice" role="alert">${esc(state.error)}</p>` : '';
-    const header = `<header class="top detail"><button class="back" data-action="meet-back" aria-label="Zurück">${icon('arrow_back')}</button><h1>${meetSlot === null ? 'Meet to eat' : meetForm ? 'Anmeldung' : 'Gemeinsam essen'}</h1></header>`;
+    const header = `<header class="top detail"><button class="back" data-action="meet-back" aria-label="Zurück">${icon('arrow_back')}</button><h1>${meetForm ? 'Anmeldung' : 'Meet to eat'}</h1></header>`;
     if (meetSlot === null) return `${header}<div class="body"><div class="scroll meet-slots"><p class="meet-intro">Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.</p>${error}${days.map((day, i) => `<button class="restaurant-row" data-action="meet-slot" data-slot="${i}"><span class="logo logo-fallback meet-time-logo">${icon('schedule')}</span><span class="restaurant-copy"><span class="restaurant-name">${esc(dateValue(day, {weekday:'long',day:'numeric',month:'long'}))} · 12:00 Uhr</span><span class="restaurant-type" style="display:block">${state.loaded ? state.participants.filter(p => p.meeting_date === day).length + ' Personen angemeldet' : 'Wird geladen …'}</span></span>${icon('chevron_right','chevron')}</button>`).join('')}</div></div>`;
-    if (meetForm) return `${header}<div class="body"><div class="scroll meet-content"><h3>Anmelden</h3>${error}${state.step === 'code' ? `<p>Wir haben einen Bestätigungscode an ${esc(state.pendingEmail)} gesendet. Bitte gib ihn hier ein.</p><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button>` : `<p>Wir bestätigen deine E-Mail-Adresse. Eine Prüfung der WU-Zugehörigkeit erfolgt derzeit nicht. Dein Vorname und der Termin sind für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="60" value="${esc(state.pendingName || getName())}"></label><label>E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Bestätigungscode senden</button>`}</div></div>`;
+    if (meetForm) return `${header}<div class="body"><div class="scroll meet-content"><h3>Anmelden</h3>${error}${state.step === 'code' ? `<p>Wir haben einen Bestätigungscode an ${esc(state.pendingEmail)} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.</p><a href="https://outlook.cloud.microsoft" data-action="meet-open-url" class="meet-mail-link" target="_blank" rel="noopener noreferrer">WU-Mail öffnen</a><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button><button class="meet-secondary" data-action="meet-resend-code" ${state.busy?'disabled':''}>Neuen Code anfordern</button>` : `<p>Wir bestätigen deine E-Mail-Adresse. Eine Prüfung der WU-Zugehörigkeit erfolgt derzeit nicht. Dein Vorname und der Termin sind für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="60" value="${esc(state.pendingName || getName())}"></label><label>E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Bestätigungscode senden</button>`}</div></div>`;
     const people = state.participants.filter(p => p.meeting_date === selected);
     let ownRemoved = false;
     const names = people.filter(p => { if (own && !ownRemoved && p.first_name === own.first_name) { ownRemoved = true; return false; } return true; });
     const entries = names.map(p => `<div class="meet-person">${icon('person')}<span>${esc(p.first_name)}</span></div>`).join('') + (own ? `<div class="meet-person">${icon('person')}<span>${esc(own.first_name)}</span><button class="meet-remove" data-action="meet-leave" aria-label="Meine Anmeldung entfernen">${icon('close')}</button></div>` : '');
-    const mapLink = 'https://www.google.com/maps/search/?api=1&amp;query=WU%20Mensa%20Welthandelsplatz%201%20Wien';
-    const location = own ? `Vor der Mensa · <a href="${mapLink}">Google Maps öffnen</a>` : 'Angabe nach Anmeldung';
-    const photos = own ? `<p><strong>Vor der Mensa</strong> · <a href="${mapLink}">Google Maps öffnen</a></p><div class="meet-photo-visible" role="img" aria-label="Symbolbild des Campus"></div><small>Symbolbild</small><div id="meet-map" class="meet-map meet-map-visible"></div>` : `<div class="meet-locked-photo" aria-label="Foto nach Anmeldung sichtbar"><div class="meet-photo"></div><span class="meet-locked-label">${icon('lock')} Nach Anmeldung sichtbar</span></div><div class="meet-locked-map" aria-label="Karte nach Anmeldung sichtbar"><div id="meet-map" class="meet-map"></div><span class="meet-locked-label">${icon('lock')} Karte nach Anmeldung sichtbar</span></div><small>Symbolbild</small>`;
+    const mapLink = 'https://www.google.com/maps/search/?api=1&amp;query=48.21289788048291%2C16.409449359855884';
+    const location = own ? 'Vor dem Baum direkt bei der Mensa' : 'Angabe nach Anmeldung';
+    const photos = own ? `<p><strong>Vor dem Baum direkt bei der Mensa</strong></p><img class="meet-photo-visible" src="./meeting-point.png" alt="Treffpunkt vor dem Baum bei der Mensa"><div id="meet-map" class="meet-map meet-map-visible"></div><a class="meet-map-button" data-action="meet-open-url" href="${mapLink}" target="_blank" rel="noopener noreferrer">Google Maps öffnen</a>` : `<div class="meet-locked-photo" aria-label="Foto nach Anmeldung sichtbar"><div class="meet-photo"></div><span class="meet-locked-label">${icon('lock')} Nach Anmeldung sichtbar</span></div><div class="meet-locked-map" aria-label="Karte nach Anmeldung sichtbar"><div id="meet-map" class="meet-map"></div><span class="meet-locked-label">${icon('lock')} Karte nach Anmeldung sichtbar</span></div>`;
     const tabs = `<div class="weekday-strip" aria-label="Termine">${days.map((day, i) => `<button type="button" class="weekday ${i === meetSlot ? 'active' : ''}" data-action="meet-select" data-slot="${i}" aria-label="${esc(dateValue(day,{weekday:'long',day:'numeric',month:'long'}))}" ${i === meetSlot ? 'aria-current="date"' : ''}><span>${esc(dateValue(day,{weekday:'long'}))}</span><span class="weekday-date">${esc(dateValue(day,{day:'2-digit',month:'2-digit'}))}</span></button>`).join('')}</div><div class="day-dots" aria-label="Wischanzeige">${days.map((day,i) => `<button type="button" class="day-dot ${i === meetSlot ? 'active' : ''}" data-action="meet-select" data-slot="${i}" aria-label="${esc(dateValue(day,{weekday:'long',day:'numeric',month:'long'}))}" ${i === meetSlot ? 'aria-current="date"' : ''}></button>`).join('')}</div>`;
-    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${tabs}${error}<h3>Nächstes gemeinsames Essen</h3><p>Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.</p><section class="meet-facts">${fact('calendar_today','Datum',esc(dateValue(selected,{weekday:'long',day:'numeric',month:'long'})))}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','WU-Studenten Gruppe')}</section>${entries ? `<h3>Bereits angemeldet</h3>${entries}` : ''}${own ? '<p class="meet-confirm">Du bist für diesen Termin angemeldet.</p><button class="meet-secondary" data-action="meet-leave">Abmelden</button>' : registrationOpen(selected) ? `<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Verbindlich anmelden</button>` : '<p class="meet-notice">Die Anmeldung für diesen Termin ist geschlossen.</p>'}<section class="meet-reveal"><h3>Treffpunkt auf der WU</h3>${photos}</section></div></div>`;
+    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${tabs}${error}<h3>Jeden ${esc(dateValue(selected,{weekday:'long'}))}: Gemeinsam Essen gehen</h3><p>Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.</p><section class="meet-facts">${fact('calendar_today','Datum',esc(dateValue(selected,{weekday:'long',day:'numeric',month:'long'})))}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','WU-Studenten Gruppe')}</section>${entries ? `<h3>Bereits angemeldet</h3>${entries}` : ''}${own ? '<p class="meet-confirm">Du bist für diesen Termin angemeldet. Bitte melde dich aus Rücksicht auf die anderen ab, wenn du doch nicht kommen kannst.</p><button class="meet-secondary" data-action="meet-leave">Abmelden</button>' : registrationOpen(selected) ? `<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Verbindlich anmelden</button>` : '<p class="meet-notice">Die Anmeldung für diesen Termin ist geschlossen.</p>'}<section class="meet-reveal"><h3>Treffpunkt auf der WU</h3>${photos}</section></div></div>`;
   }
   async function join(name, meetingDate) {
     if (!state.session || !name.trim()) { meetForm = true; state.step = 'form'; return; }
@@ -73,7 +73,7 @@
     if (state.busy) return;
     state.error='';
     if (a === 'meet-show-form') state.registrationDate=date();
-    if (['meet-show-form','meet-send-code','meet-verify'].includes(a) && !registrationOpen(state.registrationDate)) { state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false; render(); return; }
+    if (['meet-show-form','meet-send-code','meet-resend-code','meet-verify'].includes(a) && !registrationOpen(state.registrationDate)) { state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false; render(); return; }
     if (a === 'meet-show-form' && (!state.session || !getName())) { state.step='form'; meetForm=true; render(); return; }
     if (a === 'meet-send-code') {
       state.pendingName = document.getElementById('meet-first-name').value.trim();
@@ -84,21 +84,23 @@
     state.busy=true; render();
     try {
       if (a === 'meet-show-form') await join(getName(),state.registrationDate);
-      if (a === 'meet-send-code') { const {error} = await client.auth.signInWithOtp({email:state.pendingEmail}); if(error) throw error; state.step='code'; }
+      if (a === 'meet-send-code' || a === 'meet-resend-code') { const {error} = await client.auth.signInWithOtp({email:state.pendingEmail}); if(error) throw error; state.step='code'; }
       if (a === 'meet-verify') { const {data,error} = await client.auth.verifyOtp({email:state.pendingEmail,token:code,type:'email'}); if(error) throw error; state.session=data.session; await join(state.pendingName,state.registrationDate); }
       if (a === 'meet-leave') { const {error}=await client.from('meet_preview_registrations').delete().eq('user_id',state.session.user.id).eq('meeting_date',date()); if(error) throw error; await refresh(); }
     } catch(e) {
-      if (['meet-show-form','meet-send-code','meet-verify'].includes(a) && !registrationOpen(state.registrationDate)) {
+      if (['meet-show-form','meet-send-code','meet-resend-code','meet-verify'].includes(a) && !registrationOpen(state.registrationDate)) {
         state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false;
-      } else showError(e);
+      } else if (a === 'meet-verify') { state.error='Der Code ist ungültig oder bereits verwendet. Bitte fordere einen neuen Code an.'; } else showError(e);
     }
     finally { state.busy=false; render(); }
   }
   renderMeet = renderLive;
   app.addEventListener('click', e => {
     const target=e.target.closest('[data-action]');
-    if (!target || !['meet-preview','meet-back','meet-slot','meet-select','meet-show-form','meet-send-code','meet-verify','meet-leave'].includes(target.dataset.action)) return;
-    e.preventDefault(); e.stopImmediatePropagation(); void action(target);
+    if (!target || !['meet-preview','meet-back','meet-slot','meet-select','meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-leave','meet-open-url'].includes(target.dataset.action)) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (target.dataset.action === 'meet-open-url') { const url=safeUrl(target.href); if (url && !nativePost('open-source',{url,title:'Meet to eat'})) window.open(url,'_blank','noopener,noreferrer'); return; }
+    void action(target);
   }, true);
   let touch = null;
   app.addEventListener('touchstart', e => {
