@@ -48,9 +48,8 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   const source=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
   const menu=source.slice(source.indexOf('function renderMenu('),source.indexOf('function renderInfo('));
   assert.match(menu,/data-action="meet-preview"/);
-  assert.ok(menu.indexOf('Jeden Montag und Mittwoch gemeinsam essen gehen') < menu.indexOf('Angaben ohne Gewähr'));
-  const translations=await readFile(new URL('../../wu-lunch/i18n.js',import.meta.url),'utf8');
-  assert.match(translations,/Eat together every Monday and Wednesday/);
+  assert.ok(menu.indexOf('gemeinsam essen</span>') < menu.indexOf('Angaben ohne Gewähr'));
+  assert.match(menu,/\[0,2\]\.includes\(dayIndex\)/);
 });
 
 test('Vienna dates stay visible until 23:00 and registration closes after 12:05', async () => {
