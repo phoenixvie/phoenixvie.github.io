@@ -52,3 +52,6 @@
 .meet-invite{color:inherit;font-size:inherit;font-weight:inherit;text-decoration:none}.meet-map-button{background:#e4e2e4;color:#333!important}
 
 .dish-name.mensa-station{white-space:pre-line;font-weight:400}.meet-invite-link{text-decoration:underline}
+
+/* Inline Material icons use the same sizes and colours as font icons. */
+.material-svg{display:inline-block;width:24px;height:24px;flex:none;fill:currentColor}.meet-fact>.material-svg{width:23px;height:23px;color:#6f8192}.meet-person .material-svg{width:23px;height:23px;color:#8a98a5}.meet-brand-logo .material-svg{width:34px;height:34px;filter:drop-shadow(0 1px 3px #0009)}.meet-locked-label .material-svg{width:16px;height:16px}
