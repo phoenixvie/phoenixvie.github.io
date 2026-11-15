@@ -14,13 +14,13 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   let profiles=[{restaurant_id:'mensa',website_url:'https://www.wumensa.at/'}], manual=[];
   const cache=new Map();
   const localStorage={getItem:key=>cache.get(key)||null,setItem:(key,value)=>cache.set(key,value)};
-  const app = {innerHTML: '', addEventListener: (type, callback) => actions.set(type, callback)};
+  const app = {innerHTML: '', addEventListener: (type, callback) => { const previous = actions.get(type); actions.set(type, previous ? event => { callback(event); previous(event); } : callback); }};
   const mapElement={innerHTML:''};
   const restaurants = [{id:'mensa',name:'WU Mensa',url:'https://www.wumensa.at/menuplan-deutsch/',days:{}},{id:'finn',name:'Finn',url:'https://finn.wien/blogs/news/mittagsmenu',days:{}}];
   class FixtureDate extends Date {constructor(...args){super(...(args.length?args:['2026-11-10T12:00:00Z']));}}
   const context = {URL, URLSearchParams, Intl, Date:FixtureDate, console, localStorage, navigator:{language:'de-AT'}, location:{hostname:'phoenixvie.github.io',search:''},
     document:{getElementById:id=>id==='map'?mapElement:app,addEventListener:(type,callback)=>events.set(type,callback)},
-    setInterval:(callback,ms)=>{refresh=callback;refreshMs=ms;return 0}, setTimeout:()=>0,
+    setInterval:(callback,ms)=>{if(ms===3000){refresh=callback;refreshMs=ms;}return 0}, setTimeout:()=>0,
     ReactNativeWebView:{postMessage:value=>messages.push(JSON.parse(value))},
     fetch:async (url,options)=>{requests.push({url,options});return {ok:true,json:async()=>url.includes('lunch_ui_texts')?[]:url.includes('restaurant_overrides')?profiles:url.includes('menu_day_overrides')?manual:url.includes('restaurant-contact')?{restaurants:{mensa:{phone:'+43 123',email:'mensa@example.test',hours:['Mo–Fr 11:00–14:00']}}}:{weekStart:'2026-11-09',restaurants:JSON.parse(JSON.stringify(restaurants))}}}};
   context.window=context;
