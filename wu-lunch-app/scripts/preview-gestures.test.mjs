@@ -94,7 +94,7 @@ test('included soup or salad precedes the main course without changing separate 
   for(const detail of ['Mit Suppe oder Salat','Mit Tagessuppe und grünem Salat','Mit Tagessuppe oder kleinem Salat']){
     const original={name:'Hauptspeise',price:14.9,description:detail};
     const shown=c.mealPresentation(original);
-    assert.equal(shown.starter,detail.replace(/^Mit /,''));assert.equal(shown.detail,'');
+    assert.equal(shown.starter,detail.replace(/^Mit /,'').replace(/\bkleinem Salat\b/i,'kleiner Salat'));assert.equal(shown.detail,'');
     assert.equal(original.description,detail);
   }
   for(const row of [{price:13.5,description:'Suppe optional +2,00 €'},{price:3.5,description:'Separat erhältlich'},{price:null,description:'Mit Tagessuppe'},{price:2,description:'Optional zum Tagesteller',detailInline:true},{price:7.5,description:'(klein / groß)'}]){
