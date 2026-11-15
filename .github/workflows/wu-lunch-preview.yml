@@ -15,6 +15,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Einmaliger E-Mail-Versandtest für den Eigentümer
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'feat/meet-preview-registration-20261115'
+        run: |
+          node -e "fetch('https://vswnqdqnohbuzbwmsdvv.supabase.co/auth/v1/otp',{method:'POST',headers:{'Content-Type':'application/json',apikey:'sb_publishable__LAhcQOUGtE-ACAN-RPKkw_UB7Nrub2'},body:JSON.stringify({email:'campusmenue@gmail.com',create_user:true})}).then(r=>{console.log('OTP request status:',r.status);if(!r.ok)process.exitCode=1}).catch(()=>{console.log('OTP request failed');process.exitCode=1})"
       - run: node --check wu-lunch-app/preview/app.js
       - run: node --check wu-lunch-app/preview/meet-live.js
       - run: node --test wu-lunch-app/scripts/preview-gestures.test.mjs wu-lunch-app/scripts/website-presentation.test.mjs wu-lunch-app/scripts/admin-data.test.mjs wu-lunch-app/scripts/meet-preview.test.mjs
