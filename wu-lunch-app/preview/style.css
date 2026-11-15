@@ -46,3 +46,5 @@
 #meet-screen{touch-action:pan-y}#meet-screen .weekday-strip{grid-template-columns:repeat(3,minmax(0,20%));justify-content:center;margin:-6px -20px 14px;line-height:normal;background:linear-gradient(to top,#e6e7ea 2px,transparent 2px)}#meet-screen .meet-reveal{margin-top:36px}
 
 #meet-screen .weekday-strip{grid-template-columns:repeat(5,minmax(0,20%))}#meet-screen .meet-reveal{margin-top:56px}.meet-photo{background-image:url('./meeting-point.png')}.meet-photo-visible{display:block;width:100%;height:auto;background:none}.meet-map-button{display:block;text-align:center;margin-top:12px;padding:11px 14px;border-radius:7px;background:#087cf4;color:#fff!important;text-decoration:none!important}.meet-mail-link{display:inline-block;margin:4px 0 8px}
+
+.meet-invite{display:block;margin:0 0 9px;padding:0;border:0;background:none;color:#087cf4;font:inherit;font-size:12px;text-align:left;text-decoration:underline}
