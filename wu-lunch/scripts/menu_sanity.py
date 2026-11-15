@@ -165,6 +165,9 @@ def review_with_luna(restaurants, week, key):
     3. Widersprüche: dieselbe Suppe/Salat/Dessert gleichzeitig gratis und aufpreispflichtig;
     4. offensichtlich vertauschte Preis-/Portionszuordnung oder zwei widersprechende Preise
        für exakt dasselbe Angebot; keine Preisvermutungen aus Allgemeinwissen.
+    Allergene, Allergenbuchstaben und Hinweise wie laktosefrei oder glutenfrei
+    gehören nicht in die sichtbare Speisenbeschreibung. Solche Angaben können
+    als Quellinformation gespeichert bleiben; die Anzeige entfernt sie separat.
     Verschiedene Stationen/Portionen, echte Einzel-/Menüvarianten, wiederkehrende
     Wochengerichte an anderen Tagen und Suppe als Vorspeise sind KEINE Duplikate.
     WICHTIG: Salat als Beilage zur Hauptspeise und zusätzlich 'Suppe ODER Salat'
