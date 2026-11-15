@@ -10,6 +10,9 @@ const fontData = JSON.parse(font);
 const hash = createHash('sha256').update(template + css + js + i18n).digest('hex');
 const nativeCSS = `@font-face{font-family:'Material Symbols Outlined';font-style:normal;font-weight:400;src:url(data:${fontData.mime};base64,${fontData.base64}) format('${fontData.format}')}html,body{width:100%;height:100%;min-height:0;display:block;background:#fff}.app{width:100%;height:100dvh;min-height:0;border-radius:0;box-shadow:none;margin:0}.material-symbols-outlined{font-display:block}`;
 const html = template
+  // Meet-to-eat is restricted to the web preview until separately released.
+  .replace(/<script defer src="https:\/\/cdn\.jsdelivr\.net\/npm\/@supabase\/supabase-js@[^"<>]+"><\/script>\s*/,'')
+  .replace(/<script defer src="\.\/meet-live\.js(?:\?[^"<>]*)?"><\/script>\s*/,'')
   .replace(/<script defer src="\.\.\/\.\.\/wu-lunch\/i18n\.js[^"]*"><\/script>/,'')
   .replace('<title>WU Food · App-Vorschau</title>', '<title>WU Food</title>')
   .replace(/<link[^>]+(?:fonts.googleapis.com|fonts.gstatic.com)[^>]*>\s*/g, '')
