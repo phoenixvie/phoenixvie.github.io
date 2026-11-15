@@ -5,8 +5,11 @@
   });
   const state = { session: null, participants: [], own: [], pendingEmail: '', pendingName: '', step: 'form', error: '', busy: false, loaded: false };
   const slotDates = () => {
-    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    const now = new Date();
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
+    const time = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Vienna', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(now);
     const d = new Date(today + 'T12:00:00Z'), out = [];
+    if (time >= '12:00') d.setUTCDate(d.getUTCDate() + 1);
     while (out.length < 3) { if ([1, 3, 5].includes(d.getUTCDay())) out.push(d.toISOString().slice(0, 10)); d.setUTCDate(d.getUTCDate() + 1); }
     return out;
   };
@@ -46,7 +49,8 @@
     const mapLink = 'https://www.google.com/maps/search/?api=1&amp;query=WU%20Mensa%20Welthandelsplatz%201%20Wien';
     const location = own ? `Vor der Mensa · <a href="${mapLink}">Google Maps öffnen</a>` : 'Angabe nach Anmeldung';
     const photos = own ? `<p><strong>Vor der Mensa</strong> · <a href="${mapLink}">Google Maps öffnen</a></p><div class="meet-photo-visible" role="img" aria-label="Campusbild als Platzhalter"></div><small>Campusbild als Platzhalter</small><div id="meet-map" class="meet-map meet-map-visible"></div>` : `<div class="meet-locked-photo" aria-label="Foto nach Anmeldung sichtbar"><div class="meet-photo"></div><span class="meet-locked-label">${icon('lock')} Nach Anmeldung sichtbar</span></div><div class="meet-locked-map" aria-label="Karte nach Anmeldung sichtbar"><div id="meet-map" class="meet-map"></div><span class="meet-locked-label">${icon('lock')} Karte nach Anmeldung sichtbar</span></div><small>Campusbild als Platzhalter</small>`;
-    return `${header}<div class="body"><div class="scroll meet-content"><p class="meet-notice">Testvorschau: Termine und Anmeldungen dienen zum Testen.</p>${error}<h3>Nächstes gemeinsames Essen</h3><section class="meet-facts">${fact('calendar_today','Datum',esc(dateValue(selected,{weekday:'long',day:'numeric',month:'long'})))}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','Testteilnehmer')}</section><h3>Bereits angemeldet</h3>${entries || '<p>Noch niemand angemeldet.</p>'}${own ? '<p class="meet-confirm">Du bist für diesen Testtermin angemeldet.</p><button class="meet-secondary" data-action="meet-leave">Abmelden</button>' : `<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Verbindlich anmelden</button>`}<section class="meet-reveal"><h3>Treffpunkt auf der WU</h3>${photos}</section></div></div>`;
+    const tabs = `<div class="weekday-strip" aria-label="Termine">${days.map((day, i) => `<button type="button" class="weekday ${i === meetSlot ? 'active' : ''}" data-action="meet-select" data-slot="${i}" aria-label="${esc(dateValue(day,{weekday:'long',day:'numeric',month:'long'}))}" ${i === meetSlot ? 'aria-current="date"' : ''}><span>${esc(dateValue(day,{weekday:'long'}))}</span><span class="weekday-date">${esc(dateValue(day,{day:'2-digit',month:'2-digit'}))}</span></button>`).join('')}</div><div class="day-dots" aria-label="Wischanzeige">${days.map((day,i) => `<button type="button" class="day-dot ${i === meetSlot ? 'active' : ''}" data-action="meet-select" data-slot="${i}" aria-label="${esc(dateValue(day,{weekday:'long',day:'numeric',month:'long'}))}" ${i === meetSlot ? 'aria-current="date"' : ''}></button>`).join('')}</div>`;
+    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${tabs}<p class="meet-notice">Testvorschau: Termine und Anmeldungen dienen zum Testen.</p>${error}<h3>Nächstes gemeinsames Essen</h3><section class="meet-facts">${fact('calendar_today','Datum',esc(dateValue(selected,{weekday:'long',day:'numeric',month:'long'})))}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','Testteilnehmer')}</section>${entries ? `<h3>Bereits angemeldet</h3>${entries}` : ''}${own ? '<p class="meet-confirm">Du bist für diesen Testtermin angemeldet.</p><button class="meet-secondary" data-action="meet-leave">Abmelden</button>' : `<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Verbindlich anmelden</button>`}<section class="meet-reveal"><h3>Treffpunkt auf der WU</h3>${photos}</section></div></div>`;
   }
   async function join(name) {
     if (!state.session || !name.trim()) { meetForm = true; state.step = 'form'; return; }
@@ -56,9 +60,9 @@
   }
   async function action(target) {
     const a = target.dataset.action;
-    if (a === 'meet-preview') { meetPreviewOpen=true; meetSlot=null; state.error=''; render(); await refresh(); return; }
-    if (a === 'meet-back') { state.error=''; if (meetForm) meetForm=false; else if (meetSlot!==null) meetSlot=null; else meetPreviewOpen=false; render(); return; }
-    if (a === 'meet-slot') { meetSlot=Number(target.dataset.slot); meetForm=false; state.error=''; render(); await refresh(); return; }
+    if (a === 'meet-preview') { meetPreviewOpen=true; meetSlot=0; meetForm=false; state.error=''; render(); await refresh(); return; }
+    if (a === 'meet-back') { state.error=''; if (meetForm) meetForm=false; else { meetSlot=null; meetPreviewOpen=false; } render(); return; }
+    if (a === 'meet-slot' || a === 'meet-select') { if (state.busy) return; meetSlot=Math.max(0,Math.min(slotDates().length-1,Number(target.dataset.slot))); meetForm=false; state.error=''; render(); return; }
     if (state.busy) return;
     state.error='';
     if (a === 'meet-show-form' && (!state.session || !getName())) { state.step='form'; meetForm=true; render(); return; }
@@ -80,9 +84,23 @@
   renderMeet = renderLive;
   app.addEventListener('click', e => {
     const target=e.target.closest('[data-action]');
-    if (!target || !['meet-preview','meet-back','meet-slot','meet-show-form','meet-send-code','meet-verify','meet-leave'].includes(target.dataset.action)) return;
+    if (!target || !['meet-preview','meet-back','meet-slot','meet-select','meet-show-form','meet-send-code','meet-verify','meet-leave'].includes(target.dataset.action)) return;
     e.preventDefault(); e.stopImmediatePropagation(); void action(target);
   }, true);
+  let touch = null;
+  app.addEventListener('touchstart', e => {
+    touch = meetPreviewOpen && !meetForm && !state.busy && e.touches.length === 1 && e.target.closest('#meet-screen') ? {x:e.changedTouches[0].screenX,y:e.changedTouches[0].screenY} : null;
+  }, {passive:true});
+  app.addEventListener('touchend', e => {
+    if (!touch) return;
+    const dx=e.changedTouches[0].screenX-touch.x, dy=e.changedTouches[0].screenY-touch.y;
+    touch=null;
+    if (Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.2) {
+      const next=Math.max(0,Math.min(slotDates().length-1,meetSlot+(dx<0?1:-1)));
+      if (next!==meetSlot) { e.preventDefault(); meetSlot=next; state.error=''; render(); }
+    }
+  }, {passive:false});
+  app.addEventListener('touchcancel', () => { touch=null; }, {passive:true});
   setInterval(() => { if (meetPreviewOpen && !meetForm && !state.busy) void refresh(); }, 30000);
 })();
 
