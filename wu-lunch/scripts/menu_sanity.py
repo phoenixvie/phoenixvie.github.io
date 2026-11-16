@@ -1,7 +1,13 @@
 """Final publication gate: lossless redundancy cleanup, hard checks and Luna review.
 
 Never invent or rewrite a dish/price. Only remove inclusion metadata when its
-entire wording already occurs in the dish name. Any ambiguity blocks publication.
+entire wording already occurs in the dish name.
+
+A finding holds back ONLY the affected restaurant: it keeps its last published
+menu (or stays "not published" in a new week) while every other restaurant is
+released. Unreviewed data never goes live. If a finding cannot be assigned to a
+restaurant, or no published state is available, the whole publication is
+blocked as before.
 """
 import copy
 from datetime import date, datetime, timedelta, timezone
@@ -11,6 +17,7 @@ import math
 import os
 from pathlib import Path
 import re
+import subprocess
 import unicodedata
 
 import requests
@@ -181,7 +188,8 @@ def review_with_luna(restaurants, week, key):
     Prüfe ALLE übergebenen Restaurants und deren sämtliche Tage/Angebote.
     reviewed_restaurants enthält exakt alle geprüften Restaurant-IDs.
     Gib issues=[] zurück, wenn keine konkreten Fehler erkennbar sind.'''
-    response = requests.post('https://api.openai.com/v1/responses',
+    # Kurze Störungen des KI-Dienstes überbrücken, statt die Freigabe zu verlieren.
+    response = reader.post_with_retry(requests.post, 'https://api.openai.com/v1/responses',
         headers={'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'},
         json={'model': MODEL, 'store': False, 'instructions': instruction,
               'input': json.dumps({'week': week, 'restaurants': restaurants}, ensure_ascii=False),
@@ -196,38 +204,170 @@ def review_with_luna(restaurants, week, key):
     return result['issues']
 
 
+WITHHELD_MARK = 'Freigabe zurückgehalten'
+
+
+def published_menu():
+    """Zuletzt veröffentlichter Stand (Git HEAD): Rückfallebene für zurückgehaltene Restaurants."""
+    try:
+        raw = subprocess.run(['git', '-C', str(ROOT), 'show', 'HEAD:./data/menus.json'],
+                             capture_output=True, check=True, timeout=20).stdout
+        return json.loads(raw.decode('utf-8'))
+    except Exception:
+        return None
+
+
+def issue_owner(issue, ids):
+    """Restaurant, dem ein Befund eindeutig gehört – sonst None."""
+    owner = issue.get('restaurant') if isinstance(issue, dict) else str(issue).split(' ', 1)[0]
+    return owner if owner in ids else None
+
+
+def issue_text(issue):
+    if isinstance(issue, dict):
+        return f"{issue.get('restaurant')} {issue.get('day')} [{issue.get('index')}]: {issue.get('reason')}"
+    return str(issue)
+
+
+def restore_published(candidate, published, week):
+    """Stand eines zurückgehaltenen Restaurants: zuletzt veröffentlicht, nie ungeprüft."""
+    live = None
+    if published:
+        live = next((r for r in published.get('restaurants', []) if r.get('id') == candidate['id']), None)
+    if live is not None and published.get('weekStart') == week:
+        return copy.deepcopy(live)
+    # Neue Woche ohne freigegebenes Menü: leer lassen ("Noch nicht veröffentlicht").
+    blank = copy.deepcopy(candidate)
+    blank['days'] = {day: [] for day in candidate.get('days', {})}
+    blank['status'] = 'empty'
+    blank['validFrom'] = blank['validUntil'] = None
+    if 'seasonal' in candidate:
+        blank['seasonal'] = copy.deepcopy((live or {}).get('seasonal', []))
+    return blank
+
+
+def record_withheld(withheld):
+    """Im Importstatus vermerken und die Quelle zur erneuten Auswertung vormerken.
+
+    Ohne diesen Vermerk hielte der Import die Quelle für "unverändert geprüft"
+    und würde das zurückgehaltene Restaurant nie neu auswerten.
+    """
+    path = ROOT / 'status.json'
+    try:
+        status = json.loads(path.read_text(encoding='utf-8'))
+    except (OSError, ValueError):
+        return
+    problems = [p for p in status.get('problems', []) if WITHHELD_MARK not in p]
+    for ident, entry in withheld.items():
+        source = status.setdefault('sources', {}).setdefault(ident, {})
+        source.update(state='withheld', content_sha256=None,
+                      note=(WITHHELD_MARK + ': ' + '; '.join(entry['issues']))[:300])
+        problems.append(f"{ident}: {WITHHELD_MARK}: " + '; '.join(entry['issues'])[:220])
+    if problems != status.get('problems', []) or withheld:
+        status['problems'] = problems
+        status['health'] = 'degraded' if problems or status.get('quality_warning_count') else 'healthy'
+        path.write_text(json.dumps(status, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+
 def run(*, offline=False):
     data_path = ROOT / 'data/menus.json'
     data = json.loads(data_path.read_text(encoding='utf-8'))
     cleaned, changes, issues = clean_menu(data)
+    week = cleaned['weekStart']
     prior = json.loads(REPORT.read_text(encoding='utf-8')) if REPORT.exists() else {}
-    reviewed = prior.get('reviewed', {}) if prior.get('version') == VERSION and prior.get('model') == MODEL else {}
+    same_reviewer = prior.get('version') == VERSION and prior.get('model') == MODEL
+    reviewed = prior.get('reviewed', {}) if same_reviewer else {}
+    memo = prior.get('withheld', {}) if same_reviewer and prior.get('week_start') == week else {}
+    ids = [r['id'] for r in cleaned['restaurants']]
+    digests = {r['id']: restaurant_digest(r, week) for r in cleaned['restaurants']}
+    findings = {}      # restaurant -> {'issues': [...], 'source': 'hard'|'luna'|'outage'}
+    unassigned = []    # Befunde ohne eindeutiges Restaurant blockieren weiterhin alles
+
+    def note(issue, source):
+        owner = issue_owner(issue, ids)
+        if owner is None:
+            unassigned.append(issue_text(issue))
+        else:
+            findings.setdefault(owner, {'issues': [], 'source': source})['issues'].append(issue_text(issue))
+
+    for issue in issues:
+        note(issue, 'hard')
     pending = [r for r in cleaned['restaurants'] if any(r.get('days', {}).values()) or r.get('seasonal')]
-    pending = [r for r in pending if reviewed.get(r['id']) != restaurant_digest(r, cleaned['weekStart'])]
-    if not issues and pending and not offline:
+    pending = [r for r in pending if reviewed.get(r['id']) != digests[r['id']] and r['id'] not in findings]
+    luna_count = 0
+    if not offline:
+        # Ein bereits beanstandeter, unveränderter Kandidat wird nicht nochmals bezahlt geprüft.
+        for r in list(pending):
+            known = memo.get(r['id'], {})
+            if known.get('source') == 'luna' and known.get('candidate_digest') == digests[r['id']]:
+                findings[r['id']] = {'issues': list(known.get('issues', [])), 'source': 'luna',
+                                     'since': known.get('since')}
+                pending.remove(r)
+    if pending and not offline:
+        luna_count = len(pending)
         key = os.environ.get('OPENAI_API_KEY', '').strip()
+        outage = None
         if not key:
-            issues.append('OPENAI_API_KEY fehlt; neue Menüs nicht freigegeben')
+            outage = 'OPENAI_API_KEY fehlt; neue Menüs nicht freigegeben'
         else:
             try:
-                issues.extend(review_with_luna(pending, cleaned['weekStart'], key))
+                for issue in review_with_luna(pending, week, key):
+                    note(issue, 'luna')
             except Exception as exc:
-                issues.append(str(exc))
-    report = {'version': VERSION, 'model': MODEL, 'week_start': cleaned['weekStart'],
+                outage = str(exc)
+        if outage:
+            # Ungeprüfte neue Menüs gehen nicht live; beim nächsten Lauf wird erneut geprüft.
+            for r in pending:
+                findings.setdefault(r['id'], {'issues': [], 'source': 'outage'})['issues'].append(
+                    'Plausibilitätsprüfung nicht verfügbar: ' + outage[:200])
+    all_issues = unassigned + [text for entry in findings.values() for text in entry['issues']]
+    report = {'version': VERSION, 'model': MODEL, 'week_start': week,
               'checked_at': datetime.now(timezone.utc).isoformat(), 'cleanup': changes,
-              'issues': issues, 'state': 'blocked' if issues else ('offline_only' if offline else 'passed'),
+              'issues': all_issues, 'state': 'offline_only' if offline else 'passed',
               'reviewed': reviewed}
-    if not issues and not offline:
-        report['reviewed'] = {r['id']: restaurant_digest(r, cleaned['weekStart']) for r in cleaned['restaurants']}
-    # Offline validation is read-only and MUST NOT seed a successful AI cache.
-    if not offline:
+    if offline:
+        # Offline validation is read-only and MUST NOT seed a successful AI cache.
+        if all_issues:
+            raise ValueError('Menüfreigabe blockiert: ' + json.dumps(all_issues, ensure_ascii=False)[:1600])
+        print(json.dumps({'state': report['state'], 'cleaned_items': len(changes), 'luna_restaurants': 0}, ensure_ascii=False))
+        return report
+    published = published_menu() if findings else None
+    if unassigned or (findings and published is None):
+        report['state'] = 'blocked'
         REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    if issues:
-        raise ValueError('Menüfreigabe blockiert: ' + json.dumps(issues, ensure_ascii=False)[:1600])
-    if not offline:
-        data_path.write_text(json.dumps(cleaned, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-        (ROOT / 'data.js').write_text('window.CAMPUS_LUNCH_DATA = ' + json.dumps(cleaned, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
-    print(json.dumps({'state': report['state'], 'cleaned_items': len(changes), 'luna_restaurants': len(pending)}, ensure_ascii=False))
+        raise ValueError('Menüfreigabe blockiert: ' + json.dumps(all_issues, ensure_ascii=False)[:1600])
+    now = datetime.now(timezone.utc).isoformat()
+    withheld = {}
+    for index, restaurant in enumerate(cleaned['restaurants']):
+        entry = findings.get(restaurant['id'])
+        if not entry:
+            continue
+        withheld[restaurant['id']] = {'candidate_digest': digests[restaurant['id']],
+                                      'issues': entry['issues'][:12], 'source': entry['source'],
+                                      'since': entry.get('since') or now}
+        cleaned['restaurants'][index] = restore_published(restaurant, published, week)
+        live_source = next((s for s in (published or {}).get('sources', [])
+                            if s.get('id') == restaurant['id']), None)
+        for position, source in enumerate(cleaned.get('sources', [])):
+            if source.get('id') != restaurant['id']:
+                continue
+            if live_source is not None and published.get('weekStart') == week:
+                cleaned['sources'][position] = copy.deepcopy(live_source)
+            else:
+                source.update(status=cleaned['restaurants'][index].get('status'), validFrom=None, validUntil=None)
+        print(f"::warning::{restaurant['id']}: {WITHHELD_MARK} – bisheriger Stand bleibt online: "
+              + '; '.join(entry['issues'])[:300], flush=True)
+    report['reviewed'] = {**reviewed, **{ident: digest for ident, digest in digests.items() if ident not in withheld}}
+    if withheld:
+        report['state'] = 'partial'
+        report['withheld'] = withheld
+    REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    data_path.write_text(json.dumps(cleaned, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    (ROOT / 'data.js').write_text('window.CAMPUS_LUNCH_DATA = ' + json.dumps(cleaned, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
+    record_withheld(withheld)
+    print(json.dumps({'state': report['state'], 'cleaned_items': len(changes), 'luna_restaurants': luna_count,
+                      'withheld': sorted(withheld)}, ensure_ascii=False))
+    return report
 
 
 if __name__ == '__main__':

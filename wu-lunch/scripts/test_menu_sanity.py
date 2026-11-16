@@ -135,6 +135,122 @@ class MenuSanityTests(unittest.TestCase):
             self.assertEqual(data.read_bytes(), original)
             self.assertFalse((root / 'data/report.json').exists())
 
+    def two_restaurants(self, finn_rows):
+        """Temporärer Datenstand mit einem unveränderten und einem neuen Restaurant."""
+        tmp = tempfile.TemporaryDirectory()
+        root = Path(tmp.name)
+        (root / 'data').mkdir()
+        candidate = {'weekStart': '2026-11-16',
+                     'restaurants': [{'id': 'mensa', 'status': 'ai_checked', 'days': {'2026-11-16': [meal(included_choices=[], description='')]}},
+                                     {'id': 'finn', 'status': 'ai_crosschecked', 'days': {'2026-11-16': finn_rows}}],
+                     'sources': [{'id': 'mensa', 'status': 'ai_checked'}, {'id': 'finn', 'status': 'ai_crosschecked'}]}
+        (root / 'data/menus.json').write_text(json.dumps(candidate), encoding='utf-8')
+        (root / 'data.js').write_text('original', encoding='utf-8')
+        (root / 'status.json').write_text(json.dumps({'sources': {
+            'mensa': {'state': 'ok', 'content_sha256': 'm'}, 'finn': {'state': 'ok', 'content_sha256': 'f'}},
+            'problems': []}), encoding='utf-8')
+        return tmp, root
+
+    def published(self, finn_rows, week='2026-11-16'):
+        return {'weekStart': week, 'restaurants': [
+            {'id': 'mensa', 'status': 'ai_checked', 'days': {'2026-11-16': [meal(name='Alter Mensa-Stand')]}},
+            {'id': 'finn', 'status': 'ai_crosschecked', 'days': {'2026-11-16': finn_rows}}],
+            'sources': [{'id': 'mensa', 'status': 'ai_checked'}, {'id': 'finn', 'status': 'ai_crosschecked'}]}
+
+    def test_finding_holds_back_only_that_restaurant_and_releases_the_rest(self):
+        new_finn = [{'name': 'Neues Finn Gericht', 'price': 9.9, 'category': 'Fleisch'}]
+        old_finn = [{'name': 'Bisheriges Finn Gericht', 'price': 9.5, 'category': 'Fleisch'}]
+        tmp, root = self.two_restaurants(new_finn)
+        finding = [{'restaurant': 'finn', 'day': '2026-11-16', 'index': 0, 'reason': 'Preis widersprüchlich'}]
+        with tmp, patch.object(sanity, 'ROOT', root), patch.object(sanity, 'REPORT', root / 'data/report.json'), \
+             patch.dict('os.environ', {'OPENAI_API_KEY': 'test'}), \
+             patch.object(sanity, 'published_menu', return_value=self.published(old_finn)), \
+             patch.object(sanity, 'review_with_luna', return_value=finding) as reviewer:
+            report = sanity.run()
+            live = json.loads((root / 'data/menus.json').read_text())
+            by_id = {r['id']: r for r in live['restaurants']}
+            # Mensa geht mit dem neuen Stand online, Finn behält den zuletzt veröffentlichten.
+            self.assertEqual(by_id['mensa']['days']['2026-11-16'][0]['name'], meal()['name'])
+            self.assertEqual(by_id['finn']['days']['2026-11-16'], old_finn)
+            self.assertIn('Neues Finn Gericht', json.dumps(new_finn))
+            self.assertNotIn('Neues Finn Gericht', (root / 'data.js').read_text())
+            self.assertEqual(report['state'], 'partial')
+            self.assertEqual(sorted(report['withheld']), ['finn'])
+            self.assertIn('mensa', report['reviewed'])
+            self.assertNotIn('finn', report['reviewed'])
+            status = json.loads((root / 'status.json').read_text())
+            # Quelle ist zur erneuten Auswertung vorgemerkt, nicht "unverändert geprüft".
+            self.assertEqual(status['sources']['finn']['state'], 'withheld')
+            self.assertIsNone(status['sources']['finn']['content_sha256'])
+            self.assertEqual(status['sources']['mensa'], {'state': 'ok', 'content_sha256': 'm'})
+            self.assertTrue(any(sanity.WITHHELD_MARK in p for p in status['problems']))
+            # Derselbe beanstandete Kandidat wird beim nächsten Lauf nicht nochmals bezahlt geprüft.
+            (root / 'data/menus.json').write_text(json.dumps({**live, 'restaurants': [by_id['mensa'], {**by_id['finn'], 'days': {'2026-11-16': new_finn}}]}), encoding='utf-8')
+            again = sanity.run()
+            self.assertEqual(reviewer.call_count, 1)
+            self.assertEqual(again['state'], 'partial')
+            self.assertEqual(json.loads((root / 'data/menus.json').read_text())['restaurants'][1]['days']['2026-11-16'], old_finn)
+            # Ein geänderter Kandidat wird neu geprüft und bei Bestehen freigegeben.
+            fixed = [{'name': 'Korrigiertes Finn Gericht', 'price': 9.9, 'category': 'Fleisch'}]
+            (root / 'data/menus.json').write_text(json.dumps({**live, 'restaurants': [by_id['mensa'], {**by_id['finn'], 'days': {'2026-11-16': fixed}}]}), encoding='utf-8')
+            reviewer.return_value = []
+            final = sanity.run()
+            self.assertEqual((final['state'], reviewer.call_count), ('passed', 2))
+            self.assertNotIn('withheld', final)
+            self.assertEqual(json.loads((root / 'data/menus.json').read_text())['restaurants'][1]['days']['2026-11-16'], fixed)
+
+    def test_hard_duplicate_in_one_restaurant_does_not_block_the_others(self):
+        duplicate = [{'name': 'Doppeltes Gericht', 'price': 9.9, 'category': 'Fleisch'}] * 2
+        tmp, root = self.two_restaurants(duplicate)
+        with tmp, patch.object(sanity, 'ROOT', root), patch.object(sanity, 'REPORT', root / 'data/report.json'), \
+             patch.dict('os.environ', {'OPENAI_API_KEY': 'test'}), \
+             patch.object(sanity, 'published_menu', return_value=self.published([], week='2026-11-09')), \
+             patch.object(sanity, 'review_with_luna', return_value=[]) as reviewer:
+            report = sanity.run()
+            # Luna prüft nur noch das Restaurant ohne harten Befund.
+            self.assertEqual([r['id'] for r in reviewer.call_args.args[0]], ['mensa'])
+            live = {r['id']: r for r in json.loads((root / 'data/menus.json').read_text())['restaurants']}
+            self.assertTrue(live['mensa']['days']['2026-11-16'])
+            # Neue Woche ohne freigegebenen Stand: leer statt ungeprüft oder Vorwoche.
+            self.assertEqual(live['finn']['days'], {'2026-11-16': []})
+            self.assertEqual(live['finn']['status'], 'empty')
+            self.assertEqual(report['withheld']['finn']['source'], 'hard')
+
+    def test_reviewer_outage_keeps_unreviewed_menus_offline_and_retries_next_run(self):
+        new_finn = [{'name': 'Neues Finn Gericht', 'price': 9.9, 'category': 'Fleisch'}]
+        old_finn = [{'name': 'Bisheriges Finn Gericht', 'price': 9.5, 'category': 'Fleisch'}]
+        tmp, root = self.two_restaurants(new_finn)
+        with tmp, patch.object(sanity, 'ROOT', root), patch.object(sanity, 'REPORT', root / 'data/report.json'), \
+             patch.dict('os.environ', {'OPENAI_API_KEY': 'test'}), \
+             patch.object(sanity, 'published_menu', return_value=self.published(old_finn)), \
+             patch.object(sanity, 'review_with_luna', side_effect=RuntimeError('HTTP 503')) as reviewer:
+            report = sanity.run()
+            self.assertEqual(report['state'], 'partial')
+            self.assertEqual(sorted(report['withheld']), ['finn', 'mensa'])
+            self.assertNotIn('Neues Finn Gericht', (root / 'data/menus.json').read_text())
+            # Ausfall ist kein Urteil über den Inhalt: nächster Lauf prüft wieder.
+            (root / 'data/menus.json').write_text(json.dumps({'weekStart': '2026-11-16',
+                'restaurants': [{'id': 'mensa', 'days': {'2026-11-16': [meal(included_choices=[], description='')]}},
+                                {'id': 'finn', 'days': {'2026-11-16': new_finn}}], 'sources': []}), encoding='utf-8')
+            reviewer.side_effect = None
+            reviewer.return_value = []
+            self.assertEqual(sanity.run()['state'], 'passed')
+            self.assertEqual(reviewer.call_count, 2)
+            self.assertIn('Neues Finn Gericht', (root / 'data/menus.json').read_text())
+
+    def test_unassignable_finding_still_blocks_everything(self):
+        tmp, root = self.two_restaurants([{'name': 'Neues Finn Gericht', 'price': 9.9, 'category': 'Fleisch'}])
+        vague = [{'restaurant': 'unbekannt', 'day': '2026-11-16', 'index': 0, 'reason': 'Widerspruch'}]
+        with tmp, patch.object(sanity, 'ROOT', root), patch.object(sanity, 'REPORT', root / 'data/report.json'), \
+             patch.dict('os.environ', {'OPENAI_API_KEY': 'test'}), \
+             patch.object(sanity, 'published_menu', return_value=self.published([])), \
+             patch.object(sanity, 'review_with_luna', return_value=vague):
+            original = (root / 'data/menus.json').read_bytes()
+            with self.assertRaises(ValueError):
+                sanity.run()
+            self.assertEqual((root / 'data/menus.json').read_bytes(), original)
+            self.assertEqual(json.loads((root / 'data/report.json').read_text())['state'], 'blocked')
+
     def test_model_must_confirm_all_reviewed_restaurants(self):
         def response(payload, status='completed'):
             obj = unittest.mock.Mock(status_code=200)
