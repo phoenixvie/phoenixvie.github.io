@@ -33,7 +33,7 @@ Wichtige nächste Verbesserungen sind direkte Vision-Eingaben für bildbasierte 
 
 ## Was die Zeitangaben bedeuten
 
-`update-policy.json` ist die gemeinsame Konfiguration. Hauptimport und Topf-Browser sowie die zusätzliche Mensa-PDF-Sicherung prüfen ihre Ausführungsfenster damit. Website und Admin berechnen die geplanten Termine daraus. Die CI vergleicht die tatsächlichen Cron-Ausdrücke der Workflows mit dieser Datei; Abweichungen lassen die Prüfung fehlschlagen.
+`update-policy.json` ist die gemeinsame Konfiguration. Seit 17. November 2026 gilt: Der Hauptimport läuft bei jedem tatsächlichen Start zwischen 05:15 und 22:15 (verspätete Läufe werden nicht mehr verworfen), der Topf-Browser nach Bedarf statt nach Uhrzeit, und ein Taktgeber (`watch`) löst den Import rund um den Wochenstart selbst pünktlich aus. Die Mensa-PDF-Sicherung prüft ihr Ausführungsfenster weiterhin damit. Ablauf und Selbstkorrektur in einfacher Sprache: `IMPORT.md`. Website und Admin berechnen die geplanten Termine daraus. Die CI vergleicht die tatsächlichen Cron-Ausdrücke der Workflows mit dieser Datei; Abweichungen lassen die Prüfung fehlschlagen.
 
 Ein geplanter Termin ist kein Beleg für einen ausgeführten Abruf. GitHub kann zeitlich abweichen oder einen geplanten Lauf auslassen. Deshalb zeigt die Oberfläche echte Quellen-Erfassungszeiten aus `data/update-status.json` getrennt vom nächsten geplanten Menücheck. Der vollständige Importbericht verlinkt auf den ausgeführten GitHub-Lauf und enthält Beginn, Ende und Rückgabecode der produktiven Arbeitsschritte. Menüänderungen werden anhand des Inhalts erkannt; ein bloßer Abruf setzt den Änderungszeitpunkt nicht neu. Beim ersten instrumentierten Lauf wird kein unbekannter früherer Änderungszeitpunkt erfunden.
 
