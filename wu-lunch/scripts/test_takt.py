@@ -63,6 +63,18 @@ class MissingMenuTests(unittest.TestCase):
         self.assertEqual(old, ['finn', 'lia', 'mensa', 'topfdeckel'])
         self.assertEqual(takt.missing_menus(None, None, sunday, WATCH), ['*'])
 
+    def test_published_week_with_one_empty_day_is_intentional_but_daily_source_is_not(self):
+        # Stand 16.11.2026: Das Campus hat Mo–Do veröffentlicht, Freitag bewusst leer;
+        # Topf & Deckel liefert ohne Browserabruf nur den heutigen Tag ("daily").
+        week = lambda filled: {f'2026-11-{16 + i}': ([{'name': 'Gericht'}] if i in filled else []) for i in range(5)}
+        data = {'weekStart': '2026-11-16', 'restaurants': [
+            {'id': 'campus', 'status': 'verified', 'days': week({0, 1, 2, 3})},
+            {'id': 'topfdeckel', 'status': 'daily', 'days': week({0})},
+            {'id': 'finn', 'status': 'not_published', 'days': week(set())}]}
+        self.assertEqual(takt.missing_menus(data, {}, at(20, 8), WATCH), ['finn', 'topfdeckel'])   # Freitag
+        self.assertEqual(takt.missing_menus(data, {}, at(17, 8), WATCH), ['finn', 'topfdeckel'])   # Dienstag
+        self.assertEqual(takt.missing_menus(data, {}, at(16, 8), WATCH), ['finn'])                 # Montag
+
     def test_source_silent_for_over_a_week_does_not_keep_the_watch_busy(self):
         status = {'sources': {'finn': {'last_success': '2026-11-02T08:00:00+01:00'},
                               'lia': {'last_success': '2026-11-13T08:00:00+01:00'}}}

@@ -123,8 +123,8 @@ jobs:
         run: |
           set -euo pipefail
           # On first merge also import Finn's current menu once.
-          # A verified unchanged image is cached; failed images are capped
-          # to one paid attempt per image/day.
+          # A verified unchanged image is cached; a failed reading of the same
+          # image is retried once more that day (after 60 minutes), then capped.
           python wu-lunch/scripts/run_step.py finn_karma python wu-lunch/scripts/update_new_restaurants.py
       - name: Topf Wochenkarte – Browser plus Luna-Kontrolle aller Tabs
         if: steps.guard.outputs.skip == 'false'

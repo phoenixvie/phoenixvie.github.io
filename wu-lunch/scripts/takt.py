@@ -41,6 +41,9 @@ ACTIVE_STATES = {"in_progress", "queued", "pending", "requested", "waiting"}
 BUDGET_MINUTES = 320
 STEP_SECONDS = 600
 STALE_SOURCE_DAYS = 8
+# Wochenkarte gilt als veröffentlicht: Ein einzelner leerer Tag ist dann Absicht
+# des Restaurants (z. B. Feiertag) und kein Grund für Prüfungen im 15-Minuten-Takt.
+PUBLISHED_STATES = {"verified", "ai_checked", "ai_crosschecked", "undated", "current"}
 
 
 def policy():
@@ -104,7 +107,9 @@ def target_day(today):
 def missing_menus(data, status, local, watch):
     """Restaurants ohne Menü für den angezeigten Tag (Grund, weiter zu prüfen).
 
-    Dauerangebote/Saisonkarten zählen nicht. Eine Quelle, die seit über einer
+    Dauerangebote/Saisonkarten zählen nicht. Hat ein Restaurant seine
+    Wochenkarte bereits geprüft veröffentlicht und nur dieser Tag ist leer,
+    gilt das als Absicht (z. B. Feiertag). Eine Quelle, die seit über einer
     Woche nichts mehr geliefert hat, braucht einen Menschen – sie hält den
     Wächter nicht endlos im 15-Minuten-Takt.
     """
@@ -116,7 +121,10 @@ def missing_menus(data, status, local, watch):
         return sorted(r["id"] for r in restaurants) or ["*"]
     missing = []
     for restaurant in restaurants:
-        if restaurant.get("days", {}).get(day.isoformat()):
+        days = restaurant.get("days", {})
+        if days.get(day.isoformat()):
+            continue
+        if restaurant.get("status") in PUBLISHED_STATES and any(days.values()):
             continue
         last = ((status or {}).get("sources", {}).get(restaurant["id"], {}) or {}).get("last_success")
         try:
@@ -163,7 +171,7 @@ def gh(*args, check=True):
 
 def published(*paths):
     """Dateien vom aktuellen Stand des Hauptzweigs lesen (einmal frisch abgerufen)."""
-    branch = os.environ.get("WU_DEFAULT_BRANCH", "master")
+    branch = (os.environ.get("WU_DEFAULT_BRANCH") or "master")
     try:
         subprocess.run(["git", "-C", str(ROOT), "fetch", "--quiet", "--depth=1", "origin", branch],
                        capture_output=True, check=True, timeout=120)
@@ -223,7 +231,7 @@ def last_completed(record):
 def run():
     config = policy()
     watch = config["watch"]
-    branch = os.environ.get("WU_DEFAULT_BRANCH", "master")
+    branch = (os.environ.get("WU_DEFAULT_BRANCH") or "master")
     own_id = os.environ.get("GITHUB_RUN_ID", "")
     predecessor = os.environ.get("WU_TAKT_PREDECESSOR", "")
     zone = ZoneInfo(config["timezone"])
@@ -272,7 +280,7 @@ def ensure():
     if other_watch(watch["workflow"], "", ""):
         print("Wächter läuft bereits.")
         return 0
-    gh("workflow", "run", watch["workflow"], "--ref", os.environ.get("WU_DEFAULT_BRANCH", "master"))
+    gh("workflow", "run", watch["workflow"], "--ref", (os.environ.get("WU_DEFAULT_BRANCH") or "master"))
     print("Wächter gestartet.")
     return 0
 
