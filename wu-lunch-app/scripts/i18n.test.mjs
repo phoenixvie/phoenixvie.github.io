@@ -2,7 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
-import {validateTranslations,translateBatch} from '../../wu-lunch/scripts/translate_menus.mjs';
+import {validateTranslations,translateBatch,translateResilient,fetchWithRetry} from '../../wu-lunch/scripts/translate_menus.mjs';
 
 const script=await readFile(new URL('../../wu-lunch/i18n.js',import.meta.url),'utf8');
 test('translation review feedback is repaired and rechecked; persistent rejection never publishes',async()=>{
@@ -98,4 +98,36 @@ test('admin app-text save updates only the chosen language and validates contact
   await c.saveUiText('Menü','Meals');assert.equal(requests[0].options.method,'PATCH');assert.deepEqual(JSON.parse(requests[0].options.body),{en_text:'Meals'});
   await assert.rejects(()=>c.saveUiText('Webseite von {restaurant}','Website'),/Platzhalter/);
   await assert.rejects(()=>c.saveUiText('Kontakt-E-Mail','bad address'),/E-Mail/);assert.equal(requests.length,1);
+});
+test('one unreviewable source text no longer blocks every other English translation',async()=>{
+  // Regression 16.11.2026: "Kirche Erbsen" (Tippfehler in der Originalkarte) ließ den ganzen Stapel scheitern.
+  const batch=['Tagessuppe','Kirche Erbsen Curry','Apfelstrudel','Gemischter Salat','Reis'];
+  const sizes=[];
+  const translate=async part=>{
+    sizes.push(part.length);
+    if(part.includes('Kirche Erbsen Curry'))throw new Error('Translation batch failed review after 3 attempts: misspelling');
+    return part.map((german,id)=>({id,english:'EN '+german}));
+  };
+  const result=await translateResilient(batch,translate);
+  assert.deepEqual(result.done.map(x=>x.german).sort(),['Apfelstrudel','Gemischter Salat','Reis','Tagessuppe']);
+  assert.ok(result.done.every(x=>x.english==='EN '+x.german));
+  assert.deepEqual(result.failed.map(x=>x.german),['Kirche Erbsen Curry']);
+  assert.match(result.failed[0].reason,/misspelling/);
+  assert.equal(sizes[0],5);
+  // Ein fehlerfreier Stapel kostet weiterhin genau einen Durchgang.
+  sizes.length=0;
+  assert.equal((await translateResilient(['A','B'],translate)).failed.length,0);
+  assert.deepEqual(sizes,[2]);
+  // Technische Fehler werden nicht durch Teilen vervielfacht, sondern beim nächsten Lauf wiederholt.
+  await assert.rejects(()=>translateResilient(batch,async()=>{throw new Error('Translation model HTTP 401');}),/HTTP 401/);
+});
+test('translation model calls survive a short outage',async()=>{
+  const replies=[{status:503,ok:false},{status:200,ok:true}],waits=[];
+  const response=await fetchWithRetry('https://example.test',{},{send:async()=>replies.shift(),sleep:async ms=>waits.push(ms)});
+  assert.equal(response.status,200);assert.deepEqual(waits,[4000]);
+  const denied=await fetchWithRetry('https://example.test',{},{send:async()=>({status:401,ok:false}),sleep:async ms=>waits.push(ms)});
+  assert.equal(denied.status,401);assert.equal(waits.length,1);
+  let sent=0;
+  const down=await fetchWithRetry('https://example.test',{},{send:async()=>{sent++;return {status:529,ok:false};},sleep:async()=>{}});
+  assert.equal(down.status,529);assert.equal(sent,3);
 });
