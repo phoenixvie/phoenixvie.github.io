@@ -1128,6 +1128,9 @@ def run(today):
         status["topf_luna_audit"]=state["topf_luna_audit"]
     if isinstance(state.get("mensa_luna_audit"),dict):
         status["mensa_luna_audit"]=state["mensa_luna_audit"]
+    # Zeitpunkt des letzten gescheiterten Topf-Browserabrufs für den Wiederholtakt.
+    if isinstance(state.get("topf_browser_attempt"),dict):
+        status["topf_browser_attempt"]=state["topf_browser_attempt"]
     validate_meal_components(data)
     warnings=quality_warnings(data,today)
     status["quality_warnings"]=warnings

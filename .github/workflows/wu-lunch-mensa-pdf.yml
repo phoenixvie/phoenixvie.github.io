@@ -2,8 +2,10 @@ name: WU Lunch – Mensa Original-PDF sichern
 
 on:
   schedule:
-    # Zweimal pro Werktag, 08:40 und 10:40 Uhr Wien (mit Sommer-/Winterzeit-Guard)
-    - cron: '40 6-10 * * 1-5'
+    # Werktags 06:40 bis 19:40 Uhr Wien (mit Sommer-/Winterzeit-Guard). GitHub
+    # startet geplante Läufe oft Stunden verspätet; mit dem früheren engen
+    # Fenster (08:40/10:40) wurde praktisch jeder Lauf übersprungen.
+    - cron: '40 4-18 * * 1-5'
   workflow_dispatch:
   push:
     paths:

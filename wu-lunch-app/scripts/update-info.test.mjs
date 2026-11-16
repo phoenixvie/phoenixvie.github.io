@@ -24,11 +24,12 @@ test('every displayed minute/window has an actual workflow cron slot in winter a
     }
   }
 });
-test('next displayed checks follow Vienna windows in winter, summer and after a Saturday final slot',()=>{
+test('next displayed checks follow Vienna windows in winter, summer and across the nightly pause',()=>{
   const next=(at,task='menus')=>context.WULunchUpdateInfo.nextRun(policy,task,new Date(at))?.toISOString();
-  assert.equal(next('2026-11-14T17:16:00Z'),'2026-11-16T05:15:00.000Z');
-  assert.equal(next('2027-07-05T03:00:00Z'),'2027-07-05T04:15:00.000Z');
-  assert.equal(next('2026-11-16T06:16:00Z','topf_browser'),'2026-11-16T10:15:00.000Z');
+  assert.equal(next('2026-11-14T17:16:00Z'),'2026-11-14T18:15:00.000Z');
+  assert.equal(next('2026-11-14T21:30:00Z'),'2026-11-15T04:15:00.000Z');
+  assert.equal(next('2027-07-05T03:00:00Z'),'2027-07-05T03:15:00.000Z');
+  assert.equal(next('2026-11-16T06:16:00Z','topf_browser'),'2026-11-16T07:15:00.000Z');
   assert.equal(next('2026-12-04T06:00:00Z','observation'),undefined);
 });
 test('display uses actual successful fetches across import, observation and PDF snapshot; never a planned or failed fetch',async()=>{

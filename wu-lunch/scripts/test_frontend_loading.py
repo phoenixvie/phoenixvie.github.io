@@ -77,9 +77,10 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertIn("function renderSwipeDots()",html)
         self.assertIn("map-loader-spinner",html)
         workflow=(ROOT.parent/".github"/"workflows"/"wu-lunch-menus.yml").read_text(encoding="utf-8")
-        self.assertIn("'15 6-17 * * 6'",workflow)
-        self.assertIn("'15 4-17 * * 1'",workflow)
-        self.assertIn("'15 6-11 * * 2-5'",workflow)
+        # Ein täglicher Stundenplan deckt Wochenendvorschau und Werktage ab;
+        # pünktlich zum Wochenstart sorgt zusätzlich der Taktgeber.
+        self.assertIn("'15 3-21 * * *'",workflow)
+        self.assertIn("takt.py ensure",workflow)
         self.assertIn('id="updateProcess"',admin)
         self.assertIn("update-info.js",html)
         self.assertIn("Geprüfte Wochenkarte ins Admin-Archiv sichern",workflow)
