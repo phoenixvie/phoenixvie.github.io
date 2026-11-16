@@ -81,6 +81,60 @@
       "menu_status": "seasonal",
       "manifest": "2026-11-16/losteria/b079a3cf511b72aac5e4bd2c71645a43b2932bd49a10c0aa7587899fdf4d9c8a/manifest.json",
       "source_count": 2
+    },
+    {
+      "restaurant_id": "mensa",
+      "week_start": "2026-11-16",
+      "menu_sha256": "e75401c7dd884c3d9331d6ecf96d897c9439d5523e578332df1b8556ec1f4295",
+      "captured_at": "2026-11-16T12:46:36+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/mensa/e75401c7dd884c3d9331d6ecf96d897c9439d5523e578332df1b8556ec1f4295/manifest.json",
+      "source_count": 4
+    },
+    {
+      "restaurant_id": "baschly",
+      "week_start": "2026-11-16",
+      "menu_sha256": "56bcd1aace50c82dd76a612be508f68e46bcdcb1dc0f860a80758182f49a4c05",
+      "captured_at": "2026-11-16T12:46:36+00:00",
+      "menu_status": "undated",
+      "manifest": "2026-11-16/baschly/56bcd1aace50c82dd76a612be508f68e46bcdcb1dc0f860a80758182f49a4c05/manifest.json",
+      "source_count": 4
+    },
+    {
+      "restaurant_id": "finn",
+      "week_start": "2026-11-16",
+      "menu_sha256": "142f009bcb4142f125e4e670c8973147dc3a174fb18f085c72967f1eecbaf702",
+      "captured_at": "2026-11-16T12:46:36+00:00",
+      "menu_status": "ai_crosschecked",
+      "manifest": "2026-11-16/finn/142f009bcb4142f125e4e670c8973147dc3a174fb18f085c72967f1eecbaf702/manifest.json",
+      "source_count": 2
+    },
+    {
+      "restaurant_id": "lia",
+      "week_start": "2026-11-16",
+      "menu_sha256": "b4b7e1f12a371328fc09e8e0c9f310a03da83fa35a3acd854e50ac0be8784efc",
+      "captured_at": "2026-11-16T12:46:36+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/lia/b4b7e1f12a371328fc09e8e0c9f310a03da83fa35a3acd854e50ac0be8784efc/manifest.json",
+      "source_count": 2
+    },
+    {
+      "restaurant_id": "karmafood",
+      "week_start": "2026-11-16",
+      "menu_sha256": "4412c6b23f94dec413da06346eef5c333d98554800910f3957532be5484ddee0",
+      "captured_at": "2026-11-16T12:46:36+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/karmafood/4412c6b23f94dec413da06346eef5c333d98554800910f3957532be5484ddee0/manifest.json",
+      "source_count": 3
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "week_start": "2026-11-16",
+      "menu_sha256": "5661e0f8ffa540098db894233f4a32aabe1309018b5d7af07b4a705749a6bd1c",
+      "captured_at": "2026-11-16T12:46:36+00:00",
+      "menu_status": "daily",
+      "manifest": "2026-11-16/topfdeckel/5661e0f8ffa540098db894233f4a32aabe1309018b5d7af07b4a705749a6bd1c/manifest.json",
+      "source_count": 1
     }
   ]
 }

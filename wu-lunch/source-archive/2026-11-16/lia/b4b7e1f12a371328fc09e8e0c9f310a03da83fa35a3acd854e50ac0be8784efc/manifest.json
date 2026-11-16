@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "restaurant_id": "lia",
+  "week_start": "2026-11-16",
+  "menu_sha256": "b4b7e1f12a371328fc09e8e0c9f310a03da83fa35a3acd854e50ac0be8784efc",
+  "captured_at": "2026-11-16T12:46:36+00:00",
+  "run_id": "43869022569",
+  "code_commit": "1f391226c0ab101e97cac8ef364d95651ccac843",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "ok",
+    "last_success": "2026-11-16T13:43:06+01:00",
+    "consecutive_failures": 0,
+    "parser_version": 4,
+    "content_sha256": null
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-16T13:45:25+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-16",
+    "source_fingerprint": null,
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "lia",
+      "url": "https://lia.coffee/",
+      "at": "2026-11-16T12:43:17+00:00",
+      "sha256": "1ae1bba3058ad082435ab205d4da27d460df747ae370c688f96a90f52b05ebe3",
+      "bytes": 227662,
+      "format": "html",
+      "blob": "1ae1bba3058ad082435ab205d4da27d460df747ae370c688f96a90f52b05ebe3.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "lia",
+      "url": "https://lia.coffee/",
+      "at": "2026-11-16T12:45:26+00:00",
+      "sha256": "1ae1bba3058ad082435ab205d4da27d460df747ae370c688f96a90f52b05ebe3",
+      "bytes": 227662,
+      "format": "html",
+      "blob": "1ae1bba3058ad082435ab205d4da27d460df747ae370c688f96a90f52b05ebe3.html",
+      "stage": "html_ai",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [
+        {
+          "name": "Grillwürstel und Grillgemüse mit Röstzwiebeln, Senf & Pommes",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Käsespätzle mit grünem Salat",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-17": [
+        {
+          "name": "Gegrillte Hühnerbrust",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Krautfleckerl",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-18": [
+        {
+          "name": "Geräucherter Lachs auf Gemüse-Bulgur mit Olivenöl-Zitronensauce",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Lasagne mit Mozzarella und Tomatensauce",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-19": [
+        {
+          "name": "Faschierter Braten mit Kartoffelpüree",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Kürbis-Kichererbsen-Eintopf mit Reis",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-20": [
+        {
+          "name": "Gebackener Seelachs mit Kartoffelpüree",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Mildes rotes Linsen-Dal mit Zitronenreis",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-16",
+    "validUntil": "2026-11-20"
+  }
+}

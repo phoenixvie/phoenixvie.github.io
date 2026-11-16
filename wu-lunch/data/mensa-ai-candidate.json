@@ -2,8 +2,8 @@
   "week_start": "2026-11-16",
   "source": {
     "url": "https://www.wumensa.at/menuplan-deutsch/",
-    "sha256": "1f8db507732cd8b3c15b4ff50234e7dc79181b107e7bda24b893bd4be3f7c061",
-    "bytes": 137484,
+    "sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+    "bytes": 136631,
     "type": "pdf",
     "fetched": true,
     "truncated": false
@@ -12,11 +12,12 @@
   "result": {
     "status": "found",
     "period": "2026-11-16 bis 2026-11-20 (KW 47)",
-    "notes": "Erfasst sind die Angebote für jeden Wochentag. Whole-week-Angebote wurden allen fünf Tagen zugeordnet. Für „Stop Food Waste“ ist kein Preis ausgewiesen; „Spezialpasta lt. Tagesaushang“ steht in der Tabelle neben dem ausdrücklich ausgewiesenen Tarif € 8,20.",
+    "notes": "Die PDF weist Angebote teils für die ganze Woche und teils für einzelne Wochentage aus. Nicht näher bezeichnete Tagesaushang-Angebote bleiben entsprechend unbestimmt.",
     "warnings": [
-      "Der konkrete Inhalt des Soup Deal wird nur als „laut Tagesaushang“ bezeichnet.",
-      "Das Freitagsangebot „Stop Food Waste“ hat keinen ausgewiesenen Preis.",
-      "Für die Tagesgerichte sind keine Allergene als Buchstabencodes angegeben."
+      "Soup Deal: Der Inhalt ist laut Tagesaushang nicht genannt; der Tarif von € 4,25 ist separat und eindeutig ausgewiesen.",
+      "Spezialpasta ist nur als „lt. Tagesaushang“ bezeichnet; die in der Tarifspalte stehenden € 8,20 sind zugeordnet.",
+      "Für „Stop Food Waste“ am Freitag ist kein Preis sichtbar.",
+      "Das Smart Menü ist als separates bedingtes Wochenangebot erfasst und keinem bestimmten Tagesgericht zugeordnet."
     ],
     "items": [
       {
@@ -30,12 +31,12 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Montag: „Klare Gemüsesuppe | Einlage“",
+        "evidence_excerpt": "Montag, Tagessuppe: „Klare Gemüsesuppe | Einlage“",
         "confidence": "high"
       },
       {
         "date": "2026-11-16",
-        "name": "Soup Deal (laut Tagesaushang)",
+        "name": "Soup Deal – laut Tagesaushang",
         "category": "Soup Deal",
         "portion": null,
         "price_eur": 4.25,
@@ -44,119 +45,55 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "„Soup Deal € 4,25“; Inhalt: „laut Tagesaushang“",
+        "evidence_excerpt": "„Soup Deal € 4,25“; dazu „laut Tagesaushang“",
         "confidence": "high"
       },
       {
         "date": "2026-11-16",
-        "name": "„Plant“bullar – schwedische vegane Fleischbällchen, Erdäpfelpüree, Röstzwiebel",
+        "name": "„Plant“bullar – schwedische vegane Fleischbällchen, Erdäpfelpüree und Röstzwiebel",
         "category": "Powered by plants / Veggie",
         "portion": null,
         "price_eur": 5.8,
-        "included_items": [
-          "Erdäpfelpüree",
-          "Röstzwiebel"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Montag, Powered by plants / Veggie: „Plant“bullar … € 5,80",
+        "evidence_excerpt": "Montag, Powered by plants / Veggie: „€ 5,80“",
         "confidence": "high"
       },
       {
         "date": "2026-11-16",
-        "name": "Köttbullar – schwedische Fleischbällchen in Rahmsauce, Erdäpfelpüree, Röstzwiebel",
+        "name": "Köttbullar – schwedische Fleischbällchen in Rahmsauce, Erdäpfelpüree und Röstzwiebel",
         "category": "Meaty",
         "portion": null,
         "price_eur": 6.4,
-        "included_items": [
-          "Erdäpfelpüree",
-          "Röstzwiebel"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Montag, Meaty: „Köttbullar … Rahmsauce | Erdäpfelpüree | Röstzwiebel“ € 6,40",
+        "evidence_excerpt": "Montag, Meaty: „Köttbullar | schwedische Fleischbällchen in Rahmsauce | Erdäpfelpüree | Röstzwiebel € 6,40“",
         "confidence": "high"
       },
       {
         "date": "2026-11-16",
-        "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+        "name": "Smart Menü – Deal des Tages",
         "category": "Menüoption",
         "portion": null,
-        "price_eur": 7.6,
+        "price_eur": null,
         "included_items": [
           "Deal des Tages",
           "Suppe",
           "Beilagensalat"
         ],
-        "extra_costs": [],
+        "extra_costs": [
+          "Gesamtpreis für das Smart Menü: € 7,60"
+        ],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
         "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,60“",
-        "confidence": "high"
-      },
-      {
-        "date": "2026-11-16",
-        "name": "Pizza Margherita",
-        "category": "Pizza & Co",
-        "portion": null,
-        "price_eur": 7.9,
-        "included_items": [],
-        "extra_costs": [],
-        "allergens": [],
-        "energy_kcal": null,
-        "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Montag, Pizza & Co: „€ 7,90 Pizza Margherita“",
-        "confidence": "high"
-      },
-      {
-        "date": "2026-11-16",
-        "name": "Pizza Speciale (Salami, Cardinale oder vegetaria)",
-        "category": "Pizza & Co",
-        "portion": null,
-        "price_eur": 8.2,
-        "included_items": [],
-        "extra_costs": [],
-        "allergens": [],
-        "energy_kcal": null,
-        "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Montag, Pizza & Co: „€ 8,20 Pizza Speciale (Salami, Cardinale, vegetaria)“",
-        "confidence": "high"
-      },
-      {
-        "date": "2026-11-16",
-        "name": "Tex Mex Pizza mit Rinderfaschiertem, Bohnen, Mais und Chili",
-        "category": "Weekly Special",
-        "portion": null,
-        "price_eur": 8.2,
-        "included_items": [
-          "Bohnen",
-          "Mais",
-          "Chili"
-        ],
-        "extra_costs": [],
-        "allergens": [],
-        "energy_kcal": null,
-        "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Montag, Weekly Special: „Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“ € 8,20",
-        "confidence": "high"
-      },
-      {
-        "date": "2026-11-16",
-        "name": "Pinsa Prosciutto oder Mozzarella",
-        "category": "Weekly Special",
-        "portion": null,
-        "price_eur": 8.2,
-        "included_items": [],
-        "extra_costs": [],
-        "allergens": [],
-        "energy_kcal": null,
-        "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Montag, Weekly Special: „Pinsa Prosciutto oder Mozzarella“ € 8,20",
         "confidence": "high"
       },
       {
@@ -167,8 +104,8 @@
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Special Topping € 2,00",
-          "Fleisch Topping € 2,50"
+          "Special Topping: € 2,00",
+          "Fleisch Topping: € 2,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -192,13 +129,13 @@
       },
       {
         "date": "2026-11-16",
-        "name": "Hausgemachte Pasta, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Pasta (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -208,13 +145,13 @@
       },
       {
         "date": "2026-11-16",
-        "name": "Hausgemachte Gnocchi, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Gnocchi (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 8.2,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -242,14 +179,12 @@
         "category": "Global & Grill",
         "portion": null,
         "price_eur": 9.8,
-        "included_items": [
-          "Jasminreis"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Montag, Global & Grill: „Kung Pao Chicken mit Jasminreis“ € 9,80",
+        "evidence_excerpt": "Montag, Global & Grill: „Kung Pao Chicken mit Jasminreis € 9,80“",
         "confidence": "high"
       },
       {
@@ -263,12 +198,12 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Dienstag: „Burgenländische Zwiebelcremesuppe“",
+        "evidence_excerpt": "Dienstag, Tagessuppe: „Burgenländische Zwiebelcremesuppe“",
         "confidence": "high"
       },
       {
         "date": "2026-11-17",
-        "name": "Soup Deal (laut Tagesaushang)",
+        "name": "Soup Deal – laut Tagesaushang",
         "category": "Soup Deal",
         "portion": null,
         "price_eur": 4.25,
@@ -277,12 +212,12 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "„Soup Deal € 4,25“; Inhalt: „laut Tagesaushang“",
+        "evidence_excerpt": "„Soup Deal € 4,25“; dazu „laut Tagesaushang“",
         "confidence": "high"
       },
       {
         "date": "2026-11-17",
-        "name": "Thai Pineapple Fried Rice (vegan)",
+        "name": "Thai Pineapple Fried Rice",
         "category": "Powered by plants / Veggie",
         "portion": null,
         "price_eur": 6.3,
@@ -291,102 +226,41 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Dienstag, Powered by plants / Veggie: „Thai Pineapple Fried Rice (vegan)“ € 6,30",
+        "evidence_excerpt": "Dienstag, Powered by plants / Veggie: „Thai Pineapple Fried Rice € 6,30“",
         "confidence": "high"
       },
       {
         "date": "2026-11-17",
-        "name": "Hühnerstreifen in Honig-Senfsauce, Karotten, Spiralen",
+        "name": "Hühnerstreifen in Honig-Senfsauce mit Karotten und Spiralen",
         "category": "Meaty",
         "portion": null,
         "price_eur": 5.8,
-        "included_items": [
-          "Karotten",
-          "Spiralen"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Dienstag, Meaty: „Hühnerstreifen in Honig-Senfsauce | Karotten | Spiralen“ € 5,80",
+        "evidence_excerpt": "Dienstag, Meaty: „Hühnerstreifen in Honig-Senfsauce | Karotten | Spiralen € 5,80“",
         "confidence": "high"
       },
       {
         "date": "2026-11-17",
-        "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+        "name": "Smart Menü – Deal des Tages",
         "category": "Menüoption",
         "portion": null,
-        "price_eur": 7.6,
+        "price_eur": null,
         "included_items": [
           "Deal des Tages",
           "Suppe",
           "Beilagensalat"
         ],
-        "extra_costs": [],
+        "extra_costs": [
+          "Gesamtpreis für das Smart Menü: € 7,60"
+        ],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
         "evidence_excerpt": "„Mach den Deal des Tages jetzt zum Smart Menü! + Suppe + Beilagensalat um nur € 7,60“",
-        "confidence": "high"
-      },
-      {
-        "date": "2026-11-17",
-        "name": "Pizza Margherita",
-        "category": "Pizza & Co",
-        "portion": null,
-        "price_eur": 7.9,
-        "included_items": [],
-        "extra_costs": [],
-        "allergens": [],
-        "energy_kcal": null,
-        "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Dienstag, Pizza & Co: „€ 7,90 Pizza Margherita“",
-        "confidence": "high"
-      },
-      {
-        "date": "2026-11-17",
-        "name": "Pizza Speciale (Salami, Cardinale oder vegetaria)",
-        "category": "Pizza & Co",
-        "portion": null,
-        "price_eur": 8.2,
-        "included_items": [],
-        "extra_costs": [],
-        "allergens": [],
-        "energy_kcal": null,
-        "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Dienstag, Pizza & Co: „€ 8,20 Pizza Speciale (Salami, Cardinale, vegetaria)“",
-        "confidence": "high"
-      },
-      {
-        "date": "2026-11-17",
-        "name": "Tex Mex Pizza mit Rinderfaschiertem, Bohnen, Mais und Chili",
-        "category": "Weekly Special",
-        "portion": null,
-        "price_eur": 8.2,
-        "included_items": [
-          "Bohnen",
-          "Mais",
-          "Chili"
-        ],
-        "extra_costs": [],
-        "allergens": [],
-        "energy_kcal": null,
-        "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Dienstag, Weekly Special: „Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“ € 8,20",
-        "confidence": "high"
-      },
-      {
-        "date": "2026-11-17",
-        "name": "Pinsa Prosciutto oder Mozzarella",
-        "category": "Weekly Special",
-        "portion": null,
-        "price_eur": 8.2,
-        "included_items": [],
-        "extra_costs": [],
-        "allergens": [],
-        "energy_kcal": null,
-        "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Dienstag, Weekly Special: „Pinsa Prosciutto oder Mozzarella“ € 8,20",
         "confidence": "high"
       },
       {
@@ -397,8 +271,8 @@
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Special Topping € 2,00",
-          "Fleisch Topping € 2,50"
+          "Special Topping: € 2,00",
+          "Fleisch Topping: € 2,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -422,13 +296,13 @@
       },
       {
         "date": "2026-11-17",
-        "name": "Hausgemachte Pasta, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Pasta (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -438,13 +312,13 @@
       },
       {
         "date": "2026-11-17",
-        "name": "Hausgemachte Gnocchi, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Gnocchi (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 8.2,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -472,15 +346,12 @@
         "category": "Global & Grill",
         "portion": null,
         "price_eur": 9.8,
-        "included_items": [
-          "Broccoli",
-          "Jasminreis"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Dienstag, Global & Grill: „Lachs-Teriyaki | Broccoli | Jasminreis“ € 9,80",
+        "evidence_excerpt": "Dienstag, Global & Grill: „Lachs-Teriyaki | Broccoli | Jasminreis € 9,80“",
         "confidence": "high"
       },
       {
@@ -494,12 +365,12 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Mittwoch: „Klare Gemüsesuppe | Einlage“",
+        "evidence_excerpt": "Mittwoch, Tagessuppe: „Klare Gemüsesuppe | Einlage“",
         "confidence": "high"
       },
       {
         "date": "2026-11-18",
-        "name": "Soup Deal (laut Tagesaushang)",
+        "name": "Soup Deal – laut Tagesaushang",
         "category": "Soup Deal",
         "portion": null,
         "price_eur": 4.25,
@@ -508,12 +379,12 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "„Soup Deal € 4,25“; Inhalt: „laut Tagesaushang“",
+        "evidence_excerpt": "„Soup Deal € 4,25“; dazu „laut Tagesaushang“",
         "confidence": "high"
       },
       {
         "date": "2026-11-18",
-        "name": "Nasi Goreng – veganes indonesisches Reisgericht (vegan)",
+        "name": "Nasi Goreng – veganes indonesisches Reisgericht",
         "category": "Powered by plants / Veggie",
         "portion": null,
         "price_eur": 6.3,
@@ -522,7 +393,7 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Mittwoch, Powered by plants / Veggie: „Nasi Goreng | veganes indonesisches Reisgericht (vegan)“ € 6,30",
+        "evidence_excerpt": "Mittwoch, Powered by plants / Veggie: „Nasi Goreng | veganes indonesisches Reisgericht (vegan) € 6,30“",
         "confidence": "high"
       },
       {
@@ -531,28 +402,28 @@
         "category": "Meaty",
         "portion": null,
         "price_eur": 5.8,
-        "included_items": [
-          "Petersilkartoffel"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Mittwoch, Meaty: „Gebackenes Hühnerschnitzel | Petersilkartoffel“ € 5,80",
+        "evidence_excerpt": "Mittwoch, Meaty: „Gebackenes Hühnerschnitzel | Petersilkartoffel € 5,80“",
         "confidence": "high"
       },
       {
         "date": "2026-11-18",
-        "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+        "name": "Smart Menü – Deal des Tages",
         "category": "Menüoption",
         "portion": null,
-        "price_eur": 7.6,
+        "price_eur": null,
         "included_items": [
           "Deal des Tages",
           "Suppe",
           "Beilagensalat"
         ],
-        "extra_costs": [],
+        "extra_costs": [
+          "Gesamtpreis für das Smart Menü: € 7,60"
+        ],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
@@ -567,8 +438,8 @@
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Special Topping € 2,00",
-          "Fleisch Topping € 2,50"
+          "Special Topping: € 2,00",
+          "Fleisch Topping: € 2,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -592,13 +463,13 @@
       },
       {
         "date": "2026-11-18",
-        "name": "Hausgemachte Pasta, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Pasta (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -608,13 +479,13 @@
       },
       {
         "date": "2026-11-18",
-        "name": "Hausgemachte Gnocchi, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Gnocchi (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 8.2,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -638,7 +509,7 @@
       },
       {
         "date": "2026-11-18",
-        "name": "Bao Buns mit Pulled Pork oder Planted Pulled BBQ",
+        "name": "Bao Buns – Pulled Pork oder Planted Pulled BBQ",
         "category": "Global & Grill",
         "portion": null,
         "price_eur": 9.8,
@@ -647,7 +518,7 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Mittwoch, Global & Grill: „Bao Buns Pulled Pork oder Planted Pulled BBQ“ € 9,80",
+        "evidence_excerpt": "Mittwoch, Global & Grill: „Bao Buns Pulled Pork oder Planted Pulled BBQ € 9,80“",
         "confidence": "high"
       },
       {
@@ -661,12 +532,12 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Donnerstag: „Süß saure Suppe“",
+        "evidence_excerpt": "Donnerstag, Tagessuppe: „Süß saure Suppe“",
         "confidence": "high"
       },
       {
         "date": "2026-11-19",
-        "name": "Soup Deal (laut Tagesaushang)",
+        "name": "Soup Deal – laut Tagesaushang",
         "category": "Soup Deal",
         "portion": null,
         "price_eur": 4.25,
@@ -675,7 +546,7 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "„Soup Deal € 4,25“; Inhalt: „laut Tagesaushang“",
+        "evidence_excerpt": "„Soup Deal € 4,25“; dazu „laut Tagesaushang“",
         "confidence": "high"
       },
       {
@@ -684,46 +555,42 @@
         "category": "Powered by plants / Veggie",
         "portion": null,
         "price_eur": 5.8,
-        "included_items": [
-          "Pilze",
-          "Gemüse",
-          "Koriander"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Donnerstag, Powered by plants / Veggie: „Eiernudeln mit Pilzen und Gemüse, dazu Koriander“ € 5,80",
+        "evidence_excerpt": "Donnerstag, Powered by plants / Veggie: „Eiernudeln mit Pilzen und Gemüse, dazu Koriander € 5,80“",
         "confidence": "high"
       },
       {
         "date": "2026-11-19",
-        "name": "„Pastitsio“ – griechischer Nudelauflauf mit Faschiertem (Schwein & Rind), Tomatensauce",
+        "name": "„Pastitsio“ – griechischer Nudelauflauf mit Faschiertem (Schwein & Rind) und Tomatensauce",
         "category": "Meaty",
         "portion": null,
         "price_eur": 6.4,
-        "included_items": [
-          "Tomatensauce"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Donnerstag, Meaty: „Pastitsio“ – Griechischer Nudelauflauf mit Faschiertem (Schwein & Rind) | Tomatensauce € 6,40",
+        "evidence_excerpt": "Donnerstag, Meaty: „„Pastitsio“ – Griechischer Nudelauflauf mit Faschiertem (Schwein & Rind) | Tomatensauce € 6,40“",
         "confidence": "high"
       },
       {
         "date": "2026-11-19",
-        "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+        "name": "Smart Menü – Deal des Tages",
         "category": "Menüoption",
         "portion": null,
-        "price_eur": 7.6,
+        "price_eur": null,
         "included_items": [
           "Deal des Tages",
           "Suppe",
           "Beilagensalat"
         ],
-        "extra_costs": [],
+        "extra_costs": [
+          "Gesamtpreis für das Smart Menü: € 7,60"
+        ],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
@@ -764,16 +631,12 @@
         "category": "Weekly Special",
         "portion": null,
         "price_eur": 8.2,
-        "included_items": [
-          "Bohnen",
-          "Mais",
-          "Chili"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Donnerstag, Weekly Special: „Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“ € 8,20",
+        "evidence_excerpt": "Donnerstag, Weekly Special: „€ 8,20 Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“",
         "confidence": "high"
       },
       {
@@ -787,7 +650,7 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Donnerstag, Weekly Special: „Pinsa Prosciutto oder Mozzarella“ € 8,20",
+        "evidence_excerpt": "Donnerstag, Weekly Special: „€ 8,20 Pinsa Prosciutto oder Mozzarella“",
         "confidence": "high"
       },
       {
@@ -798,8 +661,8 @@
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Special Topping € 2,00",
-          "Fleisch Topping € 2,50"
+          "Special Topping: € 2,00",
+          "Fleisch Topping: € 2,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -823,13 +686,13 @@
       },
       {
         "date": "2026-11-19",
-        "name": "Hausgemachte Pasta, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Pasta (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -839,13 +702,13 @@
       },
       {
         "date": "2026-11-19",
-        "name": "Hausgemachte Gnocchi, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Gnocchi (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 8.2,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -873,14 +736,12 @@
         "category": "Global & Grill",
         "portion": null,
         "price_eur": 9.8,
-        "included_items": [
-          "Pommes"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Donnerstag, Global & Grill: „Mensa Burger | Pommes Beef oder Planted 'Crispy Chicken style'“ € 9,80",
+        "evidence_excerpt": "Donnerstag, Global & Grill: „Mensa Burger | Pommes Beef oder Planted 'Crispy Chicken style' € 9,80“",
         "confidence": "high"
       },
       {
@@ -894,12 +755,12 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Freitag: „Klare Gemüsesuppe | Einlage“",
+        "evidence_excerpt": "Freitag, Tagessuppe: „Klare Gemüsesuppe | Einlage“",
         "confidence": "high"
       },
       {
         "date": "2026-11-20",
-        "name": "Soup Deal (laut Tagesaushang)",
+        "name": "Soup Deal – laut Tagesaushang",
         "category": "Soup Deal",
         "portion": null,
         "price_eur": 4.25,
@@ -908,7 +769,7 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "„Soup Deal € 4,25“; Inhalt: „laut Tagesaushang“",
+        "evidence_excerpt": "„Soup Deal € 4,25“; dazu „laut Tagesaushang“",
         "confidence": "high"
       },
       {
@@ -917,14 +778,12 @@
         "category": "Powered by plants / Veggie",
         "portion": null,
         "price_eur": 5.8,
-        "included_items": [
-          "warme Schnittlauchsauce"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Freitag, Powered by plants / Veggie: „Zucchini-Cottage Cheese-Pie | warme Schnittlauchsauce“ € 5,80",
+        "evidence_excerpt": "Freitag, Powered by plants / Veggie: „Zucchini-Cottage Cheese-Pie | warme Schnittlauchsauce € 5,80“",
         "confidence": "high"
       },
       {
@@ -933,29 +792,28 @@
         "category": "Meaty",
         "portion": null,
         "price_eur": 6.4,
-        "included_items": [
-          "Petersil-Erdäpfel",
-          "Sauce Tartare"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Freitag, Meaty: „Gebackener Seelachs | Petersil-Erdäpfel | Sc. Tartare“ € 6,40",
+        "evidence_excerpt": "Freitag, Meaty: „Gebackener Seelachs | Petersil-Erdäpfel | Sc. Tartare € 6,40“",
         "confidence": "high"
       },
       {
         "date": "2026-11-20",
-        "name": "Smart Menü: Deal des Tages + Suppe + Beilagensalat",
+        "name": "Smart Menü – Deal des Tages",
         "category": "Menüoption",
         "portion": null,
-        "price_eur": 7.6,
+        "price_eur": null,
         "included_items": [
           "Deal des Tages",
           "Suppe",
           "Beilagensalat"
         ],
-        "extra_costs": [],
+        "extra_costs": [
+          "Gesamtpreis für das Smart Menü: € 7,60"
+        ],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
@@ -996,16 +854,12 @@
         "category": "Weekly Special",
         "portion": null,
         "price_eur": 8.2,
-        "included_items": [
-          "Bohnen",
-          "Mais",
-          "Chili"
-        ],
+        "included_items": [],
         "extra_costs": [],
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Freitag, Weekly Special: „Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“ € 8,20",
+        "evidence_excerpt": "Freitag, Weekly Special: „€ 8,20 Tex Mex Pizza | Rinderfaschiertes | Bohnen, Mais, Chili“",
         "confidence": "high"
       },
       {
@@ -1019,7 +873,7 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Freitag, Weekly Special: „Pinsa Prosciutto oder Mozzarella“ € 8,20",
+        "evidence_excerpt": "Freitag, Weekly Special: „€ 8,20 Pinsa Prosciutto oder Mozzarella“",
         "confidence": "high"
       },
       {
@@ -1030,8 +884,8 @@
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Special Topping € 2,00",
-          "Fleisch Topping € 2,50"
+          "Special Topping: € 2,00",
+          "Fleisch Topping: € 2,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -1055,13 +909,13 @@
       },
       {
         "date": "2026-11-20",
-        "name": "Hausgemachte Pasta, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Pasta (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 7.9,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -1071,13 +925,13 @@
       },
       {
         "date": "2026-11-20",
-        "name": "Hausgemachte Gnocchi, wahlweise Tomatensauce oder Pesto",
+        "name": "Hausgemachte Gnocchi (wahlweise Tomatensauce oder Pesto)",
         "category": "Pasta & Co",
         "portion": null,
         "price_eur": 8.2,
         "included_items": [],
         "extra_costs": [
-          "Aufpreis Rinder Bolognese € 1,50"
+          "Aufpreis Rinder Bolognese: € 1,50"
         ],
         "allergens": [],
         "energy_kcal": null,
@@ -1101,7 +955,7 @@
       },
       {
         "date": "2026-11-20",
-        "name": "Stop Food Waste",
+        "name": "Stop Food Waste'",
         "category": "Global & Grill",
         "portion": null,
         "price_eur": null,
@@ -1110,29 +964,28 @@
         "allergens": [],
         "energy_kcal": null,
         "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-        "evidence_excerpt": "Freitag, Global & Grill: „Stop Food Waste“",
+        "evidence_excerpt": "Freitag, Global & Grill: „Stop Food Waste'“",
         "confidence": "high"
       }
     ]
   },
   "usage": {
-    "input_tokens": 9174,
+    "input_tokens": 9093,
     "input_tokens_details": {
-      "cache_write_tokens": 9171,
+      "cache_write_tokens": 9090,
       "cache_write_tokens_details": {
         "ttl_12h_tokens": 0,
-        "ttl_30m_tokens": 9171
+        "ttl_30m_tokens": 9090
       },
       "cached_tokens": 0
     },
-    "output_tokens": 10120,
+    "output_tokens": 9054,
     "output_tokens_details": {
-      "reasoning_tokens": 1421
+      "reasoning_tokens": 1284
     },
-    "total_tokens": 19294
+    "total_tokens": 18147
   },
-  "origin_run_id": "43583673161",
+  "origin_run_id": "43869022569",
   "extraction_version": "pdf-layout-v3-merged-groups",
-  "attempted_validator_version": "ai-pdf-8-absent-allergen-metadata",
-  "validated_by": "ai-pdf-8-absent-allergen-metadata"
+  "attempted_validator_version": "ai-pdf-8-absent-allergen-metadata"
 }

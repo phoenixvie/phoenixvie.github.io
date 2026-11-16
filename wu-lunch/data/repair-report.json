@@ -1,42 +1,85 @@
 {
-  "checked_at": "2026-11-15T06:28:12+01:00",
+  "checked_at": "2026-11-16T13:45:25+01:00",
   "week_start": "2026-11-16",
   "model": "gpt-6-luna",
-  "api_calls": 3,
+  "api_calls": 4,
   "results": [
     {
       "restaurant": "lia",
-      "issues": [
-        "source_not_published"
-      ],
+      "issues": [],
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Kein Menü für den WU-Campus für 2026-11-16 bis 2026-11-20 in der übergebenen Quelle bestätigt.",
+        "Der ausgewiesene Preis ist dem jeweiligen Hauptgericht zugeordnet; ein Preis für eine Kombination mit Suppe oder Salat ist nicht belegt.",
+        "Die Angabe „To Go Container + € 0,50“ ist ein allgemeiner Zusatz und kein belegter Bestandteil eines Menügesamtpreises. Andere Lia-Standorte wurden ausgeschlossen."
+      ],
+      "ai_only_items": 1,
+      "parser_only_items": 1,
+      "ai_only_examples": [
+        "2026-11-17: gegrillte hühnerbrust hühnerkeule mit champignonsauce und reis"
+      ],
+      "parser_only_examples": [
+        "2026-11-17: gegrillte hühnerbrust"
+      ],
+      "source_hashes": {
+        "https://lia.coffee/": "1ae1bba3058ad082435ab205d4da27d460df747ae370c688f96a90f52b05ebe3"
+      },
+      "usage": {
+        "input_tokens": 7250,
+        "input_tokens_details": {
+          "cache_write_tokens": 7247,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 7247
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 1729,
+        "output_tokens_details": {
+          "reasoning_tokens": 453
+        },
+        "total_tokens": 8979
+      }
+    },
+    {
+      "restaurant": "baschly",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Produktbilder sind im bereitgestellten HTML nicht als lesbarer Menütext enthalten.",
+        "Es wurden keine datierten Speisen oder Preise für die Woche 2026-11-16 bis 2026-11-20 übernommen.",
         "Keine eindeutig veröffentlichte aktuelle Karte"
       ],
       "ai_only_items": 0,
-      "parser_only_items": 0,
+      "parser_only_items": 10,
       "ai_only_examples": [],
-      "parser_only_examples": [],
+      "parser_only_examples": [
+        "2026-11-16: knackiger gemüse wok mit jasminreis frühlingsrolle und sweet chili sauce",
+        "2026-11-16: tandori chicken curry masala mit basmatireis allergene glutenfrei laktosefrei",
+        "2026-11-17: hühnerschnitzel mit kartoffelsalat und preiselbeeren",
+        "2026-11-17: öfen süss kartoffel mit gegrilltem gemüse parmesan und rukola salat auf kräuterjoghurt sauce",
+        "2026-11-18: crispy chicken mit gebratenem eierreis"
+      ],
       "source_hashes": {
-        "https://lia.coffee/": "b8e13f60912d5f63ec96da094edba5065338f1cbf93d62878fcac44a3cdd5879"
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "7a3bda6872ea062c6bc096897afffdddbbf59a91139ce463c6769dbe1d599e91",
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "f97fca46aa92d3e52d85cc89ecb9c977256cc18872eceff3ec459e2807aeeebe"
       },
       "usage": {
-        "input_tokens": 7260,
+        "input_tokens": 2746,
         "input_tokens_details": {
-          "cache_write_tokens": 0,
+          "cache_write_tokens": 2743,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 0
+            "ttl_30m_tokens": 2743
           },
-          "cached_tokens": 7257
+          "cached_tokens": 0
         },
-        "output_tokens": 300,
+        "output_tokens": 296,
         "output_tokens_details": {
-          "reasoning_tokens": 148
+          "reasoning_tokens": 119
         },
-        "total_tokens": 7560
+        "total_tokens": 3042
       }
     },
     {
@@ -45,7 +88,7 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Keine datierten Tagesmenüs für die angefragte Woche auf der Quelle erkennbar."
+        "Die Quelle belegt keine Zuordnung dieser Gerichte zur Woche 16.–20.11.2026."
       ],
       "ai_only_items": 4,
       "parser_only_items": 0,
@@ -57,23 +100,23 @@
       ],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "b363589b1641fd6eb4a8205d3bbfe358e22b25037999ca917e648965576a7c36"
+        "https://losteria.net/at/menue/menu-della-casa/": "e1d21da05c869abd95a623ed36ea3102b284f5210c42ad463f67a68c2b3909f3"
       },
       "usage": {
-        "input_tokens": 1971,
+        "input_tokens": 1974,
         "input_tokens_details": {
-          "cache_write_tokens": 0,
+          "cache_write_tokens": 1971,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 0
+            "ttl_30m_tokens": 1971
           },
-          "cached_tokens": 1968
+          "cached_tokens": 0
         },
-        "output_tokens": 938,
+        "output_tokens": 764,
         "output_tokens_details": {
-          "reasoning_tokens": 198
+          "reasoning_tokens": 178
         },
-        "total_tokens": 2909
+        "total_tokens": 2738
       }
     },
     {
@@ -82,36 +125,38 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Quelle nennt keine Bestandteile der Lunch Combo und keinen Einzelpreis für die übrigen Hauptgerichte.",
-        "Die Extras Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai sind undatiert; ihre Zuordnung zu einzelnen Wochentagen ist nicht belegt."
+        "„Extras“ listet Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai ohne Tageszuordnung oder Einzelpreise; diese wurden daher nicht als datierte Items ausgegeben.",
+        "Vegane/glutenfreie Kennzeichnungen sind keine ausdrücklich ausgewiesenen Allergenangaben."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "587cef3b9a83ba97fc7aeee38d0c68fa920230eff20f7a9a1eafc7ca1fd98c19"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "0dcfac39801e0d9e6ca1f5e34d6db1b06aab7e41e6f49c2e3383424bedfe35a5"
       },
       "usage": {
-        "input_tokens": 2612,
+        "input_tokens": 2642,
         "input_tokens_details": {
-          "cache_write_tokens": 2609,
+          "cache_write_tokens": 2639,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2609
+            "ttl_30m_tokens": 2639
           },
           "cached_tokens": 0
         },
-        "output_tokens": 3346,
+        "output_tokens": 2619,
         "output_tokens_details": {
-          "reasoning_tokens": 1345
+          "reasoning_tokens": 822
         },
-        "total_tokens": 5958
+        "total_tokens": 5261
       }
     },
     {
       "restaurant": "mensa",
-      "issues": [],
+      "issues": [
+        "source_error"
+      ],
       "action": "dedicated_pdf_ai",
       "repairs": []
     },
@@ -123,9 +168,7 @@
     },
     {
       "restaurant": "finn",
-      "issues": [
-        "source_not_published"
-      ],
+      "issues": [],
       "action": "dedicated_image_ai",
       "repairs": []
     },

@@ -1,165 +1,117 @@
 {
   "version": 1,
-  "previous_completed": "2026-11-14T17:25:25+00:00",
-  "menus_updated_at": "2026-11-15T05:29:08+00:00",
-  "menu_sha256": "66a88c2474f2f458ef7969fe1da624e0d50d4833d47937ed9817b74e21704343",
+  "previous_completed": "2026-11-15T05:29:08+00:00",
+  "menus_updated_at": "2026-11-16T12:46:37+00:00",
+  "menu_sha256": "327516c32e40c67f4c5b7ed23d241947ffc13a8e2f3966aea8c038b035276edd",
   "run": {
-    "id": "43680927918",
-    "event": "push",
-    "started_at": "2026-11-15T05:24:42+00:00",
+    "id": "43869022569",
+    "event": "schedule",
+    "started_at": "2026-11-16T12:43:06+00:00",
     "steps": [
       {
         "name": "parser",
-        "started_at": "2026-11-15T05:24:42+00:00",
-        "completed_at": "2026-11-15T05:24:48+00:00",
+        "started_at": "2026-11-16T12:43:06+00:00",
+        "completed_at": "2026-11-16T12:43:17+00:00",
         "exit_code": 0
       },
       {
         "name": "mensa_ai",
-        "started_at": "2026-11-15T05:24:48+00:00",
-        "completed_at": "2026-11-15T05:24:50+00:00",
+        "started_at": "2026-11-16T12:43:17+00:00",
+        "completed_at": "2026-11-16T12:44:30+00:00",
         "exit_code": 0
       },
       {
         "name": "finn_karma",
-        "started_at": "2026-11-15T05:24:51+00:00",
-        "completed_at": "2026-11-15T05:24:53+00:00",
-        "exit_code": 0
-      },
-      {
-        "name": "topf_browser",
-        "started_at": "2026-11-15T05:25:22+00:00",
-        "completed_at": "2026-11-15T05:27:06+00:00",
+        "started_at": "2026-11-16T12:44:31+00:00",
+        "completed_at": "2026-11-16T12:45:24+00:00",
         "exit_code": 0
       },
       {
         "name": "html_ai",
-        "started_at": "2026-11-15T05:27:06+00:00",
-        "completed_at": "2026-11-15T05:27:44+00:00",
+        "started_at": "2026-11-16T12:45:24+00:00",
+        "completed_at": "2026-11-16T12:46:18+00:00",
         "exit_code": 0
       },
       {
         "name": "menu_sanity",
-        "started_at": "2026-11-15T05:27:44+00:00",
-        "completed_at": "2026-11-15T05:27:53+00:00",
+        "started_at": "2026-11-16T12:46:18+00:00",
+        "completed_at": "2026-11-16T12:46:24+00:00",
         "exit_code": 0
       },
       {
         "name": "observe",
-        "started_at": "2026-11-15T05:27:53+00:00",
-        "completed_at": "2026-11-15T05:28:02+00:00",
+        "started_at": "2026-11-16T12:46:24+00:00",
+        "completed_at": "2026-11-16T12:46:36+00:00",
         "exit_code": 0
       },
       {
         "name": "source_archive",
-        "started_at": "2026-11-15T05:28:02+00:00",
-        "completed_at": "2026-11-15T05:28:02+00:00",
-        "exit_code": 0
-      },
-      {
-        "name": "parser_retry",
-        "started_at": "2026-11-15T05:28:04+00:00",
-        "completed_at": "2026-11-15T05:28:09+00:00",
-        "exit_code": 0
-      },
-      {
-        "name": "finn_karma_retry",
-        "started_at": "2026-11-15T05:28:09+00:00",
-        "completed_at": "2026-11-15T05:28:10+00:00",
-        "exit_code": 0
-      },
-      {
-        "name": "mensa_ai_retry",
-        "started_at": "2026-11-15T05:28:10+00:00",
-        "completed_at": "2026-11-15T05:28:12+00:00",
-        "exit_code": 0
-      },
-      {
-        "name": "html_ai_retry",
-        "started_at": "2026-11-15T05:28:12+00:00",
-        "completed_at": "2026-11-15T05:28:58+00:00",
-        "exit_code": 0
-      },
-      {
-        "name": "menu_sanity_retry",
-        "started_at": "2026-11-15T05:28:58+00:00",
-        "completed_at": "2026-11-15T05:29:01+00:00",
-        "exit_code": 0
-      },
-      {
-        "name": "observe",
-        "started_at": "2026-11-15T05:29:01+00:00",
-        "completed_at": "2026-11-15T05:29:08+00:00",
-        "exit_code": 0
-      },
-      {
-        "name": "source_archive",
-        "started_at": "2026-11-15T05:29:08+00:00",
-        "completed_at": "2026-11-15T05:29:08+00:00",
+        "started_at": "2026-11-16T12:46:36+00:00",
+        "completed_at": "2026-11-16T12:46:37+00:00",
         "exit_code": 0
       }
     ],
-    "completed_at": "2026-11-15T05:29:08+00:00"
+    "completed_at": "2026-11-16T12:46:37+00:00"
   },
   "source_checks": {
     "baschly": {
-      "last_attempt": "2026-11-15T05:29:03+00:00",
-      "last_fetched": "2026-11-15T05:29:03+00:00",
-      "successful_fetches": 8
+      "last_attempt": "2026-11-16T12:46:28+00:00",
+      "last_fetched": "2026-11-16T12:46:28+00:00",
+      "successful_fetches": 6
     },
     "campus": {
-      "last_attempt": "2026-11-15T05:29:02+00:00",
-      "last_fetched": "2026-11-15T05:29:02+00:00",
-      "successful_fetches": 4
-    },
-    "finn": {
-      "last_attempt": "2026-11-15T05:29:06+00:00",
-      "last_fetched": "2026-11-15T05:29:06+00:00",
-      "successful_fetches": 8
-    },
-    "glashaus": {
-      "last_attempt": "2026-11-15T05:29:02+00:00",
-      "last_fetched": "2026-11-15T05:29:02+00:00",
-      "successful_fetches": 4
-    },
-    "gruenehuette": {
-      "last_attempt": "2026-11-15T05:29:04+00:00",
-      "last_fetched": "2026-11-15T05:29:04+00:00",
-      "successful_fetches": 6
-    },
-    "karmafood": {
-      "last_attempt": "2026-11-15T05:29:06+00:00",
-      "last_fetched": "2026-11-15T05:29:06+00:00",
-      "successful_fetches": 8
-    },
-    "lia": {
-      "last_attempt": "2026-11-15T05:29:06+00:00",
-      "last_fetched": "2026-11-15T05:29:06+00:00",
-      "successful_fetches": 6
-    },
-    "losteria": {
-      "last_attempt": "2026-11-15T05:29:03+00:00",
-      "last_fetched": "2026-11-15T05:29:03+00:00",
-      "successful_fetches": 4
-    },
-    "mensa": {
-      "last_attempt": "2026-11-15T05:29:02+00:00",
-      "last_fetched": "2026-11-15T05:29:02+00:00",
-      "successful_fetches": 10
-    },
-    "omakueche": {
-      "last_attempt": "2026-11-15T05:29:08+00:00",
-      "last_fetched": "2026-11-15T05:29:08+00:00",
+      "last_attempt": "2026-11-16T12:46:26+00:00",
+      "last_fetched": "2026-11-16T12:46:26+00:00",
       "successful_fetches": 2
     },
+    "finn": {
+      "last_attempt": "2026-11-16T12:46:33+00:00",
+      "last_fetched": "2026-11-16T12:46:33+00:00",
+      "successful_fetches": 5
+    },
+    "glashaus": {
+      "last_attempt": "2026-11-16T12:46:26+00:00",
+      "last_fetched": "2026-11-16T12:46:26+00:00",
+      "successful_fetches": 2
+    },
+    "gruenehuette": {
+      "last_attempt": "2026-11-16T12:46:30+00:00",
+      "last_fetched": "2026-11-16T12:46:30+00:00",
+      "successful_fetches": 3
+    },
+    "karmafood": {
+      "last_attempt": "2026-11-16T12:46:34+00:00",
+      "last_fetched": "2026-11-16T12:46:34+00:00",
+      "successful_fetches": 4
+    },
+    "lia": {
+      "last_attempt": "2026-11-16T12:46:32+00:00",
+      "last_fetched": "2026-11-16T12:46:32+00:00",
+      "successful_fetches": 3
+    },
+    "losteria": {
+      "last_attempt": "2026-11-16T12:46:29+00:00",
+      "last_fetched": "2026-11-16T12:46:29+00:00",
+      "successful_fetches": 2
+    },
+    "mensa": {
+      "last_attempt": "2026-11-16T12:46:25+00:00",
+      "last_fetched": "2026-11-16T12:46:25+00:00",
+      "successful_fetches": 5
+    },
+    "omakueche": {
+      "last_attempt": "2026-11-16T12:46:36+00:00",
+      "last_fetched": "2026-11-16T12:46:36+00:00",
+      "successful_fetches": 1
+    },
     "topfdeckel": {
-      "last_attempt": "2026-11-15T05:29:04+00:00",
-      "last_fetched": "2026-11-15T05:29:04+00:00",
-      "successful_fetches": 12
+      "last_attempt": "2026-11-16T12:46:30+00:00",
+      "last_fetched": "2026-11-16T12:46:30+00:00",
+      "successful_fetches": 2
     }
   },
-  "last_source_fetch": "2026-11-15T05:29:08+00:00",
-  "last_completed": "2026-11-15T05:29:08+00:00",
+  "last_source_fetch": "2026-11-16T12:46:36+00:00",
+  "last_completed": "2026-11-16T12:46:37+00:00",
   "week_start": "2026-11-16",
-  "archive_entries": 9
+  "archive_entries": 15
 }

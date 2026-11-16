@@ -1,0 +1,299 @@
+{
+  "version": 1,
+  "restaurant_id": "mensa",
+  "week_start": "2026-11-16",
+  "menu_sha256": "e75401c7dd884c3d9331d6ecf96d897c9439d5523e578332df1b8556ec1f4295",
+  "captured_at": "2026-11-16T12:46:36+00:00",
+  "run_id": "43869022569",
+  "code_commit": "1f391226c0ab101e97cac8ef364d95651ccac843",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "error",
+    "last_success": "2026-11-16T13:43:06+01:00",
+    "consecutive_failures": 0,
+    "parser_version": "ai-pdf-8-absent-allergen-metadata",
+    "content_sha256": "1f8db507732cd8b3c15b4ff50234e7dc79181b107e7bda24b893bd4be3f7c061",
+    "error": "Mensa: fehlender Gerichtpreis"
+  },
+  "ai_audit": {
+    "checked_at": "2026-11-16T13:43:17+01:00",
+    "source_sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+    "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+    "week_start": "2026-11-16",
+    "version": "ai-pdf-8-absent-allergen-metadata",
+    "last_attempt_at": "2026-11-16T13:43:17+01:00",
+    "state": "error",
+    "error": "Mensa: fehlender Gerichtpreis",
+    "last_success": "2026-11-15T06:28:10+01:00",
+    "published_days_sha256": "c5a0e04bb91411b46b158c203be164b0e80b95e2724aaa6f8d919193d16bfa47"
+  },
+  "sources": [
+    {
+      "restaurant_id": "mensa",
+      "url": "https://www.wumensa.at/",
+      "at": "2026-11-16T12:43:07+00:00",
+      "sha256": "27e66ae83d5c82f93b73e3247b6354d779c24f5c2766bcb691d3d8f106611a94",
+      "bytes": 16792,
+      "format": "html",
+      "blob": "27e66ae83d5c82f93b73e3247b6354d779c24f5c2766bcb691d3d8f106611a94.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "mensa",
+      "url": "https://www.wumensa.at/menuplan-deutsch/",
+      "at": "2026-11-16T12:43:08+00:00",
+      "sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+      "bytes": 136631,
+      "format": "pdf",
+      "blob": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b.pdf",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "mensa",
+      "url": "https://www.wumensa.at/",
+      "at": "2026-11-16T12:43:18+00:00",
+      "sha256": "27e66ae83d5c82f93b73e3247b6354d779c24f5c2766bcb691d3d8f106611a94",
+      "bytes": 16792,
+      "format": "html",
+      "blob": "27e66ae83d5c82f93b73e3247b6354d779c24f5c2766bcb691d3d8f106611a94.html",
+      "stage": "mensa_ai",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "mensa",
+      "url": "https://www.wumensa.at/menuplan-deutsch/",
+      "at": "2026-11-16T12:43:18+00:00",
+      "sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+      "bytes": 136631,
+      "format": "pdf",
+      "blob": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b.pdf",
+      "stage": "mensa_ai",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [
+        {
+          "name": "Klare Gemüsesuppe Einlage",
+          "price": null,
+          "category": "Tagessuppe",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "\"Plant\"bullar schwedische vegane Fleischbällchen Erdäpfelpüree Röstzwiebel",
+          "price": 5.8,
+          "category": "Powered by plants / Veggie",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Köttbullar schwedische Fleischbällchen in Rahmsauce Erdäpfelpüree Röstzwiebel",
+          "price": 6.4,
+          "category": "Meaty",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Kung Pao Chicken mit Jasminreis",
+          "price": 9.8,
+          "category": "Global & Grill",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-17": [
+        {
+          "name": "Burgenländische Zwiebelcremesuppe",
+          "price": null,
+          "category": "Tagessuppe",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Thai Pineapple Fried Rice",
+          "price": 6.3,
+          "category": "Powered by plants / Veggie",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Hühnerstreifen in Honig Senfsauce Karotten Spiralen",
+          "price": 5.8,
+          "category": "Meaty",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Lachs-Teriyaki Broccoli Jasminreis",
+          "price": 9.8,
+          "category": "Global & Grill",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-18": [
+        {
+          "name": "Klare Gemüsesuppe Einlage",
+          "price": null,
+          "category": "Tagessuppe",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Nasi Goreng veganes indonesisches Reisgericht (vegan)",
+          "price": 6.3,
+          "category": "Powered by plants / Veggie",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Gebackenes Hühnerschnitzel Petersilkartoffel",
+          "price": 5.8,
+          "category": "Meaty",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Bao Buns Pulled Pork oder Planted Pulled BBQ",
+          "price": 9.8,
+          "category": "Global & Grill",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-19": [
+        {
+          "name": "Süß saure Suppe",
+          "price": null,
+          "category": "Tagessuppe",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Eiernudeln mit Pilzen und Gemüse, dazu Koriander",
+          "price": 5.8,
+          "category": "Powered by plants / Veggie",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "\"Pastitsio\" Griechischer Nudelauflauf mit Faschiertem (Schwein & Rind) Tomatensauce",
+          "price": 6.4,
+          "category": "Meaty",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Mensa Burger Pommes Beef oder Planted 'Crispy Chicken style'",
+          "price": 9.8,
+          "category": "Global & Grill",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-20": [
+        {
+          "name": "Klare Gemüsesuppe Einlage",
+          "price": null,
+          "category": "Tagessuppe",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Zucchini-Cottage Cheese Pie warme Schnittlauchsauce",
+          "price": 5.8,
+          "category": "Powered by plants / Veggie",
+          "diet": "veggie",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Gebackener Seelachs Petersil-Erdäpfel Sc. Tartare",
+          "price": 6.4,
+          "category": "Meaty",
+          "diet": "meat",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Stop Food Waste'",
+          "price": null,
+          "category": "Global & Grill",
+          "diet": "unknown",
+          "description": "",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-16",
+    "validUntil": "2026-11-20"
+  }
+}

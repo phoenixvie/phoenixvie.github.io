@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "restaurant_id": "topfdeckel",
+  "week_start": "2026-11-16",
+  "menu_sha256": "5661e0f8ffa540098db894233f4a32aabe1309018b5d7af07b4a705749a6bd1c",
+  "captured_at": "2026-11-16T12:46:36+00:00",
+  "run_id": "43869022569",
+  "code_commit": "1f391226c0ab101e97cac8ef364d95651ccac843",
+  "menu_status": "daily",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "ok",
+    "last_success": "2026-11-16T13:43:06+01:00",
+    "consecutive_failures": 0,
+    "parser_version": null,
+    "content_sha256": null
+  },
+  "ai_audit": {
+    "state": "review_needed",
+    "model": "gpt-6-luna",
+    "fingerprint": "2e66b2dc35ac466f81667c21375be4d6d47aa5189a8cc6d6ff6e1fba12ad430a",
+    "checked_at": "2026-11-13T14:31:37+01:00",
+    "validation_issues": [
+      "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
+    ],
+    "ai_only_examples": {
+      "2026-11-09": [
+        "tan tan faschiertes mit asian slaw, basmatireis, limetten-sesam-mayo & nori crunch"
+      ]
+    },
+    "warnings": [
+      "Für Haussalat und Suppen gelten die Preise aus dem Abschnitt „Vorspeisen“; ein eigener Gerichtspreis ist nicht angezeigt.",
+      "Die Tabs weisen keine Menü-Kombination aus; Beilagen sind nur dort als Bestandteil erfasst, wo sie ausdrücklich beim Gericht genannt sind. „Dessert des Tages“ ist nicht näher beschrieben."
+    ],
+    "usage": {
+      "input_tokens": 50682,
+      "input_tokens_details": {
+        "cache_write_tokens": 50679,
+        "cached_tokens": 0
+      },
+      "output_tokens": 8945,
+      "output_tokens_details": {
+        "reasoning_tokens": 545
+      },
+      "total_tokens": 59627
+    }
+  },
+  "sources": [
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/",
+      "at": "2026-11-16T12:43:14+00:00",
+      "sha256": "f7fe031bb1306aa8e20484edaf3988dcf83a7e4c311a271068131acd6f6d3735",
+      "bytes": 117325,
+      "format": "html",
+      "blob": "f7fe031bb1306aa8e20484edaf3988dcf83a7e4c311a271068131acd6f6d3735.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [
+        {
+          "name": "Erdäpfelcremsuppe",
+          "price": 3.9,
+          "category": "Suppe",
+          "diet": "unknown",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Haussalat",
+          "price": 3.9,
+          "category": "Salat",
+          "diet": "veggie",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Paprikahühnchen in cremiger Rahmsauce",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Smashed Sweet Potato mit saftigem Faschierten & Feta-Crumble",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Cremiges Kürbis-Karfiol-Curry mit gerösteten Cashewkernen",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Halloumi Pfanne mit mediterranem Schmorgemüse, Joghurt-Kräuter Dip",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Dessert des Tages",
+          "price": 2.9,
+          "category": "Nachspeise",
+          "diet": "unknown",
+          "description": "Separat erhältlich",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 9.5,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum kleinen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 13.9,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum großen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-17": [],
+      "2026-11-18": [],
+      "2026-11-19": [],
+      "2026-11-20": []
+    },
+    "seasonal": [],
+    "validFrom": null,
+    "validUntil": null
+  }
+}
