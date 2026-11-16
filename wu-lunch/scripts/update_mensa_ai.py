@@ -18,6 +18,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import fitz
+import attempts
 from menu_sanity import clean_item
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -29,6 +30,9 @@ CANDIDATE = ROOT / "data" / "mensa-ai-candidate.json"
 TZ = ZoneInfo("Europe/Vienna")
 REVIEW_VERSION = "ai-pdf-8-absent-allergen-metadata"
 EXTRACTION_VERSION = "pdf-layout-v3-merged-groups"
+# Selbstkorrektur: So oft darf das Modell eine von den Prüfungen abgelehnte
+# Antwort anhand der konkreten Befunde und derselben Originalquelle nachbessern.
+MAX_CORRECTIONS = 3
 SOURCE_FILE = ROOT / "ai-pilot" / "ai_direct.py"
 
 spec = importlib.util.spec_from_file_location("mensa_ai_direct", SOURCE_FILE)
@@ -195,6 +199,11 @@ def same_source_word(a,b,terms=()):
     if (a==b or (min(len(a),len(b))>=6 and a[:-1]==b[:-1]) or
         SequenceMatcher(None,a,b).ratio()>=.90):
         return True
+    # Same word with a plain German ending: the PDF repeats 'veganes ... (vegan)'
+    # and the model keeps only one form. Stem of 5+ letters, ending only.
+    short,long_=sorted((a,b),key=len)
+    if len(short)>=5 and long_.startswith(short) and long_[len(short):] in ('e','es','en','er','em','n','s'):
+        return True
     # Join/split orthographic compounds only if the entire other component is
     # independently present too: Petersil-Erdäpfel vs Petersilerdäpfel.
     for whole,part in ((a,b),(b,a)):
@@ -206,7 +215,11 @@ def same_source_word(a,b,terms=()):
 
 
 def validate_layout(days, layout):
-    """Check date/category scope, printed tariffs, and coverage of literal cells."""
+    """Check date/category scope, printed tariffs, and coverage of literal cells.
+
+    Collects every rejected cell so one correction round can fix them together.
+    """
+    problems = []
     for section in layout:
         category = section['category']
         for day,text in section['cells'].items():
@@ -218,27 +231,36 @@ def validate_layout(days, layout):
             expected = {w for w in expected if not re.fullmatch(r'\d+',w)}
             if not expected:
                 if rows:
-                    raise ValueError('Mensa: Gericht in leerer/XXX-Zelle: '+day+' '+category)
+                    problems.append('Mensa: Gericht in leerer/XXX-Zelle: '+day+' '+category)
+                    continue
                 continue
             if not rows:
-                raise ValueError('Mensa: Angebotsbereich fehlt: '+day+' '+category)
+                problems.append('Mensa: Angebotsbereich fehlt: '+day+' '+category)
+                continue
             actual = content_terms(' '.join(r['name']+' '+r.get('description','') for r in rows))
             # Count small spelling differences without allowing whole dishes to disappear.
             covered=sum(any(same_source_word(w,v,expected|actual) for v in actual) for w in expected)
             if covered/len(expected)<.88:
-                raise ValueError('Mensa: unvollständige Tabellenzelle: '+day+' '+category+' fehlt '+', '.join(sorted(expected-actual))[:120])
+                problems.append('Mensa: unvollständige Tabellenzelle: '+day+' '+category+' fehlt '+', '.join(sorted(expected-actual))[:120])
+                continue
             price_text=text+'\n'+section['tariff_text']
             prices=money_values(price_text)
             shown_prices={r['price'] for r in rows if r['price'] is not None} | money_values(' '.join(r.get('description','') for r in rows))
             if not prices <= shown_prices:
-                raise ValueError('Mensa: Angebot/Aufpreis fehlt: '+day+' '+category+' '+str(sorted(prices-shown_prices)))
+                problems.append('Mensa: Angebot/Aufpreis fehlt: '+day+' '+category+' '+str(sorted(prices-shown_prices)))
+                continue
             for row in rows:
                 words=content_terms(row['name'])
                 source_words=content_terms(price_text)
                 if words and sum(any(same_source_word(w,v,words|source_words) for v in source_words) for w in words)/len(words)<.85:
-                    raise ValueError('Mensa: Gericht nicht in seiner Tageszelle: '+day+' '+row['name'])
+                    problems.append('Mensa: Gericht nicht in seiner Tageszelle: '+day+' '+row['name'])
+                    continue
                 if row['price'] is not None and row['price'] not in prices:
-                    raise ValueError('Mensa: Preis nicht in Tageszelle/Tarifspalte: '+day+' '+category)
+                    problems.append('Mensa: Preis nicht in Tageszelle/Tarifspalte: '+day+' '+category)
+                    continue
+    if problems:
+        more = f" (+{len(problems)-6} weitere)" if len(problems) > 6 else ""
+        raise ValueError("; ".join(problems[:6]) + more)
 
 
 def independent_period(pdf_bytes, monday):
@@ -281,7 +303,7 @@ def validate_menu(result, original_text, monday, pdf_url):
     days = {(monday + timedelta(days=i)).isoformat(): [] for i in range(5)}
     seen = set()
     pdf_words = set(normalize(original_text).split())
-    for item in items:
+    def check_item(item):
         day = item.get("date")
         if day not in days:
             raise ValueError("Mensa: fehlender oder falscher Wochentag")
@@ -356,7 +378,7 @@ def validate_menu(result, original_text, monday, pdf_url):
         ] if x)
         if category == 'Global & Grill' and explicit_notice:
             description = 'Konkrete Speise und Preis noch nicht veröffentlicht.'
-        days[day].append({
+        return day, {
             "name": name.strip(), "price": price, "category": category,
             "diet": diet, "description": description, "allergens": allergens,
             "energy_kcal": energy,
@@ -364,7 +386,21 @@ def validate_menu(result, original_text, monday, pdf_url):
             "source_url": pdf_url, "evidence_excerpt": evidence.strip(),
             "ai_confidence": item.get("confidence") or "unknown",
             "details_unpublished": explicit_notice,
-        })
+        }
+
+    # Alle beanstandeten Zeilen samt Tag/Kategorie/Name melden: Die Befunde
+    # gehen wortgleich an das Modell zurück (Selbstkorrektur) und in den Status.
+    problems = []
+    for item in items:
+        try:
+            day, row = check_item(item)
+        except ValueError as exc:
+            problems.append(f"{exc} [{item.get('date')} · {item.get('category')} · {str(item.get('name'))[:70]}]")
+            continue
+        days[day].append(row)
+    if problems:
+        more = f" (+{len(problems)-6} weitere)" if len(problems) > 6 else ""
+        raise ValueError("; ".join(problems[:6]) + more)
     if any(not rows for rows in days.values()):
         raise ValueError("Mensa: weniger als fünf Wochentage gefunden")
     meaty = sum(any(x["category"] == "Meaty" for x in rows) for rows in days.values())
@@ -423,7 +459,7 @@ def extract_for_week(monday, key, model, prepared=None):
               "Toppings nur als extra_costs zum Grundangebot, keine eigenen Hauptgerichte. "
               "Alle Saucenoptionen und Bolognese-Aufpreise aus Pasta & Co übernehmen. "
               "Smart Menü ist ein separates bedingtes Wochenangebot: 'Deal des Tages + Suppe + Beilagensalat', "
-              "Kategorie Menüoption, Gesamtpreis aus der Bannerzeile. NICHT einem ungeklärten Hauptgericht zuordnen. "
+              "Kategorie Menüoption, der gedruckte Gesamtpreis der Bannerzeile steht in price_eur (nicht null, nicht nur in extra_costs). NICHT einem ungeklärten Hauptgericht zuordnen. "
               "Allergens enthält ausschließlich einzelne Buchstaben; Variantenhinweise gehören in evidence_excerpt bzw. den Gerichttext. "
               "Unbekannter Preis/laut Aushang bleibt null; keinen Nachbartagespreis übernehmen. "
               "Preise der Pizza/Pasta aus der linken Tarifspalte korrekt zuordnen. "
@@ -438,6 +474,59 @@ def extract_for_week(monday, key, model, prepared=None):
         {"type": "input_file", "filename": "wu-mensa-menu.pdf",
          "file_data": "data:application/pdf;base64," + base64.b64encode(raw).decode()},
     ]}]
+    def check_candidate(result):
+        """Sämtliche unabhängigen Prüfungen; liefert die Tagesdaten oder wirft."""
+        issues = ai.validate(result, [pdf_source], monday, "mensa")
+        if issues:
+            raise ValueError("Mensa: KI-Validierung: " + "; ".join(issues[:4]))
+        days = validate_menu(result, native_text, monday, pdf_url)
+        validate_layout(days, layout)
+        # Independently compare the dated core table cells and prices. Parser
+        # failure blocks this candidate; it never becomes permission to guess.
+        core, _ = legacy.parse_mensa(raw, monday)
+        for day, rows in core.items():
+            for expected in rows:
+                matches = [i for i in days[day] if normalize(i["category"]) == normalize(expected["category"])]
+                if not matches or any(i["price"] != expected["price"] for i in matches):
+                    raise ValueError("Mensa: PDF-Zellenabgleich fehlgeschlagen: " + day + " " + expected["category"]
+                                     + " (im PDF gemessener Preis: " + str(expected["price"]) + ")")
+        # Informational notes about explicitly unknown Aushang content/prices are
+        # compatible with null fields. Ambiguity/conflicts still block publication.
+        for warning in result.get('warnings') or []:
+            text=warning.casefold()
+            if confirmed_absent_allergen_notice(warning,result,native_text):
+                continue
+            if ('smart' in text and not re.search(r'widerspr|unles|preis\w* (?:fehlt|unklar|unsicher)',text) and
+                any(s['category']=='Menüoption' for s in layout) and
+                all(any(r['category']=='Menüoption' and 'deal' in r['name'].casefold() and r['price'] is not None
+                        for r in rows) for rows in days.values())):
+                # The generic, conditional offer was verified as a separate priced
+                # row on all five days. A note that it is not tied to one main
+                # dish (exactly what the prompt asks for) is information, not
+                # doubt; uncertainty about its eligible dish is no free upgrade.
+                # Regression 16.11.2026: such a note blocked the whole Mensa week.
+                continue
+            if (re.search(r'unklar|unles|unsicher|widerspr|nicht eindeutig|abgeleitet',text) or
+                not any(term in text for term in ('aushang','stop food waste','zusammengeführt','wochenzeile'))):
+                raise ValueError('Mensa: offene KI-Warnung: '+warning[:280])
+        return days
+
+    def remember(record, result, usage):
+        record['attempted_validator_version']=REVIEW_VERSION
+        CANDIDATE.parent.mkdir(parents=True,exist_ok=True)
+        CANDIDATE.write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        # Retain the actual candidate and exact downloaded bytes for inspection.
+        # Public restaurant content only; no credentials or request headers.
+        RESULTS.mkdir(parents=True, exist_ok=True)
+        (RESULTS / "mensa-current.pdf").write_bytes(raw)
+        (RESULTS / "mensa-current.json").write_text(json.dumps({
+            "week_start": monday.isoformat(), "source": pdf_source,
+            "model": model, "result": result, "usage": usage, "layout": layout,
+            "corrections": record.get('corrections', 0),
+        }, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+        print("Mensa-KI Analyse:", json.dumps({"status": result.get("status"),
+              "warnings": result.get("warnings"), "items": len(result.get("items") or [])}, ensure_ascii=False), flush=True)
+
     record=cached_candidate(monday,pdf_source,model)
     if record:
         result,usage=record['result'],record.get('usage',{})
@@ -447,47 +536,24 @@ def extract_for_week(monday, key, model, prepared=None):
         record={'week_start':monday.isoformat(),'source':pdf_source,'model':model,
                 'result':result,'usage':usage,'origin_run_id':os.environ.get('GITHUB_RUN_ID'),
                 'extraction_version':EXTRACTION_VERSION}
-    record['attempted_validator_version']=REVIEW_VERSION
-    CANDIDATE.parent.mkdir(parents=True,exist_ok=True)
-    CANDIDATE.write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    # Retain the actual candidate and exact downloaded bytes for inspection.
-    # Public restaurant content only; no credentials or request headers.
-    RESULTS.mkdir(parents=True, exist_ok=True)
-    (RESULTS / "mensa-current.pdf").write_bytes(raw)
-    (RESULTS / "mensa-current.json").write_text(json.dumps({
-        "week_start": monday.isoformat(), "source": pdf_source,
-        "model": model, "result": result, "usage": usage, "layout": layout,
-    }, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
-    print("Mensa-KI Analyse:", json.dumps({"status": result.get("status"),
-          "warnings": result.get("warnings"), "items": len(result.get("items") or [])}, ensure_ascii=False), flush=True)
-    issues = ai.validate(result, [pdf_source], monday, "mensa")
-    if issues:
-        raise ValueError("Mensa: KI-Validierung: " + "; ".join(issues[:4]))
-    days = validate_menu(result, native_text, monday, pdf_url)
-    validate_layout(days, layout)
-    # Independently compare the dated core table cells and prices. Parser
-    # failure blocks this candidate; it never becomes permission to guess.
-    core, _ = legacy.parse_mensa(raw, monday)
-    for day, rows in core.items():
-        for expected in rows:
-            matches = [i for i in days[day] if normalize(i["category"]) == normalize(expected["category"])]
-            if not matches or any(i["price"] != expected["price"] for i in matches):
-                raise ValueError("Mensa: PDF-Zellenabgleich fehlgeschlagen: " + day + " " + expected["category"])
-    # Informational notes about explicitly unknown Aushang content/prices are
-    # compatible with null fields. Ambiguity/conflicts still block publication.
-    for warning in result.get('warnings') or []:
-        text=warning.casefold()
-        if confirmed_absent_allergen_notice(warning,result,native_text):
-            continue
-        if ('smart' in text and ('nicht eindeutig' in text or 'nicht sicher' in text) and
-            any(s['category']=='Menüoption' for s in layout) and
-            all(any(r['category']=='Menüoption' and 'deal' in r['name'].casefold() for r in rows) for rows in days.values())):
-            # The generic, conditional offer was verified as a separate row;
-            # uncertainty about its eligible main dish is not a free upgrade.
-            continue
-        if (re.search(r'unklar|unles|unsicher|widerspr|nicht eindeutig|abgeleitet',text) or
-            not any(term in text for term in ('aushang','stop food waste','zusammengeführt','wochenzeile'))):
-            raise ValueError('Mensa: offene KI-Warnung: '+warning[:280])
+    for round_number in range(MAX_CORRECTIONS + 1):
+        remember(record, result, usage)
+        try:
+            days = check_candidate(result)
+            break
+        except ValueError as rejected:
+            if round_number == MAX_CORRECTIONS or not key:
+                raise
+            # Selbstkorrektur: gleiche Originalquelle, abgelehnte Antwort und der
+            # genaue Befund. Das Ergebnis durchläuft wieder ALLE Prüfungen.
+            print(f"Mensa-KI: Antwort abgelehnt ({str(rejected)[:300]}); "
+                  f"Korrekturrunde {round_number + 1}/{MAX_CORRECTIONS}", flush=True)
+            result, usage = ai.call_model(
+                key, model, ai.correction_inputs(inputs, result, [str(rejected)]),
+                max_output_tokens=22000)
+            record.update(result=result, usage=usage, corrections=round_number + 1,
+                          last_rejection=str(rejected)[:500])
+            record.pop('validated_by', None)
     record['validated_by']=REVIEW_VERSION
     CANDIDATE.write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     return days, pdf_source, usage
@@ -554,11 +620,19 @@ def run(today, model):
             status["mensa_luna_audit"] = audit
             STATUS.write_text(json.dumps(status, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
             return False
-        if same and prior.get("last_attempt_at", "")[:10] == now[:10]:
-            raise ValueError("Mensa: diese PDF-Version heute bereits geprüft; erneuter Versuch bei Änderung oder morgen")
+        clock = datetime.now(TZ)
+        ident = attempts.identity(monday.isoformat(), REVIEW_VERSION, pdf_source["sha256"])
+        if same and not prior.get("attempts") and prior.get("last_attempt_at", "")[:10] == now[:10]:
+            # Eintrag aus der Zeit vor den begrenzten Wiederholungen: zählt als ein Versuch.
+            audit["attempts"] = {"identity": ident, "day": now[:10], "count": 1,
+                                 "last_at": prior["last_attempt_at"]}
+        permitted, reason = attempts.allowed(audit, ident, clock)
+        if not permitted:
+            raise ValueError("Mensa: diese PDF-Version " + reason)
         key = os.environ.get("OPENAI_API_KEY", "").strip()
         if not key:
             raise ValueError("Mensa: OPENAI_API_KEY fehlt")
+        attempts.register(audit, ident, clock)
         audit.update(source_sha256=pdf_source["sha256"], source_url=pdf_source["url"],
                      week_start=monday.isoformat(), version=REVIEW_VERSION, last_attempt_at=now)
         days, pdf_source, usage = extract_for_week(monday, key, model, prepared)

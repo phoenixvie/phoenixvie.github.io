@@ -74,23 +74,39 @@ class NewRestaurantTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             module.select_finn_image(finn_fixture(45,date(2025,11,2)),MON)
 
-    def test_finn_failed_same_image_not_retried_each_hour(self):
+    def test_finn_failed_same_image_retries_are_spaced_and_capped(self):
         import hashlib
         from unittest.mock import patch
         from datetime import timedelta
-        today=datetime.now(module.TZ).date()
-        monday=today-timedelta(days=today.weekday())
+        monday=date(2026,11,16)
         image=bytes([255,216,255])+(b"X"*9000)
-        previous={
-            "last_attempt_at":today.isoformat()+"T07:00:00+01:00",
-            "last_attempt_sha256":hashlib.sha256(image).hexdigest(),
+        sha=hashlib.sha256(image).hexdigest()
+        html=finn_fixture(monday.isocalendar().week,monday)
+        at=lambda hour,minute: datetime(2026,11,16,hour,minute,tzinfo=module.TZ)
+        legacy_record=lambda: {
+            "last_attempt_at":"2026-11-16T07:00:00+01:00","last_attempt_sha256":sha,
             "last_attempt_version":module.FINN_REVIEW_VERSION,
             "last_attempt_week_start":monday.isoformat(),
         }
-        html=finn_fixture(monday.isocalendar().week,monday)
-        with patch.object(module.legacy,"safe_get",side_effect=lambda url,*args: html if url==module.FINN_URL else image):
-            with self.assertRaisesRegex(ValueError,"bereits mit KI geprüft"):
-                module.fetch_finn(monday,key="fake-key",previous=previous)
+        class ModelCalled(Exception):pass
+        def no_model(*args,**kwargs):raise ModelCalled()
+        with patch.object(module.legacy,"safe_get",side_effect=lambda url,*args: html if url==module.FINN_URL else image), \
+             patch("importlib.util.spec_from_file_location",side_effect=no_model):
+            # Kurz nach einem Fehlversuch: kein weiterer bezahlter Aufruf.
+            with self.assertRaisesRegex(ValueError,"frühestens nach"):
+                module.fetch_finn(monday,key="fake-key",previous=legacy_record(),now=at(7,20))
+            # Nach der Pause: genau ein weiterer Versuch am selben Tag ...
+            previous=legacy_record()
+            with self.assertRaises(ModelCalled):
+                module.fetch_finn(monday,key="fake-key",previous=previous,now=at(8,30))
+            self.assertEqual(previous["attempts"]["count"],2)
+            # ... danach ist das Tageskontingent für dieses Bild erschöpft.
+            with self.assertRaisesRegex(ValueError,"bereits 2-mal mit KI geprüft"):
+                module.fetch_finn(monday,key="fake-key",previous=previous,now=at(12,0))
+            # Ein neuer Tag (oder ein neues Bild) gibt ein frisches Kontingent.
+            with self.assertRaises(ModelCalled):
+                module.fetch_finn(monday,key="fake-key",previous=previous,
+                                  now=datetime(2026,11,17,7,0,tzinfo=module.TZ))
 
     def test_finn_pair_rejects_price_mismatch(self):
         first=fin_result(10.0); second=fin_result(11.0)

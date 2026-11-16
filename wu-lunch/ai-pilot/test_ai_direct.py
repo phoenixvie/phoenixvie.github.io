@@ -80,6 +80,43 @@ class DirectAITests(unittest.TestCase):
         self.assertTrue(mock.call_args.kwargs["json"]["text"]["format"]["strict"])
         self.assertFalse(mock.call_args.kwargs["json"]["store"])
 
+    def test_short_outage_is_retried_and_auth_error_is_not(self):
+        payload={"status":"not_published","period":None,"notes":"","warnings":[],"items":[]}
+        class Reply:
+            def __init__(self,code):self.status_code=code;self.text="detail"
+            def json(self):
+                return {"status":"completed","output":[{"type":"message","content":[
+                    {"type":"output_text","text":json.dumps(payload)}]}],"usage":{}}
+        waits=[]
+        # Überlastung und ein Verbindungsabbruch: danach klappt es ohne Zutun.
+        with patch.object(ai.SESSION,"post",side_effect=[Reply(503),ai.requests.ConnectionError("reset"),Reply(200)]) as post:
+            result,_=ai.call_model("fake-key","gpt-6-luna",[],sleep=waits.append)
+        self.assertEqual(result["status"],"not_published")
+        self.assertEqual(post.call_count,3)
+        self.assertEqual(waits,list(ai.RETRY_WAITS[:2]))
+        # Falscher Schlüssel: sofortiger Fehler, kein sinnloses Wiederholen.
+        waits.clear()
+        with patch.object(ai.SESSION,"post",return_value=Reply(401)) as post:
+            with self.assertRaisesRegex(ValueError,"HTTP 401"):
+                ai.call_model("fake-key","gpt-6-luna",[],sleep=waits.append)
+        self.assertEqual((post.call_count,waits),(1,[]))
+        # Dauerhafte Störung: begrenzte Versuche, dann klarer Fehler.
+        with patch.object(ai.SESSION,"post",return_value=Reply(529)) as post:
+            with self.assertRaisesRegex(ValueError,"vorübergehend nicht verfügbar"):
+                ai.call_model("fake-key","gpt-6-luna",[],sleep=waits.append)
+        self.assertEqual(post.call_count,len(ai.RETRY_WAITS)+1)
+
+    def test_correction_request_keeps_the_source_and_names_the_findings(self):
+        original=[{"role":"user","content":[{"type":"input_text","text":"QUELLE"}]}]
+        follow=ai.correction_inputs(original,{"status":"found","items":[{"name":"Suppe"}]},
+                                    ["Preis fehlt [2026-11-16 · Menüoption · Smart Menü]"])
+        self.assertEqual(follow[0],original[0])
+        self.assertEqual(len(original),1)
+        text=follow[-1]["content"][0]["text"]
+        for expected in ("NICHT freigegeben","Preis fehlt [2026-11-16 · Menüoption · Smart Menü]",
+                         "nichts erfinden",'"name": "Suppe"'):
+            self.assertIn(expected,text)
+
     def test_render_html_escapes_source_data(self):
         report={"week_start":"2026-11-02","checked_at":"now","model":"gpt-6-luna",
                 "api_calls":1,"restaurants":{"lia":{"name":"Lia","sources":[],
