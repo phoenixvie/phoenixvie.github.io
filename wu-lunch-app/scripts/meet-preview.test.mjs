@@ -23,25 +23,83 @@ test('preview requires verified email before a registration and supports cancell
   await click('meet-preview');
   assert.equal(context.meetSlot,0);assert.match(context.renderMeet(),/Meet to eat/);assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet/);
   assert.match(context.renderMeet(),/WU-Studenten Gruppe/);assert.doesNotMatch(context.renderMeet(),/Testvorschau|Testteilnehmer|Testtermin/);
-  const touch=(event,x,y)=>handlers[event]({touches:[{}],target:{closest:()=>true},changedTouches:[{screenX:x,screenY:y}],preventDefault(){}});
-  touch('touchstart',250,100);touch('touchend',100,105);assert.equal(context.meetSlot,1);
-  touch('touchstart',250,100);touch('touchend',245,260);assert.equal(context.meetSlot,1);
-  touch('touchstart',100,100);touch('touchend',250,105);assert.equal(context.meetSlot,0);
-  await click('meet-select','2');assert.equal(context.meetSlot,2);await click('meet-select','0');
+  // Vereinfachung vom 17.11.2026: genau ein Termin, keine Terminleiste, keine Wischpunkte, kein Wischen.
+  assert.doesNotMatch(context.renderMeet(),/weekday-strip|day-dot|meet-select|data-slot/);
+  assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,5);
+  assert.equal(handlers.touchstart,undefined);assert.equal(handlers.touchend,undefined);
+  // Vor der Anmeldung gibt es weder Treffpunkt-Bereich noch Karte, auch nicht unscharf.
+  assert.doesNotMatch(context.renderMeet(),/meet-reveal|meet-map|meet-locked|Nach Anmeldung sichtbar|meeting-point|maps\/search/);
+  assert.match(context.renderMeet(),/Angabe nach Anmeldung/);
   await click('meet-show-form');
   assert.match(context.renderMeet(),/Prüfung der WU-Zugehörigkeit erfolgt derzeit nicht/);
   assert.equal(inserts,0);await click('meet-send-code');assert.equal(otpCalls,1);assert.equal(inserts,0);assert.equal(redirectTo,'https://phoenixvie.github.io/wu-lunch-app/preview/');
-  assert.match(context.renderMeet(),/outlook\.cloud\.microsoft/);
+  assert.match(context.renderMeet(),/outlook\.cloud\.microsoft/);assert.match(context.renderMeet(),/Bestätigungscode an anna@example\.com gesendet/);
   handlers.click({target:{closest:()=>({dataset:{action:'meet-open-url'},href:'https://outlook.cloud.microsoft'})},preventDefault(){},stopImmediatePropagation(){}});assert.equal(openedUrl,'https://outlook.cloud.microsoft');
   inputs['meet-code'].value='000000';await click('meet-verify');assert.match(context.renderMeet(),/bereits verwendet/);assert.equal(inserts,0);
   await click('meet-resend-code');assert.equal(otpCalls,2);inputs['meet-code'].value='123456';await click('meet-verify');assert.equal(verifyCalls,2);assert.equal(inserts,1);assert.equal(own[0].first_name,'Anna');
+  // Nach der Anmeldung erscheinen Treffpunkt, Foto und Karte.
   assert.match(context.renderMeet(),/Bereits angemeldet/);assert.match(context.renderMeet(),/Anna/);assert.match(context.renderMeet(),/48\.21289788048291%2C16\.409449359855884/);assert.match(context.renderMeet(),/Vor dem Baum direkt bei der Mensa/);
-  await click('meet-select','1');assert.match(context.renderMeet(),/data-action="meet-show-form"/);
-  await click('meet-show-form');assert.equal(inserts,2);assert.equal(own.length,2);
-  await click('meet-select','0');await click('meet-leave');assert.equal(own.length,1);
-  assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet/);
-  store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);await click('meet-confirm-name');assert.equal(inserts,3);await click('meet-leave');
+  assert.match(context.renderMeet(),/<section class="meet-reveal"><h3>Treffpunkt auf der WU<\/h3>/);assert.match(context.renderMeet(),/id="meet-map"/);assert.match(context.renderMeet(),/meeting-point\.webp/);
+  assert.equal(context.meetJoined,true);
+  await click('meet-leave');assert.equal(own.length,0);
+  assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet|meet-reveal|meet-map/);assert.equal(context.meetJoined,false);
+  store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);await click('meet-confirm-name');assert.equal(inserts,2);await click('meet-leave');
   await click('meet-back');assert.equal(context.meetPreviewOpen,false);assert.equal(context.selectedId,'mensa');
+});
+
+test('only one date is shown: the next one open for sign-up, or today while you are signed up', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const helper=source.slice(source.indexOf('  const viennaClock'),source.indexOf('  // Texte kommen aus dem gemeinsamen Katalog'));
+  let current='2026-11-16T09:00:00Z';   // Montag 10:00 Uhr Wien
+  class Clock extends Date { constructor(...args){super(...(args.length?args:[current]));} }
+  const state={own:[]};
+  const context={Intl,Date:Clock,state};vm.createContext(context);vm.runInContext(helper,context);
+  const shown=()=>vm.runInContext('date()',context);
+  assert.equal(shown(),'2026-11-16');                                    // Anmeldung für heute noch offen
+  current='2026-11-16T11:06:00Z';assert.equal(shown(),'2026-11-18');     // 12:06: geschlossen -> nächster Termin
+  state.own=[{meeting_date:'2026-11-16'}];assert.equal(shown(),'2026-11-16'); // selbst angemeldet: Treffpunkt bleibt sichtbar
+  current='2026-11-16T21:59:00Z';assert.equal(shown(),'2026-11-16');
+  current='2026-11-16T22:00:00Z';assert.equal(shown(),'2026-11-18');     // ab 23:00 Uhr: nächster Termin
+  state.own=[];current='2026-11-17T08:00:00Z';assert.equal(shown(),'2026-11-18'); // Dienstag
+  current='2026-11-19T08:00:00Z';assert.equal(shown(),'2026-11-23');     // Donnerstag -> Montag
+});
+
+test('texts fall back to German and use the shared catalogue for English', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const helper=source.slice(source.indexOf('  const text = (key'),source.indexOf('  const redraw ='));
+  const run=localize=>{const context=localize?{localize}:{};vm.createContext(context);vm.runInContext(helper,context);return (key,values,german)=>vm.runInContext('text',context)(key,values,german);};
+  const german=run(null);
+  assert.equal(german('Jeden {weekday}: Gemeinsam Essen gehen',{weekday:'Mittwoch'}),'Jeden Mittwoch: Gemeinsam Essen gehen');
+  assert.equal(german('Meet to eat: Abmelden',{},'Abmelden'),'Abmelden');
+  const catalogue=JSON.parse(JSON.stringify((await import('node:module')).createRequire(import.meta.url)('../../wu-lunch/i18n.js')??{}));
+  const {ui}=globalThis.WULunchI18n;
+  const english=run({label:key=>ui[key]??key});
+  assert.equal(english('Jeden {weekday}: Gemeinsam Essen gehen',{weekday:'Wednesday'}),'Every Wednesday: go for lunch together');
+  assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
+  assert.equal(english('Meet to eat: Anmelden',{},'Anmelden'),'Sign up');
+  // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
+  const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  for(const key of ['Gemeinsam essen gehen','Datum','Uhrzeit am Treffpunkt','12:00 Uhr','Gemeinsam losgehen','12:05 Uhr','Treffpunkt auf der WU','Angabe nach Anmeldung','Vor dem Baum direkt bei der Mensa','Teilnehmer','WU-Studenten Gruppe','Bereits angemeldet','Verbindlich anmelden','Google Maps öffnen','Vorname','Bestätigungscode senden','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','WU-Mail öffnen','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.']){
+    assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
+    assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
+  }
+  // "Anmelden" bleibt für den Admin-Login "Sign in"; Meet to eat nutzt eigene Schlüssel.
+  assert.equal(ui.Anmelden,'Sign in');assert.notEqual(ui['Meet to eat: Anmelden'],ui.Anmelden);
+});
+
+test('Android back button closes Meet to eat instead of leaving the app, and the icon is mirrored', async () => {
+  const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8');
+  const back=app.slice(app.indexOf('window.wuFoodBack='),app.indexOf('try{const cached='));
+  const messages=[];let renders=0;
+  const context={sourceViewUrl:null,meetPreviewOpen:true,meetForm:true,meetSlot:0,meetJoined:true,selectedId:null,selectedMapId:null,homeTab:'list',
+    render:()=>{renders++},nativePost:type=>messages.push(type),window:{}};
+  vm.createContext(context);vm.runInContext(back,context);
+  context.window.wuFoodBack();assert.equal(context.meetForm,false);assert.equal(context.meetPreviewOpen,true);   // Formular -> Terminansicht
+  context.window.wuFoodBack();assert.equal(context.meetPreviewOpen,false);assert.equal(context.meetJoined,false); // Terminansicht -> Liste
+  assert.deepEqual(messages,[]);assert.equal(renders,2);
+  context.window.wuFoodBack();assert.deepEqual(messages,['exit']);                                                // erst in der Liste: App verlassen
+  assert.match(css,/\.meet-brand-logo \.material-svg\{[^}]*transform:scaleX\(-1\)/);
 });
 
 test('restaurant menu offers an internal Meet-to-eat link above the source note', async () => {
