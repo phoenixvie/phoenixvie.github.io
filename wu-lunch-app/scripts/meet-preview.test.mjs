@@ -307,10 +307,15 @@ test('sign-up with first name only: field above the button, same name checks, no
     inputs['meet-first-name'].value=value;await click('meet-show-form');
     assert.equal(anonymous,0);assert.equal(own.length,0);assert.equal(context.meetForm,false,'keine Formularseite mehr');
     assert.match(tracked.at(-1),new RegExp('meet_input_rejected .*'+reason));
+    // Die Fehlermeldung steht direkt unter dem Feld (nicht oben auf der Seite), die Eingabe bleibt stehen.
+    const shown=context.renderMeet();
+    assert.match(shown,/<\/label><p class="meet-notice meet-name-error" role="alert">[^<]+<\/p><button class="meet-primary" data-action="meet-show-form"/);
+    assert.equal(shown.split('role="alert"').length,2,'Meldung nur einmal');
+    if(value)assert.ok(shown.includes('value="'+value+'"'),'Eingabe bleibt stehen');
   }
   // Gültiger Vorname: anonymes Konto im Hintergrund, Anmeldung, Vorname wird gemerkt. Kein E-Mail-Code.
   inputs['meet-first-name'].value='  anna ';await click('meet-show-form');
-  assert.equal(anonymous,1);assert.equal(otpCalls,0);assert.equal(own.length,1);assert.equal(own[0].first_name,'anna');assert.equal(own[0].user_id,'anon-1');
+  assert.equal(anonymous,1);assert.equal(otpCalls,0);assert.equal(own.length,1);assert.equal(own[0].first_name,'Anna');   // erster Buchstabe automatisch großassert.equal(own[0].user_id,'anon-1');
   assert.equal(store.has('wu-meet-preview-name'),false,'Vorname wird nicht gespeichert');assert.equal(context.meetForm,false);
   assert.match(context.renderMeet(),/Du bist für diesen Termin angemeldet/);assert.match(tracked.join('\n'),/meet_joined/);
   // Abmelden: Das Feld ist wieder leer (Vorname jedes Mal neu eingeben). Ohne Eingabe keine Anmeldung.
@@ -325,4 +330,19 @@ test('sign-up with first name only: field above the button, same name checks, no
   const second={...context,app:{addEventListener:(event,fn)=>{handlers[event]=fn}}};vm.createContext(second);vm.runInContext(source,second);
   await click('meet-preview');inputs['meet-first-name'].value='Mia';await click('meet-show-form');
   assert.equal(anonymous,2);assert.equal(own.length,0);assert.match(second.renderMeet(),/Die Anmeldung ist momentan nicht verfügbar/);
+});
+
+test('first letter of the first name is capitalised automatically, also while typing', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const handlers={};
+  const client={auth:{getSession:async()=>({data:{session:null},error:null})},from:()=>({select(){return {in:async()=>({data:[],error:null}),gte:async()=>({data:[],error:null})}}})};
+  const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
+    app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:()=>null},localStorage:{getItem:()=>null,setItem(){},removeItem(){}},
+    setInterval(){},console,Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d};
+  vm.createContext(context);vm.runInContext(source,context);
+  const type=value=>{const field={id:'meet-first-name',value,selectionStart:value.length,setSelectionRange(a){this.cursor=a}};handlers.input({target:field});return field;};
+  for(const [typed,shown] of [['a','A'],['anna','Anna'],['anna-lena','Anna-Lena'],['élodie','Élodie'],['ÖZGE','ÖZGE'],['Max','Max'],['','']])assert.equal(type(typed).value,shown,typed);
+  const field=type('mia');assert.equal(field.cursor,3,'Schreibmarke bleibt am Ende');
+  const other={id:'meet-date',value:'x'};handlers.input({target:other});assert.equal(other.value,'x');   // andere Felder bleiben unberührt
 });

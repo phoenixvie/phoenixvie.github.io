@@ -57,3 +57,6 @@
 .material-svg{display:inline-block;width:24px;height:24px;flex:none;fill:currentColor}.meet-fact>.material-svg{width:23px;height:23px;color:#6f8192}.meet-person .material-svg{width:23px;height:23px;color:#8a98a5}.meet-brand-logo .material-svg{width:34px;height:34px;filter:drop-shadow(0 1px 3px #0009);transform:scaleX(-1)}.meet-locked-label .material-svg{width:16px;height:16px}
 .meet-count{display:inline-flex;align-items:center;gap:2px;flex:none;margin-right:-8px;color:#8a98a5;font-size:13px;line-height:1}.meet-count .material-svg{width:17px;height:17px;color:#a9b4be}
 .meet-name-field{margin-top:22px}.meet-name-field+.meet-primary{margin-top:12px}
+.meet-notice.meet-name-error{margin:8px 0 0;background:#fdeeee;color:#a3262a}
+.meet-people{align-items:flex-start}.meet-people>.material-svg{margin-top:2px}.meet-names .meet-name{padding:3px 0}.meet-names .meet-own{display:flex!important;align-items:center;justify-content:space-between;gap:8px;padding:0}.meet-own .meet-remove{margin:-4px -6px -4px 0}
+.meet-facts+.meet-confirm{margin-top:20px}
