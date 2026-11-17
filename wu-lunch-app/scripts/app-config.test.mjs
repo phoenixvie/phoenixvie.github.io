@@ -46,7 +46,7 @@ test('visible version numbers agree, so two different builds cannot carry the sa
   assert.ok(Number.isInteger(app.android.versionCode) && app.android.versionCode > 0);
 });
 
-test('adaptive Android icon keeps the cutlery inside the safe zone and fills the whole shape', async () => {
+test('adaptive Android icon shows the cutlery large, cut slightly by the lower edge, and fills the whole shape', async () => {
   const app = (await json('app.json')).expo;
   assert.equal(app.icon, './assets/icon.png');
   assert.equal(app.android.adaptiveIcon.foregroundImage, './assets/adaptive-icon.png');
@@ -60,15 +60,22 @@ test('adaptive Android icon keeps the cutlery inside the safe zone and fills the
   const lines = new Set();
   for (let x = 0; x < size; x++) { let count = 0; for (let y = 0; y < size; y += 4) if (white(x, y)) count++; if (count > 0.9 * size / 4) for (let d = -3; d <= 3; d++) lines.add(x + d); }
   assert.ok(lines.size >= 2, 'Streifenlinien reichen von oben bis unten');
-  let reach = 0, cutlery = 0;
-  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (!lines.has(x) && white(x, y)) { cutlery++; reach = Math.max(reach, Math.hypot(x + 0.5 - size / 2, y + 0.5 - size / 2)); }
-  assert.ok(cutlery > 0.03 * size * size, 'Besteck ist deutlich sichtbar');
-  // Android garantiert nur einen Kreis mit 66/108 der Vorlage; alles außerhalb kann weggeschnitten werden.
-  assert.ok(reach / size <= 33 / 108, `Besteck reicht bis ${(reach / size).toFixed(4)} der Vorlage (sichere Zone: ${(33 / 108).toFixed(4)})`);
-  assert.ok(reach / size >= 0.27, 'Besteck nutzt die sichere Zone weitgehend aus');
+  let cutlery = 0, top = size, bottom = 0, upperReach = 0, left = size, right = 0;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (!lines.has(x) && white(x, y)) {
+    cutlery++; top = Math.min(top, y); bottom = Math.max(bottom, y); left = Math.min(left, x); right = Math.max(right, x);
+    if (y < size / 2) upperReach = Math.max(upperReach, Math.hypot(x + 0.5 - size / 2, y + 0.5 - size / 2));
+  }
+  assert.ok(cutlery > 0.06 * size * size, 'Besteck ist groß und deutlich sichtbar');
+  // Vorgabe des Betreibers (17.11.2026): herangezoomt; das untere Ende des Bestecks wird knapp abgeschnitten.
+  // Sichtbar ist höchstens das mittlere Quadrat mit 72/108 der Vorlage, sein unterer Rand liegt bei 5/6.
+  const visibleBottom = size * 5 / 6, over = (bottom - visibleBottom) / size;
+  assert.ok(over >= 0.01 && over <= 0.04, `Besteck ragt unten ${(over * 100).toFixed(1)} % über den sichtbaren Rand (knapp abgeschnitten: 1–4 %)`);
+  // Oben und seitlich bleibt es vollständig sichtbar, auch bei runden Symbolen (Kreis mit 72/108 Durchmesser).
+  assert.ok(upperReach / size <= 36 / 108, `Besteck reicht oben bis ${(upperReach / size).toFixed(4)} (Kreisradius ${(36 / 108).toFixed(4)})`);
+  assert.ok(left / size > 1 / 6 + 0.02 && right / size < 5 / 6 - 0.02, 'Gabel und Löffel bleiben seitlich im sichtbaren Bereich');
   // Der Hintergrund füllt die Vorlage: Ecken sind blau wie im Logo, nicht die einfarbige Ersatzfarbe.
   const blue = ([r, g, b]) => b > 90 && b > r + 40 && b > g;
   for (const [x, y] of [[2, 2], [size - 3, 2], [2, size - 3], [size - 3, size - 3], [size / 2, 2], [size / 2, size - 3]]) assert.ok(blue(image.at(x, y)), `Rand bei ${x},${y} ist nicht blau`);
-  const top = image.at(size / 2, 2), bottom = image.at(size / 2, size - 3);
-  assert.ok(bottom[0] + bottom[1] > top[0] + top[1], 'Verlauf (oben dunkler, unten heller) bleibt erhalten');
+  const upper = image.at(size / 2, 2), lower = image.at(size / 2, size - 3);
+  assert.ok(lower[0] + lower[1] > upper[0] + upper[1], 'Verlauf (oben dunkler, unten heller) bleibt erhalten');
 });

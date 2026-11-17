@@ -3,13 +3,13 @@
     "name": "WU Food",
     "slug": "wu-lunch",
     "scheme": "wulunch",
-    "version": "0.5.2",
+    "version": "0.5.3",
     "icon": "./assets/icon.png",
     "orientation": "portrait",
     "newArchEnabled": true,
     "android": {
       "package": "at.startit.wulunch",
-      "versionCode": 7,
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#092566"
