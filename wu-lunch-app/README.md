@@ -70,7 +70,7 @@ Gesendet werden nur Ereignisnamen mit festen Wertelisten (`src/usage.ts` weist a
 | `language_changed` | Sprache gewechselt | – |
 | `meet_open` | Meet to eat geöffnet | über die Liste oder den Hinweis unter dem Menü |
 | `meet_date_changed` | anderer Termin gewählt | nächster oder übernächster Termin |
-| `meet_signup_started` | „Verbindlich anmelden" angetippt | Termin |
+| `meet_signup_started` | „Teilnehmen" angetippt | Termin |
 | `meet_input_rejected` | Eingabe abgelehnt | Grund (Name fehlt, Namensform, gesperrter Name, E-Mail ungültig, keine WU-Adresse) |
 | `meet_code_requested` | Code angefordert | erstmals oder erneut |
 | `meet_code_result` | Code eingegeben | gültig oder ungültig |
