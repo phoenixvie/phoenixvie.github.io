@@ -1,11 +1,11 @@
 {
-  "checked_at": "2026-11-17T10:53:46+01:00",
+  "checked_at": "2026-11-17T12:57:19+01:00",
   "week_start": "2026-11-16",
   "week_end": "2026-11-20",
   "health": "degraded",
   "sources": {
     "karmafood": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-17T10:53:55+01:00",
       "checked_at": "2026-11-17T10:53:55+01:00",
       "consecutive_failures": 0,
@@ -13,7 +13,8 @@
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-16",
-      "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Vegan_Lunch_Wien_KW47.pdf?v=1794905309"
+      "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Vegan_Lunch_Wien_KW47.pdf?v=1794905309",
+      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     },
     "finn": {
       "state": "cached",
@@ -24,11 +25,12 @@
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw47.jpg?v=1794780079",
       "review_version": "image-v2-year-warning",
       "review_week_start": "2026-11-16",
-      "source_pdf": null
+      "source_pdf": null,
+      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-17T10:53:46+01:00",
+      "last_success": "2026-11-17T12:57:19+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -37,14 +39,16 @@
       "last_success": "2026-11-17T07:46:08+01:00",
       "consecutive_failures": 0,
       "parser_version": "ai-pdf-9-notice-wording",
-      "content_sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b"
+      "content_sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     },
     "glashaus": {
       "state": "cached",
       "last_success": "2026-11-17T01:26:11+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
-      "content_sha256": "8469e1d0257ca1c4140dea0341ce037c00835b7ba56916a8c9da80c440d97e7c"
+      "content_sha256": "8469e1d0257ca1c4140dea0341ce037c00835b7ba56916a8c9da80c440d97e7c",
+      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     },
     "campus": {
       "state": "cached",
@@ -68,7 +72,7 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "ok_browser",
+      "state": "cached",
       "last_success": "2026-11-17T10:54:19+01:00",
       "consecutive_failures": 0,
       "day_sha256": {
@@ -77,21 +81,24 @@
         "2026-11-18": "92bcad60e35469acf96dd4677158a34d9ffc54b382f34415b32ac08920fe82a5",
         "2026-11-19": "ca82069882d646adf102ecb3002e35c962a32dc41875e349a7aca09165c762b7",
         "2026-11-20": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
-      }
+      },
+      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     },
     "gruenehuette": {
       "state": "cached",
       "last_success": "2026-11-16T13:43:06+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
-      "content_sha256": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53"
+      "content_sha256": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53",
+      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     },
     "lia": {
       "state": "cached",
       "last_success": "2026-11-17T01:26:11+01:00",
       "consecutive_failures": 0,
       "parser_version": 4,
-      "content_sha256": "2365a9ddbcd802ee5f500fdc341f132a6c85c55212847709a8a89ac22a393dc8"
+      "content_sha256": "2365a9ddbcd802ee5f500fdc341f132a6c85c55212847709a8a89ac22a393dc8",
+      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     }
   },
   "problems": [],

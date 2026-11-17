@@ -1,60 +1,15 @@
 {
-  "checked_at": "2026-11-17T10:55:59+01:00",
+  "checked_at": "2026-11-17T12:57:24+01:00",
   "week_start": "2026-11-16",
   "model": "gpt-6-luna",
-  "api_calls": 1,
+  "api_calls": 0,
   "results": [
-    {
-      "restaurant": "karmafood",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Für die meisten Hauptgerichte ist kein Einzelpreis ausgewiesen.",
-        "Die Extras Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai stehen ohne Tageszuordnung und ohne Preis auf der Seite."
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "f4d8554ef70aa3510537e619d0df04bf5305f7053517c62d7732b8383cf155be"
-      },
-      "usage": {
-        "input_tokens": 2626,
-        "input_tokens_details": {
-          "cache_write_tokens": 2623,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2623
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 2998,
-        "output_tokens_details": {
-          "reasoning_tokens": 516
-        },
-        "total_tokens": 5624
-      }
-    },
     {
       "restaurant": "mensa",
       "issues": [
         "missing_price"
       ],
       "action": "dedicated_pdf_ai",
-      "repairs": []
-    },
-    {
-      "restaurant": "topfdeckel",
-      "issues": [],
-      "action": "browser_import",
-      "repairs": []
-    },
-    {
-      "restaurant": "finn",
-      "issues": [],
-      "action": "dedicated_image_ai",
       "repairs": []
     },
     {
