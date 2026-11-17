@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-16T13:45:25+01:00",
+  "checked_at": "2026-11-17T01:30:23+01:00",
   "week_start": "2026-11-16",
   "model": "gpt-6-luna",
   "api_calls": 4,
@@ -10,8 +10,7 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Der ausgewiesene Preis ist dem jeweiligen Hauptgericht zugeordnet; ein Preis für eine Kombination mit Suppe oder Salat ist nicht belegt.",
-        "Die Angabe „To Go Container + € 0,50“ ist ein allgemeiner Zusatz und kein belegter Bestandteil eines Menügesamtpreises. Andere Lia-Standorte wurden ausgeschlossen."
+        "Die Datumsangaben im HTML enthalten kein Jahr; die Zuordnung zu 2026 erfolgt anhand der angegebenen Prüf-Woche."
       ],
       "ai_only_items": 1,
       "parser_only_items": 1,
@@ -22,64 +21,65 @@
         "2026-11-17: gegrillte hühnerbrust"
       ],
       "source_hashes": {
-        "https://lia.coffee/": "1ae1bba3058ad082435ab205d4da27d460df747ae370c688f96a90f52b05ebe3"
+        "https://lia.coffee/": "e2200cd081573c6df3a1ee43fccec6d73a6814ad9fa18433234b04f519535360"
       },
       "usage": {
-        "input_tokens": 7250,
+        "input_tokens": 7249,
         "input_tokens_details": {
-          "cache_write_tokens": 7247,
+          "cache_write_tokens": 0,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 7247
+            "ttl_30m_tokens": 0
           },
-          "cached_tokens": 0
+          "cached_tokens": 7246
         },
-        "output_tokens": 1729,
+        "output_tokens": 2578,
         "output_tokens_details": {
-          "reasoning_tokens": 453
+          "reasoning_tokens": 924
         },
-        "total_tokens": 8979
+        "total_tokens": 9827
       }
     },
     {
-      "restaurant": "baschly",
+      "restaurant": "glashaus",
       "issues": [],
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Produktbilder sind im bereitgestellten HTML nicht als lesbarer Menütext enthalten.",
-        "Es wurden keine datierten Speisen oder Preise für die Woche 2026-11-16 bis 2026-11-20 übernommen.",
-        "Keine eindeutig veröffentlichte aktuelle Karte"
+        "2026-11-16: 0: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-16: 1: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-17: 0: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-17: 1: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-18: 0: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-18: 1: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-19: 0: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-19: 1: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-20: 0: dieselbe Leistung inklusive und mit Aufpreis",
+        "2026-11-20: 1: dieselbe Leistung inklusive und mit Aufpreis",
+        "Bei jedem Wochentag steht in der Quelle zusätzlich „FEIERTAG“; die darunter aufgeführten Gerichte wurden den jeweiligen Wochentagen zugeordnet."
       ],
       "ai_only_items": 0,
-      "parser_only_items": 10,
+      "parser_only_items": 0,
       "ai_only_examples": [],
-      "parser_only_examples": [
-        "2026-11-16: knackiger gemüse wok mit jasminreis frühlingsrolle und sweet chili sauce",
-        "2026-11-16: tandori chicken curry masala mit basmatireis allergene glutenfrei laktosefrei",
-        "2026-11-17: hühnerschnitzel mit kartoffelsalat und preiselbeeren",
-        "2026-11-17: öfen süss kartoffel mit gegrilltem gemüse parmesan und rukola salat auf kräuterjoghurt sauce",
-        "2026-11-18: crispy chicken mit gebratenem eierreis"
-      ],
+      "parser_only_examples": [],
       "source_hashes": {
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "7a3bda6872ea062c6bc096897afffdddbbf59a91139ce463c6769dbe1d599e91",
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "f97fca46aa92d3e52d85cc89ecb9c977256cc18872eceff3ec459e2807aeeebe"
+        "https://www.dasglashaus.at/menues": "9f1fa9e64ee04c862756bdddd38b572c42223d195c7a143792cc8e059f37ad4f"
       },
       "usage": {
-        "input_tokens": 2746,
+        "input_tokens": 2777,
         "input_tokens_details": {
-          "cache_write_tokens": 2743,
+          "cache_write_tokens": 0,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2743
+            "ttl_30m_tokens": 0
           },
-          "cached_tokens": 0
+          "cached_tokens": 2774
         },
-        "output_tokens": 296,
+        "output_tokens": 2879,
         "output_tokens_details": {
-          "reasoning_tokens": 119
+          "reasoning_tokens": 877
         },
-        "total_tokens": 3042
+        "total_tokens": 5656
       }
     },
     {
@@ -88,7 +88,8 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Quelle belegt keine Zuordnung dieser Gerichte zur Woche 16.–20.11.2026."
+        "Die Quelle enthält keine Datumsangaben oder Tageszuordnung für die angefragte Woche.",
+        "Keine Allergene oder Menü-Kombinationen in der Quelle ausgewiesen."
       ],
       "ai_only_items": 4,
       "parser_only_items": 0,
@@ -100,23 +101,23 @@
       ],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "e1d21da05c869abd95a623ed36ea3102b284f5210c42ad463f67a68c2b3909f3"
+        "https://losteria.net/at/menue/menu-della-casa/": "1226281522ebb30a8cb11d8113967fdf262e6f1d8ba284fb5ec95078ad8ce73f"
       },
       "usage": {
-        "input_tokens": 1974,
+        "input_tokens": 1973,
         "input_tokens_details": {
-          "cache_write_tokens": 1971,
+          "cache_write_tokens": 0,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 1971
+            "ttl_30m_tokens": 0
           },
-          "cached_tokens": 0
+          "cached_tokens": 1970
         },
-        "output_tokens": 764,
+        "output_tokens": 918,
         "output_tokens_details": {
-          "reasoning_tokens": 178
+          "reasoning_tokens": 153
         },
-        "total_tokens": 2738
+        "total_tokens": 2891
       }
     },
     {
@@ -125,31 +126,31 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "„Extras“ listet Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai ohne Tageszuordnung oder Einzelpreise; diese wurden daher nicht als datierte Items ausgegeben.",
-        "Vegane/glutenfreie Kennzeichnungen sind keine ausdrücklich ausgewiesenen Allergenangaben."
+        "Für die nicht als Special ausgezeichneten Hauptgerichte ist kein eindeutig zuordenbarer Einzelpreis angegeben.",
+        "Für die Hauptgerichte sind keine Allergene aus der vorliegenden Quelle explizit belegt."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "0dcfac39801e0d9e6ca1f5e34d6db1b06aab7e41e6f49c2e3383424bedfe35a5"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "31c4518555ff545a3618e1c318e86386183419a62d547c6d3d5b045db9ea6a7f"
       },
       "usage": {
-        "input_tokens": 2642,
+        "input_tokens": 2637,
         "input_tokens_details": {
-          "cache_write_tokens": 2639,
+          "cache_write_tokens": 2634,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2639
+            "ttl_30m_tokens": 2634
           },
           "cached_tokens": 0
         },
-        "output_tokens": 2619,
+        "output_tokens": 3354,
         "output_tokens_details": {
-          "reasoning_tokens": 822
+          "reasoning_tokens": 957
         },
-        "total_tokens": 5261
+        "total_tokens": 5991
       }
     },
     {

@@ -2,7 +2,7 @@
   "weekStart": "2026-11-16",
   "weekEnd": "2026-11-20",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-16T13:43:06+01:00",
+  "checkedAt": "2026-11-17T01:26:11+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -1004,7 +1004,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Tofu Mango Coconut Veggie Curry",
@@ -1017,7 +1017,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Dal Makhni mit veganer Butter",
@@ -1030,7 +1030,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           }
         ],
         "2026-11-17": [
@@ -1045,7 +1045,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Vegan Butter Veggie Curry",
@@ -1058,7 +1058,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Dal mit Punjabi Gewürz Tadka",
@@ -1071,7 +1071,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           }
         ],
         "2026-11-18": [
@@ -1086,7 +1086,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Vindaloo Veggie Curry",
@@ -1099,7 +1099,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Veggie Parmesan (M)eatballs",
@@ -1112,7 +1112,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           }
         ],
         "2026-11-19": [
@@ -1127,7 +1127,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Kashmiri Kokos Süßkartoffel Curry",
@@ -1140,7 +1140,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "South Indian Dal mit Kürbis",
@@ -1153,7 +1153,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           }
         ],
         "2026-11-20": [
@@ -1168,7 +1168,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Gelbes Thai Veggie Curry",
@@ -1181,7 +1181,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           },
           {
             "name": "Green Palak Dal",
@@ -1194,7 +1194,7 @@
             "included_choices": [],
             "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
             "price_source": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404",
-            "source_sha256": "80a64296b683eb9515c5404de69526b8e04259edf4dbeb3bccc106f51cfd2d2b"
+            "source_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54"
           }
         ]
       },
@@ -1316,7 +1316,98 @@
             "included_choices": []
           }
         ],
-        "2026-11-17": [],
+        "2026-11-17": [
+          {
+            "name": "Süßkartoffel-Ingwercremesuppe",
+            "price": 3.9,
+            "category": "Suppe",
+            "diet": "unknown",
+            "description": "Vorspeise, separat erhältlich; klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 3.9,
+            "price_large": 5.9
+          },
+          {
+            "name": "Haussalat",
+            "price": 3.9,
+            "category": "Salat",
+            "diet": "veggie",
+            "description": "Vorspeise, separat erhältlich; klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 3.9,
+            "price_large": 5.9
+          },
+          {
+            "name": "Quesadillas mit Faschiertem, geschmolzenem Cheddar & Sour Cream Dip",
+            "price": 7.5,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Preis klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
+          },
+          {
+            "name": "Indisches Butter Chicken in cremiger Cashewsauce mit Joghurt-Dip",
+            "price": 7.5,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Preis klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
+          },
+          {
+            "name": "Süßkartoffel-Cashew Tikka Masala in cremiger Kokossauce",
+            "price": 7.5,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Preis klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
+          },
+          {
+            "name": "Dessert des Tages",
+            "price": 2.9,
+            "category": "Nachspeise",
+            "diet": "unknown",
+            "description": "Separat erhältlich",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+            "price": 9.5,
+            "category": "Menükombo",
+            "diet": "unknown",
+            "description": "Eine Option zum kleinen Hauptgericht wählbar",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+            "price": 13.9,
+            "category": "Menükombo",
+            "diet": "unknown",
+            "description": "Eine Option zum großen Hauptgericht wählbar",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
         "2026-11-18": [],
         "2026-11-19": [],
         "2026-11-20": []

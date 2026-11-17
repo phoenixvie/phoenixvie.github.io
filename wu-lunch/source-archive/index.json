@@ -135,6 +135,15 @@
       "menu_status": "daily",
       "manifest": "2026-11-16/topfdeckel/5661e0f8ffa540098db894233f4a32aabe1309018b5d7af07b4a705749a6bd1c/manifest.json",
       "source_count": 1
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "week_start": "2026-11-16",
+      "menu_sha256": "b7dbb9a5fb794b547a8be04069e7d59d00f5b9640463e5a85ecf0aaaeba0f33c",
+      "captured_at": "2026-11-17T00:31:55+00:00",
+      "menu_status": "daily",
+      "manifest": "2026-11-16/topfdeckel/b7dbb9a5fb794b547a8be04069e7d59d00f5b9640463e5a85ecf0aaaeba0f33c/manifest.json",
+      "source_count": 12
     }
   ]
 }
