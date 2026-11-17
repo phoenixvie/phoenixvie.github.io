@@ -27,3 +27,27 @@ alter table public.meet_preview_registrations
     char_length(first_name) between 2 and 20
     and first_name ~ '^[[:alpha:]]{2,}(-[[:alpha:]]{2,})?$'
   ) not valid;
+
+-- 3) Aufräumen (Datenschutzerklärung: "spätestens 30 Tage nach dem Termin gelöscht"): Bei jeder neuen Anmeldung
+--    werden Anmeldungen gelöscht, deren Termin mehr als 30 Tage zurückliegt, und anonyme technische Konten ohne
+--    Anmeldung der letzten 30 Tage. Konten mit E-Mail-Adresse bleiben unberührt.
+create or replace function private.meet_preview_cleanup() returns trigger
+language plpgsql security definer set search_path = ''
+as $$
+begin
+  -- Ein Fehler beim Aufräumen darf eine Anmeldung nie verhindern; er wird nur protokolliert.
+  begin
+    delete from public.meet_preview_registrations
+      where meeting_date < (now() at time zone 'Europe/Vienna')::date - 30;
+    delete from auth.users u
+      where u.is_anonymous and u.created_at < now() - interval '30 days'
+        and not exists (select 1 from public.meet_preview_registrations r where r.user_id = u.id);
+  exception when others then
+    raise warning 'meet_preview_cleanup: %', sqlerrm;
+  end;
+  return null;
+end $$;
+revoke all on function private.meet_preview_cleanup() from public, anon, authenticated;
+drop trigger if exists meet_preview_cleanup on public.meet_preview_registrations;
+create trigger meet_preview_cleanup after insert on public.meet_preview_registrations
+  for each statement execute function private.meet_preview_cleanup();
