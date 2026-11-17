@@ -223,3 +223,37 @@ test('Meet to eat keeps its scroll position during background redraws', async ()
   context.render();assert.equal(screen.scrollTop,540);
   screen.scrollTop=320;context.render();assert.equal(screen.scrollTop,320);
 });
+
+test('list entry shows the number of people signed up for the next date, and nothing when nobody is', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const start=async (rowsFor, {fails=false}={})=>{
+    const asked=[]; let painted=null, removed=0;
+    const row={querySelector:()=>({remove(){removed++}}),lastElementChild:{insertAdjacentHTML:(where,html)=>{painted=[where,html]}}};
+    const client={auth:{getSession:async()=>({data:{session:null},error:null})},from(table){return {select(columns){return {in:async(column,days)=>{asked.push([table,columns,column]);return fails?{data:null,error:new Error('offline')}:{data:rowsFor(days),error:null}},gte:async()=>({data:[],error:null})}}}}};
+    const warnings=[];
+    const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
+      app:{addEventListener(){},querySelector:selector=>selector==='[data-action="meet-preview"].restaurant-row'?row:null},document:{getElementById:()=>null,addEventListener(){}},
+      localStorage:{getItem:()=>null,setItem(){}},setInterval(){},console:{...console,warn:(...args)=>warnings.push(args.join(' '))},Intl,Date,
+      meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+      renderMeet(){},render(){},icon:name=>`<i>${name}</i>`,esc:s=>String(s),dateValue:d=>d,localize:{label:key=>key==='{count} angemeldet'?'{count} signed up':key}};
+    vm.createContext(context);vm.runInContext(source,context);
+    for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));
+    return {context,asked,warnings,get painted(){return painted},get removed(){return removed}};
+  };
+  // Drei Personen beim nächsten Termin, eine beim übernächsten: gezählt wird nur der nächste.
+  const busy=await start(days=>[...['Lena','Jonas','Mia'].map(first_name=>({meeting_date:days[0],first_name})),{meeting_date:days[1],first_name:'Tom'}]);
+  assert.deepEqual(busy.asked,[['meet_preview_participants','meeting_date,first_name','meeting_date']],'nur die öffentliche Teilnehmerliste wird gelesen');
+  assert.match(busy.context.meetBadge(),/^<span class="meet-count" data-ui-literal aria-label="3 signed up"><i>person<\/i>3<\/span>$/);
+  assert.deepEqual(busy.painted,['beforebegin',busy.context.meetBadge()],'Zahl steht vor dem Pfeil des Eintrags');
+  assert.equal(busy.removed,1,'eine alte Zahl wird vorher entfernt');
+  // Niemand angemeldet (auch wenn beim übernächsten Termin schon jemand steht): nichts anzeigen.
+  const empty=await start(days=>[{meeting_date:days[1],first_name:'Tom'}]);
+  assert.equal(empty.context.meetBadge(),'');assert.equal(empty.painted,null);
+  // Ein Ladefehler bleibt still und zeigt keine Zahl.
+  const offline=await start(()=>[],{fails:true});
+  assert.equal(offline.context.meetBadge(),'');assert.equal(offline.painted,null);assert.match(offline.warnings.join('\n'),/Anzahl: offline/);
+  // Die Liste baut die Zahl über meetBadge() ein; in der Wels-Ausgabe gibt es den Eintrag gar nicht.
+  const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  assert.match(app,/let meetBadge=\(\)=>'';/);assert.match(app,/Gemeinsam essen gehen<\/span><\/span>\$\{meetBadge\(\)\}\$\{icon\('chevron_right','chevron'\)\}/);
+  const {ui}=globalThis.WULunchI18n;assert.equal(ui['{count} angemeldet'],'{count} signed up');
+});

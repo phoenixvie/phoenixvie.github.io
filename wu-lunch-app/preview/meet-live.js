@@ -65,6 +65,26 @@
   // Der Vorname wird auf dem Gerät gemerkt und überall vorausgefüllt (Vorgabe 17.11.2026). Fehlt er lokal
   // (neues Gerät, gelöschte App-Daten), dient der Name einer bestehenden eigenen Anmeldung.
   const knownName = () => getName() || state.own.find(item => item.first_name)?.first_name || '';
+  // Anzahl der Angemeldeten für den nächsten Termin, dezent am Eintrag "Meet to eat" in der Liste
+  // (Vorgabe 17.11.2026). Ist niemand angemeldet, wird nichts gezeigt.
+  const nextCount = () => { const day = dateOptions()[0]; return state.participants.filter(p => p.meeting_date === day).length; };
+  meetBadge = () => { const count = nextCount(); return count ? `<span class="meet-count" data-ui-literal aria-label="${esc(text('{count} angemeldet', {count}))}">${icon('person')}${count}</span>` : ''; };
+  // Setzt die Zahl in die sichtbare Liste ein, ohne den Bildschirm neu aufzubauen (Scrollposition und Karte bleiben).
+  const paintBadge = () => {
+    const row = app.querySelector?.('[data-action="meet-preview"].restaurant-row'); if (!row) return;
+    row.querySelector('.meet-count')?.remove();
+    const html = meetBadge(); if (html) row.lastElementChild?.insertAdjacentHTML('beforebegin', html);
+  };
+  // Lädt nur die öffentliche Teilnehmerliste (Vornamen je Termin, keine Anmeldung nötig). Fehler bleiben still:
+  // die Zahl ist ein Zusatz und darf die Restaurantliste nie stören.
+  async function refreshCount() {
+    if (!client || meetPreviewOpen) return;
+    try {
+      const {data: rows, error} = await client.from('meet_preview_participants').select('meeting_date,first_name').in('meeting_date', slotDates());
+      if (error) throw error;
+      state.participants = rows || []; paintBadge();
+    } catch (e) { console.warn('Meet to eat, Anzahl:', e?.message || e); }
+  }
   async function refresh() {
     if (!client) { state.error = 'Die Anmeldung ist derzeit nicht verfügbar.'; state.loaded = true; redraw(); return; }
     try {
@@ -169,5 +189,9 @@
   });
   if (returningFromLink) { meetPreviewOpen=true; meetSlot=0; void refresh(); }
   setInterval(() => { if (meetPreviewOpen && !meetForm && !state.busy) void refresh(); }, 30000);
+  // Anzahl in der Liste: beim Start, alle fünf Minuten und wenn die App wieder in den Vordergrund kommt.
+  if (!returningFromLink) void refreshCount();
+  setInterval(() => { if (typeof document === 'undefined' || !document.hidden) void refreshCount(); }, 300000);
+  if (typeof document !== 'undefined') document.addEventListener?.('visibilitychange', () => { if (!document.hidden) void refreshCount(); });
 })();
 
