@@ -5,7 +5,7 @@
   const client = window.supabase?.createClient(supabase, publishableKey, {
     auth: { storageKey: 'wu-meet-preview-auth-v1', persistSession: true, autoRefreshToken: true }
   });
-  const state = { session: null, participants: [], own: [], pendingEmail: '', pendingName: '', registrationDate: null, step: 'form', error: '', busy: false, loaded: false };
+  const state = { session: null, participants: [], own: [], pendingEmail: '', pendingName: '', registrationDate: null, selectedDate: null, step: 'form', error: '', busy: false, loaded: false };
   const viennaClock = (now = new Date()) => ({
     today: new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now),
     time: new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Vienna', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(now)
@@ -17,16 +17,17 @@
   const slotDates = () => {
     const {today,time}=viennaClock();
     const d = new Date(today + 'T12:00:00Z'), out = [];
-    if (time >= '23:00') d.setUTCDate(d.getUTCDate() + 1);
+    if (time >= '14:00') d.setUTCDate(d.getUTCDate() + 1);
     while (out.length < 5) { if ([1, 3].includes(d.getUTCDay())) out.push(d.toISOString().slice(0, 10)); d.setUTCDate(d.getUTCDate() + 1); }
     return out;
   };
+  // Vorgabe des Betreibers (17.11.2026): Gezeigt wird der nächste Termin – am Termintag bis
+  // 14:00 Uhr, auch wenn die Anmeldung schon um 12:05 schließt; danach rückt der folgende nach.
+  // Im Datumsfeld (Auswahlliste) ist immer auch der Termin danach wählbar.
+  const dateOptions = () => slotDates().slice(0, 2);
   const date = () => {
-    // Es wird nur EIN Termin gezeigt (Vereinfachung, 17.11.2026): der nächste, für den
-    // die Anmeldung noch offen ist – oder der heutige, solange man selbst dafür
-    // angemeldet ist (Treffpunkt bleibt dann bis 23:00 Uhr sichtbar).
-    const days = slotDates();
-    return days.find(day => registrationOpen(day) || state.own.some(item => item.meeting_date === day)) || days[0];
+    const options = dateOptions();
+    return options.includes(state.selectedDate) ? state.selectedDate : options[0];
   };
   // Texte kommen aus dem gemeinsamen Katalog (wu-lunch/i18n.js): Deutsch ist die
   // Vorlage, Englisch und Admin-Änderungen werden dort gepflegt. {platzhalter}
@@ -57,24 +58,25 @@
     } catch (e) { state.loaded = true; showError(e); }
     redraw();
   }
+  const dateField = selected => `<div class="meet-fact">${icon('calendar_today')}<div><strong><label for="meet-date">Datum</label></strong><span class="meet-date-picker"><select id="meet-date">${dateOptions().map(day => `<option value="${day}" ${day === selected ? 'selected' : ''}>${esc(dateValue(day,{weekday:'long',day:'numeric',month:'long'}))}</option>`).join('')}</select></span></div></div>`;
   const fact = (symbol, label, value) => `<div class="meet-fact">${icon(symbol)}<div><strong>${label}</strong><span>${value}</span></div></div>`;
   function renderLive() {
     const selected = date(), own = state.own.find(item => item.meeting_date === selected);
     meetJoined = !!own;
     const error = state.error ? `<p class="meet-notice" role="alert">${esc(state.error)}</p>` : '';
     const header = `<header class="top detail"><button class="back" data-action="meet-back" aria-label="Zurück">${icon('arrow_back')}</button><h1>${meetForm ? esc(text('Meet to eat: Anmeldung', {}, 'Anmeldung')) : 'Meet to eat'}</h1></header>`;
-    if (meetForm) return `${header}<div class="body"><div class="scroll meet-content"><h3>${esc(text('Meet to eat: Anmelden', {}, 'Anmelden'))}</h3>${error}${state.step === 'code' ? `<p>${esc(text('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.', {email: state.pendingEmail}))}</p><a href="https://outlook.cloud.microsoft" data-action="meet-open-url" class="meet-mail-link" target="_blank" rel="noopener noreferrer">WU-Mail öffnen</a><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button><button class="meet-secondary" data-action="meet-resend-code" ${state.busy?'disabled':''}>Neuen Code anfordern</button>` : state.step === 'name' ? `<p>Deine E-Mail-Adresse ist bestätigt. Dein Vorname und der Termin sind für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="60" value="${esc(state.pendingName || getName())}"></label><button class="meet-primary" data-action="meet-confirm-name" ${state.busy?'disabled':''}>Verbindlich anmelden</button>` : `<p>Wir bestätigen deine E-Mail-Adresse. Eine Prüfung der WU-Zugehörigkeit erfolgt derzeit nicht. Dein Vorname und der Termin sind für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="60" value="${esc(state.pendingName || getName())}"></label><label>E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Bestätigungscode senden</button>`}</div></div>`;
+    if (meetForm) return `${header}<div class="body"><div class="scroll meet-content">${error}${state.step === 'code' ? `<p>${esc(text('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.', {email: state.pendingEmail}))}</p><a href="https://outlook.cloud.microsoft" data-action="meet-open-url" class="meet-mail-link" target="_blank" rel="noopener noreferrer">WU-Mail öffnen</a><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button><button class="meet-secondary" data-action="meet-resend-code" ${state.busy?'disabled':''}>Neuen Code anfordern</button>` : state.step === 'name' ? `<p>Deine E-Mail-Adresse ist bestätigt. Dein Vorname und der Termin sind für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="60" placeholder="Max" value="${esc(state.pendingName || getName())}"></label><button class="meet-primary" data-action="meet-confirm-name" ${state.busy?'disabled':''}>Verbindlich anmelden</button>` : `<p>Gib deinen Vornamen und deine E-Mail-Adresse ein. Du bekommst einen Code per E-Mail und gibst ihn hier ein. Erst dann bist du angemeldet. Dein Vorname und der Termin sind für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="60" placeholder="Max" value="${esc(state.pendingName || getName())}"></label><label>E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" placeholder="musterfrau@wu.ac.at" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Verifizierung via Mail starten</button>`}</div></div>`;
     const people = state.participants.filter(p => p.meeting_date === selected);
     let ownRemoved = false;
     const names = people.filter(p => { if (own && !ownRemoved && p.first_name === own.first_name) { ownRemoved = true; return false; } return true; });
     const entries = names.map(p => `<div class="meet-person">${icon('person')}<span data-ui-literal>${esc(p.first_name)}</span></div>`).join('') + (own ? `<div class="meet-person">${icon('person')}<span data-ui-literal>${esc(own.first_name)}</span><button class="meet-remove" data-action="meet-leave" aria-label="Meine Anmeldung entfernen">${icon('close')}</button></div>` : '');
     const mapLink = 'https://www.google.com/maps/search/?api=1&amp;query=48.21289788048291%2C16.409449359855884';
-    const location = own ? 'Vor dem Baum direkt bei der Mensa' : 'Angabe nach Anmeldung';
+    // Vor der Anmeldung steht der Hinweis fett da, damit klar ist, dass hier noch etwas folgt.
+    const location = own ? 'Vor dem Baum direkt bei der Mensa' : '<b>Info nach Anmeldung</b>';
     // Foto und Karte des Treffpunkts erscheinen erst nach der eigenen Anmeldung;
     // vorher wird der Bereich gar nicht angezeigt (kein unscharfer Platzhalter mehr).
     const reveal = own ? `<section class="meet-reveal"><h3>Treffpunkt auf der WU</h3><p><strong>Vor dem Baum direkt bei der Mensa</strong></p><img class="meet-photo-visible" src="./meeting-point.webp" width="1200" height="1361" alt="Treffpunkt vor dem Baum bei der Mensa" onerror="this.onerror=null;this.src='./meeting-point.png'"><div id="meet-map" class="meet-map meet-map-visible"></div><a class="meet-map-button" data-action="meet-open-url" href="${mapLink}" target="_blank" rel="noopener noreferrer">Google Maps öffnen</a></section>` : '';
-    const weekday = dateValue(selected,{weekday:'long'});
-    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}<h3>${esc(text('Jeden {weekday}: Gemeinsam Essen gehen', {weekday}))}</h3><p>Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.</p><section class="meet-facts">${fact('calendar_today','Datum',esc(dateValue(selected,{weekday:'long',day:'numeric',month:'long'})))}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','WU-Studenten Gruppe')}</section>${entries ? `<h3>Bereits angemeldet</h3>${entries}` : ''}${own ? '<p class="meet-confirm">Du bist für diesen Termin angemeldet. Bitte melde dich aus Rücksicht auf die anderen ab, wenn du doch nicht kommen kannst.</p><button class="meet-secondary" data-action="meet-leave">' + esc(text('Meet to eat: Abmelden', {}, 'Abmelden')) + '</button>' : !registrationOpen(selected) ? '<p class="meet-notice">Die Anmeldung für diesen Termin ist geschlossen.</p>' : `<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Verbindlich anmelden</button>`}${reveal}</div></div>`;
+    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}<p>Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen. Findet jeden Montag und Mittwoch statt.</p><section class="meet-facts">${dateField(selected)}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','WU-Studenten Gruppe')}</section>${entries ? `<h3>Bereits angemeldet</h3>${entries}` : ''}${own ? '<p class="meet-confirm">Du bist für diesen Termin angemeldet. Bitte melde dich aus Rücksicht auf die anderen ab, wenn du doch nicht kommen kannst.</p><button class="meet-secondary" data-action="meet-leave">' + esc(text('Meet to eat: Abmelden', {}, 'Abmelden')) + '</button>' : !registrationOpen(selected) ? '<p class="meet-notice">Die Anmeldung für diesen Termin ist geschlossen.</p>' : `<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Verbindlich anmelden</button>`}${reveal}</div></div>`;
   }
   async function join(name, meetingDate) {
     if (!state.session || !name.trim()) { meetForm = true; state.step = 'form'; return; }
@@ -85,7 +87,7 @@
   }
   async function action(target) {
     const a = target.dataset.action;
-    if (a === 'meet-preview') { meetPreviewOpen=true; meetSlot=0; meetForm=false; state.error=''; render(); await refresh(); return; }
+    if (a === 'meet-preview') { meetPreviewOpen=true; meetSlot=0; meetForm=false; state.error=''; state.selectedDate=null; render(); await refresh(); return; }
     if (a === 'meet-back') { state.error=''; if (meetForm) meetForm=false; else { meetSlot=null; meetPreviewOpen=false; } render(); return; }
     if (state.busy) return;
     state.error='';
@@ -123,6 +125,13 @@
     if (target.dataset.action === 'meet-open-url') { const url=safeUrl(target.href); if (url && !nativePost('open-source',{url,title:'Meet to eat'})) window.open(url,'_blank','noopener,noreferrer'); return; }
     void action(target);
   }, true);
+  // Auswahl eines anderen Termins im Datumsfeld.
+  app.addEventListener('change', e => {
+    if (e.target?.id !== 'meet-date') return;
+    state.selectedDate = e.target.value; state.error = '';
+    meetJoined = !!state.own.find(item => item.meeting_date === date());
+    render();
+  });
   if (returningFromLink) { meetPreviewOpen=true; meetSlot=0; void refresh(); }
   setInterval(() => { if (meetPreviewOpen && !meetForm && !state.busy) void refresh(); }, 30000);
 })();

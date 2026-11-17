@@ -23,15 +23,34 @@ test('preview requires verified email before a registration and supports cancell
   await click('meet-preview');
   assert.equal(context.meetSlot,0);assert.match(context.renderMeet(),/Meet to eat/);assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet/);
   assert.match(context.renderMeet(),/WU-Studenten Gruppe/);assert.doesNotMatch(context.renderMeet(),/Testvorschau|Testteilnehmer|Testtermin/);
-  // Vereinfachung vom 17.11.2026: genau ein Termin, keine Terminleiste, keine Wischpunkte, kein Wischen.
+  // Keine Terminleiste, keine Wischpunkte, kein Wischen. Das Datum ist eine Auswahlliste mit genau
+  // zwei Terminen: dem nächsten und dem danach.
   assert.doesNotMatch(context.renderMeet(),/weekday-strip|day-dot|meet-select|data-slot/);
+  assert.match(context.renderMeet(),/<select id="meet-date">/);
+  assert.equal((context.renderMeet().match(/<option /g)||[]).length,2);
+  assert.equal((context.renderMeet().match(/<option [^>]*selected/g)||[]).length,1);
+  const later=context.renderMeet().match(/<option value="(\d{4}-\d{2}-\d{2})" >/)[1];
+  handlers.change({target:{id:'meet-date',value:later}});
+  assert.match(context.renderMeet(),new RegExp('<option value="'+later+'" selected>'));
+  handlers.change({target:{id:'something-else',value:'x'}});
+  assert.match(context.renderMeet(),new RegExp('<option value="'+later+'" selected>'));
+  await click('meet-preview');   // erneutes Öffnen beginnt wieder beim nächsten Termin
+  assert.doesNotMatch(context.renderMeet(),new RegExp('<option value="'+later+'" selected>'));
+  assert.equal((context.renderMeet().match(/placeholder="Max"/g)||[]).length,0);
   assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,5);
   assert.equal(handlers.touchstart,undefined);assert.equal(handlers.touchend,undefined);
   // Vor der Anmeldung gibt es weder Treffpunkt-Bereich noch Karte, auch nicht unscharf.
   assert.doesNotMatch(context.renderMeet(),/meet-reveal|meet-map|meet-locked|Nach Anmeldung sichtbar|meeting-point|maps\/search/);
-  assert.match(context.renderMeet(),/Angabe nach Anmeldung/);
+  assert.match(context.renderMeet(),/<b>Info nach Anmeldung<\/b>/);
+  assert.match(context.renderMeet(),/Findet jeden Montag und Mittwoch statt\./);
   await click('meet-show-form');
-  assert.match(context.renderMeet(),/Prüfung der WU-Zugehörigkeit erfolgt derzeit nicht/);
+  assert.match(context.renderMeet(),/Du bekommst einen Code per E-Mail und gibst ihn hier ein\./);
+  // Solange jede E-Mail-Adresse zugelassen ist, darf der Text keine WU-Prüfung behaupten.
+  assert.doesNotMatch(context.renderMeet(),/nur WU-Stud/i);
+  assert.match(context.renderMeet(),/id="meet-first-name"[^>]*placeholder="Max"/);
+  assert.match(context.renderMeet(),/data-action="meet-send-code"[^>]*>Verifizierung via Mail starten</);
+  assert.match(context.renderMeet(),/id="meet-email"[^>]*placeholder="musterfrau@wu\.ac\.at"/);
+  assert.doesNotMatch(context.renderMeet(),/<h3>/);   // keine Überschrift mehr über dem Formular
   assert.equal(inserts,0);await click('meet-send-code');assert.equal(otpCalls,1);assert.equal(inserts,0);assert.equal(redirectTo,'https://phoenixvie.github.io/wu-lunch-app/preview/');
   assert.match(context.renderMeet(),/outlook\.cloud\.microsoft/);assert.match(context.renderMeet(),/Bestätigungscode an anna@example\.com gesendet/);
   handlers.click({target:{closest:()=>({dataset:{action:'meet-open-url'},href:'https://outlook.cloud.microsoft'})},preventDefault(){},stopImmediatePropagation(){}});assert.equal(openedUrl,'https://outlook.cloud.microsoft');
@@ -47,21 +66,25 @@ test('preview requires verified email before a registration and supports cancell
   await click('meet-back');assert.equal(context.meetPreviewOpen,false);assert.equal(context.selectedId,'mensa');
 });
 
-test('only one date is shown: the next one open for sign-up, or today while you are signed up', async () => {
+test('the next date is shown until 14:00 and the one after it can always be chosen', async () => {
   const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
   const helper=source.slice(source.indexOf('  const viennaClock'),source.indexOf('  // Texte kommen aus dem gemeinsamen Katalog'));
   let current='2026-11-16T09:00:00Z';   // Montag 10:00 Uhr Wien
   class Clock extends Date { constructor(...args){super(...(args.length?args:[current]));} }
-  const state={own:[]};
+  const state={own:[],selectedDate:null};
   const context={Intl,Date:Clock,state};vm.createContext(context);vm.runInContext(helper,context);
   const shown=()=>vm.runInContext('date()',context);
-  assert.equal(shown(),'2026-11-16');                                    // Anmeldung für heute noch offen
-  current='2026-11-16T11:06:00Z';assert.equal(shown(),'2026-11-18');     // 12:06: geschlossen -> nächster Termin
-  state.own=[{meeting_date:'2026-11-16'}];assert.equal(shown(),'2026-11-16'); // selbst angemeldet: Treffpunkt bleibt sichtbar
-  current='2026-11-16T21:59:00Z';assert.equal(shown(),'2026-11-16');
-  current='2026-11-16T22:00:00Z';assert.equal(shown(),'2026-11-18');     // ab 23:00 Uhr: nächster Termin
-  state.own=[];current='2026-11-17T08:00:00Z';assert.equal(shown(),'2026-11-18'); // Dienstag
-  current='2026-11-19T08:00:00Z';assert.equal(shown(),'2026-11-23');     // Donnerstag -> Montag
+  const options=()=>[...vm.runInContext('dateOptions()',context)];
+  assert.equal(shown(),'2026-11-16');assert.deepEqual(options(),['2026-11-16','2026-11-18']);
+  current='2026-11-16T11:06:00Z';assert.equal(shown(),'2026-11-16');     // 12:06: Anmeldung zu, Termin bleibt sichtbar
+  assert.equal(vm.runInContext('registrationOpen("2026-11-16")',context),false);
+  current='2026-11-16T12:59:00Z';assert.equal(shown(),'2026-11-16');     // 13:59
+  current='2026-11-16T13:00:00Z';assert.equal(shown(),'2026-11-18');     // ab 14:00: nächster Termin
+  assert.deepEqual(options(),['2026-11-18','2026-11-23']);
+  state.selectedDate='2026-11-23';assert.equal(shown(),'2026-11-23');    // gewählter Folgetermin
+  state.selectedDate='2026-11-16';assert.equal(shown(),'2026-11-18');    // abgelaufene Auswahl fällt zurück
+  state.selectedDate=null;current='2026-11-17T08:00:00Z';assert.equal(shown(),'2026-11-18'); // Dienstag
+  current='2026-11-19T08:00:00Z';assert.deepEqual(options(),['2026-11-23','2026-11-25']);   // Donnerstag
 });
 
 test('texts fall back to German and use the shared catalogue for English', async () => {
@@ -69,17 +92,16 @@ test('texts fall back to German and use the shared catalogue for English', async
   const helper=source.slice(source.indexOf('  const text = (key'),source.indexOf('  const redraw ='));
   const run=localize=>{const context=localize?{localize}:{};vm.createContext(context);vm.runInContext(helper,context);return (key,values,german)=>vm.runInContext('text',context)(key,values,german);};
   const german=run(null);
-  assert.equal(german('Jeden {weekday}: Gemeinsam Essen gehen',{weekday:'Mittwoch'}),'Jeden Mittwoch: Gemeinsam Essen gehen');
+  assert.match(german('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.',{email:'a@wu.ac.at'}),/^Wir haben einen Bestätigungscode an a@wu\.ac\.at gesendet\./);
   assert.equal(german('Meet to eat: Abmelden',{},'Abmelden'),'Abmelden');
   const catalogue=JSON.parse(JSON.stringify((await import('node:module')).createRequire(import.meta.url)('../../wu-lunch/i18n.js')??{}));
   const {ui}=globalThis.WULunchI18n;
   const english=run({label:key=>ui[key]??key});
-  assert.equal(english('Jeden {weekday}: Gemeinsam Essen gehen',{weekday:'Wednesday'}),'Every Wednesday: go for lunch together');
+  assert.match(english('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.',{email:'a@wu.ac.at'}),/^We have sent a confirmation code to a@wu\.ac\.at\./);
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
-  assert.equal(english('Meet to eat: Anmelden',{},'Anmelden'),'Sign up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Gemeinsam essen gehen','Datum','Uhrzeit am Treffpunkt','12:00 Uhr','Gemeinsam losgehen','12:05 Uhr','Treffpunkt auf der WU','Angabe nach Anmeldung','Vor dem Baum direkt bei der Mensa','Teilnehmer','WU-Studenten Gruppe','Bereits angemeldet','Verbindlich anmelden','Google Maps öffnen','Vorname','Bestätigungscode senden','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','WU-Mail öffnen','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Gemeinsam essen gehen','Datum','Uhrzeit am Treffpunkt','12:00 Uhr','Gemeinsam losgehen','12:05 Uhr','Treffpunkt auf der WU','Info nach Anmeldung','Vor dem Baum direkt bei der Mensa','Teilnehmer','WU-Studenten Gruppe','Bereits angemeldet','Verbindlich anmelden','Google Maps öffnen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','WU-Mail öffnen','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen. Findet jeden Montag und Mittwoch statt.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
@@ -110,7 +132,7 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   assert.match(menu,/\[0,2\]\.includes\(dayIndex\)/);
 });
 
-test('Vienna dates stay visible until 23:00 and registration closes after 12:05', async () => {
+test('Vienna dates stay visible until 14:00 and registration closes after 12:05', async () => {
   const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
   const helper=source.slice(source.indexOf('  const viennaClock'),source.indexOf('  const date ='));
   let current='2026-11-15T23:01:00Z';
@@ -121,9 +143,9 @@ test('Vienna dates stay visible until 23:00 and registration closes after 12:05'
   assert.deepEqual(days(),['2026-11-16','2026-11-18','2026-11-23','2026-11-25','2026-11-30']);assert.equal(open('2026-11-16'),true);
   current='2026-11-16T11:05:59Z';assert.equal(open('2026-11-16'),true);assert.equal(days()[0],'2026-11-16');
   current='2026-11-16T11:06:00Z';assert.equal(open('2026-11-16'),false);assert.equal(days()[0],'2026-11-16');
-  current='2026-11-16T21:59:00Z';assert.equal(days()[0],'2026-11-16');
-  current='2026-11-16T22:00:00Z';assert.deepEqual(days(),['2026-11-18','2026-11-23','2026-11-25','2026-11-30','2026-12-02']);
-  current='2026-11-18T22:00:00Z';assert.deepEqual(days(),['2026-11-23','2026-11-25','2026-11-30','2026-12-02','2026-12-07']);
+  current='2026-11-16T12:59:00Z';assert.equal(days()[0],'2026-11-16');   // 13:59 Uhr Wien
+  current='2026-11-16T13:00:00Z';assert.deepEqual(days(),['2026-11-18','2026-11-23','2026-11-25','2026-11-30','2026-12-02']);   // 14:00 Uhr
+  current='2026-11-18T13:00:00Z';assert.deepEqual(days(),['2026-11-23','2026-11-25','2026-11-30','2026-12-02','2026-12-07']);
   current='2027-03-29T10:05:59Z';assert.equal(open('2027-03-29'),true);
   current='2027-03-29T10:06:00Z';assert.equal(open('2027-03-29'),false);
 });
