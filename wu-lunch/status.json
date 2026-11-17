@@ -1,15 +1,15 @@
 {
-  "checked_at": "2026-11-17T01:26:11+01:00",
+  "checked_at": "2026-11-17T07:45:58+01:00",
   "week_start": "2026-11-16",
   "week_end": "2026-11-20",
   "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-17T01:26:14+01:00",
-      "checked_at": "2026-11-17T01:26:14+01:00",
+      "last_success": "2026-11-17T07:46:09+01:00",
+      "checked_at": "2026-11-17T07:46:09+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54",
+      "content_sha256": "ca0075eaeacfe38b98cc613763db1e92f73ec158ad317c59675e349685e474e9",
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-16",
@@ -18,7 +18,7 @@
     "finn": {
       "state": "cached",
       "last_success": "2026-11-16T13:44:32+01:00",
-      "checked_at": "2026-11-17T01:26:14+01:00",
+      "checked_at": "2026-11-17T07:46:09+01:00",
       "consecutive_failures": 0,
       "content_sha256": "c88fdb45203f01bf46d9865b1554dec8bfde2f5665f04c8133b76ec4ab7b495e",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw47.jpg?v=1794780079",
@@ -28,20 +28,36 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-17T01:26:11+01:00",
+      "last_success": "2026-11-17T07:45:58+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
     "mensa": {
-      "state": "error",
-      "last_success": "2026-11-16T13:43:06+01:00",
+      "state": "ok",
+      "last_success": "2026-11-17T07:46:08+01:00",
       "consecutive_failures": 0,
-      "parser_version": "ai-pdf-8-absent-allergen-metadata",
-      "content_sha256": "1f8db507732cd8b3c15b4ff50234e7dc79181b107e7bda24b893bd4be3f7c061",
-      "error": "Mensa: unsichere Gerichtzuordnung [2026-11-16 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-17 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-1"
+      "parser_version": "ai-pdf-9-notice-wording",
+      "content_sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+      "model": "gpt-6-luna",
+      "usage": {
+        "input_tokens": 18275,
+        "input_tokens_details": {
+          "cache_write_tokens": 9164,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 9164
+          },
+          "cached_tokens": 9108
+        },
+        "output_tokens": 8793,
+        "output_tokens_details": {
+          "reasoning_tokens": 1008
+        },
+        "total_tokens": 27068
+      }
     },
     "glashaus": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-17T01:26:11+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
@@ -69,11 +85,16 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "ok",
-      "last_success": "2026-11-17T01:26:11+01:00",
+      "state": "ok_browser",
+      "last_success": "2026-11-17T07:46:46+01:00",
       "consecutive_failures": 0,
-      "parser_version": null,
-      "content_sha256": null
+      "day_sha256": {
+        "2026-11-16": "ec9001bcc466d010a06fac668e578754f216660ebf4f666ea36b873dcd5d8fb3",
+        "2026-11-17": "50ba00d595e5d4b2cc87e8799f05cc5c50ce61368b75e59da76181739a8b9ae7",
+        "2026-11-18": "6b4efe56a7cbd34ede9f0f76cb37ad9c1fcd88d311294c9fe91394efdf637925",
+        "2026-11-19": "a4b4fc6ee607d6552ac53398fad4b776e14e049167c14fdb935e259400f6d740",
+        "2026-11-20": "187e366552ed9d9e8c48fb4a3917a5f1dad6275bac9b8a7601a40c162aeb15c6"
+      }
     },
     "gruenehuette": {
       "state": "cached",
@@ -83,16 +104,14 @@
       "content_sha256": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53"
     },
     "lia": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-17T01:26:11+01:00",
       "consecutive_failures": 0,
       "parser_version": 4,
       "content_sha256": "2365a9ddbcd802ee5f500fdc341f132a6c85c55212847709a8a89ac22a393dc8"
     }
   },
-  "problems": [
-    "mensa: Mensa: unsichere Gerichtzuordnung [2026-11-16 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-17 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-1"
-  ],
+  "problems": [],
   "schedule_url": "update-policy.json",
   "format_version": 1,
   "ai_repair": {
@@ -157,10 +176,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-17T01:30:23+01:00",
+      "last_checked": "2026-11-17T07:47:55+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-16",
-      "source_fingerprint": "45963704a08cf7c003752763d2354c3c6887656171512608d3c7dfb9ade27d54",
+      "source_fingerprint": "ca0075eaeacfe38b98cc613763db1e92f73ec158ad317c59675e349685e474e9",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -170,52 +189,59 @@
   "topf_luna_audit": {
     "state": "review_needed",
     "model": "gpt-6-luna",
-    "fingerprint": "2e66b2dc35ac466f81667c21375be4d6d47aa5189a8cc6d6ff6e1fba12ad430a",
-    "checked_at": "2026-11-13T14:31:37+01:00",
+    "fingerprint": "910ee44e63b4f903e499b1cba7709777b25645bfde5de079e1662d11677158d7",
+    "checked_at": "2026-11-17T07:47:54+01:00",
     "validation_issues": [
       "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
     ],
     "ai_only_examples": {
-      "2026-11-09": [
-        "tan tan faschiertes mit asian slaw, basmatireis, limetten-sesam-mayo & nori crunch"
+      "2026-11-17": [
+        "balsamico linsen"
       ]
     },
     "warnings": [
-      "Für Haussalat und Suppen gelten die Preise aus dem Abschnitt „Vorspeisen“; ein eigener Gerichtspreis ist nicht angezeigt.",
-      "Die Tabs weisen keine Menü-Kombination aus; Beilagen sind nur dort als Bestandteil erfasst, wo sie ausdrücklich beim Gericht genannt sind. „Dessert des Tages“ ist nicht näher beschrieben."
+      "Die Preise sind als Abschnittstarife für Vorspeisen bzw. Hauptspeisen angegeben; ein eigener Kombinationspreis oder eine kostenlose Suppe ist nicht ausgewiesen.",
+      "„Dessert des Tages“ ist nicht näher spezifiziert; der sichtbare Preis beträgt 2,90 €. "
     ],
     "usage": {
-      "input_tokens": 50682,
+      "input_tokens": 49703,
       "input_tokens_details": {
-        "cache_write_tokens": 50679,
+        "cache_write_tokens": 49700,
+        "cache_write_tokens_details": {
+          "ttl_12h_tokens": 0,
+          "ttl_30m_tokens": 49700
+        },
         "cached_tokens": 0
       },
-      "output_tokens": 8945,
+      "output_tokens": 9010,
       "output_tokens_details": {
-        "reasoning_tokens": 545
+        "reasoning_tokens": 810
       },
-      "total_tokens": 59627
+      "total_tokens": 58713
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-17T01:26:15+01:00",
+    "checked_at": "2026-11-17T07:46:06+01:00",
     "source_sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
     "week_start": "2026-11-16",
-    "version": "ai-pdf-8-absent-allergen-metadata",
-    "last_attempt_at": "2026-11-17T01:26:15+01:00",
-    "state": "error",
-    "error": "Mensa: unsichere Gerichtzuordnung [2026-11-16 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-17 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-1",
-    "last_success": "2026-11-15T06:28:10+01:00",
-    "published_days_sha256": "c5a0e04bb91411b46b158c203be164b0e80b95e2724aaa6f8d919193d16bfa47",
+    "version": "ai-pdf-9-notice-wording",
+    "last_attempt_at": "2026-11-17T07:46:06+01:00",
+    "state": "ok",
+    "error": null,
+    "last_success": "2026-11-17T07:46:06+01:00",
+    "published_days_sha256": "80a8232e6b6dab4c7ff30c95d89d7d4f963832374cd07ad35911df48b50c3d45",
     "attempts": {
-      "identity": "2026-11-16|ai-pdf-8-absent-allergen-metadata|f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+      "identity": "2026-11-16|ai-pdf-9-notice-wording|f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
       "day": "2026-11-17",
       "count": 1,
-      "last_at": "2026-11-17T01:26:17+01:00"
+      "last_at": "2026-11-17T07:46:07+01:00"
     }
   },
-  "quality_warnings": [],
-  "quality_warning_count": 0,
+  "quality_warnings": [
+    "mensa 2026-11-16: Preis fehlt: Spezialpasta lt. Tagesaushang",
+    "mensa 2026-11-17: Preis fehlt: Spezialpasta lt. Tagesaushang"
+  ],
+  "quality_warning_count": 2,
   "next_run": "Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)"
 }

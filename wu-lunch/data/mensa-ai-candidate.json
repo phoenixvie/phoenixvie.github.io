@@ -978,7 +978,8 @@
   },
   "origin_run_id": "43986980988",
   "extraction_version": "pdf-layout-v3-merged-groups",
-  "attempted_validator_version": "ai-pdf-8-absent-allergen-metadata",
+  "attempted_validator_version": "ai-pdf-9-notice-wording",
   "corrections": 3,
-  "last_rejection": "Mensa: unsichere Gerichtzuordnung [2026-11-16 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-17 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-18 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-19 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-20 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung ["
+  "last_rejection": "Mensa: unsichere Gerichtzuordnung [2026-11-16 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-17 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-18 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-19 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [2026-11-20 · Pasta & Co · Spezialpasta lt. Tagesaushang]; Mensa: unsichere Gerichtzuordnung [",
+  "validated_by": "ai-pdf-9-notice-wording"
 }

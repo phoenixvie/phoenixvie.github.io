@@ -1,140 +1,25 @@
 {
-  "checked_at": "2026-11-17T01:30:23+01:00",
+  "checked_at": "2026-11-17T07:47:55+01:00",
   "week_start": "2026-11-16",
   "model": "gpt-6-luna",
-  "api_calls": 4,
+  "api_calls": 1,
   "results": [
-    {
-      "restaurant": "lia",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Datumsangaben im HTML enthalten kein Jahr; die Zuordnung zu 2026 erfolgt anhand der angegebenen Prüf-Woche."
-      ],
-      "ai_only_items": 1,
-      "parser_only_items": 1,
-      "ai_only_examples": [
-        "2026-11-17: gegrillte hühnerbrust hühnerkeule mit champignonsauce und reis"
-      ],
-      "parser_only_examples": [
-        "2026-11-17: gegrillte hühnerbrust"
-      ],
-      "source_hashes": {
-        "https://lia.coffee/": "e2200cd081573c6df3a1ee43fccec6d73a6814ad9fa18433234b04f519535360"
-      },
-      "usage": {
-        "input_tokens": 7249,
-        "input_tokens_details": {
-          "cache_write_tokens": 0,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 0
-          },
-          "cached_tokens": 7246
-        },
-        "output_tokens": 2578,
-        "output_tokens_details": {
-          "reasoning_tokens": 924
-        },
-        "total_tokens": 9827
-      }
-    },
-    {
-      "restaurant": "glashaus",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "2026-11-16: 0: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-16: 1: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-17: 0: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-17: 1: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-18: 0: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-18: 1: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-19: 0: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-19: 1: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-20: 0: dieselbe Leistung inklusive und mit Aufpreis",
-        "2026-11-20: 1: dieselbe Leistung inklusive und mit Aufpreis",
-        "Bei jedem Wochentag steht in der Quelle zusätzlich „FEIERTAG“; die darunter aufgeführten Gerichte wurden den jeweiligen Wochentagen zugeordnet."
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://www.dasglashaus.at/menues": "9f1fa9e64ee04c862756bdddd38b572c42223d195c7a143792cc8e059f37ad4f"
-      },
-      "usage": {
-        "input_tokens": 2777,
-        "input_tokens_details": {
-          "cache_write_tokens": 0,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 0
-          },
-          "cached_tokens": 2774
-        },
-        "output_tokens": 2879,
-        "output_tokens_details": {
-          "reasoning_tokens": 877
-        },
-        "total_tokens": 5656
-      }
-    },
-    {
-      "restaurant": "losteria",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Quelle enthält keine Datumsangaben oder Tageszuordnung für die angefragte Woche.",
-        "Keine Allergene oder Menü-Kombinationen in der Quelle ausgewiesen."
-      ],
-      "ai_only_items": 4,
-      "parser_only_items": 0,
-      "ai_only_examples": [
-        "None: crema di patate con tartufo",
-        "None: pizza bianca tacchino e cipolletartufo di cielo",
-        "None: tagliatelle tartufo e funghi",
-        "None: tortina di mandorle"
-      ],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "1226281522ebb30a8cb11d8113967fdf262e6f1d8ba284fb5ec95078ad8ce73f"
-      },
-      "usage": {
-        "input_tokens": 1973,
-        "input_tokens_details": {
-          "cache_write_tokens": 0,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 0
-          },
-          "cached_tokens": 1970
-        },
-        "output_tokens": 918,
-        "output_tokens_details": {
-          "reasoning_tokens": 153
-        },
-        "total_tokens": 2891
-      }
-    },
     {
       "restaurant": "karmafood",
       "issues": [],
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für die nicht als Special ausgezeichneten Hauptgerichte ist kein eindeutig zuordenbarer Einzelpreis angegeben.",
-        "Für die Hauptgerichte sind keine Allergene aus der vorliegenden Quelle explizit belegt."
+        "Für „Lassi & Lunch“ ist kein Preis ausgewiesen.",
+        "Die Kombinationsteile des Lunch Combo sind nicht näher angegeben.",
+        "Die undatierten Extras Samosas, Sweets & Mango Lassi, Kashmiri Chili Crisp und Masala Chai sind keinem Wochentag zuordenbar."
       ],
       "ai_only_items": 0,
       "parser_only_items": 0,
       "ai_only_examples": [],
       "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "31c4518555ff545a3618e1c318e86386183419a62d547c6d3d5b045db9ea6a7f"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "c82234bc2fb3c9abf1ac26c3e2388e108df8843ad62d20b133280e953d5b8fc5"
       },
       "usage": {
         "input_tokens": 2637,
@@ -146,17 +31,17 @@
           },
           "cached_tokens": 0
         },
-        "output_tokens": 3354,
+        "output_tokens": 3414,
         "output_tokens_details": {
-          "reasoning_tokens": 957
+          "reasoning_tokens": 940
         },
-        "total_tokens": 5991
+        "total_tokens": 6051
       }
     },
     {
       "restaurant": "mensa",
       "issues": [
-        "source_error"
+        "missing_price"
       ],
       "action": "dedicated_pdf_ai",
       "repairs": []

@@ -144,6 +144,24 @@
       "menu_status": "daily",
       "manifest": "2026-11-16/topfdeckel/b7dbb9a5fb794b547a8be04069e7d59d00f5b9640463e5a85ecf0aaaeba0f33c/manifest.json",
       "source_count": 12
+    },
+    {
+      "restaurant_id": "mensa",
+      "week_start": "2026-11-16",
+      "menu_sha256": "e2e983936a71cfa7ec651da36297a44b76c5f29f9a7dc2333b48393e682efbc7",
+      "captured_at": "2026-11-17T06:49:01+00:00",
+      "menu_status": "ai_checked",
+      "manifest": "2026-11-16/mensa/e2e983936a71cfa7ec651da36297a44b76c5f29f9a7dc2333b48393e682efbc7/manifest.json",
+      "source_count": 2
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "week_start": "2026-11-16",
+      "menu_sha256": "c2083594a3851da399a34ce15234a0e77c2f530f8a49e175ba2df281f036bd86",
+      "captured_at": "2026-11-17T06:49:01+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/topfdeckel/c2083594a3851da399a34ce15234a0e77c2f530f8a49e175ba2df281f036bd86/manifest.json",
+      "source_count": 11
     }
   ]
 }
