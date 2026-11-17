@@ -46,6 +46,18 @@ test('visible version numbers agree, so two different builds cannot carry the sa
   assert.ok(Number.isInteger(app.android.versionCode) && app.android.versionCode > 0);
 });
 
+test('Android package name is the one registered in the Google Play Console', async () => {
+  // Vorgabe des Betreibers (17.11.2026): Paketname at.startit.wufood. Er ist nach dem ersten Upload bei
+  // Google Play endgültig und darf nicht mehr geändert werden (bis 0.5.4 hieß das Paket at.startit.wulunch).
+  const app = (await json('app.json')).expo;
+  assert.equal(app.android.package, 'at.startit.wufood');
+  const {readFile} = await import('node:fs/promises');
+  for (const script of ['verify-apk.py', 'emulator-smoke.py']) {
+    const text = await readFile(new URL('./' + script, import.meta.url), 'utf8');
+    assert.ok(text.includes('at.startit.wufood') && !text.includes('at.startit.wulunch'), script);
+  }
+});
+
 test('adaptive Android icon shows the cutlery large, cut slightly by the lower edge, and fills the whole shape', async () => {
   const app = (await json('app.json')).expo;
   assert.equal(app.icon, './assets/icon.png');

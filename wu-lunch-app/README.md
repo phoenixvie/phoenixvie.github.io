@@ -50,6 +50,12 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - **Nicht aufgenommen (Stand 17.11.2026):** Agape (auf der Webseite gibt es kein Mittagsmenü mehr, die genannte Seite existiert nicht), Rex Lounge (unter der Adresse erscheint ein fremdes Online-Casino) und Interspar Restaurant (die Seite sperrt automatische Abrufe).
 - **In der Android-App nicht enthalten:** Die Wels-Ausgabe ist nur eine Webseite.
 
+## Paketname für Google Play (Stand 17.11.2026)
+
+- Der Android-Paketname ist ab Version 0.5.5 `at.startit.wufood` (so im Google Play Console angelegt). Bis 0.5.4 hieß er `at.startit.wulunch`.
+- Android behandelt das als neue App: Eine installierte 0.5.4 oder älter wird nicht aktualisiert, sondern muss vorher deinstalliert werden.
+- Nach dem ersten Upload zu Google Play ist der Paketname endgültig.
+
 ## Meet to eat: Kontrolle im Admin (Stand 17.11.2026)
 
 - Im Admin der Webseite (`wu-lunch/admin.html`) gibt es den Bereich „Meet to eat: Anmeldungen": alle Vornamen ab heute, nach Termin gruppiert, je Eintrag ein Knopf „Löschen".
