@@ -66,6 +66,50 @@ class TopfSideDishRegression(unittest.TestCase):
             legacy.topf_main_items(swapped)
 
 
+class TopfActiveTabRegression(unittest.TestCase):
+    """17.11.2026 (Trockenlauf): Der erste Reiter-Klick ging verloren; der Montag
+    bekam unbemerkt die Gerichte des voreingestellten heutigen Tages."""
+    ACTIVE = "flex-1 rounded-[10px] bg-[#6BAF7C] text-white shadow-[0_2px_6px_rgba(107,175,124,0.25)]"
+    IDLE = "flex-1 rounded-[10px] bg-transparent text-[#1A1A1A] hover:bg-white/60"
+
+    def setUp(self):
+        import update_topf_browser     # lädt ohne Browser-Treiber (der wird erst beim Abruf gebraucht)
+        self.topf = update_topf_browser
+
+    def tabs(self, active):
+        return [self.ACTIVE if name == active else self.IDLE for name in self.topf.DAY_NAMES]
+
+    def test_exactly_one_differently_styled_button_is_the_active_day(self):
+        for day in self.topf.DAY_NAMES:
+            self.assertEqual(self.topf.active_tab(self.tabs(day)), day)
+
+    def test_ambiguous_or_changed_markup_gives_no_answer(self):
+        topf = self.topf
+        self.assertIsNone(topf.active_tab([self.IDLE] * 5))                                   # keiner aktiv
+        self.assertIsNone(topf.active_tab([self.ACTIVE, self.ACTIVE, self.IDLE, self.IDLE, self.IDLE]))
+        self.assertIsNone(topf.active_tab([self.ACTIVE, "andere", self.IDLE, self.IDLE, self.IDLE]))
+        self.assertIsNone(topf.active_tab([self.ACTIVE, None, self.IDLE, self.IDLE, self.IDLE]))  # Knopf fehlt
+        self.assertIsNone(topf.active_tab(self.tabs("Montag")[:4]))
+
+    def test_lost_first_click_is_repeated_and_a_stuck_tab_aborts(self):
+        topf = self.topf
+        class Page:
+            def __init__(self, needed_clicks): self.needed, self.clicks, self.state = needed_clicks, 0, "Dienstag"
+            def wait_for_timeout(self, ms): pass
+            def evaluate(self, script, names): return [TopfActiveTabRegression.ACTIVE if n == self.state else TopfActiveTabRegression.IDLE for n in names]
+        class Button:
+            def __init__(self, page): self.page = page
+            def click(self, timeout=None):
+                self.page.clicks += 1
+                if self.page.clicks >= self.page.needed: self.page.state = "Montag"
+        page = Page(needed_clicks=3)                 # Seite reagiert erst auf den dritten Klick
+        topf.open_tab(page, "Montag", Button(page))
+        self.assertEqual((page.clicks, page.state), (3, "Montag"))
+        stuck = Page(needed_clicks=99)               # Reiter reagiert nie: nichts veröffentlichen
+        with self.assertRaisesRegex(ValueError, "nicht aktiv"):
+            topf.open_tab(stuck, "Montag", Button(stuck))
+
+
 class MensaNoticeWordingRegression(unittest.TestCase):
     RAW = (FIXTURES / 'mensa-2026-11-16-monday.pdf').read_bytes()
     ANSWER = json.loads((FIXTURES / 'mensa-2026-11-16-monday.notice-answer.json').read_text(encoding='utf-8'))
