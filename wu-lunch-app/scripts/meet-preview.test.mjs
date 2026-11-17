@@ -51,6 +51,10 @@ test('preview requires verified email before a registration and supports cancell
   await click('meet-send-code');assert.equal(otpCalls,0);assert.match(context.renderMeet(),/Bitte verwende deine WU-Mailadresse/);
   inputs['meet-email'].value='anna@wu.ac.at.example.com';await click('meet-send-code');assert.equal(otpCalls,0);   // nur echte WU-Endung
   inputs['meet-email'].value='anna@s.wu.ac.at';
+  // Vornamen-Prüfung greift vor dem Versand des Codes.
+  inputs['meet-first-name'].value='Wählt Liste 3!';await click('meet-send-code');assert.equal(otpCalls,0);assert.match(context.renderMeet(),/nur deinen Vornamen/);
+  inputs['meet-first-name'].value='Hitler';await click('meet-send-code');assert.equal(otpCalls,0);assert.match(context.renderMeet(),/nicht möglich/);
+  inputs['meet-first-name'].value='Anna';
   assert.match(context.renderMeet(),/id="meet-first-name"[^>]*placeholder="Max"/);
   assert.match(context.renderMeet(),/data-action="meet-send-code"[^>]*>Verifizierung via Mail starten</);
   assert.match(context.renderMeet(),/id="meet-email"[^>]*placeholder="mustermann@wu\.ac\.at"/);
@@ -72,6 +76,23 @@ test('preview requires verified email before a registration and supports cancell
   assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet|meet-reveal|meet-map/);assert.equal(context.meetJoined,false);
   store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);await click('meet-confirm-name');assert.equal(inserts,2);await click('meet-leave');
   await click('meet-back');assert.equal(context.meetPreviewOpen,false);assert.equal(context.selectedId,'mensa');
+});
+
+test('first names must look like a name; obvious insults and political terms are refused', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const helper=source.slice(source.indexOf('  const blockedParts ='),source.indexOf('  const redraw ='));
+  const context={};vm.createContext(context);vm.runInContext(helper,context);
+  const problem=name=>vm.runInContext('nameProblem',context)(name);
+  // Echte Vornamen, auch mit Akzent, Bindestrich, zwei Teilen oder Ähnlichkeit zu gesperrten Wörtern.
+  for(const name of ['Anna','Max','Jo','Anna-Lena','Jean-Luc','Zoë','Jürgen','Renée','Sieglinde','Siegfried','Ignazio','Nazim','Kanako','Pornthip','Dick','Adolf','Annalena','Heilwig','Mustafa'])
+    assert.equal(problem(name),'',name);
+  assert.equal(problem(''),'Bitte gib deinen Vornamen ein.');
+  // Keine Sätze, Zahlen, Links, Zeichen oder Überlängen – also auch keine Botschaften.
+  for(const text of ['Wählt Liste 3!','Free Palestine now','Free Palestine','Sieg Heil','Jean Luc','Max123','www.example.org','Anna 😀','A','Maximilianalexanderxyz','Stop the war','x x x'])
+    assert.match(problem(text),/nur deinen Vornamen/,text);
+  // Offensichtliche Beschimpfungen und politische Begriffe, auch groß geschrieben, mit Akzent oder als Teil.
+  for(const text of ['Nazi','NAZI','Hitler','Sieg-Heil','Heil','Arschloch','Fuck','Fuckyou','Hurensohn','Trump','Putin','AfD','FPÖ','Hamas','Schlampe','Nigger','Idiot','Porno','Free-Palestine','Stop-War','Fck-Afd','Israel','MAGA'])
+    assert.match(problem(text),/nicht möglich/,text);
 });
 
 test('the next date is shown until 14:00 and the one after it can always be chosen', async () => {

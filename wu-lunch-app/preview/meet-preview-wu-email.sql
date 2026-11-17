@@ -11,3 +11,12 @@ create policy meet_preview_insert_own on public.meet_preview_registrations
       and (now() at time zone 'Europe/Vienna')::date + 14
     and now() < ((meeting_date + time '12:06') at time zone 'Europe/Vienna')
   );
+
+-- Vornamen: nur Namensform (ein Name aus Buchstaben oder Doppelname mit Bindestrich, höchstens 20 Zeichen). Die App prüft
+-- zusätzlich eine kleine Sperrliste; diese Regel verhindert Sätze, Zahlen, Links und Sonderzeichen auch dann,
+-- wenn jemand die App umgeht. "not valid": bestehende Einträge bleiben unberührt.
+alter table public.meet_preview_registrations
+  add constraint meet_preview_first_name_format check (
+    char_length(first_name) between 2 and 20
+    and first_name ~ '^[[:alpha:]]{2,}(-[[:alpha:]]{2,})?$'
+  ) not valid;
