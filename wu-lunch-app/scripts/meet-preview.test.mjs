@@ -75,7 +75,11 @@ test('preview requires verified email before a registration and supports cancell
   assert.match(context.renderMeet(),/<a data-action="meet-open-url"[^>]*href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
   await click('meet-leave');assert.equal(own.length,0);
   assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet|meet-reveal|meet-map/);assert.equal(context.meetJoined,false);
-  store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);await click('meet-confirm-name');assert.equal(inserts,2);await click('meet-leave');
+  // Abgemeldet, Name lokal gemerkt: erneutes Anmelden braucht kein Formular mehr.
+  assert.equal(store.get('wu-meet-preview-name'),'Anna');
+  store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);
+  // Der Vorname ist im Bestätigungsschritt schon eingefügt (hier aus der laufenden Sitzung, sonst vom Gerät).
+  assert.match(context.renderMeet(),/id="meet-first-name"[^>]*value="Anna"/);await click('meet-confirm-name');assert.equal(inserts,2);await click('meet-leave');
   await click('meet-back');assert.equal(context.meetPreviewOpen,false);assert.equal(context.selectedId,'mensa');  // Anonyme Statistik: Schritte werden gezählt, Eingaben (Name, Adresse, Code) nie mitgeschickt.
   const events=tracked.map(row=>row[0]);
   for(const expected of ['meet_open','meet_date_changed','meet_signup_started','meet_input_rejected','meet_code_requested','meet_code_result','meet_joined','meet_left','meet_mail_opened'])
