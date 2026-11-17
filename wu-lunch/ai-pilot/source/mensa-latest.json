@@ -1,14 +1,14 @@
 {
-  "fetched_at": "2026-11-14T12:06:14.437743+01:00",
+  "fetched_at": "2026-11-17T01:22:00.915678+01:00",
   "source": "https://www.wumensa.at/menuplan-deutsch/",
   "http_status": 200,
-  "sha256": "1f8db507732cd8b3c15b4ff50234e7dc79181b107e7bda24b893bd4be3f7c061",
-  "bytes": 137484,
+  "sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+  "bytes": 136631,
   "pages": 1,
   "detected_dates": [
     "16.11.2026",
     "20.11.2026"
   ],
-  "current_week_monday": "2026-11-09",
+  "current_week_monday": "2026-11-16",
   "verification": "Snapshot only: PDF date MUST be checked by AI before publishing"
 }
