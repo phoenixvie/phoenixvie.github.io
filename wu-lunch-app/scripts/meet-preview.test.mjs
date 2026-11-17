@@ -42,8 +42,8 @@ test('preview requires verified email before a registration and supports cancell
   // Vor der Anmeldung gibt es weder Treffpunkt-Bereich noch Karte, auch nicht unscharf.
   assert.doesNotMatch(context.renderMeet(),/meet-reveal|meet-map|meet-locked|Nach Anmeldung sichtbar|meeting-point|maps\/search/);
   assert.match(context.renderMeet(),/<b>Info nach Anmeldung<\/b>/);
-  // Über dem Einleitungstext steht eine schlichte Zeichnung (Personen im Gespräch über Essen), nicht im Formular.
-  assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^>]*aria-label="Vier Personen stehen zusammen und unterhalten sich über Essen"/);
+  // Über dem Einleitungstext steht eine schlichte Zeichnung (Treffpunkt mit Besteck, Personen kommen zusammen), nicht im Formular.
+  assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^>]*aria-label="Personen kommen an einem Treffpunkt zum gemeinsamen Essen zusammen"/);
   assert.match(context.renderMeet(),/Findet jeden Montag und Mittwoch statt\./);
   await click('meet-show-form');
   assert.match(context.renderMeet(),/Du bekommst einen Code per E-Mail und gibst ihn hier ein\./);
@@ -60,8 +60,12 @@ test('preview requires verified email before a registration and supports cancell
   await click('meet-resend-code');assert.equal(otpCalls,2);inputs['meet-code'].value='123456';await click('meet-verify');assert.equal(verifyCalls,2);assert.equal(inserts,1);assert.equal(own[0].first_name,'Anna');
   // Nach der Anmeldung erscheinen Treffpunkt, Foto und Karte.
   assert.match(context.renderMeet(),/Bereits angemeldet/);assert.match(context.renderMeet(),/Anna/);assert.match(context.renderMeet(),/48\.21289788048291%2C16\.409449359855884/);assert.match(context.renderMeet(),/Vor dem Baum direkt bei der Mensa/);
-  assert.match(context.renderMeet(),/<section class="meet-reveal"><h3>Treffpunkt auf der WU<\/h3>/);assert.match(context.renderMeet(),/id="meet-map"/);assert.match(context.renderMeet(),/meeting-point\.webp/);
+  assert.match(context.renderMeet(),/<section class="meet-reveal"><h3>Treffpunkt auf der WU<\/h3>/);assert.doesNotMatch(context.renderMeet(),/id="meet-map"/);   // eingebettete Karte entfernt (17.11.2026)assert.match(context.renderMeet(),/meeting-point\.webp/);
   assert.equal(context.meetJoined,true);
+  // Die Bestätigung trägt ein Häkchen-Symbol vor dem Text.
+  assert.match(context.renderMeet(),/<div class="meet-confirm"><p><svg class="meet-check"[^>]*>.*?<\/svg><span>Du bist für diesen Termin angemeldet\.<\/span><\/p><p><svg class="meet-check"[^>]*>.*?<\/svg><span>Bitte melde dich aus Rücksicht/);
+  // Der Treffpunkt in der Übersicht ist ein Link zu Google Maps.
+  assert.match(context.renderMeet(),/<a data-action="meet-open-url" href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
   await click('meet-leave');assert.equal(own.length,0);
   assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet|meet-reveal|meet-map/);assert.equal(context.meetJoined,false);
   store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);await click('meet-confirm-name');assert.equal(inserts,2);await click('meet-leave');
