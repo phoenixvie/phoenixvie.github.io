@@ -46,15 +46,17 @@ test('preview requires verified email before a registration and supports cancell
   assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^>]*aria-label="Personen kommen an einem Treffpunkt zum gemeinsamen Essen zusammen"/);
   assert.match(context.renderMeet(),/Findet jeden Montag und Mittwoch statt\./);
   await click('meet-show-form');
-  assert.match(context.renderMeet(),/Du bekommst einen Code per E-Mail und gibst ihn hier ein\./);
-  // Solange jede E-Mail-Adresse zugelassen ist, darf der Text keine WU-Prüfung behaupten.
-  assert.doesNotMatch(context.renderMeet(),/nur WU-Stud/i);
+  assert.match(context.renderMeet(),/Verifizierung deiner WU-Mailadresse, damit nur WU Studenten teilnehmen können\. Du bekommst einen Code per E-Mail\./);
+  // Der Text verspricht die WU-Prüfung – also nimmt das Formular auch nur WU-Adressen an.
+  await click('meet-send-code');assert.equal(otpCalls,0);assert.match(context.renderMeet(),/Bitte verwende deine WU-Mailadresse/);
+  inputs['meet-email'].value='anna@wu.ac.at.example.com';await click('meet-send-code');assert.equal(otpCalls,0);   // nur echte WU-Endung
+  inputs['meet-email'].value='anna@s.wu.ac.at';
   assert.match(context.renderMeet(),/id="meet-first-name"[^>]*placeholder="Max"/);
   assert.match(context.renderMeet(),/data-action="meet-send-code"[^>]*>Verifizierung via Mail starten</);
   assert.match(context.renderMeet(),/id="meet-email"[^>]*placeholder="mustermann@wu\.ac\.at"/);
   assert.doesNotMatch(context.renderMeet(),/<h3>/);   // keine Überschrift mehr über dem Formular
   assert.equal(inserts,0);await click('meet-send-code');assert.equal(otpCalls,1);assert.equal(inserts,0);assert.equal(redirectTo,'https://phoenixvie.github.io/wu-lunch-app/preview/');
-  assert.match(context.renderMeet(),/outlook\.cloud\.microsoft/);assert.match(context.renderMeet(),/Bestätigungscode an anna@example\.com gesendet/);
+  assert.match(context.renderMeet(),/outlook\.cloud\.microsoft/);assert.match(context.renderMeet(),/Bestätigungscode an anna@s\.wu\.ac\.at gesendet/);
   handlers.click({target:{closest:()=>({dataset:{action:'meet-open-url'},href:'https://outlook.cloud.microsoft'})},preventDefault(){},stopImmediatePropagation(){}});assert.equal(openedUrl,'https://outlook.cloud.microsoft');
   inputs['meet-code'].value='000000';await click('meet-verify');assert.match(context.renderMeet(),/bereits verwendet/);assert.equal(inserts,0);
   await click('meet-resend-code');assert.equal(otpCalls,2);inputs['meet-code'].value='123456';await click('meet-verify');assert.equal(verifyCalls,2);assert.equal(inserts,1);assert.equal(own[0].first_name,'Anna');
