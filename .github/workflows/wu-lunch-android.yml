@@ -37,8 +37,13 @@ jobs:
         run: npm run test && npx tsc --noEmit
       - name: Generate Android project
         run: CI=1 npx expo prebuild --platform android
-      - name: Verify adaptive icon inset
-        run: grep -q 'android:inset="20%"' android/app/src/main/res/drawable/ic_launcher_foreground_inset.xml
+      - name: Verify adaptive icon uses the dedicated full-bleed foreground
+        # Das Motiv liegt in assets/adaptive-icon.png bereits in der sicheren Zone und
+        # der Hintergrund füllt die ganze Vorlage; ein zusätzlicher Innenabstand
+        # (früher 20 %) würde wieder einen sichtbaren Rand erzeugen.
+        run: |
+          test ! -e android/app/src/main/res/drawable/ic_launcher_foreground_inset.xml
+          grep -rq '@mipmap/ic_launcher_foreground' android/app/src/main/res/mipmap-anydpi-v26/
       - name: Build standalone test APK with bundled JavaScript
         run: ./gradlew assembleRelease
         working-directory: wu-lunch-app/android
