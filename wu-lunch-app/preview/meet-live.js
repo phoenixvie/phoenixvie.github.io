@@ -5,6 +5,11 @@
   const client = window.supabase?.createClient(supabase, publishableKey, {
     auth: { storageKey: 'wu-meet-preview-auth-v1', persistSession: true, autoRefreshToken: true }
   });
+  // Bestätigung per E-Mail-Code: PAUSIERT (Vorgabe des Betreibers, 17.11.2026). Angemeldet wird vorerst nur mit dem
+  // Vornamen direkt auf der Seite von Meet to eat; im Hintergrund entsteht dafür ein anonymes Konto (Supabase
+  // „Anonymous sign-ins“), damit jede Person nur ihre eigene Anmeldung sieht und löschen kann. Der komplette Ablauf
+  // mit E-Mail-Code bleibt unverändert im Code; true schaltet ihn wieder ein.
+  const emailVerification = false;
   const state = { session: null, participants: [], own: [], pendingEmail: '', pendingName: '', registrationDate: null, selectedDate: null, step: 'form', error: '', busy: false, loaded: false };
   const viennaClock = (now = new Date()) => ({
     today: new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Vienna', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now),
@@ -41,7 +46,7 @@
   // Vornamen-Prüfung (Vorgabe 17.11.2026): Der Vorname ist für alle sichtbar. Damit dort keine Botschaften,
   // Beschimpfungen oder Parolen stehen, wird nur eine Namensform angenommen (ein Name aus Buchstaben oder ein
   // Doppelname mit Bindestrich, höchstens 20 Zeichen, keine Leerzeichen) und eine kleine Sperrliste geprüft. Das fängt das Offensichtliche ab,
-  // nicht jede kreative Schreibweise – verbindlich ist zusätzlich die Datenbank-Regel in meet-preview-name-format.sql.
+  // nicht jede kreative Schreibweise – verbindlich ist zusätzlich die Datenbank-Regel in meet-preview-ohne-email.sql.
   const blockedParts = ['nazi','nazis','heil','sieg','hitler','himmler','goebbels','stalin','putin','trump','biden','hamas','afd','fpo','fpoe','ovp','oevp','spo','spoe','kpo','kpoe','neos','antifa','arsch','hure','nutte','sex','porn','porno','anal','idiot','trottel','depp','spast','kanake','kanak','jude','juden','free','palestine','palastina','palaestina','israel','gaza','ukraine','russia','russland','krieg','war','stop','vote','wahl','waehlt','boykott','boycott','fck','acab','maga','blm'];
   const blockedInside = ['fuck','bitch','fotze','wichser','schlampe','schwuchtel','nigger','nigga','hitler','arschloch','hurensohn','scheiss','penis','vagina','faschis','kommunis'];
   const rejection = problem => /nicht möglich/.test(problem) ? 'name_blocked' : /nur deinen Vornamen/.test(problem) ? 'name_format' : 'name_missing';
@@ -123,9 +128,10 @@
     // Karte wurde am 17.11.2026 auf Wunsch des Betreibers entfernt);
     // vorher wird der Bereich gar nicht angezeigt (kein unscharfer Platzhalter mehr).
     const reveal = own ? `<section class="meet-reveal"><h3>Treffpunkt auf der WU</h3><p><strong>Vor dem Baum direkt bei der Mensa</strong></p><img class="meet-photo-visible" src="./meeting-point.webp" width="1200" height="1361" alt="Treffpunkt vor dem Baum bei der Mensa" onerror="this.onerror=null;this.src='./meeting-point.png'"><a class="meet-map-button" data-action="meet-open-url" data-track="button" href="${mapLink}" target="_blank" rel="noopener noreferrer">Google Maps öffnen</a></section>` : '';
-    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}${groupArt}<p class="meet-lead">Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen. Findet jeden Montag und Mittwoch statt.</p><section class="meet-facts">${dateField(selected)}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','WU-Studenten Gruppe')}</section>${entries ? `<h3>Bereits angemeldet</h3>${entries}` : ''}${own ? '<div class="meet-confirm"><p><svg class="meet-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2f9e5b"/><path d="M6.8 12.4l3.4 3.4 7-7.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Du bist für diesen Termin angemeldet.</span></p><p><svg class="meet-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#56718c"/><path d="M12 10.6v6.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="7.2" r="1.5" fill="#fff"/></svg><span>Bitte melde dich aus Rücksicht auf die anderen ab, wenn du doch nicht kommen kannst.</span></p></div><button class="meet-secondary" data-action="meet-leave">' + esc(text('Meet to eat: Abmelden', {}, 'Abmelden')) + '</button>' : !registrationOpen(selected) ? '<p class="meet-notice">Die Anmeldung für diesen Termin ist geschlossen.</p>' : `<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Teilnehmen</button>`}${reveal}</div></div>`;
+    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}${groupArt}<p class="meet-lead">Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen. Findet jeden Montag und Mittwoch statt.</p><section class="meet-facts">${dateField(selected)}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','WU-Studenten Gruppe')}</section>${entries ? `<h3>Bereits angemeldet</h3>${entries}` : ''}${own ? '<div class="meet-confirm"><p><svg class="meet-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2f9e5b"/><path d="M6.8 12.4l3.4 3.4 7-7.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Du bist für diesen Termin angemeldet.</span></p><p><svg class="meet-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#56718c"/><path d="M12 10.6v6.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="7.2" r="1.5" fill="#fff"/></svg><span>Bitte melde dich aus Rücksicht auf die anderen ab, wenn du doch nicht kommen kannst.</span></p></div><button class="meet-secondary" data-action="meet-leave">' + esc(text('Meet to eat: Abmelden', {}, 'Abmelden')) + '</button>' : !registrationOpen(selected) ? '<p class="meet-notice">Die Anmeldung für diesen Termin ist geschlossen.</p>' : `${emailVerification ? '' : `<label class="meet-name-field">Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || knownName())}"></label>`}<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Teilnehmen</button>`}${reveal}</div></div>`;
   }
   async function join(name, meetingDate) {
+    if (!emailVerification && (!state.session || nameProblem(name))) { state.error = nameProblem(name) || 'Die Anmeldung ist momentan nicht verfügbar. Bitte versuche es später erneut.'; return; }
     if (!state.session || !name.trim() || nameProblem(name)) { meetForm = true; state.step = state.session ? 'name' : 'form'; if (name.trim()) state.error = nameProblem(name); return; }
     if (!registrationOpen(meetingDate)) { state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false; return; }
     const {error} = await client.from('meet_preview_registrations').insert({user_id:state.session.user.id, meeting_date:meetingDate, first_name:name.trim().slice(0,60)});
@@ -141,7 +147,13 @@
     state.error='';
     if (a === 'meet-show-form') { state.registrationDate=date(); track('meet_signup_started', {slot: slotOf(state.registrationDate)}); }
     if (['meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-confirm-name'].includes(a) && !registrationOpen(state.registrationDate)) { state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false; render(); return; }
-    if (a === 'meet-show-form' && (!state.session || !knownName())) { state.step=state.session?'name':'form'; meetForm=true; render(); return; }
+    if (a === 'meet-show-form' && !emailVerification) {
+      // Ohne E-Mail: Vorname aus dem Feld auf der Seite prüfen (dieselben Regeln wie bisher) und gleich anmelden.
+      state.pendingName = tidyName(document.getElementById('meet-first-name')?.value || '');
+      const problem = nameProblem(state.pendingName);
+      if (problem) { track('meet_input_rejected', {reason: rejection(problem)}); state.error = problem; render(); return; }
+    }
+    else if (a === 'meet-show-form' && (!state.session || !knownName())) { state.step=state.session?'name':'form'; meetForm=true; render(); return; }
     if (a === 'meet-confirm-name') { state.pendingName=tidyName(document.getElementById('meet-first-name').value); const problem=nameProblem(state.pendingName); if (problem) { track('meet_input_rejected', {reason: rejection(problem)}); state.error=problem; render(); return; } }
     if (a === 'meet-send-code') {
       state.pendingName = tidyName(document.getElementById('meet-first-name').value);
@@ -155,7 +167,11 @@
     const code = a === 'meet-verify' ? document.getElementById('meet-code').value.trim() : '';
     state.busy=true; render();
     try {
-      if (a === 'meet-show-form') await join(knownName(),state.registrationDate);
+      if (a === 'meet-show-form' && !emailVerification) {
+        if (!state.session) { const {data,error} = await client.auth.signInAnonymously(); if (error) throw error; state.session = data.session; }
+        await join(state.pendingName,state.registrationDate);
+      }
+      else if (a === 'meet-show-form') await join(knownName(),state.registrationDate);
       if (a === 'meet-send-code' || a === 'meet-resend-code') { const {error} = await client.auth.signInWithOtp({email:state.pendingEmail,options:{emailRedirectTo}}); if(error) throw error; track('meet_code_requested', {resend: a === 'meet-resend-code' ? 'yes' : 'no'}); state.step='code'; }
       if (a === 'meet-verify') { const {data,error} = await client.auth.verifyOtp({email:state.pendingEmail,token:code,type:'email'}); if(error) throw error; track('meet_code_result', {result: 'ok'}); state.session=data.session; await join(state.pendingName,state.registrationDate); }
       if (a === 'meet-confirm-name') await join(state.pendingName,state.registrationDate);
@@ -164,6 +180,7 @@
       if (['meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-confirm-name'].includes(a) && !registrationOpen(state.registrationDate)) {
         state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false;
       }
+      else if (a === 'meet-show-form' && /anonymous/i.test(e?.message || '')) { console.error('Meet preview:', e); state.error='Die Anmeldung ist momentan nicht verfügbar. Bitte versuche es später erneut.'; }
       else if (e?.message?.includes('meet_registration_closed')) { state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false; }
       else if (a === 'meet-verify') { track('meet_code_result', {result: 'invalid'}); state.error='Der Code ist ungültig oder bereits verwendet. Bitte fordere einen neuen Code an.'; } else showError(e);
     }

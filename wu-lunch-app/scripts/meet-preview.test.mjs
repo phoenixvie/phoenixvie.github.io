@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 
-test('preview requires verified email before a registration and supports cancellation', async () => {
-  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+test('paused e-mail flow still works when switched back on (verified email, then sign-up and cancellation)', async () => {
+  // Die Bestätigung per E-Mail-Code ist pausiert, nicht gelöscht: Mit eingeschaltetem Schalter läuft der alte Ablauf.
+  const source=(await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8')).replace('const emailVerification = false;','const emailVerification = true;');
   const handlers={}; let session=null, own=[], otpCalls=0, verifyCalls=0, inserts=0, openedUrl='', redirectTo='';
   const store=new Map();
   const client={auth:{getSession:async()=>({data:{session},error:null}),signInWithOtp:async({options})=>{otpCalls++;redirectTo=options.emailRedirectTo;return {error:null}},verifyOtp:async({token})=>{verifyCalls++;if(token==='000000')return {data:null,error:new Error('expired')};session={user:{id:'test-user'}};return {data:{session},error:null}}},from(table){return {
@@ -260,7 +261,7 @@ test('list entry shows the number of people signed up for the next date, and not
 });
 
 test('any valid e-mail address can be used, there is no WU restriction', async () => {
-  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const source=(await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8')).replace('const emailVerification = false;','const emailVerification = true;');
   assert.doesNotMatch(source,/wu\.ac\.at|requireWuEmail|email_not_wu|WU-Mail/);
   const handlers={}, tracked=[]; let otpCalls=0;
   const client={auth:{getSession:async()=>({data:{session:null},error:null}),signInWithOtp:async()=>{otpCalls++;return {error:null}}},from(){return {select(){return {in:async()=>({data:[],error:null}),gte:async()=>({data:[],error:null})}}}}};
@@ -276,4 +277,47 @@ test('any valid e-mail address can be used, there is no WU restriction', async (
   assert.equal(await send('keine-adresse'),false);                      // ungültige Eingabe: kein Code
   assert.match(tracked.join('\n'),/email_invalid/);
   for(const email of ['anna@gmail.com','anna@s.wu.ac.at','anna@firma.co.at'])assert.equal(await send(email),true,email);
+});
+
+test('sign-up with first name only: field above the button, same name checks, no e-mail page', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  assert.equal(source.split('const emailVerification = false;').length,2,'E-Mail-Bestätigung ist pausiert');
+  const handlers={}, tracked=[], store=new Map(); let session=null, own=[], anonymous=0, otpCalls=0, failAnonymous=null;
+  const client={auth:{getSession:async()=>({data:{session},error:null}),
+      signInAnonymously:async()=>{anonymous++;if(failAnonymous)return {data:null,error:new Error(failAnonymous)};session={user:{id:'anon-1'}};return {data:{session},error:null}},
+      signInWithOtp:async()=>{otpCalls++;return {error:null}}},
+    from:()=>({select(){return {in:async()=>({data:own,error:null}),gte:async()=>({data:own,error:null})}},insert:async row=>{own.push(row);return {error:null}},
+      delete(){return {eq(){return {eq:async(_key,date)=>{own=own.filter(item=>item.meeting_date!==date);return {error:null}}}}}}})};
+  const inputs={'meet-first-name':{value:''}};
+  const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
+    app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v)},
+    setInterval(){},console:{...console,error(){}},Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d,trackUsage:(event,props)=>tracked.push(event+' '+JSON.stringify(props))};
+  vm.createContext(context);vm.runInContext(source,context);
+  const click=async action=>{handlers.click({target:{closest:()=>({dataset:{action}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));};
+  await click('meet-preview');
+  const screen=context.renderMeet();
+  // Vornamenfeld steht direkt über dem Knopf, nirgends ist von E-Mail die Rede.
+  assert.match(screen,/<label class="meet-name-field">Vorname<input id="meet-first-name"[^>]*placeholder="Max"[^>]*><\/label><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button>/);
+  assert.doesNotMatch(screen,/E-Mail|Verifizierung|meet-email/);
+  // Die Vornamen-Prüfung gilt weiter, vor jeder Anmeldung.
+  for(const [value,reason] of [['','name_missing'],['Free Palestine','name_format'],['Hitler','name_blocked']]){
+    inputs['meet-first-name'].value=value;await click('meet-show-form');
+    assert.equal(anonymous,0);assert.equal(own.length,0);assert.equal(context.meetForm,false,'keine Formularseite mehr');
+    assert.match(tracked.at(-1),new RegExp('meet_input_rejected .*'+reason));
+  }
+  // Gültiger Vorname: anonymes Konto im Hintergrund, Anmeldung, Vorname wird gemerkt. Kein E-Mail-Code.
+  inputs['meet-first-name'].value='  anna ';await click('meet-show-form');
+  assert.equal(anonymous,1);assert.equal(otpCalls,0);assert.equal(own.length,1);assert.equal(own[0].first_name,'anna');assert.equal(own[0].user_id,'anon-1');
+  assert.equal(store.get('wu-meet-preview-name'),'anna');assert.equal(context.meetForm,false);
+  assert.match(context.renderMeet(),/Du bist für diesen Termin angemeldet/);assert.match(tracked.join('\n'),/meet_joined/);
+  // Abmelden und erneut anmelden nutzt dasselbe Konto (kein zweites anonymes Konto), Name ist vorausgefüllt.
+  await click('meet-leave');assert.equal(own.length,0);
+  assert.match(context.renderMeet(),/id="meet-first-name"[^>]*value="anna"/);
+  await click('meet-show-form');assert.equal(anonymous,1);assert.equal(own.length,1);
+  // Ist die anonyme Anmeldung in Supabase (noch) ausgeschaltet, erscheint ein verständlicher Hinweis (neues Gerät, kein Konto).
+  own=[];session=null;failAnonymous='Anonymous sign-ins are disabled';
+  const second={...context,app:{addEventListener:(event,fn)=>{handlers[event]=fn}}};vm.createContext(second);vm.runInContext(source,second);
+  await click('meet-preview');inputs['meet-first-name'].value='Mia';await click('meet-show-form');
+  assert.equal(anonymous,2);assert.equal(own.length,0);assert.match(second.renderMeet(),/Die Anmeldung ist momentan nicht verfügbar/);
 });

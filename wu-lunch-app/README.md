@@ -56,6 +56,13 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - Android behandelt das als neue App: Eine installierte 0.5.4 oder älter wird nicht aktualisiert, sondern muss vorher deinstalliert werden.
 - Nach dem ersten Upload zu Google Play ist der Paketname endgültig.
 
+## Meet to eat: Anmeldung nur mit Vornamen (Stand 17.11.2026)
+
+- Angemeldet wird direkt auf der Seite von Meet to eat: Vorname eingeben, „Teilnehmen" tippen. Die Vornamen-Prüfung (Form und Sperrliste) gilt weiter.
+- Im Hintergrund meldet die App ein anonymes Konto an (Supabase „Anonymous sign-ins"); so sieht und löscht jede Person nur ihre eigene Anmeldung.
+- Die Bestätigung per E-Mail-Code ist pausiert, nicht gelöscht: Schalter `emailVerification` in `preview/meet-live.js`.
+- Voraussetzung in Supabase: „Allow anonymous sign-ins" einschalten und `preview/meet-preview-ohne-email.sql` ausführen (Anmelderegel ohne E-Mail-Pflicht, verbindliche Vornamen-Form).
+
 ## Meet to eat: Kontrolle im Admin (Stand 17.11.2026)
 
 - Im Admin der Webseite (`wu-lunch/admin.html`) gibt es den Bereich „Meet to eat: Anmeldungen": alle Vornamen ab heute, nach Termin gruppiert, je Eintrag ein Knopf „Löschen".
