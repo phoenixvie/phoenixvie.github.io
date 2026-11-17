@@ -46,6 +46,15 @@ test('visible version numbers agree, so two different builds cannot carry the sa
   assert.ok(Number.isInteger(app.android.versionCode) && app.android.versionCode > 0);
 });
 
+test('unused Android permissions of the Expo template are blocked (Google Play data safety)', async () => {
+  // Die App braucht nur Internet. Überlagerung, Speicherzugriff und Vibration stammen aus der Vorlage und werden
+  // ausdrücklich entfernt; verify-apk.py prüft das im fertigen APK.
+  const app = (await json('app.json')).expo;
+  assert.deepEqual(app.android.permissions, ['INTERNET']);
+  for (const name of ['SYSTEM_ALERT_WINDOW', 'READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE', 'VIBRATE'])
+    assert.ok(app.android.blockedPermissions.includes('android.permission.' + name), name);
+});
+
 test('Android package name is the one registered in the Google Play Console', async () => {
   // Vorgabe des Betreibers (17.11.2026): Paketname at.startit.wufood. Er ist nach dem ersten Upload bei
   // Google Play endgültig und darf nicht mehr geändert werden (bis 0.5.4 hieß das Paket at.startit.wulunch).
