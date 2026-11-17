@@ -49,7 +49,7 @@ test('preview requires verified email before a registration and supports cancell
   assert.doesNotMatch(context.renderMeet(),/nur WU-Stud/i);
   assert.match(context.renderMeet(),/id="meet-first-name"[^>]*placeholder="Max"/);
   assert.match(context.renderMeet(),/data-action="meet-send-code"[^>]*>Verifizierung via Mail starten</);
-  assert.match(context.renderMeet(),/id="meet-email"[^>]*placeholder="musterfrau@wu\.ac\.at"/);
+  assert.match(context.renderMeet(),/id="meet-email"[^>]*placeholder="mustermann@wu\.ac\.at"/);
   assert.doesNotMatch(context.renderMeet(),/<h3>/);   // keine Überschrift mehr über dem Formular
   assert.equal(inserts,0);await click('meet-send-code');assert.equal(otpCalls,1);assert.equal(inserts,0);assert.equal(redirectTo,'https://phoenixvie.github.io/wu-lunch-app/preview/');
   assert.match(context.renderMeet(),/outlook\.cloud\.microsoft/);assert.match(context.renderMeet(),/Bestätigungscode an anna@example\.com gesendet/);
