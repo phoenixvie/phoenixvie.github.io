@@ -24,8 +24,17 @@ Die Android-Oberfläche wird aus den lokalen Dateien unter `preview/` eingebette
 APK-Builds starten nur manuell oder für Pull Requests mit `[APK]` im Titel. Die CI prüft den Design-Fingerabdruck innerhalb der tatsächlichen APK und installiert sie für Oberflächenprüfungen auf einem Android-Emulator. Das Downloadpaket heißt `wu-food-android-<Version>` (aktuell `wu-food-android-0.5.2`) und enthält `WU-Food-<Version>.apk` sowie `build-info.json`. Die Version steht in `app.json`, `package.json` und `package-lock.json`; ein Test stellt sicher, dass alle drei übereinstimmen.
 
 
-Die App lädt die veröffentlichte Weboberfläche bei Start und Wiederaufnahme neu.
-Freigegebene Menüdaten werden alle drei Sekunden aktualisiert. Restaurantseiten
-und PDF-Dateien öffnen intern mit einem einzigen Zurück-Button unten. Die
-eingebaute Oberfläche dient nur als Rückfall bei Ladefehlern. Bestehende APKs
-erhalten diese Umstellung erst durch eine ausdrücklich freigegebene neue APK.
+## Was ohne neue APK ankommt – und was nicht
+
+Die installierte App zeigt die **beim Bau eingebettete Oberfläche** (`src/previewHtml.ts`). Sie lädt die Oberfläche nicht von der Webseite
+nach. Eine frühere Fassung dieser Datei behauptete das Gegenteil; der aktuelle Code tut das nicht (geprüft am 17.11.2026).
+
+| Änderung | Kommt auf dem Handy an |
+| --- | --- |
+| Menüs, Preise, Reihenfolge und Sichtbarkeit der Restaurants, Restaurantdaten, manuelle Menüs | sofort (alle drei Sekunden abgefragt, solange die App sichtbar ist; beim Zurückkehren in die App sofort) |
+| App-Texte und englische Übersetzungen aus dem Admin | sofort |
+| Bilder, die von der Webseite geladen werden (z. B. Treffpunktfoto) | sobald sie auf der Webseite liegen |
+| Layout, Navigation, neue Funktionen, Meet-to-eat-Ablauf, App-Symbol | erst mit einer neuen APK |
+
+Die Webvorschau unter https://phoenixvie.github.io/wu-lunch-app/preview/ zeigt den Stand des Hauptzweigs und damit das, was die nächste APK
+enthalten würde. Restaurantseiten und PDF-Dateien öffnen in der App intern mit einem einzigen Zurück-Button unten.
