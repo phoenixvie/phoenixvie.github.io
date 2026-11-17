@@ -10,7 +10,7 @@
     'Kontaktdaten':'Contact details','Telefon':'Phone','E-Mail':'Email','Webseite':'Website','Webseite – Mittagsmenü':'Website – lunch menu','Adresse':'Address','Öffnungszeiten':'Opening hours','Standort':'Location',
     'Nicht hinterlegt':'Not provided','Noch nicht hinterlegt':'Not provided','Noch nicht veröffentlicht':'Not published yet','In Google Maps öffnen':'Open in Google Maps','Auf Google Maps öffnen':'Open in Google Maps',
     'Karte wird geladen …':'Loading map …','Karte wird geladen':'Loading map','Menüs werden geladen …':'Loading menus …','Erneut versuchen':'Try again','Restaurantwebseite':'restaurant website','Jeden Montag und Mittwoch gemeinsam essen gehen':'Eat together every Monday and Wednesday',
-    'Angaben ohne Gewähr. Bitte auf der':'Information may change. Check the','prüfen.':'to confirm.',
+    'Angaben ohne Gewähr. Bitte auf der':'Info may change. Check the','prüfen.':'for confirmation.',
     'Angaben ohne Gewähr – bitte Menü auf der Restaurant-Website prüfen.':'Information may change – please check the menu on the restaurant website.',
     'Diese Website verwendet keine Cookies.':'This website does not use cookies.','Impressum':'Legal notice','Admin':'Admin','Zum Restaurant':'Restaurant website','Karte':'Map','Liste':'List',
     'Mittagsmenüs am WU Campus':'Lunch menus at WU Campus','Mittagsmenüs':'Lunch menus','Tagesmenüs':'Daily menus','WU Campus Mittagsmenüs':'WU Campus lunch menus',

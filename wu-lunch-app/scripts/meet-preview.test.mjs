@@ -132,7 +132,9 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   assert.match(menu,/data-action="meet-preview"/);
   assert.ok(menu.indexOf('gemeinsam essen</span>') < menu.indexOf('Angaben ohne Gewähr'));
   // Unter jedem Menü steht – auf Deutsch wie auf Englisch gleich – der Sprachwechsel (nicht in der Wels-Ausgabe).
-  assert.match(menu,/prüfen\.\$\{site\.standalone\?'':' <a href="#" class="source-link" data-change-language>Change language\.<\/a>'\}/);
+  assert.match(menu,/\$\{site\.standalone\?'':' <a href="#" class="source-link" data-change-language>Change language\.<\/a>'\}/);
+  // Englisch endet direkt nach dem Link mit einem Punkt ("… Check the restaurant website."), Deutsch mit " prüfen.".
+  assert.ok(menu.includes("${source&&localize.language==='en'?'.':' prüfen.'}"));
   assert.match(menu,/\[0,2\]\.includes\(dayIndex\)/);
 });
 
