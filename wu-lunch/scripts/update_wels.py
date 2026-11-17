@@ -149,6 +149,13 @@ class NotThisWeek(Exception):
     """Die Quelle ist erreichbar, zeigt aber (noch) nicht die gesuchte Woche."""
 
 
+class Outdated(Exception):
+    """Die Quelle hat sich nachweislich geändert: Bisher Gezeigtes gilt nicht mehr und wird entfernt.
+
+    Anders als ein Abruffehler – dort bleibt der gute Stand der Woche stehen.
+    """
+
+
 # ---------------------------------------------------------------------------
 # Hilfen
 # ---------------------------------------------------------------------------
@@ -836,7 +843,7 @@ def read_sorrymama(image, monday, read=ocr):
 
 def hayashi_days(image, monday):
     if hashlib.sha256(image).hexdigest() != HAYASHI_SHA256:
-        raise ValueError("Hayashi: Die Mittagskarte (Bild) wurde geändert – bitte neu abschreiben")
+        raise Outdated("Hayashi: Die Mittagskarte (Bild) wurde geändert – bitte neu abschreiben")
     rows = [dish(name, price, description=detail) for name, detail, price in HAYASHI_LUNCH]
     rows.append(dish("Alle Gerichte mit Reis und Misoshiru oder Salat", None, priceLabel=" "))
     return {(monday + timedelta(days=offset)).isoformat(): [dict(row) for row in rows] for offset in range(1, 5)}
@@ -930,23 +937,31 @@ def build(previous, monday, now, get=http_get):
     for base in RESTAURANTS:
         old = earlier.get(base["id"], {}) if same_week else {}
         days, state, message, marks = {}, "ok", "", {}
+        if base["id"] in UNDATED:
+            # Maßstab ist die zuletzt als gültig gezeigte Karte einer früheren Woche. Er wird über
+            # Wochenwechsel, Abruffehler und Wochen ohne neue Karte hinweg mitgeführt – sonst würde
+            # eine unveränderte alte Karte allein durch einen weiteren Abruf "aktuell".
+            record = (earlier.get(base["id"], {}).get("import") or {})
+            stale = record.get("stale") if same_week else (record.get("fingerprint") or record.get("stale"))
+            marks = {"stale": stale} if stale else {}
+            if same_week and record.get("fingerprint"):
+                marks["fingerprint"] = record["fingerprint"]
         try:
             days = check(fetch(base["id"], base["url"], monday, get), monday)
             if base["id"] in UNDATED:
-                # Maßstab ist die Karte der Vorwoche: in derselben Woche die gemerkte, sonst die zuletzt gezeigte.
-                record = (earlier.get(base["id"], {}).get("import") or {})
-                stale = record.get("stale") if same_week else record.get("fingerprint")
-                marks = {"fingerprint": fingerprint(days), **({"stale": stale} if stale else {})}
-                if stale and stale == marks["fingerprint"]:
+                mark = fingerprint(days)
+                if stale and stale == mark:
                     marks = {"stale": stale}
                     raise NotThisWeek(base["name"] + " zeigt noch die Karte der Vorwoche")
+                marks["fingerprint"] = mark
             if base["id"] in DAILY:
                 days = {**{day: rows for day, rows in old.get("days", {}).items() if rows}, **days}
         except NotThisWeek as reason:
             state, message, days = "not_published", str(reason), old.get("days", {})
+        except Outdated as reason:  # nachweislich überholt: nichts Altes weiter zeigen
+            state, message, days = "error", str(reason), {}
         except Exception as error:  # Abruf- oder Lesefehler: guten Stand derselben Woche behalten
             state, message, days = "error", f"{type(error).__name__}: {error}"[:240], old.get("days", {})
-            marks = {key: value for key, value in (old.get("import") or {}).items() if key in ("fingerprint", "stale")}
         complete = {day.isoformat(): days.get(day.isoformat(), []) for day in week_dates(monday)}
         restaurants.append({**base, "days": complete, "import": {"state": state, "message": message, **marks}})
         print(f"{base['name']}: {state}" + (f" – {message}" if message else "")

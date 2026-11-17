@@ -201,8 +201,27 @@ class SecondListTests(unittest.TestCase):
             days = wels.check(wels.hayashi_days(image, MONDAY), MONDAY)
             self.assertEqual(sorted(days), ['2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20'])   # Lunch Di–Fr
             self.assertEqual((days['2026-11-17'][0]['name'], days['2026-11-17'][0]['price']), ('Black Pepper Chicken', 13.9))
-            with self.assertRaises(ValueError):                    # geändertes Bild: lieber nichts als Veraltetes
+            with self.assertRaises(wels.Outdated):                 # geändertes Bild: lieber nichts als Veraltetes
                 wels.hayashi_days(image + b'!', MONDAY)
+
+    def test_changed_hayashi_image_removes_what_was_shown_before(self):
+        # Anders als ein Abruffehler: Die hinterlegte Karte ist nachweislich überholt.
+        from unittest.mock import patch
+        hayashi = lambda result: next(row for row in result['restaurants'] if row['id'] == 'hayashi')
+        def run(previous, outcome):
+            def fake(identifier, url, week, get):
+                if identifier != 'hayashi':
+                    raise OSError('offline')
+                if isinstance(outcome, Exception):
+                    raise outcome
+                return outcome
+            with patch.object(wels, 'fetch', side_effect=fake):
+                return wels.build(previous, MONDAY, datetime(2026, 11, 18, 9, tzinfo=wels.TZ))
+        shown = run(None, {'2026-11-18': [{'name': 'Black Pepper Chicken', 'price': 13.9}]})
+        offline = run(shown, OSError('Zeitüberschreitung'))
+        self.assertEqual(names(hayashi(offline)['days']['2026-11-18']), ['Black Pepper Chicken'])   # Ausfall: bleibt
+        changed = run(shown, wels.Outdated('Karte geändert'))
+        self.assertEqual((hayashi(changed)['days']['2026-11-18'], hayashi(changed)['import']['state']), ([], 'error'))
 
     def test_undated_card_counts_as_new_only_after_it_changed(self):
         from unittest.mock import patch
@@ -228,6 +247,34 @@ class SecondListTests(unittest.TestCase):
                          ('ok', ['Wiener Schnitzel | Kartoffelsalat']))
         again = run(updated, next_week, 'Wiener Schnitzel | Kartoffelsalat') # bleibt in derselben Woche gültig
         self.assertEqual(ox(again)['import']['state'], 'ok')
+
+    def test_undated_baseline_survives_failed_fetches_and_weeks_without_a_new_card(self):
+        from unittest.mock import patch
+        ox = lambda result: next(row for row in result['restaurants'] if row['id'] == 'ox')
+        def run(previous, monday, dish):
+            def fake(identifier, url, week, get):
+                if identifier != 'ox' or dish is None:
+                    raise OSError('offline')
+                return {week.isoformat(): [{'name': dish, 'price': 12.9}]}
+            with patch.object(wels, 'fetch', side_effect=fake):
+                return wels.build(previous, monday, datetime(2026, 11, 17, 9, tzinfo=wels.TZ))
+        old = 'Cheeseburger | Wedges'
+        week1 = run(None, MONDAY, old)
+        week2, week3 = date(2026, 11, 23), date(2026, 11, 30)
+        # Erster Abruf der neuen Woche scheitert – danach darf die alte Karte trotzdem nicht als neu gelten.
+        failed = run(week1, week2, None)
+        after_failure = run(failed, week2, old)
+        self.assertEqual((ox(after_failure)['import']['state'], ox(after_failure)['days']['2026-11-23']), ('not_published', []))
+        # Eine ganze Woche ohne neue Karte, dann wieder Wochenwechsel: weiterhin die alte Karte.
+        third = run(after_failure, week3, old)
+        self.assertEqual((ox(third)['import']['state'], ox(third)['days']['2026-11-30']), ('not_published', []))
+        fresh = run(third, week3, 'Backhendl | Salat')
+        self.assertEqual((ox(fresh)['import']['state'], names(ox(fresh)['days']['2026-11-30'])), ('ok', ['Backhendl | Salat']))
+        # Ausfall mitten in der Woche: gezeigte Karte und beide Merkmale bleiben erhalten.
+        outage = run(fresh, week3, None)
+        self.assertEqual(names(ox(outage)['days']['2026-11-30']), ['Backhendl | Salat'])
+        self.assertEqual({key: ox(outage)['import'].get(key) for key in ('fingerprint', 'stale')},
+                         {key: ox(fresh)['import'].get(key) for key in ('fingerprint', 'stale')})
 
     def test_daily_card_adds_today_and_keeps_earlier_days_of_the_week(self):
         from unittest.mock import patch
