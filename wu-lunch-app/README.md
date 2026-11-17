@@ -41,10 +41,11 @@ enthalten würde. Restaurantseiten und PDF-Dateien öffnen in der App intern mit
 
 ## Zweit-Ausgabe „Mittag in Wels" (Zwischenprojekt, 17.11.2026)
 
-Unter `preview/wels/` läuft dieselbe App für fünf Restaurants in Wels – für den Vater des Betreibers. Der Schwerpunkt bleibt WU Food.
+Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für den Vater des Betreibers. Der Schwerpunkt bleibt WU Food.
 
 - **Kein kopierter Code:** `preview/wels/index.html` setzt nur `window.WU_FOOD_SITE` (eigene Menüdatei, Titel, Kartenmitte) und lädt `../app.js` und `../style.css`. Ohne diese Angabe verhält sich `app.js` unverändert wie WU Food. In der Wels-Ausgabe gibt es keine Admin-Daten, kein Meet to eat und keine Sprachumschaltung.
 - **Daten:** `wu-lunch/scripts/update_wels.py` liest die Mittagsmenüs direkt von den Restaurantseiten (Text, PDF-Text, beim BILLA-Plakat über die Textposition) und schreibt `preview/wels/menus.json`. Keine KI, keine Zugangsschlüssel. Zeigt eine Quelle eine andere Woche, bleibt der Tag leer.
 - **Ablauf:** Workflow `wels-mittag.yml`, getrennt vom WU-Import; er läuft nach jedem WU-Import mit und zusätzlich nach GitHub-Zeitplan.
-- **Nicht aufgenommen (Stand 17.11.2026):** Agape (auf der Webseite gibt es kein Mittagsmenü mehr, die genannte Seite existiert nicht) und Rex Lounge (unter der Adresse erscheint ein fremdes Online-Casino).
+- **Besonderheiten einzelner Quellen:** Sorry Mama veröffentlicht die Wochenkarte nur als Bild – sie wird per Texterkennung (tesseract) zweimal gelesen und nur übernommen, wenn beide Lesungen übereinstimmen. Hayashi hat eine feste Mittagskarte als Bild; ihr Inhalt ist im Skript hinterlegt und an genau diese Bilddatei gebunden (ändert sich das Bild, wird nichts mehr gezeigt, bis die Karte nachgezogen ist). OX nennt kein Datum; die Karte gilt erst als neue Woche, wenn sie sich gegenüber der Vorwoche geändert hat. Gasthaus Huber veröffentlicht nur die Tageskarte; frühere Tage der Woche bleiben stehen. Gösserbräu nennt im Monatsplan keine Preise.
+- **Nicht aufgenommen (Stand 17.11.2026):** Agape (auf der Webseite gibt es kein Mittagsmenü mehr, die genannte Seite existiert nicht), Rex Lounge (unter der Adresse erscheint ein fremdes Online-Casino) und Interspar Restaurant (die Seite sperrt automatische Abrufe).
 - **In der Android-App nicht enthalten:** Die Wels-Ausgabe ist nur eine Webseite.

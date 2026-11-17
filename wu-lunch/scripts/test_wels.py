@@ -93,6 +93,158 @@ class ParserTests(unittest.TestCase):
             wels.find_dokkhun_pdf(b'<a href="/Abendkarte.pdf">Abendkarte</a>', 'https://dok-khun.metro.biz/')
 
 
+class SecondListTests(unittest.TestCase):
+    """Zweite Liste des Betreibers (17.11.2026): neun weitere Restaurants."""
+
+    def test_no_restaurant_twice_and_list_is_alphabetical(self):
+        ids = [row['id'] for row in wels.RESTAURANTS]
+        labels = [row['name'] for row in wels.RESTAURANTS]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertEqual(len(labels), len(set(labels)))
+        self.assertEqual(len(ids), 14)
+        self.assertEqual(labels, sorted(labels, key=lambda name: name.replace("'", '').casefold()))
+
+    def test_imturm_one_price_covers_soup_main_salad_and_dessert(self):
+        days = wels.check(wels.parse_imturm(read('imturm-2026-11-17.txt'), MONDAY), MONDAY)
+        tuesday = days['2026-11-17']
+        self.assertEqual(names(tuesday), ['Paprikahenderl / Gemüsevariation / Butterreis', 'Fleckerlspeis',
+                                          'Kürbisknödel / Nussbutter'])
+        self.assertEqual({(row['price'], row['included_soup'], row['description']) for row in tuesday},
+                         {(13.4, 'Kartoffelcremesuppe', 'Mit Salatbuffet und Dessert')})
+        with self.assertRaises(wels.NotThisWeek):
+            wels.parse_imturm(read('imturm-2026-11-17.txt'), date(2026, 11, 23))
+
+    def test_hannibal_tariff_prices_and_friday_burgers(self):
+        days = wels.check(wels.parse_hannibal(read('hannibal-2026-11-17.txt'), MONDAY), MONDAY)
+        self.assertEqual([(row['name'], row['price']) for row in days['2026-11-17']], [
+            ('Geschmorter Rindsbraten | Butterspätzle | Ofengemüse', 12.0), ('Polentaknödel | Peperonata', 11.5)])
+        self.assertEqual([row['price'] for row in days['2026-11-20']], [13.9, 13.9])
+        self.assertFalse(any('Lammrücken' in name for rows in days.values() for name in names(rows)))  # Abendkarte
+        swapped = read('hannibal-2026-11-17.txt').replace(
+            'Geschmorter Rindsbraten | Butterspätzle | Ofengemüse\noder\nPolentaknödel | Peperonata',
+            'Polentaknödel | Peperonata\noder\nGeschmorter Rindsbraten | Butterspätzle | Ofengemüse')
+        unsure = wels.parse_hannibal(swapped, MONDAY)['2026-11-17']
+        self.assertEqual([row['price'] for row in unsure], [None, None])
+        self.assertIn('Fleischgericht 12,00 €', unsure[0]['description'])
+
+    def test_lalina_takes_only_the_newest_lunch_block(self):
+        days = wels.check(wels.parse_lalina(read('lalina-2026-11-17.txt'), MONDAY), MONDAY)
+        self.assertEqual(sorted(days), ['2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20'])
+        self.assertEqual([(row['name'], row['price']) for row in days['2026-11-20']], [
+            ('Hühnerkeule mit Kartoffeln – Zimtwaffeln', 14.9),
+            ('Gefüllte Palatschinken in Tomatensauce dazu Kartoffeln', 14.9)])
+        self.assertFalse(any('Emmentaler-Burger' in name for rows in days.values() for name in names(rows)))  # Vorwoche
+
+    def test_ox_card_without_date_is_read_once_although_the_page_repeats_it(self):
+        days = wels.check(wels.parse_ox(read('ox-2026-11-17.txt'), MONDAY), MONDAY)
+        self.assertEqual(sorted(days), ['2026-11-16', '2026-11-17', '2026-11-18', '2026-11-19'])
+        self.assertEqual([(row['name'], row['price'], row['included_starter']) for row in days['2026-11-18']], [
+            ('Cheeseburger | Wedges', 12.9, 'Tagessuppe oder Salat'),
+            ('Gemüsereis | Eis | Soja | Ingwer', 12.9, 'Tagessuppe oder Salat')])
+
+    def test_goesser_monthly_plan_without_prices_and_without_allergen_letters(self):
+        days = wels.check(wels.parse_goesser(read('goesser-november.txt'), MONDAY), MONDAY)
+        self.assertEqual(len(days), 5)
+        self.assertEqual([(row['name'], row.get('description')) for row in days['2026-11-16']], [
+            ('Zigeunerschnitzerl mit Spätzle', None), ('Cremespinat mit Röstkartoffel und Spiegelei', 'Vegetarisch')])
+        self.assertEqual(names(days['2026-11-18']), ['1/2 Grill Hendl mit Pommes Frites', 'Fisolengulasch mit Erdäpfel'])
+        self.assertTrue(all(row['price'] is None and row['priceLabel'] == ' ' for rows in days.values() for row in rows))
+        following = wels.parse_goesser(read('goesser-november.txt'), date(2026, 11, 23))
+        self.assertEqual(names(following['2026-11-27']), [
+            'gebackenes Buntbarschfilet mit Kartoffelsalat u. Sc.Tartar', 'Gemüseomelette mit Kartoffel'])
+        links = wels.find_goesser_pdfs(read('links2.html').encode('utf-8'))
+        self.assertEqual([link.rsplit('/', 1)[1] for link in links],
+                         ['MONATSPLAN-10-Oktober-2026.pdf', 'MONATSPLAN-11-November-26.pdf'])
+
+    def test_huber_daily_card_stops_before_the_standing_recommendations(self):
+        days = wels.check(wels.parse_huber(read('huber-2026-11-17.txt'), MONDAY), MONDAY)
+        self.assertEqual(list(days), ['2026-11-17'])
+        self.assertEqual([(row['name'], row['price'], row.get('included_soup'), row.get('category')) for row in days['2026-11-17']], [
+            ('Lebernetzbraten mit Kartoffeln und Sauerkraut', 13.5, 'Tagessuppe', None),
+            ('Käsespätzle mit Blattsalat', 12.9, 'Tagessuppe', None),
+            ('Apfelschnitte oder Eierlikörtorte', 4.5, None, 'Nachspeise')])
+        with self.assertRaises(wels.NotThisWeek):
+            wels.parse_huber(read('huber-2026-11-17.txt'), date(2026, 11, 23))
+
+    def test_denns_structured_data_with_weekly_soup(self):
+        days = wels.check(wels.parse_denns(json.loads(read('denns-kw47.json')), MONDAY), MONDAY)
+        self.assertEqual([(row['name'], row['price'], row.get('description')) for row in days['2026-11-17']], [
+            ('Tagessuppe', 4.5, None), ('Pastinaken-Gulasch', 6.9, 'Vegan'), ('Zwiebelfleisch mit Hörnchen', 7.9, None)])
+        self.assertEqual(len(days), 5)
+        with self.assertRaises(wels.NotThisWeek):
+            wels.parse_denns(json.loads(read('denns-kw47.json')), date(2026, 11, 23))
+
+    def test_sorrymama_image_needs_two_identical_readings(self):
+        texts = {1: read('sorrymama-ocr-1.txt'), 2: read('sorrymama-ocr-2.txt')}   # echte Texterkennung beider Größen
+        days = wels.check(wels.read_sorrymama(b'bild', MONDAY, read=lambda image, scale: texts[scale]), MONDAY)
+        self.assertEqual(len(days), 5)
+        self.assertEqual([(row['name'], row['price']) for row in days['2026-11-18']], [
+            ('Suppe oder Menü Salat – Kürbis-Kokos-Cremesuppe', 5.2),
+            ('Hühnergeschnetzeltes – Champignons | Reis', 13.9),
+            ('Gebackenes Seelachsfilet – Petersilienkartoffeln | Sauce Tartare', 13.9),
+            ('Fusilli all’Arrabbiata – Tomatensauce | Chili | Knoblauch | Parmesan', 13.9)])
+        misread = {1: texts[1], 2: texts[2].replace('13,90', '18,90', 1)}
+        with self.assertRaises(ValueError):
+            wels.read_sorrymama(b'bild', MONDAY, read=lambda image, scale: misread[scale])
+        with self.assertRaises(wels.NotThisWeek):
+            wels.read_sorrymama(b'bild', date(2026, 11, 23), read=lambda image, scale: texts[scale])
+        page = read('links2.html').split('<div id="sorrymama">')[1].encode('utf-8')
+        self.assertTrue(wels.find_sorrymama(page, MONDAY).endswith('Mittagskarte-16.11-20.11-724x1024.png'))
+        with self.assertRaises(wels.NotThisWeek):
+            wels.find_sorrymama(page, date(2026, 11, 23))
+
+    def test_hayashi_standing_card_is_bound_to_the_exact_image(self):
+        import hashlib
+        from unittest.mock import patch
+        image = b'lunchkarte'
+        with patch.object(wels, 'HAYASHI_SHA256', hashlib.sha256(image).hexdigest()):
+            days = wels.check(wels.hayashi_days(image, MONDAY), MONDAY)
+            self.assertEqual(sorted(days), ['2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20'])   # Lunch Di–Fr
+            self.assertEqual((days['2026-11-17'][0]['name'], days['2026-11-17'][0]['price']), ('Black Pepper Chicken', 13.9))
+            with self.assertRaises(ValueError):                    # geändertes Bild: lieber nichts als Veraltetes
+                wels.hayashi_days(image + b'!', MONDAY)
+
+    def test_undated_card_counts_as_new_only_after_it_changed(self):
+        from unittest.mock import patch
+        card = lambda monday, dish: {(monday.isoformat()): [{'name': dish, 'price': 12.9}]}
+        now = datetime(2026, 11, 17, 9, tzinfo=wels.TZ)
+        ox = lambda result: next(row for row in result['restaurants'] if row['id'] == 'ox')
+        def run(previous, monday, dish, moment=now):
+            def fake(identifier, url, week, get):
+                if identifier != 'ox':
+                    raise OSError('offline')
+                return card(week, dish)
+            with patch.object(wels, 'fetch', side_effect=fake):
+                return wels.build(previous, monday, moment)
+        first = run(None, MONDAY, 'Cheeseburger | Wedges')
+        self.assertEqual(ox(first)['import']['state'], 'ok')
+        next_week = date(2026, 11, 23)
+        weekend = run(first, next_week, 'Cheeseburger | Wedges')            # Samstag: Seite zeigt noch die alte Karte
+        self.assertEqual((ox(weekend)['import']['state'], ox(weekend)['days']['2026-11-23']), ('not_published', []))
+        monday_morning = run(weekend, next_week, 'Cheeseburger | Wedges')   # weiterhin unverändert
+        self.assertEqual(ox(monday_morning)['import']['state'], 'not_published')
+        updated = run(monday_morning, next_week, 'Wiener Schnitzel | Kartoffelsalat')
+        self.assertEqual((ox(updated)['import']['state'], names(ox(updated)['days']['2026-11-23'])),
+                         ('ok', ['Wiener Schnitzel | Kartoffelsalat']))
+        again = run(updated, next_week, 'Wiener Schnitzel | Kartoffelsalat') # bleibt in derselben Woche gültig
+        self.assertEqual(ox(again)['import']['state'], 'ok')
+
+    def test_daily_card_adds_today_and_keeps_earlier_days_of_the_week(self):
+        from unittest.mock import patch
+        huber = lambda result: next(row for row in result['restaurants'] if row['id'] == 'huber')
+        def run(previous, day, dish):
+            def fake(identifier, url, week, get):
+                if identifier != 'huber':
+                    raise OSError('offline')
+                return {day: [{'name': dish, 'price': 13.5}]}
+            with patch.object(wels, 'fetch', side_effect=fake):
+                return wels.build(previous, MONDAY, datetime(2026, 11, 18, 9, tzinfo=wels.TZ))
+        tuesday = run(None, '2026-11-17', 'Lebernetzbraten')
+        wednesday = run(tuesday, '2026-11-18', 'Backhendl')
+        self.assertEqual([names(rows) for rows in huber(wednesday)['days'].values()],
+                         [[], ['Lebernetzbraten'], ['Backhendl'], [], []])
+
+
 class SafetyTests(unittest.TestCase):
     def test_week_shown_matches_the_app(self):
         at = lambda day, hour=12: datetime(2026, 11, day, hour, tzinfo=wels.TZ)

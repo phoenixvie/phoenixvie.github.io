@@ -2,93 +2,789 @@
  "weekStart": "2026-11-16",
  "restaurants": [
   {
-   "id": "naschmarkt",
-   "name": "Naschmarkt Wels",
-   "restaurantType": "Österreichisch",
-   "url": "https://www.naschmarkt-wels.at/speisekarte-wels-restaurant/",
-   "address": "Kaiser-Josef-Platz 21, 4600 Wels",
-   "latitude": 48.1590092,
-   "longitude": 14.0226595,
-   "phone": "+43 7242 45 22 94 44",
-   "email": "office@naschmarkt-wels.at",
+   "id": "billa",
+   "name": "BILLA PLUS Marktküche",
+   "restaurantType": "Marktküche",
+   "url": "https://www.billa.at/unsere-maerkte/billa-plus/marktkueche",
    "hours": [
-    "Montag bis Freitag 08:00–15:00 Uhr"
+    "Mittagsmenü Montag bis Freitag 11:00–14:00 Uhr"
    ],
-   "brandColor": "#b5462f",
+   "brandColor": "#d8a400",
    "days": {
     "2026-11-16": [
      {
-      "name": "Festtagsschnitzel (gefülltes Hühnerfilet mit Blattspinat und Brie) in Sesampanier gebacken dazu Kräuterkartoffel",
-      "price": 14.9
+      "name": "Gemüseschnitzel mit Rösterdäpfel & Dipsauce",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
      },
      {
-      "name": "Spaghetti „Arrabbiata“ mit Salat",
-      "price": 12.9
-     },
-     {
-      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
-      "price": 12.9,
-      "description": "Star der Woche"
+      "name": "Gelbes Curry vom Huhn, auf Basmatireis, mit Sojasprossen & Koriander",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert"
      }
     ],
     "2026-11-17": [
      {
-      "name": "Hirschragout mit Kroketten und Rotkraut",
-      "price": 15.9
+      "name": "Gnocchi in Blattspinatrahmsauce dazu Kirschtomaten & frischer Parmesan",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
      },
      {
-      "name": "Gefüllte Zucchini mit Mozzarella gratiniert auf Tomatenragout dazu Erdäpfel",
-      "price": 12.9
-     },
-     {
-      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
-      "price": 12.9,
-      "description": "Star der Woche"
+      "name": "Gefüllte Zucchini mit Faschiertem & Käse überbacken, dazu Petersilerdäpfel",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert"
      }
     ],
     "2026-11-18": [
      {
-      "name": "Putenmedaillons in Paprikarahmsauce dazu Bandnudeln und Gemüse",
-      "price": 14.9
+      "name": "Kürbislasagne mit Salatbouquet",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
      },
      {
-      "name": "Rahmlinsen mit Kräuterknödel dazu Salat",
-      "price": 12.9
-     },
-     {
-      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
-      "price": 12.9,
-      "description": "Star der Woche"
+      "name": "Gebackenes Schnitzel vom Schwein, mit Reis",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
      }
     ],
     "2026-11-19": [
      {
-      "name": "Schweinsrückensteak vom Grill mit Kräuterbutter, Süßkartoffelpommes und Speckbohnen",
-      "price": 13.9
+      "name": "Vegetarisches Bohnengulasch mit einer reschen Semmel",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
      },
      {
-      "name": "Überbackene Topfenpalatschinken mit Vanillesauce",
-      "price": 10.9
-     },
-     {
-      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
-      "price": 12.9,
-      "description": "Star der Woche"
+      "name": "Gebratener Leberkäse mit Erdäpfelschmarrn",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
      }
     ],
     "2026-11-20": [
      {
-      "name": "Gebratenes Lachsfilet an Safransauce dazu Wildreis und Romanescoröschen",
-      "price": 15.9
+      "name": "Pasta »Arrabbiata« mit fruchtig-scharfer Tomatensauce & frisch gehobeltem Parmesan",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
      },
      {
-      "name": "Erdäpfelgulasch mit pikanter Wurst dazu Gebäck",
-      "price": 11.9
+      "name": "Gebratenes Fischfilet mit Paprikareis & Kräuterbutter",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
+     }
+    ]
+   },
+   "import": {
+    "state": "ok",
+    "message": ""
+   }
+  },
+  {
+   "id": "denns",
+   "name": "Denns BioMarkt Bistro",
+   "restaurantType": "Bio-Bistro",
+   "url": "https://www.denns-biomarkt.at/wels-malvenstr-5/mittagsgerichte/",
+   "address": "Malvenstraße 5, 4600 Wels",
+   "latitude": 48.1439914,
+   "longitude": 13.9704601,
+   "brandColor": "#6a9a2d",
+   "days": {
+    "2026-11-16": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "category": "Suppe"
      },
      {
-      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
+      "name": "Kürbis-Mais-Eintopf",
+      "price": 6.9,
+      "description": "Vegan"
+     },
+     {
+      "name": "Puten-Tomaten-Reis",
+      "price": 7.9
+     }
+    ],
+    "2026-11-17": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "category": "Suppe"
+     },
+     {
+      "name": "Pastinaken-Gulasch",
+      "price": 6.9,
+      "description": "Vegan"
+     },
+     {
+      "name": "Zwiebelfleisch mit Hörnchen",
+      "price": 7.9
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "category": "Suppe"
+     },
+     {
+      "name": "Kürbis-Risotto",
+      "price": 6.9,
+      "description": "Vegetarisch"
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "category": "Suppe"
+     },
+     {
+      "name": "Bunter Gemüse-Eintopf",
+      "price": 6.9,
+      "description": "Vegetarisch"
+     }
+    ],
+    "2026-11-20": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "category": "Suppe"
+     },
+     {
+      "name": "Gemüse-Spätzle",
+      "price": 6.9,
+      "description": "Vegetarisch"
+     }
+    ]
+   },
+   "import": {
+    "state": "ok",
+    "message": ""
+   }
+  },
+  {
+   "id": "dokkhun",
+   "name": "Dok Khun",
+   "restaurantType": "Thailändisch",
+   "url": "https://dok-khun.metro.biz/?lang=de",
+   "address": "Maria-Theresia-Straße 16, 4600 Wels",
+   "latitude": 48.1553411,
+   "longitude": 14.0170914,
+   "phone": "+43 7242 252670",
+   "email": "office@dok-khun-thai.at",
+   "brandColor": "#c0842b",
+   "days": {
+    "2026-11-16": [],
+    "2026-11-17": [
+     {
+      "name": "Gaeng Ped Nuea (rotes Curry mit Rindfleisch, Karotten, Bambus, Spitzpaprika, Kürbis, süßes Thaibasilikum, Reis) leicht scharf",
+      "price": 15.5,
+      "included_starter": "Gemischter Salat",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     },
+     {
+      "name": "Kauw Pad Tom Yum Gai (gebraterner Reis mit Hühnerfleisch, Champignons, Karotten, Spitzpaprika, Koriander, Chillipaste) leicht scharf",
+      "price": 14.5,
+      "included_starter": "Gemischter Salat",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "Gai Pad Sauce Prik (gebratenes Hühnerfleisch, Pak-Choi, Karotten, Zwiebel, Chilli-Sauce) leicht scharf",
+      "price": 14.5,
+      "included_starter": "Dim Sum (gedämpfte hausgemachte Teigtaschen gefüllt mit Hühnerfleisch und Dip-Sauce)",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     },
+     {
+      "name": "Gung Pad Buab (gebratene Garnelen, Zucchini, Karotten, Jungzwiebel, Reis",
+      "price": 15.5,
+      "included_starter": "Dim Sum (gedämpfte hausgemachte Teigtaschen gefüllt mit Hühnerfleisch und Dip-Sauce)",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Spagetti Med Mamuang Gai (Spagetti mit gebratenem Hühnerfleisch, Paprika, Karotten, Zwiebel, Jungzwiebel, Cashewnüsse)",
+      "price": 14.5,
+      "included_starter": "Gemischter Salat",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     },
+     {
+      "name": "Pad Kua Gring Moo Sab (gehacktes gebratenes Schweinefleisch, grüne Bohnen, Karotten, grüner Pfeffer, Zitronengras, Spitzpaprika, hausgemachte rote Currypaste, Reis) leicht scharf",
+      "price": 14.5,
+      "included_starter": "Gemischter Salat",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     }
+    ],
+    "2026-11-20": [
+     {
+      "name": "Pad Bamie Luang Gai (gebratene gelbe Nudeln mit Hühnerfleisch, Gemüse, Jungzwiebel)",
+      "price": 14.5,
+      "included_starter": "Tom Yum Gai (Zitronengrassuppe mit Hühnerfleisch und Champignons)",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     },
+     {
+      "name": "Pad Pak Ruam Bed Yung (Wokgemüse mit knuspriger Thai-Ente, Reis)",
+      "price": 15.5,
+      "included_starter": "Tom Yum Gai (Zitronengrassuppe mit Hühnerfleisch und Champignons)",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     }
+    ]
+   },
+   "import": {
+    "state": "ok",
+    "message": ""
+   }
+  },
+  {
+   "id": "huber",
+   "name": "Gasthaus Huber",
+   "restaurantType": "Österreichisch",
+   "url": "https://www.gasthaus-huber.at/tages-menue",
+   "address": "Wiesenstraße 69, 4600 Wels",
+   "latitude": 48.1630194,
+   "longitude": 14.0450788,
+   "phone": "+43 7242 45030",
+   "hours": [
+    "Montag bis Freitag 09:00–24:00 Uhr",
+    "Warme Küche 11:00–14:00 und 17:00–21:00 Uhr",
+    "Samstag, Sonntag und Feiertag geschlossen"
+   ],
+   "brandColor": "#7a5a3a",
+   "days": {
+    "2026-11-16": [],
+    "2026-11-17": [
+     {
+      "name": "Lebernetzbraten mit Kartoffeln und Sauerkraut",
+      "price": 13.5,
+      "included_soup": "Tagessuppe"
+     },
+     {
+      "name": "Käsespätzle mit Blattsalat",
       "price": 12.9,
-      "description": "Star der Woche"
+      "included_soup": "Tagessuppe"
+     },
+     {
+      "name": "Apfelschnitte oder Eierlikörtorte",
+      "price": 4.5,
+      "category": "Nachspeise"
+     }
+    ],
+    "2026-11-18": [],
+    "2026-11-19": [],
+    "2026-11-20": []
+   },
+   "import": {
+    "state": "ok",
+    "message": ""
+   }
+  },
+  {
+   "id": "linde",
+   "name": "Gasthaus zur Linde",
+   "restaurantType": "Österreichisch",
+   "url": "https://gasthaus-zur-linde.at/speisekarte",
+   "address": "Ringstraße 45, 4600 Wels",
+   "latitude": 48.159415,
+   "longitude": 14.0272387,
+   "phone": "07242 46023",
+   "hours": [
+    "Dienstag bis Freitag 10:00–14:30 und 16:30–24:00 Uhr",
+    "Warme Küche 11:30–14:00 und 17:30–21:00 Uhr",
+    "Samstag, Sonntag, Montag und an Feiertagen geschlossen"
+   ],
+   "brandColor": "#4f7d3a",
+   "days": {
+    "2026-11-16": [],
+    "2026-11-17": [],
+    "2026-11-18": [],
+    "2026-11-19": [],
+    "2026-11-20": []
+   },
+   "import": {
+    "state": "not_published",
+    "message": "Zur Linde zeigt 2026-11-10 bis 2026-11-13"
+   }
+  },
+  {
+   "id": "goesser",
+   "name": "Gösserbräu",
+   "restaurantType": "Österreichisch",
+   "url": "https://www.goesserbraeu.at/restaurant/mittagsmenue/",
+   "address": "Kaiser-Josef-Platz 27, 4600 Wels",
+   "latitude": 48.1586061,
+   "longitude": 14.0212375,
+   "phone": "+43 7242 60 460",
+   "brandColor": "#1f6b3a",
+   "days": {
+    "2026-11-16": [
+     {
+      "name": "Zigeunerschnitzerl mit Spätzle",
+      "price": null,
+      "priceLabel": " "
+     },
+     {
+      "name": "Cremespinat mit Röstkartoffel und Spiegelei",
+      "price": null,
+      "priceLabel": " ",
+      "description": "Vegetarisch"
+     }
+    ],
+    "2026-11-17": [
+     {
+      "name": "Gebratene Blutwurst mit Kartoffelschmarrn",
+      "price": null,
+      "priceLabel": " "
+     },
+     {
+      "name": "Sellerieschnitzerl mit Kartoffeln und Sauerrahmdip",
+      "price": null,
+      "priceLabel": " ",
+      "description": "Vegetarisch"
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "1/2 Grill Hendl mit Pommes Frites",
+      "price": null,
+      "priceLabel": " "
+     },
+     {
+      "name": "Fisolengulasch mit Erdäpfel",
+      "price": null,
+      "priceLabel": " ",
+      "description": "Vegetarisch"
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Reisfleisch mit grünem Salat",
+      "price": null,
+      "priceLabel": " "
+     },
+     {
+      "name": "Geröstete Knödel mit Ei",
+      "price": null,
+      "priceLabel": " ",
+      "description": "Vegetarisch"
+     }
+    ],
+    "2026-11-20": [
+     {
+      "name": "Forellenfilet gebraten auf Gemüserisotto",
+      "price": null,
+      "priceLabel": " "
+     },
+     {
+      "name": "Linsenpfanne mit Semmelknödel",
+      "price": null,
+      "priceLabel": " ",
+      "description": "Vegetarisch"
+     }
+    ]
+   },
+   "import": {
+    "state": "ok",
+    "message": ""
+   }
+  },
+  {
+   "id": "hannibal",
+   "name": "Hannibal",
+   "restaurantType": "Österreichisch",
+   "url": "https://www.restaurant-hannibal.at/mittagskarte/",
+   "address": "Maxlheid 9, 4600 Wels",
+   "latitude": 48.1864802,
+   "longitude": 14.0759777,
+   "phone": "+43 7242 46716 46",
+   "email": "hotel@maxlhaid.at",
+   "hours": [
+    "Montag bis Freitag 10:00–23:30 Uhr (außer Feiertage)",
+    "Warme Küche 11:30–21:30 Uhr"
+   ],
+   "brandColor": "#8c2f39",
+   "days": {
+    "2026-11-16": [
+     {
+      "name": "Backhendl im Kürbiskernpanade | gemischter Salat | Kernöl",
+      "price": 12.0
+     },
+     {
+      "name": "Ofenkartoffel | Feta | Spinat | Tomate | Dip",
+      "price": 11.5
+     }
+    ],
+    "2026-11-17": [
+     {
+      "name": "Geschmorter Rindsbraten | Butterspätzle | Ofengemüse",
+      "price": 12.0
+     },
+     {
+      "name": "Polentaknödel | Peperonata",
+      "price": 11.5
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "Putencurry | Gewürzreis | Mango",
+      "price": 12.0
+     },
+     {
+      "name": "Fettuccine | Kräuterpesto | Pinienkerne | Parmesan",
+      "price": 11.5
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Surschnitzel vom Strohschwein | Petersilienkartoffeln | Zitrone | Preiselbeeren",
+      "price": 12.0
+     },
+     {
+      "name": "Curry-Karfiol | Süßkartoffelcreme | Cashewnüsse",
+      "price": 11.5
+     }
+    ],
+    "2026-11-20": [
+     {
+      "name": "Pulled Pork Burger | Cheddar | roter Zwiebel | Coleslawsalat | Pommes",
+      "price": 13.9
+     },
+     {
+      "name": "Veggi-Burger | Cheddar | roter Zwiebel | Coleslawsalat | Pommes",
+      "price": 13.9
+     }
+    ]
+   },
+   "import": {
+    "state": "ok",
+    "message": ""
+   }
+  },
+  {
+   "id": "hayashi",
+   "name": "Hayashi",
+   "restaurantType": "Asiatisch",
+   "url": "https://www.hayashi.at/menu4.html",
+   "address": "Charwatstraße 2, 4600 Wels",
+   "latitude": 48.1576027,
+   "longitude": 14.016551,
+   "phone": "07242 214081",
+   "email": "welcome@hayashi.at",
+   "hours": [
+    "Montag Ruhetag",
+    "Dienstag bis Donnerstag 11:30–15:00 und 17:00–22:00 Uhr",
+    "Freitag und Samstag 11:30–22:00 Uhr",
+    "Sonntag 11:30–21:30 Uhr",
+    "Lunch Dienstag bis Freitag 11:30–14:30 Uhr"
+   ],
+   "brandColor": "#2b2b2b",
+   "days": {
+    "2026-11-16": [],
+    "2026-11-17": [
+     {
+      "name": "Black Pepper Chicken",
+      "price": 13.9,
+      "description": "Hühnerfleisch | schwarze Pfeffersauce | Saisongemüse"
+     },
+     {
+      "name": "Gaeng Khiao Wan",
+      "price": 14.9,
+      "description": "grünes Thaicurry | gegrillte Ente | Kokosmilch | Zitronengras"
+     },
+     {
+      "name": "Chili Beef",
+      "price": 18.9,
+      "description": "Rinderfilet | Szechuan Chili & Pfeffer"
+     },
+     {
+      "name": "Bulgogi",
+      "price": 14.9,
+      "description": "mariniertes Rindfleisch | koreanische Art | Bao Brötchen"
+     },
+     {
+      "name": "Gaeng Phed",
+      "price": 13.9,
+      "description": "rotes Thaicurry | Hühnerfleisch"
+     },
+     {
+      "name": "Yaki Udon",
+      "price": 12.5,
+      "description": "Wok Udon-Nudeln | Saisongemüse"
+     },
+     {
+      "name": "Wok Saisongemüse",
+      "price": 12.5
+     },
+     {
+      "name": "Asam Gulai",
+      "price": 17.9,
+      "description": "Malaysisches Curry | Garnelen | Kokosmilch"
+     },
+     {
+      "name": "Alle Gerichte mit Reis und Misoshiru oder Salat",
+      "price": null,
+      "priceLabel": " "
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "Black Pepper Chicken",
+      "price": 13.9,
+      "description": "Hühnerfleisch | schwarze Pfeffersauce | Saisongemüse"
+     },
+     {
+      "name": "Gaeng Khiao Wan",
+      "price": 14.9,
+      "description": "grünes Thaicurry | gegrillte Ente | Kokosmilch | Zitronengras"
+     },
+     {
+      "name": "Chili Beef",
+      "price": 18.9,
+      "description": "Rinderfilet | Szechuan Chili & Pfeffer"
+     },
+     {
+      "name": "Bulgogi",
+      "price": 14.9,
+      "description": "mariniertes Rindfleisch | koreanische Art | Bao Brötchen"
+     },
+     {
+      "name": "Gaeng Phed",
+      "price": 13.9,
+      "description": "rotes Thaicurry | Hühnerfleisch"
+     },
+     {
+      "name": "Yaki Udon",
+      "price": 12.5,
+      "description": "Wok Udon-Nudeln | Saisongemüse"
+     },
+     {
+      "name": "Wok Saisongemüse",
+      "price": 12.5
+     },
+     {
+      "name": "Asam Gulai",
+      "price": 17.9,
+      "description": "Malaysisches Curry | Garnelen | Kokosmilch"
+     },
+     {
+      "name": "Alle Gerichte mit Reis und Misoshiru oder Salat",
+      "price": null,
+      "priceLabel": " "
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Black Pepper Chicken",
+      "price": 13.9,
+      "description": "Hühnerfleisch | schwarze Pfeffersauce | Saisongemüse"
+     },
+     {
+      "name": "Gaeng Khiao Wan",
+      "price": 14.9,
+      "description": "grünes Thaicurry | gegrillte Ente | Kokosmilch | Zitronengras"
+     },
+     {
+      "name": "Chili Beef",
+      "price": 18.9,
+      "description": "Rinderfilet | Szechuan Chili & Pfeffer"
+     },
+     {
+      "name": "Bulgogi",
+      "price": 14.9,
+      "description": "mariniertes Rindfleisch | koreanische Art | Bao Brötchen"
+     },
+     {
+      "name": "Gaeng Phed",
+      "price": 13.9,
+      "description": "rotes Thaicurry | Hühnerfleisch"
+     },
+     {
+      "name": "Yaki Udon",
+      "price": 12.5,
+      "description": "Wok Udon-Nudeln | Saisongemüse"
+     },
+     {
+      "name": "Wok Saisongemüse",
+      "price": 12.5
+     },
+     {
+      "name": "Asam Gulai",
+      "price": 17.9,
+      "description": "Malaysisches Curry | Garnelen | Kokosmilch"
+     },
+     {
+      "name": "Alle Gerichte mit Reis und Misoshiru oder Salat",
+      "price": null,
+      "priceLabel": " "
+     }
+    ],
+    "2026-11-20": [
+     {
+      "name": "Black Pepper Chicken",
+      "price": 13.9,
+      "description": "Hühnerfleisch | schwarze Pfeffersauce | Saisongemüse"
+     },
+     {
+      "name": "Gaeng Khiao Wan",
+      "price": 14.9,
+      "description": "grünes Thaicurry | gegrillte Ente | Kokosmilch | Zitronengras"
+     },
+     {
+      "name": "Chili Beef",
+      "price": 18.9,
+      "description": "Rinderfilet | Szechuan Chili & Pfeffer"
+     },
+     {
+      "name": "Bulgogi",
+      "price": 14.9,
+      "description": "mariniertes Rindfleisch | koreanische Art | Bao Brötchen"
+     },
+     {
+      "name": "Gaeng Phed",
+      "price": 13.9,
+      "description": "rotes Thaicurry | Hühnerfleisch"
+     },
+     {
+      "name": "Yaki Udon",
+      "price": 12.5,
+      "description": "Wok Udon-Nudeln | Saisongemüse"
+     },
+     {
+      "name": "Wok Saisongemüse",
+      "price": 12.5
+     },
+     {
+      "name": "Asam Gulai",
+      "price": 17.9,
+      "description": "Malaysisches Curry | Garnelen | Kokosmilch"
+     },
+     {
+      "name": "Alle Gerichte mit Reis und Misoshiru oder Salat",
+      "price": null,
+      "priceLabel": " "
+     }
+    ]
+   },
+   "import": {
+    "state": "ok",
+    "message": ""
+   }
+  },
+  {
+   "id": "imturm",
+   "name": "Im Turm",
+   "restaurantType": "Messerestaurant",
+   "url": "https://imturm.at/mittagsmenue-druckversion/",
+   "address": "Messeplatz 1, 4600 Wels (Messezentrum Neu, 1. Stock)",
+   "latitude": 48.1518071,
+   "longitude": 14.0187612,
+   "phone": "+43 7242 9392 5050",
+   "email": "essen@imturm.at",
+   "hours": [
+    "Montag bis Freitag 10:00–14:30 Uhr",
+    "Mittags-Brunch 11:30–14:00 Uhr",
+    "Samstag, Sonntag und Feiertag geschlossen"
+   ],
+   "brandColor": "#35607f",
+   "days": {
+    "2026-11-16": [
+     {
+      "name": "Schweinebraten / Kartoffeln / Kraut",
+      "price": 13.4,
+      "included_soup": "Rindssuppe / Nudeln",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Piccata Milanese / Tomatenpasta",
+      "price": 13.4,
+      "included_soup": "Rindssuppe / Nudeln",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Eiernockerl / Schnittlauch",
+      "price": 13.4,
+      "included_soup": "Rindssuppe / Nudeln",
+      "description": "Mit Salatbuffet und Dessert"
+     }
+    ],
+    "2026-11-17": [
+     {
+      "name": "Paprikahenderl / Gemüsevariation / Butterreis",
+      "price": 13.4,
+      "included_soup": "Kartoffelcremesuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Fleckerlspeis",
+      "price": 13.4,
+      "included_soup": "Kartoffelcremesuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Kürbisknödel / Nussbutter",
+      "price": 13.4,
+      "included_soup": "Kartoffelcremesuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "Zwiebelrostbraten / Butternudeln / Fisolen",
+      "price": 13.4,
+      "included_soup": "Klare - Gemüsesuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Karreesteak / Pilz - Käsekruste / Bratkartoffeln",
+      "price": 13.4,
+      "included_soup": "Klare - Gemüsesuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Gemüselaibchen / Rahmdip",
+      "price": 13.4,
+      "included_soup": "Klare - Gemüsesuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Chilli con carne / Gebäck",
+      "price": 13.4,
+      "included_soup": "Karotten - Kokossuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Putenrollbraten / Butterreis / Gemüse",
+      "price": 13.4,
+      "included_soup": "Karotten - Kokossuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Gemüse - Kartoffelauflauf",
+      "price": 13.4,
+      "included_soup": "Karotten - Kokossuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     }
+    ],
+    "2026-11-20": [
+     {
+      "name": "Rinderbraten / Spätzle / Erbsen-Karottengemüse",
+      "price": 13.4,
+      "included_soup": "Gemüsecremesuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Gegrilltes Fischfilet / Kürbisragout / Kartoffeln",
+      "price": 13.4,
+      "included_soup": "Gemüsecremesuppe",
+      "description": "Mit Salatbuffet und Dessert"
+     },
+     {
+      "name": "Pasta / gröstete Nüsse / Pesto verde / Parmesan",
+      "price": 13.4,
+      "included_soup": "Gemüsecremesuppe",
+      "description": "Mit Salatbuffet und Dessert"
      }
     ]
    },
@@ -220,99 +916,63 @@
    }
   },
   {
-   "id": "linde",
-   "name": "Gasthaus zur Linde",
-   "restaurantType": "Österreichisch",
-   "url": "https://gasthaus-zur-linde.at/speisekarte",
-   "address": "Ringstraße 45, 4600 Wels",
-   "latitude": 48.159415,
-   "longitude": 14.0272387,
-   "phone": "07242 46023",
+   "id": "lalina",
+   "name": "La lina",
+   "restaurantType": "Restaurant · Bar",
+   "url": "https://lalina.at/lunchevents/",
+   "address": "Europastraße 45, 4600 Wels",
+   "latitude": 48.14983,
+   "longitude": 13.9939371,
+   "phone": "+43 690 106 33 193",
+   "email": "office@lalina.at",
    "hours": [
-    "Dienstag bis Freitag 10:00–14:30 und 16:30–24:00 Uhr",
-    "Warme Küche 11:30–14:00 und 17:30–21:00 Uhr",
-    "Samstag, Sonntag, Montag und an Feiertagen geschlossen"
+    "Lunch Dienstag bis Freitag 11:30–14:00 Uhr"
    ],
-   "brandColor": "#4f7d3a",
-   "days": {
-    "2026-11-16": [],
-    "2026-11-17": [],
-    "2026-11-18": [],
-    "2026-11-19": [],
-    "2026-11-20": []
-   },
-   "import": {
-    "state": "not_published",
-    "message": "Zur Linde zeigt 2026-11-10 bis 2026-11-13"
-   }
-  },
-  {
-   "id": "dokkhun",
-   "name": "Dok Khun",
-   "restaurantType": "Thailändisch",
-   "url": "https://dok-khun.metro.biz/?lang=de",
-   "address": "Maria-Theresia-Straße 16, 4600 Wels",
-   "latitude": 48.1553411,
-   "longitude": 14.0170914,
-   "phone": "+43 7242 252670",
-   "email": "office@dok-khun-thai.at",
-   "brandColor": "#c0842b",
+   "brandColor": "#b0607a",
    "days": {
     "2026-11-16": [],
     "2026-11-17": [
      {
-      "name": "Gaeng Ped Nuea (rotes Curry mit Rindfleisch, Karotten, Bambus, Spitzpaprika, Kürbis, süßes Thaibasilikum, Reis) leicht scharf",
-      "price": 15.5,
-      "included_starter": "Gemischter Salat",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
+      "name": "Nudelsuppe – Cremige Pasta mit Filetspitzen von Schwein",
+      "price": 14.9
      },
      {
-      "name": "Kauw Pad Tom Yum Gai (gebraterner Reis mit Hühnerfleisch, Champignons, Karotten, Spitzpaprika, Koriander, Chillipaste) leicht scharf",
-      "price": 14.5,
-      "included_starter": "Gemischter Salat",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
+      "name": "Gefüllte Palatschinken in Tomatensauce dazu Kartoffeln",
+      "price": 14.9,
+      "description": "Vegetarisches Wochengericht"
      }
     ],
     "2026-11-18": [
      {
-      "name": "Gai Pad Sauce Prik (gebratenes Hühnerfleisch, Pak-Choi, Karotten, Zwiebel, Chilli-Sauce) leicht scharf",
-      "price": 14.5,
-      "included_starter": "Dim Sum (gedämpfte hausgemachte Teigtaschen gefüllt mit Hühnerfleisch und Dip-Sauce)",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
+      "name": "Fischcremesuppe – Käsespätzle mit Speck",
+      "price": 14.9
      },
      {
-      "name": "Gung Pad Buab (gebratene Garnelen, Zucchini, Karotten, Jungzwiebel, Reis",
-      "price": 15.5,
-      "included_starter": "Dim Sum (gedämpfte hausgemachte Teigtaschen gefüllt mit Hühnerfleisch und Dip-Sauce)",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
+      "name": "Gefüllte Palatschinken in Tomatensauce dazu Kartoffeln",
+      "price": 14.9,
+      "description": "Vegetarisches Wochengericht"
      }
     ],
     "2026-11-19": [
      {
-      "name": "Spagetti Med Mamuang Gai (Spagetti mit gebratenem Hühnerfleisch, Paprika, Karotten, Zwiebel, Jungzwiebel, Cashewnüsse)",
-      "price": 14.5,
-      "included_starter": "Gemischter Salat",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
+      "name": "Knoblauchcremesuppe – Hühnercurry mit Reis",
+      "price": 14.9
      },
      {
-      "name": "Pad Kua Gring Moo Sab (gehacktes gebratenes Schweinefleisch, grüne Bohnen, Karotten, grüner Pfeffer, Zitronengras, Spitzpaprika, hausgemachte rote Currypaste, Reis) leicht scharf",
-      "price": 14.5,
-      "included_starter": "Gemischter Salat",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
+      "name": "Gefüllte Palatschinken in Tomatensauce dazu Kartoffeln",
+      "price": 14.9,
+      "description": "Vegetarisches Wochengericht"
      }
     ],
     "2026-11-20": [
      {
-      "name": "Pad Bamie Luang Gai (gebratene gelbe Nudeln mit Hühnerfleisch, Gemüse, Jungzwiebel)",
-      "price": 14.5,
-      "included_starter": "Tom Yum Gai (Zitronengrassuppe mit Hühnerfleisch und Champignons)",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
+      "name": "Hühnerkeule mit Kartoffeln – Zimtwaffeln",
+      "price": 14.9
      },
      {
-      "name": "Pad Pak Ruam Bed Yung (Wokgemüse mit knuspriger Thai-Ente, Reis)",
-      "price": 15.5,
-      "included_starter": "Tom Yum Gai (Zitronengrassuppe mit Hühnerfleisch und Champignons)",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
+      "name": "Gefüllte Palatschinken in Tomatensauce dazu Kartoffeln",
+      "price": 14.9,
+      "description": "Vegetarisches Wochengericht"
      }
     ]
    },
@@ -322,73 +982,283 @@
    }
   },
   {
-   "id": "billa",
-   "name": "BILLA PLUS Marktküche",
-   "restaurantType": "Marktküche",
-   "url": "https://www.billa.at/unsere-maerkte/billa-plus/marktkueche",
+   "id": "naschmarkt",
+   "name": "Naschmarkt Wels",
+   "restaurantType": "Österreichisch",
+   "url": "https://www.naschmarkt-wels.at/speisekarte-wels-restaurant/",
+   "address": "Kaiser-Josef-Platz 21, 4600 Wels",
+   "latitude": 48.1590092,
+   "longitude": 14.0226595,
+   "phone": "+43 7242 45 22 94 44",
+   "email": "office@naschmarkt-wels.at",
    "hours": [
-    "Mittagsmenü Montag bis Freitag 11:00–14:00 Uhr"
+    "Montag bis Freitag 08:00–15:00 Uhr"
    ],
-   "brandColor": "#d8a400",
+   "brandColor": "#b5462f",
    "days": {
     "2026-11-16": [
      {
-      "name": "Gemüseschnitzel mit Rösterdäpfel & Dipsauce",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
+      "name": "Festtagsschnitzel (gefülltes Hühnerfilet mit Blattspinat und Brie) in Sesampanier gebacken dazu Kräuterkartoffel",
+      "price": 14.9
      },
      {
-      "name": "Gelbes Curry vom Huhn, auf Basmatireis, mit Sojasprossen & Koriander",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert"
+      "name": "Spaghetti „Arrabbiata“ mit Salat",
+      "price": 12.9
+     },
+     {
+      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
+      "price": 12.9,
+      "description": "Star der Woche"
      }
     ],
     "2026-11-17": [
      {
-      "name": "Gnocchi in Blattspinatrahmsauce dazu Kirschtomaten & frischer Parmesan",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
+      "name": "Hirschragout mit Kroketten und Rotkraut",
+      "price": 15.9
      },
      {
-      "name": "Gefüllte Zucchini mit Faschiertem & Käse überbacken, dazu Petersilerdäpfel",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert"
+      "name": "Gefüllte Zucchini mit Mozzarella gratiniert auf Tomatenragout dazu Erdäpfel",
+      "price": 12.9
+     },
+     {
+      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
+      "price": 12.9,
+      "description": "Star der Woche"
      }
     ],
     "2026-11-18": [
      {
-      "name": "Kürbislasagne mit Salatbouquet",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
+      "name": "Putenmedaillons in Paprikarahmsauce dazu Bandnudeln und Gemüse",
+      "price": 14.9
      },
      {
-      "name": "Gebackenes Schnitzel vom Schwein, mit Reis",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
+      "name": "Rahmlinsen mit Kräuterknödel dazu Salat",
+      "price": 12.9
+     },
+     {
+      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
+      "price": 12.9,
+      "description": "Star der Woche"
      }
     ],
     "2026-11-19": [
      {
-      "name": "Vegetarisches Bohnengulasch mit einer reschen Semmel",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
+      "name": "Schweinsrückensteak vom Grill mit Kräuterbutter, Süßkartoffelpommes und Speckbohnen",
+      "price": 13.9
      },
      {
-      "name": "Gebratener Leberkäse mit Erdäpfelschmarrn",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
+      "name": "Überbackene Topfenpalatschinken mit Vanillesauce",
+      "price": 10.9
+     },
+     {
+      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
+      "price": 12.9,
+      "description": "Star der Woche"
      }
     ],
     "2026-11-20": [
      {
-      "name": "Pasta »Arrabbiata« mit fruchtig-scharfer Tomatensauce & frisch gehobeltem Parmesan",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
+      "name": "Gebratenes Lachsfilet an Safransauce dazu Wildreis und Romanescoröschen",
+      "price": 15.9
      },
      {
-      "name": "Gebratenes Fischfilet mit Paprikareis & Kräuterbutter",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
+      "name": "Erdäpfelgulasch mit pikanter Wurst dazu Gebäck",
+      "price": 11.9
+     },
+     {
+      "name": "Schupfnudeln „Süß-Sauer“ mit Asiagemüse",
+      "price": 12.9,
+      "description": "Star der Woche"
+     }
+    ]
+   },
+   "import": {
+    "state": "ok",
+    "message": ""
+   }
+  },
+  {
+   "id": "ox",
+   "name": "OX",
+   "restaurantType": "Steaks & Grill",
+   "url": "https://www.ox-wels.at/",
+   "address": "Waidhausenstraße 26, 4600 Wels",
+   "latitude": 48.1470255,
+   "longitude": 13.9776431,
+   "phone": "+43 7242 225777",
+   "email": "office@ox-wels.at",
+   "hours": [
+    "Montag bis Sonntag 11:00–24:00 Uhr",
+    "Mittagsmenü Montag bis Freitag 11:30–14:00 Uhr"
+   ],
+   "brandColor": "#5b3a29",
+   "days": {
+    "2026-11-16": [
+     {
+      "name": "Gegrilltes vom Rind und Schwein | Zuckermais | Rosmarinkartoffel | Kräuterbutter",
+      "price": 12.9,
+      "included_starter": "Tagessuppe oder Salat"
+     },
+     {
+      "name": "Penne | Lachs | Dill | Gurke",
+      "price": 12.9,
+      "included_starter": "Tagessuppe oder Salat"
+     }
+    ],
+    "2026-11-17": [
+     {
+      "name": "Hühnergeschnetzeltes | Champignons | Erbsenreis",
+      "price": 12.9,
+      "included_starter": "Tagessuppe oder Salat"
+     },
+     {
+      "name": "Gebackene Champignons | Kartoffeln | Sauce Tartar",
+      "price": 12.9,
+      "included_starter": "Tagessuppe oder Salat"
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "Cheeseburger | Wedges",
+      "price": 12.9,
+      "included_starter": "Tagessuppe oder Salat"
+     },
+     {
+      "name": "Gemüsereis | Eis | Soja | Ingwer",
+      "price": 12.9,
+      "included_starter": "Tagessuppe oder Salat"
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Fish and Chips | Sauce Tartar",
+      "price": 12.9,
+      "included_starter": "Tagessuppe oder Salat"
+     },
+     {
+      "name": "Zucchini Piccata Milanese | Tomatensauce",
+      "price": 12.9,
+      "included_starter": "Tagessuppe oder Salat"
+     }
+    ],
+    "2026-11-20": []
+   },
+   "import": {
+    "state": "ok",
+    "message": "",
+    "fingerprint": "036b573a4ddb19ac"
+   }
+  },
+  {
+   "id": "sorrymama",
+   "name": "Sorry Mama",
+   "restaurantType": "Kitchen & Bar",
+   "url": "https://www.sorrymama.at/mittagskarte/",
+   "address": "Stadtplatz 11, 4600 Wels",
+   "latitude": 48.1570147,
+   "longitude": 14.0259031,
+   "phone": "+43 7242 911117",
+   "email": "office@sorrymama.at",
+   "hours": [
+    "Montag bis Donnerstag 11:30–22:30 Uhr",
+    "Freitag und Samstag 11:30–24:00 Uhr",
+    "Warme Küche 11:30–14:00 und 17:00–21:30 Uhr"
+   ],
+   "brandColor": "#d9534f",
+   "days": {
+    "2026-11-16": [
+     {
+      "name": "Suppe oder Menü Salat – Kürbis-Kokos-Cremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Hühnergeschnetzeltes – Champignons | Reis",
+      "price": 13.9
+     },
+     {
+      "name": "Gebackenes Seelachsfilet – Petersilienkartoffeln | Sauce Tartare",
+      "price": 13.9
+     },
+     {
+      "name": "Fusilli all’Arrabbiata – Tomatensauce | Chili | Knoblauch | Parmesan",
+      "price": 13.9
+     }
+    ],
+    "2026-11-17": [
+     {
+      "name": "Suppe oder Menü Salat – Kürbis-Kokos-Cremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Hühnergeschnetzeltes – Champignons | Reis",
+      "price": 13.9
+     },
+     {
+      "name": "Gebackenes Seelachsfilet – Petersilienkartoffeln | Sauce Tartare",
+      "price": 13.9
+     },
+     {
+      "name": "Fusilli all’Arrabbiata – Tomatensauce | Chili | Knoblauch | Parmesan",
+      "price": 13.9
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "Suppe oder Menü Salat – Kürbis-Kokos-Cremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Hühnergeschnetzeltes – Champignons | Reis",
+      "price": 13.9
+     },
+     {
+      "name": "Gebackenes Seelachsfilet – Petersilienkartoffeln | Sauce Tartare",
+      "price": 13.9
+     },
+     {
+      "name": "Fusilli all’Arrabbiata – Tomatensauce | Chili | Knoblauch | Parmesan",
+      "price": 13.9
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Suppe oder Menü Salat – Kürbis-Kokos-Cremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Hühnergeschnetzeltes – Champignons | Reis",
+      "price": 13.9
+     },
+     {
+      "name": "Gebackenes Seelachsfilet – Petersilienkartoffeln | Sauce Tartare",
+      "price": 13.9
+     },
+     {
+      "name": "Fusilli all’Arrabbiata – Tomatensauce | Chili | Knoblauch | Parmesan",
+      "price": 13.9
+     }
+    ],
+    "2026-11-20": [
+     {
+      "name": "Suppe oder Menü Salat – Kürbis-Kokos-Cremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Hühnergeschnetzeltes – Champignons | Reis",
+      "price": 13.9
+     },
+     {
+      "name": "Gebackenes Seelachsfilet – Petersilienkartoffeln | Sauce Tartare",
+      "price": 13.9
+     },
+     {
+      "name": "Fusilli all’Arrabbiata – Tomatensauce | Chili | Knoblauch | Parmesan",
+      "price": 13.9
      }
     ]
    },
@@ -398,5 +1268,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-17T08:39:19+01:00"
+ "updatedAt": "2026-11-17T10:31:31+01:00"
 }

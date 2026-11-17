@@ -43,6 +43,10 @@ jobs:
           cache-dependency-path: wu-lunch/requirements.txt
       - name: Abhängigkeiten installieren
         run: pip install -r wu-lunch/requirements.txt
+      - name: Texterkennung installieren (Wochenkarte von Sorry Mama ist nur ein Bild)
+        # Scheitert die Installation, fällt nur dieses eine Restaurant aus.
+        continue-on-error: true
+        run: sudo apt-get update -q && sudo apt-get install -y -q tesseract-ocr tesseract-ocr-deu
       - name: Mittagsmenüs der Welser Restaurants lesen
         run: python wu-lunch/scripts/update_wels.py
       - name: Nur bei Änderung veröffentlichen
