@@ -201,12 +201,86 @@ class SingleWatchTests(unittest.TestCase):
             self.assertTrue(started())
 
 
+class HandoverTests(unittest.TestCase):
+    """Die Wachkette darf an einer verschluckten Übergabe nicht reißen (17.11.2026).
+
+    Reißt sie, wacht bis zum nächsten GitHub-Zeitplan niemand – genau die
+    Verspätung, wegen der es den Taktgeber gibt.
+    """
+
+    OLD = [{'databaseId': 70, 'status': 'completed', 'conclusion': 'success'},
+           {'databaseId': 77, 'status': 'in_progress', 'conclusion': None}]
+
+    def hand_over(self, listings, dispatch_error=None):
+        calls, naps = [], []
+        answers = iter(listings)
+        def gh(*args, **kwargs):
+            calls.append(args)
+            if args[:2] == ('run', 'list'):
+                answer = next(answers)
+                if isinstance(answer, Exception):
+                    raise answer
+                return json.dumps(answer)
+            if dispatch_error:
+                raise dispatch_error
+            return ''
+        with patch.object(takt, 'gh', side_effect=gh):
+            result = takt.hand_over('takt.yml', 'master', '77', sleep=naps.append)
+        return result, [call for call in calls if call[:2] == ('workflow', 'run')], naps
+
+    def test_waits_until_github_really_lists_the_successor(self):
+        successor = {'databaseId': 90, 'status': 'queued', 'conclusion': None}
+        result, dispatches, naps = self.hand_over([self.OLD, self.OLD, self.OLD + [successor]])
+        self.assertTrue(result)
+        self.assertEqual(dispatches, [('workflow', 'run', 'takt.yml', '--ref', 'master', '-f', 'predecessor=77')])
+        self.assertEqual(naps, [20, 20])
+
+    def test_swallowed_dispatch_is_reported_as_failed(self):
+        polls = takt.HANDOVER_CONFIRM_SECONDS // 20
+        result, dispatches, naps = self.hand_over([self.OLD] * (polls + 1))
+        self.assertFalse(result)                       # ältere Läufe zählen nicht als Nachfolger
+        self.assertEqual((len(dispatches), len(naps)), (1, polls))
+
+    def test_successor_that_failed_at_once_does_not_count(self):
+        polls = takt.HANDOVER_CONFIRM_SECONDS // 20
+        broken = {'databaseId': 90, 'status': 'completed', 'conclusion': 'failure'}
+        self.assertFalse(self.hand_over([self.OLD] + [self.OLD + [broken]] * polls)[0])
+
+    def test_successor_that_already_finished_regularly_counts(self):
+        done = {'databaseId': 90, 'status': 'completed', 'conclusion': 'success'}
+        self.assertTrue(self.hand_over([self.OLD, self.OLD + [done]])[0])
+
+    def test_failed_dispatch_and_flaky_status_queries(self):
+        result, dispatches, naps = self.hand_over([self.OLD], dispatch_error=RuntimeError('HTTP 503'))
+        self.assertEqual((result, naps), (False, []))  # gar nicht ausgelöst: sofort melden
+        successor = {'databaseId': 90, 'status': 'in_progress', 'conclusion': None}
+        flaky = [RuntimeError('HTTP 502'), RuntimeError('HTTP 502'), self.OLD + [successor]]
+        self.assertTrue(self.hand_over(flaky)[0])      # gestörte Abfragen werden einfach wiederholt
+
+    def test_start_check_survives_a_short_outage_and_then_watches_anyway(self):
+        naps = []
+        with patch.object(takt, 'other_watch', side_effect=[RuntimeError('HTTP 502'), 100]):
+            self.assertEqual(takt.first_watch_check('takt.yml', '200', '', sleep=naps.append), 100)
+        with patch.object(takt, 'other_watch', side_effect=RuntimeError('HTTP 502')) as query:
+            self.assertIsNone(takt.first_watch_check('takt.yml', '200', '', sleep=naps.append))
+            self.assertEqual(query.call_count, takt.START_TRIES)
+
+    def test_job_limit_leaves_room_for_a_running_import_and_handover_retries(self):
+        workflow = (takt.ROOT.parent / '.github/workflows/wu-lunch-takt.yml').read_text(encoding='utf-8')
+        limit = int(workflow.split('timeout-minutes:')[1].split()[0])
+        attempt = (takt.HANDOVER_CONFIRM_SECONDS + takt.RETRY_SECONDS) / 60
+        self.assertLessEqual(limit, 355)               # GitHub selbst beendet Jobs nach 360 Minuten
+        self.assertGreaterEqual(limit - takt.BUDGET_MINUTES - 25, 3 * attempt)
+
+
 class WatchRunSimulation(unittest.TestCase):
     """Ganzer Wachlauf mit simulierter Uhr."""
 
-    def simulate(self, start, until, publish_at, rival=False, max_minutes=None):
+    def simulate(self, start, until, publish_at, rival=False, max_minutes=None, swallowed=0, outage=0,
+                 failing_starts=0):
         clock = {'now': start, 'imported': False}   # 'imported': neue Menüs wurden tatsächlich abgeholt
-        log = {'imports': [], 'dispatched': []}
+        log = {'imports': [], 'dispatched': [], 'failed': []}
+        github = {'listings': 0, 'failing_starts': failing_starts}
         class Clock(datetime):
             @classmethod
             def now(cls, tz=None):
@@ -227,6 +301,10 @@ class WatchRunSimulation(unittest.TestCase):
                      'data/update-status.json': {'last_completed': (start - timedelta(hours=3)).isoformat()}}
             return [files[path] for path in paths]
         def trigger(workflow, branch, **kwargs):
+            if github['failing_starts'] > 0:            # GitHub nimmt den Start gerade nicht an
+                github['failing_starts'] -= 1
+                log['failed'].append(clock['now'])
+                raise RuntimeError('gh workflow run: HTTP 503')
             log['imports'].append(clock['now'])
             if clock['now'] >= publish_at:              # das Restaurant hat inzwischen veröffentlicht
                 clock['imported'] = True
@@ -234,7 +312,13 @@ class WatchRunSimulation(unittest.TestCase):
             return {'status': 'completed'}
         def gh(*args, **kwargs):
             if args[:2] == ('run', 'list'):
-                return json.dumps([{'databaseId': 5, 'status': 'in_progress'}] if rival else [])
+                github['listings'] += 1
+                if github['listings'] <= outage:
+                    raise RuntimeError('gh run list: HTTP 502')
+                rows = [{'databaseId': 5, 'status': 'in_progress'}] if rival else []
+                if len(log['dispatched']) > swallowed:   # der Nachfolger wird wirklich geführt
+                    rows.append({'databaseId': 78, 'status': 'queued', 'conclusion': None})
+                return json.dumps(rows)
             log['dispatched'].append(args)
             return ''
         budget = max_minutes or 10 ** 6
@@ -290,6 +374,29 @@ class WatchRunSimulation(unittest.TestCase):
     def test_second_watch_exits_without_importing(self):
         ended, log = self.simulate(at(16, 6, 0), until=at(16, 12, 0), publish_at=at(16, 8, 0), rival=True)
         self.assertEqual((log['imports'], log['dispatched'], ended), ([], [], at(16, 6, 0)))
+
+    def test_swallowed_handover_is_repeated_until_a_successor_exists(self):
+        handover = ('workflow', 'run', WATCH['workflow'], '--ref', 'master', '-f', 'predecessor=77')
+        ended, log = self.simulate(at(14, 1, 0), until=at(16, 0, 0), publish_at=at(16, 8, 0), max_minutes=120,
+                                   swallowed=2)
+        self.assertEqual(log['dispatched'], [handover] * 3)
+        self.assertLess(ended, at(14, 3, 20))                                    # danach endet der alte Lauf
+
+    def test_watch_starts_despite_a_short_github_outage(self):
+        for outage in (2, takt.START_TRIES):
+            _, log = self.simulate(at(16, 6, 0), until=at(16, 7, 0), publish_at=at(16, 8, 0), outage=outage)
+            self.assertGreaterEqual(len(log['imports']), 3, outage)             # Montagstakt läuft trotzdem
+
+    def test_failed_import_start_is_retried_at_once_instead_of_skipping_the_time(self):
+        _, log = self.simulate(at(14, 7, 30), until=at(14, 12, 0), publish_at=at(16, 8, 0), failing_starts=2)
+        self.assertEqual([m.strftime('%H:%M') for m in log['failed']], ['08:00', '08:01'])
+        self.assertEqual(self.stamps(log), ['Sat 08:02'])
+
+    def test_permanently_failing_import_start_gives_up_until_the_next_time(self):
+        _, log = self.simulate(at(14, 7, 30), until=at(14, 13, 30), publish_at=at(16, 8, 0), failing_starts=10 ** 6)
+        morning = [m for m in log['failed'] if m < at(14, 12, 0)]
+        self.assertEqual(len(morning), takt.MAX_FAILED_STARTS)                   # kein Dauerfeuer
+        self.assertEqual(log['failed'][takt.MAX_FAILED_STARTS].strftime('%H:%M'), '13:00')
 
 
 if __name__ == '__main__':

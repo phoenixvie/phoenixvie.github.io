@@ -56,6 +56,12 @@ Zeitplan des Taktgebers) prüft, ob eine Wache gebraucht wird und läuft, und st
 Ein verpasster Termin wird beim nächsten Start sofort nachgeholt. Vor Ablauf der GitHub-Höchstlaufzeit (6 Stunden) übergibt der Wächter selbst an
 einen Nachfolger.
 
+Kurze GitHub-Störungen reißen die Kette nicht (ergänzt am 17.11.2026, nach dem ersten echten Wachlauf): Der alte Wächter endet erst, wenn GitHub
+den Nachfolger wirklich führt – wartend, laufend oder schon wieder regulär beendet; sonst übergibt er nach einer Minute erneut. Nimmt GitHub den
+Start eines Imports nicht an, wird er im Minutenabstand bis zu fünfmal wiederholt, statt den Termin auszulassen. Bleibt beim Start die Abfrage
+"läuft schon ein Wächter?" unbeantwortet, wacht der Lauf trotzdem: Ein doppelter Wächter ist harmlos (der Import überspringt zu dichte Starts,
+und bei der nächsten Übergabe weicht der jüngere), ein fehlender wäre es nicht.
+
 **Grenzen, ehrlich benannt:** Der Wächter belegt in seinem Zeitraum einen GitHub-Rechner, der meist nur wartet (Freitagabend bis Montagabend,
 rund 72 Stunden pro Woche; länger, solange Menüs fehlen). Für öffentliche Repositories ist das kostenlos; GitHub sieht Dauerläufer aber nicht gern.
 Garantiert minutengenau und ohne wartenden Rechner ist nur ein externer Auslöser (siehe unten).

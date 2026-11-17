@@ -32,6 +32,11 @@ angestoßen (eigener Zeitplan plus `ensure` aus anderen Workflows). Läuft schon
 einer, beendet sich der neue sofort. Fällt einer aus, übernimmt der nächste.
 Ein verpasster Termin wird beim nächsten Start sofort nachgeholt.
 
+Kurze GitHub-Störungen reißen die Kette nicht: Die Übergabe gilt erst, wenn der
+Nachfolger wirklich bei GitHub geführt wird (sonst wird sie wiederholt), ein
+nicht ausgelöster Import wird nach einer Minute erneut versucht, und eine
+unbeantwortete Abfrage beim Start beendet die Wache nicht.
+
 Nur Standardbibliothek, damit `ensure` in jedem Workflow ohne Installation läuft.
 """
 from __future__ import annotations
@@ -48,11 +53,18 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[1]
 ACTIVE_STATES = {"in_progress", "queued", "pending", "requested", "waiting"}
 # Ein Job darf bei GitHub höchstens sechs Stunden laufen; rechtzeitig übergeben.
-BUDGET_MINUTES = 320
+# Der Abstand zur Jobgrenze (350 Minuten im Workflow) lässt Zeit für einen noch
+# laufenden Import (bis 25 Minuten) und mehrere Übergabeversuche.
+BUDGET_MINUTES = 300
 STEP_SECONDS = 600
 STALE_SOURCE_DAYS = 8
 # Ab dieser Stunde zählt Mo–Do bereits das Menü des nächsten Tages.
 LOOK_AHEAD_HOUR = 14
+# Überbrücken kurzer GitHub-Störungen (siehe "Selbstheilung" oben).
+START_TRIES = 3
+HANDOVER_CONFIRM_SECONDS = 180
+MAX_FAILED_STARTS = 5
+RETRY_SECONDS = 60
 
 
 def policy():
@@ -231,18 +243,83 @@ def other_watch(workflow, own_id, predecessor):
     return min(older) if older else None
 
 
+def first_watch_check(workflow, own_id, predecessor, sleep=None):
+    """Läuft schon ein anderer Wächter? Übersteht kurze GitHub-Störungen.
+
+    Bleibt die Abfrage mehrmals ohne Antwort, wacht dieser Lauf trotzdem. Ein
+    doppelter Wächter ist harmlos (der Import überspringt zu dichte Starts, und
+    bei der nächsten Übergabe weicht der jüngere); ein fehlender ist es nicht.
+    """
+    sleep = sleep or time.sleep
+    for attempt in range(START_TRIES):
+        try:
+            return other_watch(workflow, own_id, predecessor)
+        except Exception as error:
+            print(f"::warning::Wächterabfrage fehlgeschlagen ({attempt + 1}/{START_TRIES}):",
+                  str(error)[:200], flush=True)
+            if attempt + 1 < START_TRIES:
+                sleep(20)
+    return None
+
+
+def dispatched_runs(workflow):
+    """Die jüngsten per Auftrag (nicht per Zeitplan) gestarteten Läufe eines Workflows."""
+    return json.loads(gh("run", "list", "--workflow", workflow, "--event", "workflow_dispatch", "--limit", "10",
+                         "--json", "databaseId,status,conclusion", check=False) or "[]")
+
+
+def hand_over(workflow, branch, own_id, sleep=None):
+    """Nachfolger starten und abwarten, bis GitHub ihn wirklich führt. True bei Erfolg.
+
+    Ohne diese Bestätigung bliebe nach einer verschluckten Übergabe bis zum
+    nächsten GitHub-Zeitplan (oft Stunden) niemand auf Wache. Als Nachfolger
+    zählt nur ein Lauf, den es vor der Übergabe noch nicht gab und der wartet,
+    läuft oder sich bereits regulär beendet hat – ein sofort gescheiterter nicht.
+    """
+    sleep = sleep or time.sleep
+    own = int(own_id or 0)
+    try:
+        newest = max([int(row["databaseId"]) for row in dispatched_runs(workflow)] + [own])
+    except Exception:
+        newest = own
+    try:
+        gh("workflow", "run", workflow, "--ref", branch, "-f", "predecessor=" + own_id)
+    except Exception as error:
+        print("::warning::Übergabe nicht ausgelöst:", str(error)[:200], flush=True)
+        return False
+    for _ in range(HANDOVER_CONFIRM_SECONDS // 20):
+        sleep(20)
+        try:
+            rows = dispatched_runs(workflow)
+        except Exception:
+            continue
+        if any(int(row["databaseId"]) > newest
+               and (row.get("status") in ACTIVE_STATES or row.get("conclusion") == "success") for row in rows):
+            return True
+    print("::warning::Nachfolger ist nach der Übergabe nicht erschienen.", flush=True)
+    return False
+
+
 def trigger_import(workflow, branch, wait_minutes=25, sleep=time.sleep, clock=time.time):
-    """Import-Workflow auslösen und auf dessen Ende warten."""
+    """Import-Workflow auslösen und auf dessen Ende warten.
+
+    Nur das Auslösen selbst darf scheitern (dann versucht es der Wächter gleich
+    noch einmal). Eine gestörte Statusabfrage danach wird einfach wiederholt.
+    """
     began = datetime.now(timezone.utc).replace(tzinfo=None, microsecond=0)
     gh("workflow", "run", workflow, "--ref", branch)
     deadline = clock() + wait_minutes * 60
     seen = None
     while clock() < deadline:
         sleep(20)
-        rows = json.loads(gh("run", "list", "--workflow", workflow, "--event", "workflow_dispatch",
-                             "--limit", "5", "--json", "databaseId,status,conclusion,createdAt", check=False) or "[]")
-        fresh = [row for row in rows
-                 if datetime.fromisoformat(row["createdAt"].replace("Z", "")) >= began - timedelta(seconds=30)]
+        try:
+            rows = json.loads(gh("run", "list", "--workflow", workflow, "--event", "workflow_dispatch",
+                                 "--limit", "5", "--json", "databaseId,status,conclusion,createdAt", check=False) or "[]")
+            fresh = [row for row in rows
+                     if datetime.fromisoformat(row["createdAt"].replace("Z", "")) >= began - timedelta(seconds=30)]
+        except Exception as error:
+            print("Statusabfrage des Imports wird wiederholt:", str(error)[:120], flush=True)
+            continue
         if not fresh:
             continue
         seen = max(fresh, key=lambda row: row["databaseId"])
@@ -266,11 +343,12 @@ def run():
     predecessor = os.environ.get("WU_TAKT_PREDECESSOR", "")
     zone = ZoneInfo(config["timezone"])
     started = datetime.now(zone)
-    rival = other_watch(watch["workflow"], own_id, predecessor)
+    rival = first_watch_check(watch["workflow"], own_id, predecessor)
     if rival:
         print(f"Wächter {rival} ist bereits aktiv – dieser Lauf beendet sich.")
         return 0
     last_import = last_completed(published("data/update-status.json")[0] or {})
+    failed_starts = 0
     while True:
         now = datetime.now(zone)
         menus, status = published("data/menus.json", "status.json")
@@ -281,15 +359,25 @@ def run():
         if step["action"] == "stop":
             return 0
         if step["action"] == "handover":
-            gh("workflow", "run", watch["workflow"], "--ref", branch, "-f", "predecessor=" + own_id)
-            print("Übergabe an Nachfolger ausgelöst.")
-            return 0
+            if hand_over(watch["workflow"], branch, own_id):
+                print("Übergabe an Nachfolger ausgelöst.")
+                return 0
+            # Weiter wachen und erneut übergeben, bis es klappt (längstens bis GitHub den Job beendet).
+            time.sleep(RETRY_SECONDS)
+            continue
         if step["action"] == "import":
             try:
                 outcome = trigger_import(watch["import_workflow"], branch)
                 print("Import:", json.dumps(outcome, ensure_ascii=False), flush=True)
+                failed_starts = 0
             except Exception as error:  # Ein Fehlstart beendet die Wache nicht.
-                print("::warning::Import konnte nicht ausgelöst werden:", str(error)[:200], flush=True)
+                failed_starts += 1
+                print(f"::warning::Import konnte nicht ausgelöst werden ({failed_starts}/{MAX_FAILED_STARTS}):",
+                      str(error)[:200], flush=True)
+                if failed_starts < MAX_FAILED_STARTS:
+                    time.sleep(RETRY_SECONDS)   # gleich noch einmal, statt den Termin auszulassen
+                    continue
+                failed_starts = 0               # aufgeben bis zum nächsten Termin bzw. Takt
             last_import = datetime.now(zone)
             continue
         time.sleep(max(5, step["seconds"]))
