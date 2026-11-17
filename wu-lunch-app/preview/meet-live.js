@@ -38,6 +38,10 @@
     for (const [name, replacement] of Object.entries(values)) value = value.replace('{' + name + '}', replacement);
     return value;
   };
+  // Schalter für die WU-Prüfung der E-Mail-Adresse. Vorgabe des Betreibers (17.11.2026): für den internen
+  // Test der APK vorerst AUS, damit auch andere Adressen funktionieren. Vor dem öffentlichen Start wieder auf
+  // true stellen und meet-preview-wu-email.sql in Supabase einspielen (dort prüft die Datenbank dasselbe).
+  const requireWuEmail = false;
   const wuEmail = value => /^[^\s@]+@(?:[a-z0-9-]+\.)*wu\.ac\.at$/i.test(String(value || '').trim());
   // Vornamen-Prüfung (Vorgabe 17.11.2026): Der Vorname ist für alle sichtbar. Damit dort keine Botschaften,
   // Beschimpfungen oder Parolen stehen, wird nur eine Namensform angenommen (ein Name aus Buchstaben oder ein
@@ -153,7 +157,7 @@
       // (…@wu.ac.at und Unterdomänen wie …@s.wu.ac.at für Studierende). Die Datenbank prüft dasselbe,
       // sobald meet-preview-wu-email.sql eingespielt ist.
       setName(state.pendingName);
-      if (!wuEmail(state.pendingEmail)) { track('meet_input_rejected', {reason: 'email_not_wu'}); state.error='Bitte verwende deine WU-Mailadresse (…@wu.ac.at oder …@s.wu.ac.at).'; render(); return; }
+      if (requireWuEmail && !wuEmail(state.pendingEmail)) { track('meet_input_rejected', {reason: 'email_not_wu'}); state.error='Bitte verwende deine WU-Mailadresse (…@wu.ac.at oder …@s.wu.ac.at).'; render(); return; }
     }
     const code = a === 'meet-verify' ? document.getElementById('meet-code').value.trim() : '';
     state.busy=true; render();

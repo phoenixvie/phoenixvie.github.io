@@ -48,9 +48,7 @@ test('preview requires verified email before a registration and supports cancell
   assert.match(context.renderMeet(),/Findet jeden Montag und Mittwoch statt\./);
   await click('meet-show-form');
   assert.match(context.renderMeet(),/Verifizierung deiner WU-Mailadresse, damit nur WU Studenten teilnehmen können\. Du bekommst einen Code per E-Mail\./);
-  // Der Text verspricht die WU-Prüfung – also nimmt das Formular auch nur WU-Adressen an.
-  await click('meet-send-code');assert.equal(otpCalls,0);assert.match(context.renderMeet(),/Bitte verwende deine WU-Mailadresse/);
-  inputs['meet-email'].value='anna@wu.ac.at.example.com';await click('meet-send-code');assert.equal(otpCalls,0);   // nur echte WU-Endung
+  // Die WU-Prüfung der Adresse ist für den internen Test abgeschaltet (eigener Test weiter unten).
   inputs['meet-email'].value='anna@s.wu.ac.at';
   // Vornamen-Prüfung greift vor dem Versand des Codes.
   inputs['meet-first-name'].value='Wählt Liste 3!';await click('meet-send-code');assert.equal(otpCalls,0);assert.match(context.renderMeet(),/nur deinen Vornamen/);
@@ -84,7 +82,7 @@ test('preview requires verified email before a registration and supports cancell
   const events=tracked.map(row=>row[0]);
   for(const expected of ['meet_open','meet_date_changed','meet_signup_started','meet_input_rejected','meet_code_requested','meet_code_result','meet_joined','meet_left','meet_mail_opened'])
     assert.ok(events.includes(expected),'Ereignis fehlt: '+expected);
-  assert.deepEqual([...new Set(tracked.filter(row=>row[0]==='meet_input_rejected').map(row=>JSON.parse(row[1]).reason))].sort(),['email_not_wu','name_blocked','name_format']);
+  assert.deepEqual([...new Set(tracked.filter(row=>row[0]==='meet_input_rejected').map(row=>JSON.parse(row[1]).reason))].sort(),['name_blocked','name_format']);
   assert.deepEqual(tracked.filter(row=>row[0]==='meet_code_result').map(row=>JSON.parse(row[1]).result),['invalid','ok']);
   assert.doesNotMatch(JSON.stringify(tracked),/Anna|anna@|123456|000000|example/);
 });
@@ -256,4 +254,34 @@ test('list entry shows the number of people signed up for the next date, and not
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
   assert.match(app,/let meetBadge=\(\)=>'';/);assert.match(app,/Gemeinsam essen gehen<\/span><\/span>\$\{meetBadge\(\)\}\$\{icon\('chevron_right','chevron'\)\}/);
   const {ui}=globalThis.WULunchI18n;assert.equal(ui['{count} angemeldet'],'{count} signed up');
+});
+
+test('WU e-mail check is switched off for the internal test and works again when switched on', async () => {
+  const original=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  assert.equal(original.split('const requireWuEmail = false;').length,2,'Schalter steht für den internen Test auf AUS');
+  const start=async source=>{
+    const handlers={}, tracked=[]; let otpCalls=0;
+    const client={auth:{getSession:async()=>({data:{session:null},error:null}),signInWithOtp:async()=>{otpCalls++;return {error:null}}},from(){return {select(){return {in:async()=>({data:[],error:null}),gte:async()=>({data:[],error:null})}}}}};
+    const inputs={'meet-first-name':{value:'Anna'},'meet-email':{value:''}};
+    const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
+      app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},localStorage:{getItem:()=>null,setItem(){}},
+      setInterval(){},console,Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+      renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d,trackUsage:(event,props)=>tracked.push(event+' '+JSON.stringify(props))};
+    vm.createContext(context);vm.runInContext(source,context);
+    const click=async action=>{handlers.click({target:{closest:()=>({dataset:{action}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));};
+    await click('meet-preview');await click('meet-show-form');
+    const send=async email=>{inputs['meet-email'].value=email;const before=otpCalls;await click('meet-send-code');return {sent:otpCalls>before,screen:context.renderMeet()};};
+    return {send,tracked};
+  };
+  // Ausgelieferter Stand: jede gültige Adresse bekommt einen Code, eine ungültige weiterhin nicht.
+  const open=await start(original);
+  assert.equal((await open.send('keine-adresse')).sent,false);
+  const other=await open.send('anna@example.com');assert.equal(other.sent,true);assert.doesNotMatch(other.screen,/Bitte verwende deine WU-Mailadresse/);
+  assert.doesNotMatch(open.tracked.join('\n'),/email_not_wu/);
+  // Mit eingeschaltetem Schalter gelten wieder nur Adressen der WU.
+  const strict=await start(original.replace('const requireWuEmail = false;','const requireWuEmail = true;'));
+  const rejected=await strict.send('anna@example.com');assert.equal(rejected.sent,false);assert.match(rejected.screen,/Bitte verwende deine WU-Mailadresse/);
+  assert.equal((await strict.send('anna@wu.ac.at.example.com')).sent,false);
+  assert.match(strict.tracked.join('\n'),/email_not_wu/);
+  assert.equal((await strict.send('anna@s.wu.ac.at')).sent,true);
 });
