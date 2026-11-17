@@ -42,8 +42,8 @@ test('preview requires verified email before a registration and supports cancell
   // Vor der Anmeldung gibt es weder Treffpunkt-Bereich noch Karte, auch nicht unscharf.
   assert.doesNotMatch(context.renderMeet(),/meet-reveal|meet-map|meet-locked|Nach Anmeldung sichtbar|meeting-point|maps\/search/);
   assert.match(context.renderMeet(),/<b>Info nach Anmeldung<\/b>/);
-  // Über dem Einleitungstext steht eine schlichte Zeichnung (gemeinsam am Tisch), nicht im Formular.
-  assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^>]*aria-label="Vier Personen sitzen gemeinsam an einem Tisch"/);
+  // Über dem Einleitungstext steht eine schlichte Zeichnung (Personen im Gespräch über Essen), nicht im Formular.
+  assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^>]*aria-label="Vier Personen stehen zusammen und unterhalten sich über Essen"/);
   assert.match(context.renderMeet(),/Findet jeden Montag und Mittwoch statt\./);
   await click('meet-show-form');
   assert.match(context.renderMeet(),/Du bekommst einen Code per E-Mail und gibst ihn hier ein\./);
