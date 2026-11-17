@@ -1,13 +1,15 @@
 name: WU Lunch – Taktgeber (pünktlicher Menüimport)
 
 # Warum: GitHub startet zeitgesteuerte Läufe dieses Repositorys nur wenige Male
-# pro Tag und oft Stunden zu spät. Dieser Wächter hält rund um den Wochenstart
-# durch und löst den normalen Import pünktlich aus. Details und Zeiten:
-# wu-lunch/scripts/takt.py und "watch" in wu-lunch/update-policy.json.
+# pro Tag und oft Stunden zu spät. Dieser Wächter wartet auf die festen Termine
+# (Freitagnacht, Samstag und Sonntag je dreimal, Montag engmaschig, Dienstag bis
+# Freitag täglich, solange etwas fehlt) und löst den normalen Import pünktlich
+# aus. Details und Zeiten: wu-lunch/scripts/takt.py und "watch" in
+# wu-lunch/update-policy.json.
 #
-# Kosten: Der Job wartet die meiste Zeit nur. Er läuft ausschließlich im
-# Wachzeitraum (Standard: Sonntag 17:00 bis Montag 13:30) bzw. werktags am
-# Vormittag, solange Menüs fehlen, und beendet sich sonst nach Sekunden.
+# Kosten: Der Job wartet die meiste Zeit nur. Er ist von Freitag 18:00 bis Montag
+# 18:00 aktiv und darüber hinaus, solange ein Menü fehlt; sonst beendet er sich
+# nach Sekunden.
 
 on:
   schedule:

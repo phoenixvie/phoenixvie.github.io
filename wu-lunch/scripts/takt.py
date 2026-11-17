@@ -10,17 +10,27 @@ und Topf & Deckel verspätet.
 
 Wie es funktioniert
 -------------------
-Rund um den Wochenstart (Standard: Sonntag 17:00 bis Montag 13:30, siehe
-`watch` in update-policy.json) hält ein einzelner Wächter-Job durch: Er wartet,
-löst den normalen Import-Workflow aus und übergibt vor Ablauf seiner Laufzeit
-an einen Nachfolger. Solange für den aktuellen Tag noch Menüs fehlen, prüft er
-vormittags alle 15 Minuten, sonst stündlich; nachts ruht er.
+Ein einzelner Wächter-Job wartet auf die festen Termine aus `watch.slots` in
+update-policy.json und löst dann den normalen Import-Workflow aus:
+
+- Freitagnacht (Sa 00:10): alles, was bis Freitagabend für die neue Woche
+  veröffentlicht wurde. (Bis Freitag 24:00 zeigen Seite und App die laufende
+  Woche; der Import stellt deshalb erst nach Mitternacht auf die neue um.)
+- Samstag und Sonntag je dreimal.
+- Montag ab 05:30 alle 15 Minuten, solange Menüs fehlen; dazu feste Termine.
+- Dienstag bis Freitag 07:00 und 10:30, solange noch ein Menü fehlt.
+
+Der Wächter ist von Freitag 18:00 bis Montag 18:00 immer aktiv und darüber
+hinaus, solange ein Menü fehlt. Ist alles da, endet er bis zum nächsten
+Wochenende; unter der Woche genügt dann das Auffangnetz des Import-Workflows.
+Vor Ablauf der GitHub-Höchstlaufzeit übergibt er an einen Nachfolger.
 
 Selbstheilung
 -------------
 Der Wächter wird von jedem tatsächlich gestarteten GitHub-Zeitplan neu
 angestoßen (eigener Zeitplan plus `ensure` aus anderen Workflows). Läuft schon
 einer, beendet sich der neue sofort. Fällt einer aus, übernimmt der nächste.
+Ein verpasster Termin wird beim nächsten Start sofort nachgeholt.
 
 Nur Standardbibliothek, damit `ensure` in jedem Workflow ohne Installation läuft.
 """
@@ -31,7 +41,7 @@ import os
 import subprocess
 import sys
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, time as clock_time, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -41,9 +51,8 @@ ACTIVE_STATES = {"in_progress", "queued", "pending", "requested", "waiting"}
 BUDGET_MINUTES = 320
 STEP_SECONDS = 600
 STALE_SOURCE_DAYS = 8
-# Wochenkarte gilt als veröffentlicht: Ein einzelner leerer Tag ist dann Absicht
-# des Restaurants (z. B. Feiertag) und kein Grund für Prüfungen im 15-Minuten-Takt.
-PUBLISHED_STATES = {"verified", "ai_checked", "ai_crosschecked", "undated", "current"}
+# Ab dieser Stunde zählt Mo–Do bereits das Menü des nächsten Tages.
+LOOK_AHEAD_HOUR = 14
 
 
 def policy():
@@ -77,43 +86,61 @@ def in_period(local, watch):
     return False
 
 
-def in_hot(local, watch):
-    hot = watch["hot"]
-    return (local.isoweekday() % 7 in hot["days"]
-            and _minutes(hot["from"]) <= local.hour * 60 + local.minute < _minutes(hot["to"]))
+def slots_on(day, watch, zone):
+    texts = watch.get("slots", {}).get(str(day.isoweekday() % 7), [])
+    return sorted(datetime.combine(day, clock_time(*map(int, text.split(":"))), tzinfo=zone) for text in texts)
 
 
-def quiet_seconds(local, watch):
-    """Sekunden bis zum Ende der Nachtruhe; 0 außerhalb der Nachtruhe."""
-    quiet = watch["quiet"]
-    start, end = _minutes(quiet["from"]), _minutes(quiet["to"])
+def latest_slot(local, watch):
+    """Jüngster fester Termin, der bereits fällig war."""
+    for back in range(8):
+        due = [slot for slot in slots_on(local.date() - timedelta(days=back), watch, local.tzinfo) if slot <= local]
+        if due:
+            return due[-1]
+    return None
+
+
+def next_slot(local, watch):
+    for ahead in range(8):
+        coming = [slot for slot in slots_on(local.date() + timedelta(days=ahead), watch, local.tzinfo) if slot > local]
+        if coming:
+            return coming[0]
+    return None
+
+
+def dense_interval(local, watch):
+    """Minutentakt eines dichten Zeitfensters (Montagvormittag) oder None."""
     minute = local.hour * 60 + local.minute
-    if start > end:  # über Mitternacht
-        if minute >= start:
-            return (1440 - minute + end) * 60 - local.second
-        if minute < end:
-            return (end - minute) * 60 - local.second
-        return 0
-    return (end - minute) * 60 - local.second if start <= minute < end else 0
+    for window in watch.get("dense", []):
+        if local.isoweekday() % 7 == window["day"] and _minutes(window["from"]) <= minute < _minutes(window["to"]):
+            return window["every_minutes"]
+    return None
 
 
-def target_day(today):
-    """Tag, dessen Menü Besucher jetzt sehen: heute, am Wochenende der nächste Montag."""
+def target_day(local):
+    """Tag, dessen Menü als Nächstes gebraucht wird.
+
+    Am Wochenende der kommende Montag; Montag bis Donnerstag ab dem Nachmittag
+    schon der nächste Tag, damit der Wächter über Nacht aktiv bleibt, wenn für
+    morgen noch etwas fehlt. Freitagnachmittag bleibt Freitag: Die neue Woche
+    beginnt für Import und Anzeige erst am Samstag.
+    """
+    today = local.date()
     if today.weekday() >= 5:
         return today + timedelta(days=7 - today.weekday())
+    if today.weekday() <= 3 and local.hour >= LOOK_AHEAD_HOUR:
+        return today + timedelta(days=1)
     return today
 
 
 def missing_menus(data, status, local, watch):
-    """Restaurants ohne Menü für den angezeigten Tag (Grund, weiter zu prüfen).
+    """Restaurants ohne Menü für den als Nächstes gebrauchten Tag.
 
-    Dauerangebote/Saisonkarten zählen nicht. Hat ein Restaurant seine
-    Wochenkarte bereits geprüft veröffentlicht und nur dieser Tag ist leer,
-    gilt das als Absicht (z. B. Feiertag). Eine Quelle, die seit über einer
+    Dauerangebote/Saisonkarten zählen nicht. Eine Quelle, die seit über einer
     Woche nichts mehr geliefert hat, braucht einen Menschen – sie hält den
-    Wächter nicht endlos im 15-Minuten-Takt.
+    Wächter nicht endlos aktiv.
     """
-    day = target_day(local.date())
+    day = target_day(local)
     monday = day - timedelta(days=day.weekday())
     skipped = set(watch.get("untracked", []))
     restaurants = [r for r in (data or {}).get("restaurants", []) if r.get("id") not in skipped]
@@ -121,10 +148,7 @@ def missing_menus(data, status, local, watch):
         return sorted(r["id"] for r in restaurants) or ["*"]
     missing = []
     for restaurant in restaurants:
-        days = restaurant.get("days", {})
-        if days.get(day.isoformat()):
-            continue
-        if restaurant.get("status") in PUBLISHED_STATES and any(days.values()):
+        if restaurant.get("days", {}).get(day.isoformat()):
             continue
         last = ((status or {}).get("sources", {}).get(restaurant["id"], {}) or {}).get("last_success")
         try:
@@ -140,22 +164,28 @@ def decide(now, *, config, missing, last_import_at, started_at, budget_minutes=B
     """Nächster Schritt des Wächters als reine Entscheidung (ohne Nebenwirkungen)."""
     watch = config["watch"]
     local = vienna(now, config)
-    hot_gap = in_hot(local, watch) and bool(missing)
-    if not (in_period(local, watch) or hot_gap):
+    if not (in_period(local, watch) or missing):
         return {"action": "stop", "reason": "außerhalb des Wachzeitraums und kein Menü ausständig"}
     if (now - started_at).total_seconds() >= budget_minutes * 60:
         return {"action": "handover", "reason": "Laufzeitgrenze des Jobs erreicht"}
-    resting = quiet_seconds(local, watch)
-    if resting > 0:
-        return {"action": "sleep", "seconds": min(resting, STEP_SECONDS), "reason": "Nachtruhe"}
-    interval = watch["interval_minutes"]["hot_incomplete" if hot_gap else "default"]
+    slot = latest_slot(local, watch)
     if last_import_at is None:
-        return {"action": "import", "reason": "noch kein Import in diesem Wachzeitraum bekannt"}
-    waited = (now - last_import_at).total_seconds()
-    if waited >= interval * 60:
-        return {"action": "import", "reason": f"letzter Import vor {int(waited // 60)} Minuten (Takt {interval})"}
-    return {"action": "sleep", "seconds": min(interval * 60 - waited, STEP_SECONDS),
-            "reason": f"nächster Import im {interval}-Minuten-Takt"}
+        return {"action": "import", "reason": "noch kein Import bekannt"}
+    if slot is not None and last_import_at < slot:
+        return {"action": "import", "reason": "fester Termin " + slot.strftime("%d.%m. %H:%M")}
+    pause = STEP_SECONDS
+    every = dense_interval(local, watch) if missing else None
+    if every:
+        waited = (now - last_import_at).total_seconds()
+        if waited >= every * 60:
+            return {"action": "import", "reason": f"Menüs fehlen; letzter Import vor {int(waited // 60)} Minuten (Takt {every})"}
+        pause = every * 60 - waited
+    coming = next_slot(local, watch)
+    if coming is not None:
+        pause = min(pause, (coming - local).total_seconds())
+    return {"action": "sleep", "seconds": max(1, min(pause, STEP_SECONDS)),
+            "reason": "wartet auf " + (coming.strftime("%d.%m. %H:%M") if coming else "den nächsten Termin")
+                      + (f" bzw. den {every}-Minuten-Takt" if every else "")}
 
 
 # ---------------------------------------------------------------------------
@@ -262,7 +292,7 @@ def run():
                 print("::warning::Import konnte nicht ausgelöst werden:", str(error)[:200], flush=True)
             last_import = datetime.now(zone)
             continue
-        time.sleep(max(30, step["seconds"]))
+        time.sleep(max(5, step["seconds"]))
 
 
 def ensure():
@@ -274,7 +304,7 @@ def ensure():
     data_path, status_path = ROOT / "data/menus.json", ROOT / "status.json"
     read = lambda path: json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
     missing = missing_menus(read(data_path), read(status_path), local, watch)
-    if not (in_period(local, watch) or (in_hot(local, watch) and missing)):
+    if not (in_period(local, watch) or missing):
         print("Wächter derzeit nicht nötig.")
         return 0
     if other_watch(watch["workflow"], "", ""):
