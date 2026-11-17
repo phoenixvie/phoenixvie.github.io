@@ -7,6 +7,7 @@ tabs because requests fetches only the default HTML. Do not invent missing days.
 from __future__ import annotations
 import hashlib
 import importlib.util
+from collections import Counter
 import os
 import json
 import re
@@ -15,7 +16,6 @@ from datetime import date,datetime,timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from playwright.sync_api import sync_playwright
 from source_archive import capture
 from update_menus import ROOT, target_week_monday, topf_starters, topf_main_items, topf_desserts, topf_combo_items, html_lines, quality_warnings, validate_meal_components
 
@@ -35,7 +35,47 @@ def verify_week(text,monday):
     if start!=monday or end!=monday+timedelta(days=4):
         raise ValueError(f"Topf-Browser: Wochenquelle {start} bis {end} ist nicht aktuelle Woche {monday}")
 
+TAB_CLASSES_JS = """names => names.map(name => {
+  const button = [...document.querySelectorAll('button')].find(b => b.textContent.trim() === name);
+  return button ? button.className : null;
+})"""
+
+
+def active_tab(classes):
+    """Welcher Tages-Reiter ist gerade ausgewählt?
+
+    Die Seite kennzeichnet den aktiven Reiter nur über sein Aussehen: Genau einer
+    der fünf Knöpfe trägt andere Klassen als die übrigen vier. Ist das Bild nicht
+    eindeutig (Seite umgebaut), gibt es keine Antwort – dann wird nichts übernommen.
+    """
+    if len(classes) != len(DAY_NAMES) or any(not isinstance(value, str) for value in classes):
+        return None
+    counts = Counter(classes)
+    if sorted(counts.values()) != [1, len(DAY_NAMES) - 1]:
+        return None
+    return DAY_NAMES[next(i for i, value in enumerate(classes) if counts[value] == 1)]
+
+
+def open_tab(page, day, button):
+    """Reiter anklicken und erst weitermachen, wenn er wirklich aktiv ist.
+
+    17.11.2026: Der erste Klick ging verloren, weil die Seite noch nicht bereit
+    war. Der "Montag" enthielt dadurch unbemerkt die Gerichte des voreingestellten
+    heutigen Tages. Jetzt wird der Klick wiederholt und der aktive Reiter geprüft;
+    bleibt er falsch, bricht der Abruf ab, statt falsche Tage zu veröffentlichen.
+    """
+    for attempt in range(8):
+        button.click(timeout=5000)
+        page.wait_for_timeout(350 + 250 * attempt)
+        if active_tab(page.evaluate(TAB_CLASSES_JS, list(DAY_NAMES))) == day:
+            return
+    raise ValueError(f"Topf-Browser: {day}: Tages-Tab wurde nach dem Klick nicht aktiv")
+
+
 def collect_week(monday, *, with_snapshots=False):
+    # Erst hier laden: Der Browser-Treiber wird nur im Import-Lauf installiert;
+    # die reinen Prüf-Funktionen dieses Moduls sollen auch ohne ihn testbar sein.
+    from playwright.sync_api import sync_playwright
     days={}
     hashes={}
     snapshots={}
@@ -53,8 +93,7 @@ def collect_week(monday, *, with_snapshots=False):
                 button=buttons.first
                 if not button.is_visible():
                     raise ValueError(f"Topf-Browser: {day}: Tages-Tab nicht sichtbar")
-                button.click(timeout=5000)
-                page.wait_for_timeout(350)
+                open_tab(page,day,button)
                 html=page.locator("main").inner_html()
                 capture(URL,page.content().encode('utf-8'),'topfdeckel',context=day)
                 capture(URL,page.screenshot(full_page=True),'topfdeckel',kind='png',context=day)

@@ -533,11 +533,34 @@ def topf_desserts(lines):
         raise ValueError("Topf&Deckel: Dessert fehlt")
     return desserts
 
+TOPF_PORTION_TARIFF=(7.50,11.90)
+
+def topf_portion_prices(section):
+    """Klein-/Groß-Preis aus der Bereichsüberschrift der Seite lesen.
+
+    Steht dort "KLEIN € 7.50 / GROSS € 11.90", gelten diese gedruckten Preise.
+    Nur wenn die Überschrift keine Preise zeigt, gilt der bisher bekannte Tarif.
+    """
+    head=" ".join(tidy(x) for x in section[:10])
+    found=re.search(r"KLEIN\s*€\s*(\d{1,2}[.,]\d{2})\s*/?\s*GRO(?:SS|ß)\s*€\s*(\d{1,2}[.,]\d{2})",head,re.I)
+    if not found:return TOPF_PORTION_TARIFF
+    small,large=(float(x.replace(",",".")) for x in found.groups())
+    if not 0<small<large<=60:raise ValueError("Topf&Deckel: Portionspreise der Seite widersprüchlich")
+    return small,large
+
 def topf_main_items(lines):
     section=topf_section(lines,{"main dish","hauptspeisen","hauptgerichte"},
                          {"dessert","desserts","nachspeisen"})
+    small,large=topf_portion_prices(section)
     items=[]
     seen=set()
+    side_line=lambda value:bool(re.match(r"(?:[\wäöüÄÖÜ]+\s+){0,2}beilagen?\s*:",tidy(value),re.I)) or tidy(value).casefold().startswith("allergene")
+    # Wochenkarten-Layout (seit November 2026): Jede Karte lautet "[Veggie] Name /
+    # Beilage: ... Allergene: ...", das Veggie-Zeichen steht also VOR dem Gericht.
+    # Im älteren Layout ohne Beilagenzeilen steht es NACH dem Gericht. Nie beides
+    # zugleich auswerten – sonst bekäme ein Fleischgericht das Zeichen des Nachbarn.
+    described=any(side_line(x) for x in section)
+    badge=lambda j:0<=j<len(section) and tidy(section[j]).casefold() in ("veggie","vegan")
     stop_terms=("beilage:","allergene","veggie","veg","klein","gross","groß",
                 "image:","salat/suppe","mit ","nur in","€","kleine portion")
     for i,text in enumerate(section):
@@ -546,16 +569,21 @@ def topf_main_items(lines):
             continue
         if "€" in label or re.fullmatch(r"[ACDEFGHLMNOPR,\s]{1,40}",label,re.I):
             continue
+        # Beilagenzeilen in jeder Schreibweise sind kein eigenes Gericht. 18.11.2026:
+        # "Optionale Beilage: Basmatireis. Allergene: ..." wurde als Hauptgericht zum
+        # vollen Preis gelesen; die Abschlussprüfung hielt die Karte deshalb zurück.
+        if side_line(label):
+            continue
         if label.casefold() in seen:continue
         seen.add(label.casefold())
-        is_veg="veggie" in label.casefold() or (i+1<len(section) and tidy(section[i+1]).casefold()=="veggie")
+        is_veg="veggie" in label.casefold() or (badge(i-1) if described else badge(i+1))
         if label.casefold().startswith("special"):
             price=euros(" ".join(section[i+1:i+5]))
             if price is None:raise ValueError("Topf&Deckel: Special-Preis fehlt")
             item=topf_portion_item(label,"Special",None,price,"veggie" if is_veg else "unknown",
                                    "Nur groß erhältlich")
         else:
-            item=topf_portion_item(label,"Hauptgericht",7.50,11.90,"veggie" if is_veg else "unknown",
+            item=topf_portion_item(label,"Hauptgericht",small,large,"veggie" if is_veg else "unknown",
                                    "Preis klein / groß")
         items.append(item)
         if len(items)>=8:break
