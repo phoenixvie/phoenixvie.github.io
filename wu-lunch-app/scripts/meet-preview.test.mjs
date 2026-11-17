@@ -288,17 +288,19 @@ test('sign-up with first name only: field above the button, same name checks, no
       signInWithOtp:async()=>{otpCalls++;return {error:null}}},
     from:()=>({select(){return {in:async()=>({data:own,error:null}),gte:async()=>({data:own,error:null})}},insert:async row=>{own.push(row);return {error:null}},
       delete(){return {eq(){return {eq:async(_key,date)=>{own=own.filter(item=>item.meeting_date!==date);return {error:null}}}}}}})};
-  const inputs={'meet-first-name':{value:''}};
+  const inputs={'meet-first-name':{value:''}};store.set('wu-meet-preview-name','Alt');
   const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
-    app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v)},
+    app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)},
     setInterval(){},console:{...console,error(){}},Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
     renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d,trackUsage:(event,props)=>tracked.push(event+' '+JSON.stringify(props))};
   vm.createContext(context);vm.runInContext(source,context);
   const click=async action=>{handlers.click({target:{closest:()=>({dataset:{action}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));};
+  assert.equal(store.has('wu-meet-preview-name'),false,'früher gespeicherter Vorname wird entfernt');
   await click('meet-preview');
   const screen=context.renderMeet();
+  assert.match(screen,/id="meet-first-name"[^>]*value=""/);   // leer, nicht vorausgefüllt
   // Vornamenfeld steht direkt über dem Knopf, nirgends ist von E-Mail die Rede.
-  assert.match(screen,/<label class="meet-name-field">Vorname<input id="meet-first-name"[^>]*placeholder="Max"[^>]*><\/label><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button>/);
+  assert.match(screen,/<label class="meet-name-field">Dein Vorname<input id="meet-first-name"[^>]*placeholder="Max"[^>]*><\/label><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button>/);
   assert.doesNotMatch(screen,/E-Mail|Verifizierung|meet-email/);
   // Die Vornamen-Prüfung gilt weiter, vor jeder Anmeldung.
   for(const [value,reason] of [['','name_missing'],['Free Palestine','name_format'],['Hitler','name_blocked']]){
@@ -309,12 +311,15 @@ test('sign-up with first name only: field above the button, same name checks, no
   // Gültiger Vorname: anonymes Konto im Hintergrund, Anmeldung, Vorname wird gemerkt. Kein E-Mail-Code.
   inputs['meet-first-name'].value='  anna ';await click('meet-show-form');
   assert.equal(anonymous,1);assert.equal(otpCalls,0);assert.equal(own.length,1);assert.equal(own[0].first_name,'anna');assert.equal(own[0].user_id,'anon-1');
-  assert.equal(store.get('wu-meet-preview-name'),'anna');assert.equal(context.meetForm,false);
+  assert.equal(store.has('wu-meet-preview-name'),false,'Vorname wird nicht gespeichert');assert.equal(context.meetForm,false);
   assert.match(context.renderMeet(),/Du bist für diesen Termin angemeldet/);assert.match(tracked.join('\n'),/meet_joined/);
-  // Abmelden und erneut anmelden nutzt dasselbe Konto (kein zweites anonymes Konto), Name ist vorausgefüllt.
+  // Abmelden: Das Feld ist wieder leer (Vorname jedes Mal neu eingeben). Ohne Eingabe keine Anmeldung.
   await click('meet-leave');assert.equal(own.length,0);
-  assert.match(context.renderMeet(),/id="meet-first-name"[^>]*value="anna"/);
-  await click('meet-show-form');assert.equal(anonymous,1);assert.equal(own.length,1);
+  assert.match(context.renderMeet(),/id="meet-first-name"[^>]*value=""/);
+  inputs['meet-first-name'].value='';await click('meet-show-form');assert.equal(own.length,0);
+  // Erneut anmelden nutzt dasselbe Konto (kein zweites anonymes Konto).
+  inputs['meet-first-name'].value='Anna';await click('meet-show-form');assert.equal(anonymous,1);assert.equal(own.length,1);
+  await click('meet-preview');assert.match(context.renderMeet(),/Du bist für diesen Termin angemeldet/);
   // Ist die anonyme Anmeldung in Supabase (noch) ausgeschaltet, erscheint ein verständlicher Hinweis (neues Gerät, kein Konto).
   own=[];session=null;failAnonymous='Anonymous sign-ins are disabled';
   const second={...context,app:{addEventListener:(event,fn)=>{handlers[event]=fn}}};vm.createContext(second);vm.runInContext(source,second);
