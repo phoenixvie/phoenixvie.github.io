@@ -319,7 +319,7 @@ html,body,.page { background:#fff; }
     
   </div>
 
-  <script src="update-info.js?v=20261114-policy1"></script><script src="i18n.js?v=20261114-weekend1"></script><script src="data.js?v=5"></script>
+  <script src="update-info.js?v=20261114-policy1"></script><script src="i18n.js?v=20261117-meet27"></script><script src="data.js?v=5"></script>
   <script src="supabase-config.js?v=1"></script>
   <script>
   (async function initializeLunchPage() {
@@ -375,7 +375,10 @@ html,body,.page { background:#fff; }
       renderAnnouncement();
     }
     let profileFetchSucceeded=false;
-    async function applyRestaurantOverrides(){
+    // `target`: Beim Aktualisieren im Hintergrund wird ein eigener Stand aufgebaut und erst am Ende
+    // übernommen. Früher wurde DATA zuerst mit den rohen Importdaten überschrieben; wer in diesem
+    // Moment einen Tag anklickte, sah Standardnamen und deaktivierte Restaurants (17.11.2026).
+    async function applyRestaurantOverrides(target=DATA){
       profileFetchSucceeded=false;
       const config=window.WU_LUNCH_SUPABASE;
       if(!config?.url||!config?.publishableKey)return;
@@ -387,8 +390,8 @@ html,body,.page { background:#fff; }
         const overrides=await response.json();
         if(!Array.isArray(overrides))throw new Error('Ungültiges Einstellungsformat');
         profileFetchSucceeded=true;const byId=new Map(overrides.map(value=>[value.restaurant_id,value]));
-        DATA.restaurants=DATA.restaurants.filter(restaurant=>byId.get(restaurant.id)?.is_enabled!==false);
-        DATA.restaurants.forEach(restaurant=>{
+        target.restaurants=target.restaurants.filter(restaurant=>byId.get(restaurant.id)?.is_enabled!==false);
+        target.restaurants.forEach(restaurant=>{
           const profile=byId.get(restaurant.id);
           if(!profile)return;
           restaurant.name=profile.display_name||restaurant.name;
@@ -401,7 +404,7 @@ html,body,.page { background:#fff; }
           restaurant.latitude=profile.latitude;
           restaurant.longitude=profile.longitude;
         });
-        DATA.restaurants.sort((left,right)=>{
+        target.restaurants.sort((left,right)=>{
           const leftOrder=byId.get(left.id)?.sort_order;
           const rightOrder=byId.get(right.id)?.sort_order;
           return (Number.isFinite(leftOrder)?leftOrder:99999)-(Number.isFinite(rightOrder)?rightOrder:99999);
@@ -411,7 +414,7 @@ html,body,.page { background:#fff; }
       }
     }
     let manualFetchSucceeded=false;
-    async function applyManualMenus(){
+    async function applyManualMenus(target=DATA){
       manualFetchSucceeded=false;
       const config=window.WU_LUNCH_SUPABASE;
       if(!config?.url||!config?.publishableKey)return;
@@ -422,7 +425,7 @@ html,body,.page { background:#fff; }
         if(!response.ok)throw new Error('HTTP '+response.status);
         const rows=await response.json();manualFetchSucceeded=true;
         for(const row of rows){
-          const restaurant=DATA.restaurants.find(item=>item.id===row.restaurant_id);
+          const restaurant=target.restaurants.find(item=>item.id===row.restaurant_id);
           if(restaurant&&Array.isArray(row.dishes)){
             restaurant.days[row.menu_date]=row.dishes;
             (restaurant.manualDays??= {})[row.menu_date]=true;
@@ -881,7 +884,7 @@ function mensaStations(raw){
     update();
     renderNextUpdate();
     let liveRefreshing=false,liveSignature=JSON.stringify(DATA);
-    async function refreshLiveData(){void window.WULunchI18n.refresh();if(liveRefreshing)return;liveRefreshing=true;const previous=JSON.parse(JSON.stringify(DATA));try{const response=await fetch('./data/menus.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return;const incoming=await response.json();Object.assign(DATA,incoming);await Promise.all([applyRestaurantOverrides(),loadAnnouncement(),applyManualMenus()]);if(!profileFetchSucceeded||!manualFetchSucceeded){Object.assign(DATA,previous);return;}const signature=JSON.stringify(DATA);if(signature!==liveSignature){liveSignature=signature;for(const r of DATA.restaurants){const info=locationInfo[r.id];if(info){info.address=r.address||info.address;info.color=r.brand_color||info.color;if(Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)){info.lat=r.latitude;info.lon=r.longitude;}}}update();if(realMap){realMap.remove();realMap=null;loadRealMap();}}}catch(e){Object.assign(DATA,previous);console.warn('Aktualisierung fehlgeschlagen',e)}finally{liveRefreshing=false}}
+    async function refreshLiveData(){void window.WULunchI18n.refresh();if(liveRefreshing)return;liveRefreshing=true;const previous=JSON.parse(JSON.stringify(DATA));try{const response=await fetch('./data/menus.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return;const incoming=await response.json();const next={...DATA,...incoming};await Promise.all([applyRestaurantOverrides(next),loadAnnouncement(),applyManualMenus(next)]);if(!profileFetchSucceeded||!manualFetchSucceeded)return;Object.assign(DATA,next);const signature=JSON.stringify(DATA);if(signature!==liveSignature){liveSignature=signature;for(const r of DATA.restaurants){const info=locationInfo[r.id];if(info){info.address=r.address||info.address;info.color=r.brand_color||info.color;if(Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)){info.lat=r.latitude;info.lon=r.longitude;}}}update();if(realMap){realMap.remove();realMap=null;loadRealMap();}}}catch(e){Object.assign(DATA,previous);console.warn('Aktualisierung fehlgeschlagen',e)}finally{liveRefreshing=false}}
     window.setInterval(refreshLiveData,3000);window.addEventListener('focus',refreshLiveData);
 
 

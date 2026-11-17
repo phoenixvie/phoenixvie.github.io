@@ -75,6 +75,13 @@
         <button id="saveAnnouncementButton" type="button">Ankündigung speichern</button>
         <p class="notice" id="announcementNotice" aria-live="polite"></p>
       </section>
+      <section class="panel">
+        <h2>Meet to eat: Anmeldungen</h2>
+        <p class="muted">Angemeldete Vornamen ab heute. „Löschen" entfernt den Eintrag sofort für alle; die Person kann sich danach neu anmelden.</p>
+        <button id="reloadMeet" type="button" class="secondary">Anmeldungen aktualisieren</button>
+        <div id="meetList"></div>
+        <p class="notice" id="meetNotice" aria-live="polite"></p>
+      </section>
 <section class="panel"><h2>App-Texte bearbeiten</h2><p class="muted">Diese Texte werden ohne neue App-Version nachgeladen. Menüs und Restaurantdaten bearbeitest du in den jeweiligen Bereichen.</p><p class="muted">Texte gelten für alle Nutzer der gewählten Sprache. Platzhalter wie {restaurant} beibehalten.</p><p class="muted">Nur eigene App-Texte. Menüinhalte und Restaurantdaten bearbeitest du in den jeweiligen Bereichen.</p><label for="uiTextCategory">Kategorie</label><select id="uiTextCategory"><option value="all">Alle App-Bereiche</option><option value="navigation">Navigation &amp; Tage</option><option value="restaurant">Restaurantinformationen</option><option value="status">Laden, Hinweise &amp; Fehler</option><option value="pdf">Webseiten &amp; PDF</option><option value="footer">Fußzeile &amp; Kontakt</option><option value="meet">Meet to eat</option><option value="privacy">Datenschutz</option><option value="general">Allgemein</option></select><input id="uiTextSearch" placeholder="App-Texte durchsuchen"><button id="reloadUiTexts" class="secondary" type="button">App-Texte aktualisieren</button><div id="uiTextList"></div></section>
       <section class="panel">
         <h2>Englische Texte bearbeiten</h2><input id="translationSearch" placeholder="Deutschen oder englischen Text suchen"><p class="muted">Eine Korrektur gilt für identische deutsche Texte überall. Manuelle Übersetzungen werden nicht durch die KI überschrieben.</p><button id="reloadTranslations" type="button" class="secondary">Übersetzungen aktualisieren</button><div id="translationList"></div></section><section class="panel"><h2>Archivierte Mittagsmenüs</h2>
@@ -86,7 +93,7 @@
     </section>
     <p class="footer">WU Lunch · <a href="impressum.html">Impressum</a></p>
   </main>
-  <script src="update-info.js?v=20261114-policy1"></script><script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261114-weekend1"></script><script src="admin-menu-rules.js"></script>
+  <script src="update-info.js?v=20261114-policy1"></script><script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261117-meet27"></script><script src="admin-menu-rules.js"></script>
   <script>
   (()=>{
     const config=window.WU_LUNCH_SUPABASE;
@@ -130,6 +137,7 @@
       const rows=await response.json();
       if(!response.ok||!Array.isArray(rows)||rows.length!==1){accessToken='';throw new Error('Dieses Konto hat keinen Admin-Zugang.');}
       loginPanel.classList.add('hidden');adminPanel.classList.remove('hidden');
+      void refreshMeetRegistrations();   // eigener Bereich: lädt nebenher, ein Fehler hier darf den Rest des Admins nicht stören
       await Promise.all([loadRestaurants(),loadAnnouncementSettings(),loadHistory()]);
       await loadEnglishRows();await loadUiTexts();await loadMenuEditor();await loadPublicationHistory();
     }
@@ -355,6 +363,40 @@
     async function loadEnglishRows(){let rows=[];for(let offset=0;;offset+=1000){const response=await api('/rest/v1/lunch_translations?select=*&order=source_text&limit=1000&offset='+offset);if(!response.ok)throw new Error('Übersetzungen konnten nicht geladen werden.');const batch=await response.json();rows.push(...batch);if(batch.length<1000)break;}englishRows=new Map(rows.map(row=>[row.source_text,row]));renderTranslationList();}
     async function saveEnglishPairs(pairs){const unique=new Map();for(const [source,english] of pairs)if(source?.trim()&&english?.trim()){unique.set(source,english.trim());if(source.includes('\n')){const de=source.split('\n'),en=english.trim().split('\n');if(de.length!==en.length)throw new Error('Bitte die Zeilenstruktur der deutschen Fassung beibehalten.');de.forEach((line,i)=>{if(line.trim()&&en[i].trim())unique.set(line.trim(),en[i].trim());});}}if(!unique.size)throw new Error('Bitte mindestens einen englischen Text eingeben.');const records=await Promise.all([...unique].map(async([source_text,english_text])=>({source_text,english_text,source_sha256:[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source_text)))].map(b=>b.toString(16).padStart(2,'0')).join(''),origin:'manual',model:null,updated_at:new Date().toISOString()})));const response=await api('/rest/v1/lunch_translations?on_conflict=source_sha256',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(records)});if(!response.ok)throw new Error('English konnte nicht gespeichert werden.');for(const row of records)englishRows.set(row.source_text,row);renderTranslationList();}
     function renderTranslationList(){const list=document.getElementById('translationList');if(!list)return;const filter=document.getElementById('translationSearch').value.toLowerCase();list.replaceChildren();for(const row of [...englishRows.values()].filter(row=>(row.source_text+' '+row.english_text).toLowerCase().includes(filter)).slice(0,100)){const item=document.createElement('div');item.className='day';item.innerHTML='<p style="white-space:pre-line"></p><textarea></textarea><button type="button">English speichern</button><span class="notice"></span>';item.querySelector('p').textContent=row.source_text+' · '+(row.origin==='manual'?'manuell':'KI');item.querySelector('textarea').value=row.english_text;item.querySelector('button').onclick=async()=>{try{await saveEnglishPairs([[row.source_text,item.querySelector('textarea').value]]);}catch(e){item.querySelector('.notice').textContent=e.message;}};list.append(item);}}
+    // Meet to eat: Vornamen der Angemeldeten ansehen und einzeln löschen (Kontrollmöglichkeit).
+    // Die Datenbank erlaubt das nur dem Admin (supabase/20261117_meet_admin.sql).
+    let meetRows=[];
+    async function loadMeetRegistrations(){
+      const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Vienna',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+      const [all,visible]=await Promise.all([api('/rest/v1/meet_preview_registrations?select=user_id,meeting_date,first_name,created_at&meeting_date=gte.'+today+'&order=meeting_date.asc,created_at.asc'),api('/rest/v1/meet_preview_participants?select=meeting_date&meeting_date=gte.'+today)]);
+      if(!all.ok||!visible.ok)throw new Error('Anmeldungen konnten nicht geladen werden.');
+      meetRows=await all.json();const shown=await visible.json();renderMeetRegistrations();
+      // Ohne die Datenbank-Freigabe sieht auch der Admin nur eigene Einträge – die Liste wäre dann fälschlich leer.
+      if(shown.length>meetRows.length)throw new Error('Öffentlich sichtbar sind '+shown.length+' Vornamen, hier aber nur '+meetRows.length+'. Die Datenbank-Freigabe für den Admin fehlt noch: Datei supabase/20261117_meet_admin.sql in Supabase ausführen.');
+      return meetRows.length;
+    }
+    async function deleteMeetRegistration(row){
+      const response=await api('/rest/v1/meet_preview_registrations?user_id=eq.'+encodeURIComponent(row.user_id)+'&meeting_date=eq.'+encodeURIComponent(row.meeting_date),{method:'DELETE',headers:{Prefer:'return=representation'}});
+      const removed=response.ok?await response.json():null;
+      // Die Datenbank meldet ohne Freigabe keinen Fehler, sondern löscht einfach nichts – deshalb wird gezählt.
+      if(!Array.isArray(removed)||removed.length!==1)throw new Error('Eintrag konnte nicht gelöscht werden.');
+      meetRows=meetRows.filter(item=>item!==row);
+    }
+    function renderMeetRegistrations(){
+      const list=document.getElementById('meetList'),notice=document.getElementById('meetNotice');if(!list)return;list.replaceChildren();let day='';
+      for(const row of meetRows){
+        if(row.meeting_date!==day){day=row.meeting_date;const head=document.createElement('h3');head.style.marginTop='16px';head.dataset.uiLiteral='';head.textContent=new Date(day+'T12:00:00Z').toLocaleDateString(LOCALE,{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'})+' · '+meetRows.filter(item=>item.meeting_date===day).length;list.append(head);}
+        const item=document.createElement('div');item.className='restaurant';item.innerHTML='<span class="restaurant-name" data-ui-literal></span><button type="button" class="secondary">Löschen</button>';
+        item.querySelector('span').textContent=row.first_name;
+        item.querySelector('button').onclick=async event=>{
+          if(!confirm('Vorname „'+row.first_name+'" für diesen Termin löschen?'))return;
+          event.target.disabled=true;
+          try{await deleteMeetRegistration(row);renderMeetRegistrations();text(notice,'Gelöscht.','success');}catch(error){event.target.disabled=false;text(notice,error.message,'error');}
+        };
+        list.append(item);
+      }
+    }
+    const refreshMeetRegistrations=()=>loadMeetRegistrations().then(count=>text(document.getElementById('meetNotice'),count?'':'Derzeit ist niemand angemeldet.')).catch(error=>text(document.getElementById('meetNotice'),error.message,'error'));
     let uiTextRows=new Map();
     async function loadUiTexts(){
       let rows=[];for(let offset=0;;offset+=1000){const response=await api('/rest/v1/lunch_ui_texts?select=*&order=text_key&limit=1000&offset='+offset);if(!response.ok)throw new Error('App-Texte konnten nicht geladen werden.');const batch=await response.json();rows.push(...batch);if(batch.length<1000)break;}
@@ -379,6 +421,7 @@
     document.getElementById('uiTextSearch').oninput=renderUiTexts;document.getElementById('uiTextCategory').onchange=renderUiTexts;
     document.getElementById('reloadUiTexts').onclick=()=>loadUiTexts().catch(error=>alert(error.message));
     document.getElementById('editLanguage').onchange=async event=>{if(menuEditor.dataset.dirty==='true'&&!confirm('Nicht gespeicherte Menüänderungen verwerfen?')){event.target.value=editLanguage;return;}editLanguage=event.target.value;await loadEnglishRows();renderProfile();renderSelectedMenu();renderAnnouncementLanguage();renderUiTexts();document.getElementById('addDishButton').disabled=editLanguage==='en';document.getElementById('resetMenuButton').disabled=editLanguage==='en';};
+    document.getElementById('reloadMeet').onclick=refreshMeetRegistrations;
     document.getElementById('translationSearch').oninput=renderTranslationList;
     document.getElementById('reloadTranslations').onclick=()=>loadEnglishRows().catch(e=>alert(e.message));
     document.getElementById('logoutButton').addEventListener('click',()=>{accessToken='';password.value='';adminPanel.classList.add('hidden');loginPanel.classList.remove('hidden');text(loginNotice,'Abgemeldet.');});

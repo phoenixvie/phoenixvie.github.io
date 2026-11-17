@@ -105,3 +105,20 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.match(cachedApp.innerHTML,/Finn/);assert.match(cachedApp.innerHTML,/WU Mensa/);
 
 });
+
+test('installed app carries its own meeting-point photo and every icon it shows', async () => {
+  const read = path => readFile(new URL(path, import.meta.url), 'utf8');
+  const [generated, app, meet] = await Promise.all([read('../src/previewHtml.ts'), read('../preview/app.js'), read('../preview/meet-live.js')]);
+  const html = JSON.parse(generated.match(/export const previewHtml = (.+);/)[1]);
+  // Foto: fest eingebaut (sonst zeigt die App je nach Stand der Webseite ein anderes Bild); die Web-Vorschau lädt die Datei.
+  assert.match(html, /class="meet-photo-visible" src="data:image\/webp;base64,[A-Za-z0-9+/=]{1000,}"/);
+  assert.doesNotMatch(html, /src="\.\/meeting-point\.webp"/);
+  assert.match(meet, /src="\.\/meeting-point\.webp"/);
+  // Symbole: Die App enthält nur eine kleine Auswahl der Symbolschrift (assets/material-symbols-font.json).
+  // Jedes andere Symbol muss als Zeichnung in meetIcons stehen – sonst erscheint sein Name als Text ("CLOSE").
+  const inFont = ['access_time','arrow_back','arrow_forward','call','chevron_right','email','info','language','launch','local_dining','local_phone','location_on','mail','map','open_in_new','phone','place','restaurant_menu','schedule'];
+  const inline = Object.keys(JSON.parse(app.match(/const meetIcons=(\{.*?\});\n/s)[1]));
+  const used = new Set([...(app + meet).matchAll(/\b(?:icon|fact)\('([a-z_]+)'/g)].map(match => match[1]));
+  assert.ok(used.has('close') && used.size >= 10);
+  for (const name of used) assert.ok(inline.includes(name) || inFont.includes(name), 'Symbol fehlt in der App: ' + name);
+});

@@ -7,10 +7,15 @@ quadratische Logo unverändert darunter, werden Gabel und Löffel angeschnitten;
 verkleinert man es einfach, bleibt ein einfarbiger Rand um ein kleines Quadrat.
 
 Dieses Skript baut deshalb eine eigene Vorlage (assets/adaptive-icon.png):
-- Gabel, Messer und Löffel liegen vollständig in der garantiert sichtbaren Mitte
-  ("safe zone": Kreis mit 66 von 108 Einheiten Durchmesser).
+- Vorgabe des Betreibers (17.11.2026): näher heran – das Besteck ist groß, und sein
+  unteres Ende wird vom unteren Rand des Symbols knapp abgeschnitten (es "wächst"
+  aus dem Rand). Oben bleibt es vollständig sichtbar, auch bei runden Symbolen.
 - Die drei blauen Streifen samt Verlauf werden bis an den Rand der Vorlage
   fortgesetzt, sodass bei keiner Maskenform ein Rand oder eine Kante sichtbar ist.
+
+Maße: Sichtbar ist höchstens das mittlere Quadrat mit 72 von 108 Einheiten; sein
+unterer Rand liegt bei 5/6 der Vorlagenhöhe. Runde Masken schneiden die äußeren
+Griffe (Gabel, Löffel) unten etwas stärker an als das Messer in der Mitte.
 
 Aufruf (nur nötig, wenn sich assets/icon.png ändert):
     python3 scripts/make-adaptive-icon.py
@@ -24,8 +29,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "assets/icon.png"
 TARGET = ROOT / "assets/adaptive-icon.png"
 CANVAS = 1024            # Expo erwartet 1024 x 1024 für die adaptive Vorlage
-SAFE_RADIUS = 33 / 108   # Radius der sicheren Zone, relativ zur Vorlage
-MARGIN = 0.985           # etwas Luft zur Grenze der sicheren Zone
+VISIBLE_BOTTOM = 0.5 + 36 / 108   # unterer Rand des sichtbaren Bereichs (relativ zur Vorlagenhöhe)
+CUT = 0.022                       # so weit ragt das Besteck unten über den sichtbaren Rand hinaus
+TOP = 0.5 - 0.288                 # Oberkante des Bestecks (Messerspitze), sicher innerhalb jeder Maske
 
 
 def motif(pixels):
@@ -43,9 +49,10 @@ def build(source=SOURCE, canvas=CANVAS):
     pixels = np.asarray(art).astype(int)
     height, width, _ = pixels.shape
     ys, xs = np.nonzero(motif(pixels))
-    centre_x, centre_y = (xs.min() + xs.max()) / 2, (ys.min() + ys.max()) / 2
-    reach = np.sqrt((xs - centre_x) ** 2 + (ys - centre_y) ** 2).max()   # in Quellpixeln
-    scale = SAFE_RADIUS * MARGIN * canvas / reach                        # Quellpixel -> Zielpixel
+    centre_x = (xs.min() + xs.max()) / 2
+    scale = (VISIBLE_BOTTOM + CUT - TOP) * canvas / (ys.max() - ys.min())   # Quellpixel -> Zielpixel
+    # Quellzeile, die in der Mitte der Vorlage landet: Besteck-Oberkante liegt bei TOP.
+    centre_y = ys.min() + (0.5 - TOP) * canvas / scale
     # Jedes Zielpixel auf die Quelle abbilden; außerhalb wird die Randzeile bzw.
     # -spalte fortgesetzt (Streifen und Verlauf laufen bis zum Rand weiter).
     target = np.arange(canvas) + 0.5

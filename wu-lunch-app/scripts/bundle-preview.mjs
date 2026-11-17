@@ -6,8 +6,14 @@ const root = resolve(import.meta.dirname, '..');
 const read = async path => (await readFile(resolve(root, path), 'utf8')).replace(/\r\n/g, '\n');
 const [template, css, js, meet, font] = await Promise.all([read('preview/index.html'), read('preview/style.css'), read('preview/app.js'), read('preview/meet-live.js'), read('assets/material-symbols-font.json')]);
 const i18n=await read('../wu-lunch/i18n.js');
+// Das Treffpunkt-Foto wird fest in die App eingebaut. Sonst lädt die installierte App es von der Webseite und
+// zeigt je nach deren Stand ein anderes (älteres) Bild als das, mit dem sie gebaut wurde – und offline gar keines.
+const photo = (await readFile(resolve(root, 'preview/meeting-point.webp'))).toString('base64');
+const photoTag = 'src="./meeting-point.webp"';
+if (meet.split(photoTag).length !== 2) throw new Error('Treffpunkt-Foto: erwartete Stelle in meet-live.js nicht gefunden');
+const meetNative = meet.replace(photoTag, `src="data:image/webp;base64,${photo}"`);
 const fontData = JSON.parse(font);
-const hash = createHash('sha256').update(template + css + js + meet + i18n).digest('hex');
+const hash = createHash('sha256').update(template + css + js + meet + i18n + photo).digest('hex');
 const nativeCSS = `@font-face{font-family:'Material Symbols Outlined';font-style:normal;font-weight:400;src:url(data:${fontData.mime};base64,${fontData.base64}) format('${fontData.format}')}html,body{width:100%;height:100%;min-height:0;display:block;background:#fff}.app{width:100%;height:100dvh;min-height:0;border-radius:0;box-shadow:none;margin:0}.material-symbols-outlined{font-display:block}`;
 const html = template
   .replace(/<script defer src="\.\/meet-live\.js(?:\?[^"<>]*)?"><\/script>\s*/,'')
@@ -15,7 +21,7 @@ const html = template
   .replace('<title>WU Food · App-Vorschau</title>', '<title>WU Food</title>')
   .replace(/<link[^>]+(?:fonts.googleapis.com|fonts.gstatic.com)[^>]*>\s*/g, '')
   .replace(/<link rel="stylesheet" href="\.\/style\.css(?:\?[^"<>]*)?">/, `<style>${css}\n${nativeCSS}</style>`)
-  .replace(/<script defer src="\.\/app\.js(?:\?[^"<>]*)?"><\/script>/, `<script>window.WU_FOOD_BUILD='${hash}';${i18n}document.addEventListener('DOMContentLoaded',()=>{\n${js.replace(/<\/script/gi, '<\\/script')}\n${meet.replace(/<\/script/gi, '<\\/script')}\n});</script>`);
+  .replace(/<script defer src="\.\/app\.js(?:\?[^"<>]*)?"><\/script>/, `<script>window.WU_FOOD_BUILD='${hash}';${i18n}document.addEventListener('DOMContentLoaded',()=>{\n${js.replace(/<\/script/gi, '<\\/script')}\n${meetNative.replace(/<\/script/gi, '<\\/script')}\n});</script>`);
 await writeFile(resolve(root, 'src/previewHtml.ts'), `// Generated from preview sources; run npm run bundle:preview.\nexport const designHash = ${JSON.stringify(hash)};\nexport const previewHtml = ${JSON.stringify(html)};\n`);
 console.log('Bundled current preview design: ' + hash);
 

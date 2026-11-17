@@ -104,7 +104,7 @@ function AppContent() {
             openExternalLink(request.url); return false;
           }} /> : null}
         {failed ? <View style={styles.failure}><Text>{nativeText('Die Restaurantseite konnte nicht geladen werden.','The restaurant website could not be loaded.')}</Text><Pressable onPress={() => {setFailed(false); browser.current?.reload();}}><Text style={styles.link}>{nativeText('Erneut versuchen','Try again')}</Text></Pressable></View> : null}
-        <View style={styles.browserFooter}><Pressable accessibilityLabel={nativeText('Zurück zum Menü','Back to menu')} onPress={closePage} style={styles.back}><Text style={styles.footerText}>{nativeText('Zurück','Back')}</Text></Pressable></View>
+        <View style={styles.browserFooter}><Pressable accessibilityLabel={nativeText('Zurück zum Menü','Back to menu')} onPress={closePage} style={styles.back}><Text style={styles.footerText}>{'←  ' + nativeText('Zurück','Back')}</Text></Pressable></View>
       </SafeAreaView>
     </Modal>
   </SafeAreaView>;
