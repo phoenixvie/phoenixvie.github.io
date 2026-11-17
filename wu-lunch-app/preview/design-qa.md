@@ -31,3 +31,13 @@ Restaurantauswahl, Zurück-Navigation, Menü/Karte/Kontakt, Tageswechsel, Tagpun
 - „Weiter“ führt zum nächsten Restaurant der aktuellen Liste und setzt den Tag auf heute bzw. am Wochenende auf Montag. Im Browser mit einem Wechsel von Donnerstag auf das nächste Restaurant geprüft.
 - Ein Kartenmarker öffnet eine Leiste mit Name, Typ und Buchstabenkachel. Ein weiterer Marker ersetzt sie; ein Klick auf die Karte schließt sie. Die Leiste führt zum Menü. Alle drei Zustände wurden im Browser geprüft.
 - Für Öffnungszeiten führt ein Link zur jeweiligen Google-Maps-Suche. Uhrzeiten direkt in der App warten auf eine autorisierte Google Places API-Anbindung; es werden keine Zeiten erfunden.
+
+## Meet to eat – Vereinfachung vom 17.11.2026
+
+- Es wird genau **ein** Termin gezeigt: der nächste, für den die Anmeldung noch offen ist. Wer für den heutigen Termin angemeldet ist, sieht diesen weiter bis 23:00 Uhr (Treffpunkt bleibt sichtbar).
+- Terminleiste, Wischpunkte und Wischgesten zwischen Terminen wurden entfernt.
+- Der Bereich „Treffpunkt auf der WU" mit Foto und Karte erscheint erst nach der eigenen Anmeldung; vorher gibt es keinen unscharfen Platzhalter mehr. In der Übersicht steht weiterhin „Angabe nach Anmeldung".
+- Das Symbol der Funktion ist gespiegelt (Plus rechts von der Person).
+- Alle Texte haben eine englische Fassung im gemeinsamen Katalog (`wu-lunch/i18n.js`, Admin → App-Texte → „Meet to eat").
+- Die Android-Zurücktaste schließt zuerst das Anmeldeformular bzw. Meet to eat, statt die App zu verlassen.
+- Das Treffpunktfoto wird als WebP (165 KB statt 2,9 MB) geladen.

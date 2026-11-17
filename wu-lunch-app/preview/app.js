@@ -26,8 +26,8 @@ function displayWeekStart(now=new Date()){
   date.setUTCDate(date.getUTCDate()+(day===6?2:day===0?1:1-day));
   return date.toISOString().slice(0,10);
 }
-let meetPreviewOpen=false,meetSlot=null,meetJoined=false,meetForm=false,meetNames={};
-const meetSlots=[['Montag','Anna, Paul',2],['Mittwoch','Lisa',1],['Freitag','',0]];
+// Zustand von Meet to eat; Darstellung und Anmeldung übernimmt meet-live.js.
+let meetPreviewOpen=false,meetSlot=null,meetJoined=false,meetForm=false;
 let renderedWeek=null;
 const dates=()=>Array.from({length:5},(_,i)=>{const d=new Date(displayWeekStart()+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+i);return d.toISOString().slice(0,10)});
 const currentRestaurant=()=>data?.restaurants.find(r=>r.id===selectedId);
@@ -138,12 +138,7 @@ app.addEventListener('click',async e=>{
   if(target.dataset.day!==undefined){const nextDay=Number(target.dataset.day);if(nextDay!==dayIndex)trackUsage('menu_day_changed',{restaurant_id:selectedId,weekday:nextDay+1});dayIndex=nextDay;render();return}
   switch(target.dataset.action){
     case'meet-preview':meetPreviewOpen=true;render();break;
-    case'meet-back':if(meetForm){meetForm=false}else if(meetSlot!==null){meetSlot=null;meetJoined=false}else meetPreviewOpen=false;render();break;
-    case'meet-slot':meetSlot=Number(target.dataset.slot);meetJoined=Boolean(meetNames[meetSlot]);meetForm=false;render();break;
-    case'meet-show-form':meetForm=true;render();break;
-    case'meet-join':{const name=document.getElementById('meet-first-name')?.value.trim();if(!name){document.getElementById('meet-first-name')?.focus();break}meetNames[meetSlot]=name.slice(0,60);meetJoined=true;meetForm=false;render();break}
-    case'meet-leave':delete meetNames[meetSlot];meetJoined=false;render();break;
-    case'meet-close':meetPreviewOpen=false;render();break;
+    case'meet-back':meetForm=false;meetSlot=null;meetJoined=false;meetPreviewOpen=false;render();break;
     case'back':selectedId=null;selectedMapId=null;sourceViewUrl=null;render();break;
     case'open-menu-source':{const r=currentRestaurant(),url=safeUrl(r?.menuSourceUrl||r?.url);if(!url)break;if(!nativePost('open-source',{url,title:r.name})){sourceViewUrl=url;render()}break}
     case'close-source':sourceViewUrl=null;render();break;
@@ -171,9 +166,9 @@ async function rows(path){const response=await fetch(supabase+'/rest/v1/'+path,{
 function applyPayload(incoming,profiles,manual,contact){const oldWeek=data?.weekStart,oldDisplayWeek=renderedWeek;const byId=new Map(profiles.map(p=>[p.restaurant_id,p]));incoming.restaurants=incoming.restaurants.filter(r=>byId.get(r.id)?.is_enabled!==false).map(r=>{const p=byId.get(r.id),info=contact[r.id]||{};r={...r,days:{...r.days},manualDays:{},menuSourceUrl:p?.menu_url??r.url,homepageUrl:(safeUrl(p?.website_url)?new URL(p.website_url).origin+'/':'')||(r.id==='baschly'?'https://baschly.com/':(safeUrl(r.url)?new URL(r.url).origin+'/':'')),phone:info.phone,email:info.email,hours:p?.opening_hours??info.hours,hoursSource:info.source};if(p){r.name=p.display_name||r.name;r.restaurantType=p.restaurant_type||undefined;r.logoUrl=p.logo_url||undefined;r.phone=p.phone??r.phone;r.email=p.email??r.email;r.brandColor=p.brand_color;r.url=p.website_url||r.url;r.address=p.address||undefined;r.latitude=p.latitude??undefined;r.longitude=p.longitude??undefined}for(const m of manual)if(m.restaurant_id===r.id){r.days[m.menu_date]=Array.isArray(m.dishes)?m.dishes:[];r.manualDays[m.menu_date]=true}return r}).sort((a,b)=>(byId.get(a.id)?.sort_order??9999)-(byId.get(b.id)?.sort_order??9999));data=incoming;if(selectedId&&!currentRestaurant()){selectedId=null;sourceViewUrl=null;detailTab='menu'}if(selectedMapId&&!data.restaurants.some(r=>r.id===selectedMapId))selectedMapId=null;renderedWeek=displayWeekStart();if(oldWeek!==data.weekStart||oldDisplayWeek!==renderedWeek)dayIndex=initialDayIndex();render()}
 let loadingMenus=false;
 async function load(){void localize.refresh();if(loadingMenus)return;loadingMenus=true;try{const [response,profiles,localContactResponse]=await Promise.all([fetch(menuUrl+'?t='+Date.now(),{cache:'no-store'}),rows('restaurant_overrides?select=*'),fetch(contactUrl+'?t='+Date.now(),{cache:'no-store'})]);if(!response.ok)throw new Error('Menüs konnten nicht geladen werden');const incoming=await response.json();if(!incoming.weekStart||!Array.isArray(incoming.restaurants))throw new Error('Menüdaten sind ungültig');const manual=await rows('menu_day_overrides?week_start=eq.'+displayWeekStart()+'&select=restaurant_id,menu_date,dishes');const contactResponse=localContactResponse.ok?localContactResponse:await fetch(publishedContactUrl+'?t='+Date.now(),{cache:'no-store'});const contact=contactResponse.ok?(await contactResponse.json()).restaurants||{}:{};const payload=JSON.stringify([incoming,profiles,manual,contact]);if(payload===lastPayload&&renderedWeek===displayWeekStart())return;lastPayload=payload;applyPayload(incoming,profiles,manual,contact);try{localStorage.setItem('wu-food-live-v1',payload)}catch{}}catch(error){if(!data)app.innerHTML=`<div class="loading"><div class="spinner"></div><div class="error">${esc(localize.ui?.[error.message]?error.message:'Menüs konnten nicht geladen werden')}<br><button class="retry" data-action="retry">Erneut versuchen</button></div></div>`;console.error(error)}finally{loadingMenus=false}}
-window.wuFoodBack=()=>{if(sourceViewUrl){sourceViewUrl=null;render()}else if(selectedId){selectedId=null;selectedMapId=null;render()}else if(homeTab==='map'){homeTab='list';selectedMapId=null;render()}else nativePost('exit')};
+window.wuFoodBack=()=>{if(sourceViewUrl){sourceViewUrl=null;render()}else if(meetPreviewOpen){if(meetForm)meetForm=false;else{meetPreviewOpen=false;meetSlot=null;meetJoined=false}render()}else if(selectedId){selectedId=null;selectedMapId=null;render()}else if(homeTab==='map'){homeTab='list';selectedMapId=null;render()}else nativePost('exit')};
 try{const cached=JSON.parse(localStorage.getItem('wu-food-live-v1')||'null');if(Array.isArray(cached)&&cached.length===4&&cached[0]?.weekStart&&Array.isArray(cached[0].restaurants))applyPayload(...cached)}catch{}
-window.wuFoodRefresh=load;load();setInterval(load,3000);window.addEventListener?.('focus',()=>load());document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
+window.wuFoodRefresh=load;load();setInterval(()=>document.hidden?undefined:load(),3000);window.addEventListener?.('focus',()=>load());document.addEventListener('visibilitychange',()=>{if(!document.hidden)load()});
 
 window.addEventListener?.('wu-language-change',()=>{trackUsage('language_changed');render();});
 
