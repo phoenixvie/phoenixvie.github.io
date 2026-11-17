@@ -296,14 +296,38 @@
    "brandColor": "#4f7d3a",
    "days": {
     "2026-11-16": [],
-    "2026-11-17": [],
-    "2026-11-18": [],
-    "2026-11-19": [],
-    "2026-11-20": []
+    "2026-11-17": [
+     {
+      "name": "Gefüllter Paprika mit Kartoffeln und Tomatensauce",
+      "price": 14.8,
+      "included_soup": "Nudelsuppe oder Tagessuppe"
+     }
+    ],
+    "2026-11-18": [
+     {
+      "name": "Hühnergeschnetzeltes mit Nudeln",
+      "price": 14.8,
+      "included_soup": "Nudelsuppe oder Tagessuppe"
+     }
+    ],
+    "2026-11-19": [
+     {
+      "name": "Gebackenes Schweinsschnitzel mit Reis und Kartoffelmayonnaisesalat",
+      "price": 14.8,
+      "included_soup": "Nudelsuppe oder Tagessuppe"
+     }
+    ],
+    "2026-11-20": [
+     {
+      "name": "Kümmelbauch mit Kartoffelknödel und warmen Krautsalat",
+      "price": 14.8,
+      "included_soup": "Nudelsuppe oder Tagessuppe"
+     }
+    ]
    },
    "import": {
-    "state": "not_published",
-    "message": "Zur Linde zeigt 2026-11-10 bis 2026-11-13"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -1095,50 +1119,50 @@
    "days": {
     "2026-11-16": [
      {
-      "name": "Gegrilltes vom Rind und Schwein | Zuckermais | Rosmarinkartoffel | Kräuterbutter",
-      "price": 12.9,
+      "name": "Naturschnitzel vom Hühnerfilet mit Butternudeln und Gemüse",
+      "price": 13.9,
       "included_starter": "Tagessuppe oder Salat"
      },
      {
-      "name": "Penne | Lachs | Dill | Gurke",
-      "price": 12.9,
+      "name": "Chicken Burger mit Wedges",
+      "price": 13.9,
       "included_starter": "Tagessuppe oder Salat"
      }
     ],
     "2026-11-17": [
      {
-      "name": "Hühnergeschnetzeltes | Champignons | Erbsenreis",
-      "price": 12.9,
-      "included_starter": "Tagessuppe oder Salat"
+      "name": "Knuspriger Schweinebauch mit Semmelknödel und Krautsalat",
+      "price": 13.9,
+      "included_starter": "Tomaten-Mozzarellasuppe"
      },
      {
-      "name": "Gebackene Champignons | Kartoffeln | Sauce Tartar",
-      "price": 12.9,
-      "included_starter": "Tagessuppe oder Salat"
+      "name": "Schinkenspätzle mit Käse gratiniert",
+      "price": 13.9,
+      "included_starter": "Tomaten-Mozzarellasuppe"
      }
     ],
     "2026-11-18": [
      {
-      "name": "Cheeseburger | Wedges",
-      "price": 12.9,
-      "included_starter": "Tagessuppe oder Salat"
+      "name": "Knuspriges Grillhenderl mit Reis und Kartoffeln",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Grießnockerl"
      },
      {
-      "name": "Gemüsereis | Eis | Soja | Ingwer",
-      "price": 12.9,
-      "included_starter": "Tagessuppe oder Salat"
+      "name": "Penne Bolognese mit Parmesan",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Grießnockerl"
      }
     ],
     "2026-11-19": [
      {
-      "name": "Fish and Chips | Sauce Tartar",
-      "price": 12.9,
-      "included_starter": "Tagessuppe oder Salat"
+      "name": "Rinderhuftstreifen „Stroganoff“ mit Butternudeln",
+      "price": 14.9,
+      "included_starter": "Knoblauchrahmsuppe mit Croutons"
      },
      {
-      "name": "Zucchini Piccata Milanese | Tomatensauce",
-      "price": 12.9,
-      "included_starter": "Tagessuppe oder Salat"
+      "name": "Nougatknödel",
+      "price": 14.9,
+      "included_starter": "Knoblauchrahmsuppe mit Croutons"
      }
     ],
     "2026-11-20": []
@@ -1146,7 +1170,7 @@
    "import": {
     "state": "ok",
     "message": "",
-    "fingerprint": "036b573a4ddb19ac"
+    "fingerprint": "fb2cedd1238f0ebf"
    }
   },
   {
@@ -1268,5 +1292,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-17T10:31:31+01:00"
+ "updatedAt": "2026-11-17T12:58:17+01:00"
 }
