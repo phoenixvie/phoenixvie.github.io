@@ -1121,12 +1121,12 @@
      {
       "name": "Naturschnitzel vom Hühnerfilet mit Butternudeln und Gemüse",
       "price": 13.9,
-      "included_starter": "Tagessuppe oder Salat"
+      "included_starter": "Tagessuppe"
      },
      {
       "name": "Chicken Burger mit Wedges",
       "price": 13.9,
-      "included_starter": "Tagessuppe oder Salat"
+      "included_starter": "Tagessuppe"
      }
     ],
     "2026-11-17": [
@@ -1165,12 +1165,23 @@
       "included_starter": "Knoblauchrahmsuppe mit Croutons"
      }
     ],
-    "2026-11-20": []
+    "2026-11-20": [
+     {
+      "name": "Paniertes Seehechtfilet mit Gemüsereis und Sauce Tatare",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Nudeln"
+     },
+     {
+      "name": "Spinat-Trüffel Gnocci",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Nudeln"
+     }
+    ]
    },
    "import": {
     "state": "ok",
     "message": "",
-    "fingerprint": "fb2cedd1238f0ebf"
+    "fingerprint": "d17f8d95c12483a6"
    }
   },
   {
@@ -1292,5 +1303,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-17T12:58:17+01:00"
+ "updatedAt": "2026-11-17T17:26:46+01:00"
 }
