@@ -28,7 +28,7 @@ JS = ROOT / "data.js"
 STATUS = ROOT / "status.json"
 CANDIDATE = ROOT / "data" / "mensa-ai-candidate.json"
 TZ = ZoneInfo("Europe/Vienna")
-REVIEW_VERSION = "ai-pdf-8-absent-allergen-metadata"
+REVIEW_VERSION = "ai-pdf-9-notice-wording"
 EXTRACTION_VERSION = "pdf-layout-v3-merged-groups"
 # Selbstkorrektur: So oft darf das Modell eine von den Prüfungen abgelehnte
 # Antwort anhand der konkreten Befunde und derselben Originalquelle nachbessern.
@@ -192,6 +192,29 @@ def confirmed_absent_allergen_notice(warning, result, native_text):
     return not re.search(r'(?i:\ballergene?\b)|\([A-Z](?:[\s,;/]+[A-Z])*\)', native_text)
 
 
+DOUBT_MARKERS = (r'unklar|unles|nicht lesbar|unsicher|nicht sicher|widerspr|nicht eindeutig|uneindeutig|mehrdeutig|'
+                 r'abgeleitet|geschätzt|vermut|möglicherweise|eventuell|evtl\.|fraglich|geraten|zweifel')
+
+
+def resolved_notice_uncertainty(warning, days):
+    """Zweifel an einem ausdrücklich offenen Aushang-Angebot, der vorsichtig aufgelöst wurde.
+
+    Beispiel 17.11.2026: "Spezialpasta ist mit 'lt. Tagesaushang' bezeichnet ... die
+    Zuordnung der € 8,20 ist unsicher; daher price_eur=null." Der unsichere Wert wird
+    also gar nicht veröffentlicht. Das ist eine Information, kein Grund, die ganze
+    Wochenkarte zu verwerfen. Wurde dagegen trotz Zweifel ein Preis übernommen, oder
+    meldet das Modell Widersprüche/Unlesbares, blockiert die Warnung weiterhin.
+    """
+    text = warning.casefold()
+    if 'aushang' not in text or re.search(r'widerspr|unles', text):
+        return False
+    open_rows = [r for rows in days.values() for r in rows if r.get('details_unpublished')]
+    named = [r for r in open_rows
+             if any(word in text for word in normalize(r['name']).split()
+                    if len(word) >= 6 and word not in ('aushang', 'tagesaushang'))]
+    return bool(named) and all(r['price'] is None for r in named)
+
+
 def same_source_word(a,b,terms=()):
     from difflib import SequenceMatcher
     # German case endings change e.g. 'cremiger' to 'cremigem' when a model
@@ -329,11 +352,20 @@ def validate_menu(result, original_text, monday, pdf_url):
         evidence = item.get("evidence_excerpt")
         if not isinstance(evidence, str) or len(evidence.strip()) < 8:
             raise ValueError("Mensa: Quellenzitat fehlt")
-        explicit_notice = ((category == 'Soup Deal' and 'tagesaushang' in name.casefold()) or
-                           (category in ('Pasta','Pasta & Co') and normalize(name)=='spezialpasta laut aushang' and price is None) or
-                           (category == 'Global & Grill' and normalize(name)=='stop food waste day' and price is None))
+        # Ausdrücklich unbestimmte Angebote ("laut Tagesaushang", "Stop Food Waste"):
+        # Das PDF selbst lässt Inhalt bzw. Preis offen, daher ist eine nicht-"high"
+        # Einstufung hier erwartbar. Die Schreibweise des Modells darf nicht den
+        # Ausschlag geben (17.11.2026: "Spezialpasta lt. Tagesaushang" statt
+        # "Spezialpasta laut Aushang" ließ die ganze Wochenkarte scheitern).
+        # Preise solcher Zeilen prüft weiterhin der Zellenabgleich.
+        plain_name = normalize(name)
+        explicit_notice = ((category == 'Soup Deal' and 'aushang' in plain_name) or
+                           (category in ('Pasta','Pasta & Co') and 'spezialpasta' in plain_name and 'aushang' in plain_name) or
+                           (category == 'Global & Grill' and plain_name.startswith('stop food waste') and price is None))
         if item.get("confidence") != "high" and not explicit_notice:
-            raise ValueError("Mensa: unsichere Gerichtzuordnung")
+            raise ValueError("Mensa: unsichere Gerichtzuordnung (confidence=" + str(item.get("confidence"))
+                             + "; übernommen wird nur 'high'. Steht die Zeile eindeutig so im PDF, mit wörtlichem "
+                             "Zitat als high angeben; sonst aus items entfernen und unter warnings nennen)")
         # This is a conservative plausibility check, not independent proof of
         # each row assignment. A full source-layout audit may still be needed.
         # Short printed offer labels such as 'Soup Deal' and 'Salad Deal'
@@ -496,6 +528,8 @@ def extract_for_week(monday, key, model, prepared=None):
             text=warning.casefold()
             if confirmed_absent_allergen_notice(warning,result,native_text):
                 continue
+            if resolved_notice_uncertainty(warning,days):
+                continue
             if ('smart' in text and not re.search(r'widerspr|unles|preis\w* (?:fehlt|unklar|unsicher)',text) and
                 any(s['category']=='Menüoption' for s in layout) and
                 all(any(r['category']=='Menüoption' and 'deal' in r['name'].casefold() and r['price'] is not None
@@ -506,8 +540,13 @@ def extract_for_week(monday, key, model, prepared=None):
                 # doubt; uncertainty about its eligible dish is no free upgrade.
                 # Regression 16.11.2026: such a note blocked the whole Mensa week.
                 continue
-            if (re.search(r'unklar|unles|unsicher|widerspr|nicht eindeutig|abgeleitet',text) or
-                not any(term in text for term in ('aushang','stop food waste','zusammengeführt','wochenzeile'))):
+            # Nur Warnungen, die Zweifel oder Widersprüche melden, blockieren. Reine
+            # Hinweise ("Für die Tagessuppen ist kein Preis angegeben.", "Änderungen
+            # vorbehalten.") tun es nicht mehr: Jeder veröffentlichte Wert ist oben
+            # unabhängig gegen die PDF-Zellen geprüft, und der Wortlaut solcher
+            # Hinweise wechselt von Lesung zu Lesung (17.11.2026: dieselbe Karte einmal
+            # freigegeben, Minuten später wegen eines Hinweises verworfen).
+            if re.search(DOUBT_MARKERS,text):
                 raise ValueError('Mensa: offene KI-Warnung: '+warning[:280])
         return days
 

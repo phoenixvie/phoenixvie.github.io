@@ -78,10 +78,19 @@ Start läuft sofort.
 | Mensa tauscht ihr PDF aus und die neue KI-Lesung scheitert | Volle Karte wurde durch die reduzierte Notauswertung ersetzt | Die geprüfte volle Karte der Woche bleibt stehen |
 | Abschlussprüfung beanstandet **ein** Restaurant | Kein einziges neues Menü geht online | Nur dieses Restaurant behält seinen bisherigen Stand; alle anderen gehen online. Die Quelle wird beim nächsten Lauf neu ausgewertet |
 | Ein einzelner Text lässt sich nicht geprüft übersetzen | Gar keine neue englische Übersetzung | Alle anderen werden gespeichert; nur dieser Text bleibt "English translation pending" (im Admin ergänzbar) |
+| Während des Imports schreibt ein anderer Workflow ins Repository | Das fertige Ergebnis wurde verworfen und alles samt KI-Lesungen wiederholt (17.11.2026: korrekt gelesene Mensa-Karte ging verloren) | Das Ergebnis bleibt erhalten und wird auf den neuen Stand gesetzt (`scripts/publish_data.sh`); nur bei echter Überschneidung in Importdateien wird neu importiert |
+| Die KI formuliert einen Hinweis anders ("Spezialpasta lt. Tagesaushang", "Änderungen vorbehalten.") | Ganze Mensa-Karte verworfen | Nur Warnungen, die Zweifel oder Widersprüche melden, blockieren; reine Hinweise nicht |
 | GitHub startet einen Lauf Stunden zu spät | Lauf wird als "außerhalb des Fensters" verworfen | Lauf importiert trotzdem |
 
 Unverändert gilt: **Nichts wird erfunden.** Eine Korrekturrunde ersetzt keine Prüfung – ein Preis, der nicht im Original steht, fällt weiterhin durch.
 Bei einem Quellenproblem bleiben gültige Daten derselben Woche stehen; Menüs einer alten Woche werden nie als neue Woche gezeigt.
+
+## Englische Übersetzung
+
+Neue Gerichte werden **im Import selbst** übersetzt, unmittelbar nach der Abschlussprüfung und bevor die deutsche Karte online geht. Die
+englische Fassung liegt damit schon bereit, wenn das Gericht erscheint. Scheitert die Übersetzung, erscheint die deutsche Karte trotzdem
+pünktlich; der eigene Übersetzungs-Workflow (`wu-lunch-english.yml`) holt das Englische nach jedem Import und stündlich nach. Für im Admin
+von Hand eingetragene deutsche Texte gilt weiterhin dieser Nachholweg.
 
 ## Wo sehe ich, was passiert ist?
 

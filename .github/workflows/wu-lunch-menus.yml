@@ -182,6 +182,24 @@ jobs:
           path: wu-lunch/data/menu-sanity-report.json
           if-no-files-found: ignore
           retention-days: 30
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.skip == 'false'
+        with:
+          node-version: '24'
+      - name: Neue Gerichte sofort ins Englische übersetzen (vor der Veröffentlichung)
+        # Vorgabe des Betreibers: Englisch soll bei Gerichten sofort da sein. Die
+        # freigegebenen Texte werden deshalb übersetzt, BEVOR die deutsche Karte
+        # online geht; die Übersetzung liegt dann schon bereit. Scheitert dieser
+        # Schritt, erscheint die deutsche Karte trotzdem pünktlich – der eigene
+        # Übersetzungs-Workflow holt das Englische danach wie bisher nach.
+        if: steps.guard.outputs.skip == 'false'
+        continue-on-error: true
+        timeout-minutes: 8
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_URL: https://vswnqdqnohbuzbwmsdvv.supabase.co
+        run: node wu-lunch/scripts/translate_menus.mjs
       - name: Veröffentlichungsänderungen mit Abrufzeit erfassen
         if: steps.guard.outputs.skip == 'false'
         continue-on-error: true
@@ -225,24 +243,22 @@ jobs:
           git config user.name "wu-lunch-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           branch="${{ github.event.repository.default_branch }}"
-          # Bei parallelen Code-/Datencommits auf dem neuesten Branch erneut importieren.
+          message="WU Lunch: Menüimport $(TZ=Europe/Vienna date +%F)"
+          # Wird der Push abgelehnt, weil inzwischen ein anderer Workflow geschrieben
+          # hat, setzt publish_data.sh den eigenen Commit auf den neuen Stand, statt
+          # den Import samt KI-Lesungen zu wiederholen. Nur bei einer echten
+          # Überschneidung in Importdateien (Rückgabe 3) wird neu importiert.
           # Nie konflikthafte JSON-Dateien blind zusammenführen oder force-pushen.
           for attempt in 1 2 3; do
-            git add wu-lunch/data.js wu-lunch/data/menus.json wu-lunch/status.json
-            git add wu-lunch/data/update-status.json wu-lunch/source-archive
-            if [[ -f wu-lunch/data/menu-sanity-report.json ]]; then git add wu-lunch/data/menu-sanity-report.json; fi
-            if [[ -f wu-lunch/data/mensa-ai-candidate.json ]]; then git add wu-lunch/data/mensa-ai-candidate.json; fi
-            if [[ -f wu-lunch/data/repair-report.json ]]; then git add wu-lunch/data/repair-report.json; fi
-            if [[ -f wu-lunch/data/publication-observations.json ]]; then git add wu-lunch/data/publication-observations.json; fi
-            if git diff --cached --quiet; then
-              echo "Keine Datenänderungen"
+            result=0
+            bash wu-lunch/scripts/publish_data.sh "$branch" "$message" || result=$?
+            if [[ $result -eq 0 ]]; then
               exit 0
             fi
-            git commit -m "WU Lunch: Menüimport $(TZ=Europe/Vienna date +%F)"
-            if git push origin HEAD:"$branch"; then
-              exit 0
+            if [[ $result -ne 3 ]]; then
+              exit "$result"
             fi
-            echo "Push-Konflikt, versuche erneuten Import ($attempt/3)"
+            echo "Echte Überschneidung, versuche erneuten Import ($attempt/3)"
             git fetch origin "$branch"
             cp wu-lunch/data/update-status.json wu-lunch/.source-capture/update-status-retry.json
             git reset --hard "origin/$branch"
