@@ -1,6 +1,6 @@
 {
   "started_at": "2026-11-08T13:16:40+01:00",
-  "ends_after": "2026-12-04",
+  "ends_after": null,
   "sources": {
     "mensa": {
       "observations": [
@@ -166,6 +166,15 @@
         },
         {
           "at": "2026-11-17T16:00:09+01:00",
+          "sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+          "format": "pdf",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://www.wumensa.at/menuplan-deutsch/",
+          "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
           "sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
           "format": "pdf",
           "validity": null,
@@ -405,6 +414,18 @@
         },
         {
           "at": "2026-11-17T16:00:09+01:00",
+          "sha256": "478f1fe39b807843de87af5d319b58de8fb8a89bc899ccf2e892b5c7ad7c2713",
+          "format": "html",
+          "validity": [
+            "2026-11-16",
+            "2026-11-19"
+          ],
+          "changed": false,
+          "source_url": "https://www.dascampus.at/dc-mittagsmenues",
+          "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
           "sha256": "478f1fe39b807843de87af5d319b58de8fb8a89bc899ccf2e892b5c7ad7c2713",
           "format": "html",
           "validity": [
@@ -654,6 +675,18 @@
           "changed": false,
           "source_url": "https://www.dasglashaus.at/menues",
           "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
+          "sha256": "7934c97d7617fc4c4ecbdf1fce28262b784362626dbaf6865fbcb415e3d6651a",
+          "format": "html",
+          "validity": [
+            "2026-11-16",
+            "2026-11-20"
+          ],
+          "changed": false,
+          "source_url": "https://www.dasglashaus.at/menues",
+          "publication_time_confirmed": false
         }
       ],
       "changes": [
@@ -831,6 +864,15 @@
         },
         {
           "at": "2026-11-17T16:00:09+01:00",
+          "sha256": "2650c8736f998c626345bf558ea1f07a1e747c4f8242cef8e3d50cbe85962eb7",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie",
+          "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
           "sha256": "2650c8736f998c626345bf558ea1f07a1e747c4f8242cef8e3d50cbe85962eb7",
           "format": "html",
           "validity": null,
@@ -1027,6 +1069,15 @@
           "changed": false,
           "source_url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch",
           "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
+          "sha256": "02aefc7c80c9b26c604bd98c4634c089ebf283642832e6003303922fa12636d6",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch",
+          "publication_time_confirmed": false
         }
       ],
       "changes": [
@@ -1217,6 +1268,15 @@
           "changed": false,
           "source_url": "https://losteria.net/at/menue/menu-della-casa/",
           "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
+          "sha256": "76a56f5bbccdac1b1e165a8598fb3734a1ad4fb3400cb85c820a34d9768cd29d",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://losteria.net/at/menue/menu-della-casa/",
+          "publication_time_confirmed": false
         }
       ],
       "changes": []
@@ -1391,6 +1451,15 @@
           "changed": false,
           "source_url": "https://topfdeckel.at/",
           "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
+          "sha256": "b34da763a513c2efd30cf621c0811b9bfec5dc061605d661280b23a140411aab",
+          "format": "html",
+          "validity": null,
+          "changed": true,
+          "source_url": "https://topfdeckel.at/",
+          "publication_time_confirmed": false
         }
       ],
       "changes": [
@@ -1422,6 +1491,11 @@
         {
           "first_seen_at": "2026-11-17T10:56:40+01:00",
           "previous_seen_at": "2026-11-17T09:03:45+01:00",
+          "validity": null
+        },
+        {
+          "first_seen_at": "2026-11-17T17:26:03+01:00",
+          "previous_seen_at": "2026-11-17T16:00:09+01:00",
           "validity": null
         }
       ]
@@ -1590,6 +1664,15 @@
         },
         {
           "at": "2026-11-17T16:00:09+01:00",
+          "sha256": "fa731e006d00b24a152977730ed4f92e10b55dae0271489126d8dfb75b38e289",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://www.zurgruenenhuette.com/mittags-menu",
+          "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
           "sha256": "fa731e006d00b24a152977730ed4f92e10b55dae0271489126d8dfb75b38e289",
           "format": "html",
           "validity": null,
@@ -1770,6 +1853,15 @@
         },
         {
           "at": "2026-11-17T16:00:09+01:00",
+          "sha256": "da5d02971b65c3d798a169132c30df7bd9ef16a2ee855255ecc7416ad473d16c",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://lia.coffee/",
+          "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
           "sha256": "da5d02971b65c3d798a169132c30df7bd9ef16a2ee855255ecc7416ad473d16c",
           "format": "html",
           "validity": null,
@@ -1959,6 +2051,15 @@
           "changed": false,
           "source_url": "https://finn.wien/blogs/news/mittagsmenu",
           "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
+          "sha256": "d053b3c2af146ff0609e02dc5db488fa39c7e87974638c32660b24178bb292c8",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://finn.wien/blogs/news/mittagsmenu",
+          "publication_time_confirmed": false
         }
       ],
       "changes": [
@@ -2126,6 +2227,15 @@
         },
         {
           "at": "2026-11-17T16:00:09+01:00",
+          "sha256": "3819587ac0c3c4fe5143a9ca5ebfc4598388a6e448c8eb6e39b84324312d317f",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+          "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
           "sha256": "3819587ac0c3c4fe5143a9ca5ebfc4598388a6e448c8eb6e39b84324312d317f",
           "format": "html",
           "validity": null,
@@ -2304,6 +2414,15 @@
         },
         {
           "at": "2026-11-17T16:00:09+01:00",
+          "sha256": "d00c0fa7f9a03cde0a3cc139d79ddc8698a26d2a166ac3211083840afc354d61",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://www.xn--omakche-q2a.at/",
+          "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-17T17:26:03+01:00",
           "sha256": "d00c0fa7f9a03cde0a3cc139d79ddc8698a26d2a166ac3211083840afc354d61",
           "format": "html",
           "validity": null,
