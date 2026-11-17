@@ -24,6 +24,7 @@ from bs4 import BeautifulSoup
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import update_menus as legacy
+import attempts
 
 DATA = ROOT / "data" / "menus.json"
 FRONT = ROOT / "data.js"
@@ -346,7 +347,7 @@ def attach_finn_weekly_extras(days, prices, image_url):
     return days
 
 
-def fetch_finn(monday, *, key, previous):
+def fetch_finn(monday, *, key, previous, now=None):
     raw = legacy.safe_get(FINN_URL)
     image_url = select_finn_image(raw, monday)
     # Download every time: publishers can replace bytes under the same URL.
@@ -360,12 +361,22 @@ def fetch_finn(monday, *, key, previous):
         return None, sha, image_url
     if not key:
         raise ValueError("Finn: OPENAI_API_KEY fehlt für Originalbild-Analyse")
-    now = datetime.now(TZ).isoformat(timespec="seconds")
-    if (previous.get("last_attempt_sha256") == sha and
+    clock = now or datetime.now(TZ)
+    now = clock.isoformat(timespec="seconds")
+    # Begrenzte Wiederholungen statt "erst morgen wieder": Eine einzelne
+    # gescheiterte Bildlesung soll sich am selben Vormittag selbst beheben,
+    # ohne dass ein unlesbares Bild stündlich Kosten verursacht.
+    ident = attempts.identity(monday.isoformat(), FINN_REVIEW_VERSION, sha)
+    if (not previous.get("attempts") and previous.get("last_attempt_sha256") == sha and
         previous.get("last_attempt_version") == FINN_REVIEW_VERSION and
         previous.get("last_attempt_week_start") == monday.isoformat() and
         previous.get("last_attempt_at", "")[:10] == now[:10]):
-        raise ValueError("Finn: diese Bildversion heute bereits mit KI geprüft; neuer Versuch erst bei Änderung oder morgen")
+        previous["attempts"] = {"identity": ident, "day": now[:10], "count": 1,
+                                "last_at": previous["last_attempt_at"]}
+    permitted, reason = attempts.allowed(previous, ident, clock)
+    if not permitted:
+        raise ValueError("Finn: diese Bildversion " + reason)
+    attempts.register(previous, ident, clock)
     # Mark an attempt BEFORE the paid model call. The caller retains this
     # record even if the models disagree or the API returns an error.
     previous.update({"last_attempt_sha256": sha, "last_attempt_at": now,
@@ -465,6 +476,11 @@ def run(today, *, karma_only=False):
     for ident in (("karmafood",) if karma_only else ("karmafood", "finn")):
         previous = source_states.get(ident, {})
         restaurant = legacy.restaurant(data, ident)
+        if legacy.week_published(data, ident, monday) and previous.get("state") in ("ok", "cached"):
+            # Wochenkarte bereits geprüft veröffentlicht: kein erneuter Abruf, keine KI-Kosten.
+            source_states[ident] = {**previous, "state": "cached",
+                                    "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"}
+            continue
         try:
             if ident == "karmafood":
                 days, digest, source_url = fetch_karma(monday)
@@ -521,8 +537,8 @@ def run(today, *, karma_only=False):
     status["quality_warning_count"] = len(status["quality_warnings"])
     status["health"] = ("degraded" if status["problems"] or status["quality_warning_count"]
                         else "healthy")
-    status["next_run"] = ("Mo 06:15–18:15 stündlich, Di–Fr 08:15–12:15 "
-                          "(Europe/Vienna, GitHub Actions: zeitliche Abweichung möglich)")
+    status["next_run"] = ("Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, "
+                          "solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)")
     DATA.write_text(json.dumps(data, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     FRONT.write_text("window.CAMPUS_LUNCH_DATA = "+
                      json.dumps(data, ensure_ascii=False, separators=(",", ":"))+";\n", encoding="utf-8")

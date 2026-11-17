@@ -1,0 +1,45 @@
+name: WU Lunch – Taktgeber (pünktlicher Menüimport)
+
+# Warum: GitHub startet zeitgesteuerte Läufe dieses Repositorys nur wenige Male
+# pro Tag und oft Stunden zu spät. Dieser Wächter wartet auf die festen Termine
+# (Freitagnacht, Samstag und Sonntag je dreimal, Montag engmaschig, Dienstag bis
+# Freitag täglich, solange etwas fehlt) und löst den normalen Import pünktlich
+# aus. Details und Zeiten: wu-lunch/scripts/takt.py und "watch" in
+# wu-lunch/update-policy.json.
+#
+# Kosten: Der Job wartet die meiste Zeit nur. Er ist von Freitag 18:00 bis Montag
+# 18:00 aktiv und darüber hinaus, solange ein Menü fehlt; sonst beendet er sich
+# nach Sekunden.
+
+on:
+  schedule:
+    # Viele Startgelegenheiten: Jeder tatsächlich ausgeführte Lauf prüft nur
+    # kurz, ob eine Wache nötig ist und ob schon eine läuft.
+    - cron: '7,27,47 * * * *'
+  workflow_dispatch:
+    inputs:
+      predecessor:
+        description: 'Laufnummer des übergebenden Wächters (wird automatisch gesetzt)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  # Zum Auslösen des Import-Workflows und des eigenen Nachfolgers.
+  actions: write
+
+jobs:
+  wache:
+    if: github.ref == 'refs/heads/master' && github.repository == 'phoenixvie/phoenixvie.github.io'
+    runs-on: ubuntu-latest
+    # GitHub beendet Jobs nach 6 Stunden; der Wächter übergibt vorher selbst.
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wachlauf
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          WU_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          WU_TAKT_PREDECESSOR: ${{ inputs.predecessor }}
+        run: python3 wu-lunch/scripts/takt.py run

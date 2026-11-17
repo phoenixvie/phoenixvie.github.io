@@ -8,6 +8,7 @@ import hashlib
 from difflib import SequenceMatcher
 import json
 import logging
+import os
 import re
 import sys
 import time
@@ -801,6 +802,28 @@ def weekly_cache_valid(data,identifier,monday):
     if r.get("validFrom") and not (r["validFrom"]<=monday.isoformat()<=r.get("validUntil","")):return False
     return sum(len(v) for v in r.get("days",{}).values())>= (10 if identifier=="mensa" else 6)
 
+PUBLISHED_STATES = ("verified", "current", "ai_checked", "ai_crosschecked")
+
+def recheck_all():
+    """Ausdrücklich alles neu prüfen (Code-Änderung oder Häkchen beim manuellen Start)."""
+    return os.environ.get("WU_RECHECK_ALL") == "1"
+
+def week_published(data,identifier,monday):
+    """Wochenkarte liegt geprüft und vollständig für genau diese Woche vor.
+
+    Vorgabe des Betreibers (17.11.2026): Ein Restaurant, das seine Wochenkarte
+    veröffentlicht hat, wird in dieser Woche nicht mehr neu abgerufen – weder
+    am Wochenende noch bei den dichten Montagsprüfungen. Das spart Abrufe und
+    KI-Kosten und verhindert, dass ein guter Stand durch eine misslungene
+    Neu-Auswertung ersetzt wird (so geschehen bei der Mensa am 16.11.2026).
+    Unvollständige Wochen (ein Tag leer) und undatierte Karten zählen nicht.
+    """
+    if recheck_all():return False
+    r=restaurant(data,identifier)
+    if data.get("weekStart")!=monday.isoformat() or r.get("status") not in PUBLISHED_STATES:return False
+    if r.get("validFrom")!=monday.isoformat():return False
+    return all(r.get("days",{}).get((monday+timedelta(days=i)).isoformat()) for i in range(5))
+
 def menu_fingerprint(raw):
     """Fingerprint des sichtbaren HTML-Textes ohne Skripte oder volatile Attribute."""
     if raw.startswith(b"%PDF-"):return hashlib.sha256(raw).hexdigest()
@@ -965,6 +988,14 @@ def run(today):
         should_check=True
         prefetched_raw=None
         observed_digest=meta.get('content_sha256')
+        # Bereits geprüft veröffentlichte Wochenkarte: kein erneuter Abruf.
+        if (ident in ("mensa","glashaus","campus","gruenehuette","lia","topfdeckel")
+                and week_published(data,ident,monday) and (ident!="lia" or meta.get("parser_version")==4)):
+            operations[ident]={**meta,"state":"cached","last_success":prev_success,
+                               "consecutive_failures":meta.get("consecutive_failures",0),
+                               "note":"Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"}
+            operations[ident].pop("error",None)
+            continue
         # Topf's interactive tabs are a weekday-only daily menu. The browser
         # importer below handles its next published weekly plan separately.
         if ident=="topfdeckel" and today.weekday()>=5:
@@ -1027,6 +1058,14 @@ def run(today):
                         if (audit.get("state") in ("ok","cached") and audit.get("week_start")==monday.isoformat()
                             and audit.get("source_sha256")==hashlib.sha256(raw).hexdigest()
                             and audit.get("published_days_sha256")==kept_hash):
+                            parsed=(kept,(monday,monday+timedelta(days=4)))
+                            break
+                        # Die vollständige, KI-geprüfte Karte dieser Woche nie durch die
+                        # reduzierte Kernauswertung ersetzen, nur weil das PDF sich geändert
+                        # hat: Über ein geändertes PDF entscheidet der KI-Schritt danach,
+                        # der erst nach bestandener Prüfung austauscht (16.11.2026: 63 -> 20 Gerichte).
+                        if (audit.get("week_start")==monday.isoformat() and audit.get("published_days_sha256")==kept_hash
+                            and all(kept.get((monday+timedelta(days=i)).isoformat()) for i in range(5))):
                             parsed=(kept,(monday,monday+timedelta(days=4)))
                             break
                         parsed=parse_mensa(raw,monday)
@@ -1128,6 +1167,9 @@ def run(today):
         status["topf_luna_audit"]=state["topf_luna_audit"]
     if isinstance(state.get("mensa_luna_audit"),dict):
         status["mensa_luna_audit"]=state["mensa_luna_audit"]
+    # Zeitpunkt des letzten gescheiterten Topf-Browserabrufs für den Wiederholtakt.
+    if isinstance(state.get("topf_browser_attempt"),dict):
+        status["topf_browser_attempt"]=state["topf_browser_attempt"]
     validate_meal_components(data)
     warnings=quality_warnings(data,today)
     status["quality_warnings"]=warnings

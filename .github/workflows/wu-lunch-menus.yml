@@ -2,14 +2,21 @@ name: WU Lunch – Speisepläne aktualisieren
 
 on:
   schedule:
-    # Montag 06:15 bis 18:15 sowie Samstag 08:15 bis 18:15 Wiener Zeit:
-    # neue Wochenpläne früh erkennen und die Samstagsvorschau befüllen.
-    # Di–Fr weiterhin 08:15 bis 12:15. UTC deckt beide DST-Offsets ab;
-    # die Prüfung unten filtert unerwünschte Stunden heraus.
-    - cron: '15 4-17 * * 1'
-    - cron: '15 6-11 * * 2-5'
-    - cron: '15 6-17 * * 6'
+    # Auffangnetz: täglich 05:15 bis 22:15 Wiener Zeit, stündlich. GitHub startet
+    # geplante Läufe dieses Repositorys erfahrungsgemäß nur wenige Male pro Tag
+    # und oft Stunden zu spät – deshalb zählt jeder tatsächliche Start und kein
+    # Lauf wird mehr wegen "falscher Stunde" übersprungen. UTC deckt Sommer- und
+    # Winterzeit ab; die Prüfung unten filtert nur die Nacht heraus.
+    # Pünktlich (Freitagnacht, Sa/So je dreimal, Montag engmaschig, Di–Fr täglich)
+    # sorgt der Taktgeber (wu-lunch-takt.yml), der diesen Workflow über
+    # workflow_dispatch auslöst.
+    - cron: '15 3-21 * * *'
   workflow_dispatch:
+    inputs:
+      recheck_all:
+        description: 'Alle Restaurants neu prüfen – auch bereits veröffentlichte Wochenkarten'
+        type: boolean
+        default: false
   push:
     # Clean-room test: menu data and cache cleared on 2026-11-06; run on this push.
     paths:
@@ -29,6 +36,8 @@ on:
 
 permissions:
   contents: write
+  # Nur um den Taktgeber-Workflow starten zu können (siehe letzter Schritt).
+  actions: write
 
 concurrency:
   group: wu-lunch-menus
@@ -59,6 +68,11 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      # Normalfall "0": Restaurants mit bereits geprüft veröffentlichter Wochenkarte
+      # werden nicht erneut abgerufen. "1" bei Code-Änderungen (Integrationstest)
+      # und wenn beim manuellen Start das Häkchen gesetzt wurde.
+      WU_RECHECK_ALL: ${{ (github.event_name == 'push' || inputs.recheck_all == true) && '1' || '0' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -82,12 +96,8 @@ jobs:
       - name: Abhängigkeiten installieren
         if: steps.guard.outputs.skip == 'false'
         run: pip install -r wu-lunch/requirements.txt
-      - name: Offline-Tests
-        if: steps.guard.outputs.skip == 'false'
-        run: python wu-lunch/scripts/update_menus.py --smoke-test
-      - name: Parser-Regressionstests
-        if: steps.guard.outputs.skip == 'false'
-        run: python -m unittest discover -s wu-lunch/scripts -p 'test_*.py' -v
+      # Die Regressionstests liefen bereits im vorgelagerten Job "test" auf
+      # demselben Stand; hier nicht nochmals ausführen.
       - id: importer
         name: Speisepläne prüfen und extrahieren
         if: steps.guard.outputs.skip == 'false'
@@ -124,8 +134,8 @@ jobs:
         run: |
           set -euo pipefail
           # On first merge also import Finn's current menu once.
-          # A verified unchanged image is cached; failed images are capped
-          # to one paid attempt per image/day.
+          # A verified unchanged image is cached; a failed reading of the same
+          # image is retried once more that day (after 60 minutes), then capped.
           python wu-lunch/scripts/run_step.py finn_karma python wu-lunch/scripts/update_new_restaurants.py
       - name: Topf Wochenkarte – Browser plus Luna-Kontrolle aller Tabs
         if: steps.guard.outputs.skip == 'false'
@@ -135,10 +145,12 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
-          # Geplante Quellenanalyse Mo 07:15 und 11:15, Di–Sa um 11:15 Wien.
-          # Bei Code-Änderungen sofort als Integrationstest ausführen.
+          # Nach Bedarf statt nach Uhrzeit: läuft, solange die Wochenkarte nicht
+          # vollständig browsergeprüft vorliegt (auch bei verspätetem Start),
+          # danach nur noch gelegentlich zur Auffrischung. Bei Code-Änderungen
+          # sofort als Integrationstest.
           if ! python wu-lunch/scripts/update_schedule.py topf_browser "${{ github.event_name }}"; then
-            echo "Topf Browser: außerhalb des konfigurierten Ausführungsfensters; kein Browserabruf."
+            echo "Topf Browser: Wochenkarte bereits vollständig geprüft bzw. letzter Versuch erst kürzlich; kein Browserabruf."
             exit 0
           fi
           pip install 'playwright>=1.50,<2'
@@ -256,7 +268,20 @@ jobs:
           python - <<'PY'
           import json
           status=json.load(open('wu-lunch/status.json'))
+          held=[name for name,row in status.get('sources',{}).items() if row.get('state')=='withheld']
+          if held:
+              print('::warning::Freigabe zurückgehalten (bisheriger Stand bleibt online): '+', '.join(held))
           failed=[name for name in ('mensa','finn') if status.get('sources',{}).get(name,{}).get('state')=='error']
           if failed:
               raise SystemExit('Quellenprüfung fehlgeschlagen: '+', '.join(failed)+' – Details in wu-lunch/status.json')
           PY
+      - name: Taktgeber für pünktliche Importe sicherstellen
+        # Jeder von GitHub tatsächlich gestartete Zeitplan-Lauf prüft, ob der
+        # Wächter gebraucht wird und läuft – so heilt sich eine unterbrochene
+        # Wache von selbst. Scheitert nie den Import.
+        if: always() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          WU_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: python3 wu-lunch/scripts/takt.py ensure

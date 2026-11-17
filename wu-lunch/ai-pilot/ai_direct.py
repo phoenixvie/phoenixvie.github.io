@@ -242,20 +242,63 @@ def read_text(response):
         raise ValueError("API hat keinen JSON-Ausgabetext zurückgegeben")
     return "".join(fragments)
 
-def call_model(key, model, inputs, timeout=160, max_output_tokens=11500):
+TRANSIENT_HTTP = {408, 409, 425, 429, 500, 502, 503, 504, 520, 522, 524, 529}
+RETRY_WAITS = (4, 15, 40)
+
+def post_with_retry(post, url, *, sleep=None, waits=RETRY_WAITS, **kwargs):
+    """POST that survives short outages instead of losing a whole import step.
+
+    Only network errors and HTTP codes that mean "try again later" are retried,
+    with growing pauses. Authentication or request errors fail immediately.
+    """
+    import time
+    pause = sleep or time.sleep
+    last = None
+    for attempt in range(len(waits) + 1):
+        try:
+            response = post(url, **kwargs)
+        except requests.RequestException as exc:
+            last = ValueError("KI-Dienst nicht erreichbar: " + type(exc).__name__)
+        else:
+            if response.status_code not in TRANSIENT_HTTP:
+                return response
+            last = ValueError(f"KI-Dienst vorübergehend nicht verfügbar (HTTP {response.status_code})")
+        if attempt < len(waits):
+            print(f"KI-Aufruf: Versuch {attempt + 1} fehlgeschlagen ({last}); neuer Versuch in {waits[attempt]} s", flush=True)
+            pause(waits[attempt])
+    raise last
+
+def call_model(key, model, inputs, timeout=160, max_output_tokens=11500, *, sleep=None):
     body={"model":model,"store":False,"instructions":SYSTEM,
           "input":inputs,"max_output_tokens":max_output_tokens,
           "text":{"format":{"type":"json_schema","name":"lunch_menu_extraction",
                             "strict":True,"schema":SCHEMA}}}
-    resp=SESSION.post("https://api.openai.com/v1/responses",
-                      headers={"Authorization":"Bearer "+key,"Content-Type":"application/json"},
-                      json=body,timeout=timeout)
+    resp=post_with_retry(SESSION.post,"https://api.openai.com/v1/responses",sleep=sleep,
+                         headers={"Authorization":"Bearer "+key,"Content-Type":"application/json"},
+                         json=body,timeout=timeout)
     if resp.status_code>=400:
         raise ValueError(f"OpenAI API HTTP {resp.status_code}: "+
                          resp.text[:280].replace(key,"[REDACTED]"))
     answer=resp.json()
     result=json.loads(read_text(answer))
     return result,answer.get("usage",{})
+
+def correction_inputs(inputs, previous_result, problems):
+    """Follow-up request for one self-correction round.
+
+    The model sees the same original source again, its own rejected answer and
+    the concrete findings of the independent checks. The checks stay the gate:
+    a corrected answer is validated exactly like a first answer.
+    """
+    findings="\n".join("- "+str(p)[:400] for p in problems[:12])
+    note=("Deine vorige Antwort wurde von unabhängigen Prüfungen NICHT freigegeben. Befunde:\n"
+          +findings+"\n\nPrüfe die Originalquelle oben erneut und liefere die VOLLSTÄNDIGE korrigierte "
+          "Antwort im selben JSON-Schema. Korrigiere ausschließlich anhand der Quelle. "
+          "Steht eine Angabe (z. B. ein Preis) tatsächlich nicht in der Quelle, bleibt sie null "
+          "und wird als Warnung genannt – nichts erfinden, nichts raten, nichts weglassen, "
+          "nur um die Prüfung zu bestehen.\n\nVorige Antwort:\n"
+          +json.dumps(previous_result,ensure_ascii=False)[:60000])
+    return [*inputs,{"role":"user","content":[{"type":"input_text","text":note}]}]
 
 def validate(result, sources, week_start, restaurant):
     """Safety checks independent of any restaurant parser; never writes production."""

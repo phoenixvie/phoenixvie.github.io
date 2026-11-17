@@ -20,6 +20,8 @@ on:
     paths: ['wu-lunch/**', 'wu-lunch-app/**', '.github/workflows/wu-lunch-english.yml']
 permissions:
   contents: read
+  # Nur um den Taktgeber-Workflow starten zu können (siehe letzter Schritt).
+  actions: write
 concurrency:
   group: wu-lunch-english
   cancel-in-progress: false
@@ -52,3 +54,12 @@ jobs:
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_URL: https://vswnqdqnohbuzbwmsdvv.supabase.co
         run: node wu-lunch/scripts/translate_menus.mjs
+      - name: Taktgeber für pünktliche Importe sicherstellen
+        # Jeder tatsächlich gestartete Zeitplan-Lauf hilft, eine unterbrochene
+        # Wache neu zu starten. Scheitert nie die Übersetzung.
+        if: always() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          WU_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: python3 wu-lunch/scripts/takt.py ensure

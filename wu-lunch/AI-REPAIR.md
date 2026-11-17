@@ -2,11 +2,13 @@
 
 ## Betriebsmodus (Stand: 9. November 2026; 11 Restaurants)
 
-GitHub Actions prüft Montag stündlich 06:15–18:15, Dienstag–Freitag
-08:15–12:15 und Samstag 08:15–18:15 (Europe/Vienna; Verzögerungen möglich).
+Wann geprüft wird, steht seit 17. November 2026 in `IMPORT.md` (Taktgeber zum
+Wochenstart plus Auffangnetz nach GitHub-Zeitplan); die früheren festen
+Zeitfenster gelten nicht mehr.
 Nach den Parsern prüft Mensa bei jedem freigegebenen Lauf das Original-PDF.
-Danach folgen Finn/Karma, der zeitlich begrenzte Topf-Browserimport und der
-Restaurant-Repair-Agent. Die zusätzliche 11-Uhr-Sperre für Mensa entfällt.
+Danach folgen Finn/Karma, der Topf-Browserimport (nach Bedarf, nicht mehr nach
+Uhrzeit) und der Restaurant-Repair-Agent. Die zusätzliche 11-Uhr-Sperre für
+Mensa entfällt.
 
 Mensa lädt die Originaldatei bei jeder Prüfung erneut. Ein erfolgreicher Cache
 gilt nur für denselben PDF-Hash, dieselbe Woche, Prüfversion und unveränderte
@@ -130,8 +132,6 @@ bevor der Einsatz ausgeweitet wird.
 
 ### Häufigere Montagsprüfungen
 
-- Montag stündlich **06:15–18:15 Uhr** Wiener Zeit (13 Prüfungen), auch früh vor 08:00 Uhr.
-- Dienstag bis Freitag weiterhin stündlich **08:15–12:15 Uhr** (fünf Prüfungen).
-- GitHub-Actions-Zeitpläne sind Best-Effort und können sich aufgrund von Auslastung verspäten.
-- Die Quellen werden mehrfach abgefragt, **KI nicht automatisch in jedem Lauf**: Finn nur bei neuem eindeutig aktuellem Bild; HTML-Reparatur und Mensa-KI regulär um 11:15 Uhr.
+- **Überholt (17.11.2026):** Die hier früher genannten festen Fenster (Mo 06:15–18:15, Di–Fr 08:15–12:15) wurden von GitHub in der Praxis nicht eingehalten – geplante Läufe starteten nur etwa zweimal täglich und rund acht Stunden verspätet. Aktueller Ablauf: `IMPORT.md`.
+- Die Quellen werden mehrfach abgefragt, **KI nicht automatisch in jedem Lauf**: Finn nur bei neuem eindeutig aktuellem Bild; Mensa-KI nur bei neuem/geändertem PDF. Eine gescheiterte KI-Lesung wird am selben Tag höchstens einmal wiederholt (frühestens nach 60 Minuten).
 - Vorab veröffentlichte Menüs der *Folgewoche* werden nicht der laufenden Woche zugewiesen. Das ist bei Karma Food am Freitag, 06.11.2026 bereits vorgekommen (09.–13.11.2026).

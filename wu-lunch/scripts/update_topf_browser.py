@@ -164,6 +164,7 @@ def main():
         print("::warning::Topf Luna Kontrollanalyse nicht verfügbar:",str(error)[:180],flush=True)
     status["sources"]["topfdeckel"]={"state":"ok_browser","last_success":r["browser_verified_at"],
         "consecutive_failures":0,"day_sha256":hashes}
+    status.pop("topf_browser_attempt",None)
     warnings=quality_warnings(data,today)
     status["quality_warnings"]=warnings
     status["quality_warning_count"]=len(warnings)
@@ -171,8 +172,22 @@ def main():
     STATUS.write_text(json.dumps(status,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print("Topf week published locally:",json.dumps({k:len(v) for k,v in days.items()}))
 
+def record_failed_attempt(error):
+    """Fehlversuch vermerken: Der nächste Import versucht es bald erneut
+    (siehe retry_minutes in update-policy.json), aber nicht im Minutentakt."""
+    try:
+        status=json.loads(STATUS.read_text(encoding="utf-8"))
+        status["topf_browser_attempt"]={
+            "at":datetime.now(ZoneInfo("Europe/Vienna")).isoformat(timespec="seconds"),
+            "error":str(error)[:220]}
+        STATUS.write_text(json.dumps(status,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    except (OSError,ValueError):
+        pass
+
+
 if __name__=="__main__":
     try:main()
     except Exception as error:
+        record_failed_attempt(error)
         print("::error::Topf browser import failed: "+str(error)[:240],file=sys.stderr)
         raise

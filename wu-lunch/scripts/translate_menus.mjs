@@ -29,8 +29,18 @@ export function validateTranslations(sources,items){
   }
   return [...items].sort((a,b)=>a.id-b.id);
 }
+// Kurze Störungen des KI-Dienstes überbrücken, statt den ganzen Lauf zu verlieren.
+export async function fetchWithRetry(url,options,{send=fetch,waits=[4000,15000],sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms))}={}){
+  for(let attempt=0;;attempt++){
+    let response,failure;
+    try{response=await send(url,typeof options==='function'?options():options);}catch(error){failure=error;}
+    if(response&&![408,409,425,429,500,502,503,504,520,522,524,529].includes(response.status))return response;
+    if(attempt>=waits.length){if(failure)throw failure;return response;}
+    await sleep(waits[attempt]);
+  }
+}
 async function ask(instructions,input,schema){
-  const response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model,store:false,instructions,input:JSON.stringify(input),max_output_tokens:12000,text:{format:{type:'json_schema',name:'lunch_translation',strict:true,schema}}}),signal:AbortSignal.timeout(180000)});
+  const response=await fetchWithRetry('https://api.openai.com/v1/responses',()=>({method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model,store:false,instructions,input:JSON.stringify(input),max_output_tokens:12000,text:{format:{type:'json_schema',name:'lunch_translation',strict:true,schema}}}),signal:AbortSignal.timeout(180000)}));
   if(!response.ok)throw new Error('Translation model HTTP '+response.status);
   const result=await response.json();if(result.status!=='completed')throw new Error('Incomplete model response');
   const text=(result.output||[]).flatMap(x=>x.content||[]).filter(x=>x.type==='output_text').map(x=>x.text).join('');
@@ -50,6 +60,26 @@ export async function translateBatch(batch,request=ask){
   }
   throw new Error('Translation batch failed review after 3 attempts: '+notes.join('; ').slice(0,2000));
 }
+// Ein einzelner nicht prüfbarer Text (z. B. ein Tippfehler in der Originalkarte)
+// darf nicht alle anderen Übersetzungen blockieren: Scheitert ein Stapel an der
+// inhaltlichen Prüfung, wird er geteilt, bis die Problemtexte isoliert sind.
+// Gespeichert wird weiterhin nur, was die unabhängige Prüfung bestanden hat;
+// die isolierten Texte bleiben "English translation pending" und lassen sich im
+// Admin von Hand ergänzen. Technische Fehler (Netz, Datenbank) brechen wie
+// bisher ab und werden beim nächsten Lauf wiederholt.
+export async function translateResilient(batch,translate=translateBatch){
+  try{
+    const items=await translate(batch);
+    return {done:items.map(x=>({german:batch[x.id],english:x.english})),failed:[]};
+  }catch(error){
+    if(!/failed review after/.test(error.message))throw error;
+    if(batch.length<=1)return {done:[],failed:batch.map(german=>({german,reason:error.message}))};
+    const middle=Math.ceil(batch.length/2);
+    const left=await translateResilient(batch.slice(0,middle),translate);
+    const right=await translateResilient(batch.slice(middle),translate);
+    return {done:[...left.done,...right.done],failed:[...left.failed,...right.failed]};
+  }
+}
 export async function main(){
   if(!key||!process.env.OPENAI_API_KEY)throw new Error('Translation secrets are not configured');
   const menu=JSON.parse(await readFile(new URL('../data/menus.json',import.meta.url),'utf8'));
@@ -59,12 +89,19 @@ export async function main(){
   const sources=[...new Set(menus.flatMap(data=>JSON.parse(execFileSync(process.execPath,['wu-lunch/scripts/collect_translation_texts.cjs'],{cwd:root,input:JSON.stringify([data,profiles,manual.filter(row=>row.week_start===data.weekStart),contact,announcements]),encoding:'utf8'}))))];
   const existing=new Set(known.map(x=>x.source_text));const missing=sources.filter(x=>!existing.has(x));
   console.log(`${sources.length} current texts, ${missing.length} missing English translations`);
+  const pending=[];
   for(let start=0;start<missing.length;start+=25){
     const batch=missing.slice(start,start+25);
-    const items=await translateBatch(batch);
+    const {done,failed}=await translateResilient(batch);
+    pending.push(...failed);
+    if(!done.length)continue;
     // Insert-only protects manual edits even when they are saved during an AI run.
-    await rest('lunch_translations?on_conflict=source_sha256',{method:'POST',headers:{Prefer:'resolution=ignore-duplicates,return=representation'},body:JSON.stringify(items.map(x=>({source_text:batch[x.id],english_text:x.english,source_sha256:sha(batch[x.id]),origin:'ai',model})))});
-    console.log(`Stored English batch ${start+1}–${start+items.length}`);
+    await rest('lunch_translations?on_conflict=source_sha256',{method:'POST',headers:{Prefer:'resolution=ignore-duplicates,return=representation'},body:JSON.stringify(done.map(x=>({source_text:x.german,english_text:x.english,source_sha256:sha(x.german),origin:'ai',model})))});
+    console.log(`Stored ${done.length} reviewed English texts of batch ${start+1}–${start+batch.length}`);
+  }
+  if(pending.length){
+    console.log(`::warning::${pending.length} Text(e) ohne geprüfte englische Übersetzung – bleiben "English translation pending" und können im Admin ergänzt werden.`);
+    for(const item of pending)console.log('- '+JSON.stringify(item.german.slice(0,140))+' → '+item.reason.slice(0,260));
   }
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error(e.message);process.exitCode=1;});
