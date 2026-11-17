@@ -60,3 +60,4 @@
 .meet-notice.meet-name-error{margin:8px 0 0;background:#fdeeee;color:#a3262a}
 .meet-people{align-items:flex-start}.meet-people>.material-svg{margin-top:2px}.meet-names .meet-name{padding:3px 0}.meet-names .meet-own{display:flex!important;align-items:center;justify-content:space-between;gap:8px;padding:0}.meet-own .meet-remove{margin:-4px -6px -4px 0}
 .meet-facts+.meet-confirm{margin-top:20px}
+.meet-icon-button{display:flex;align-items:center;justify-content:center;gap:8px}.meet-icon-button .material-svg{width:20px;height:20px;color:#fff}

@@ -318,6 +318,8 @@ test('sign-up with first name only: field above the button, same name checks, no
   assert.equal(anonymous,1);assert.equal(otpCalls,0);assert.equal(own.length,1);assert.equal(own[0].first_name,'Anna');   // erster Buchstabe automatisch großassert.equal(own[0].user_id,'anon-1');
   assert.equal(store.has('wu-meet-preview-name'),false,'Vorname wird nicht gespeichert');assert.equal(context.meetForm,false);
   assert.match(context.renderMeet(),/Du bist für diesen Termin angemeldet/);assert.match(tracked.join('\n'),/meet_joined/);
+  // Abmelden: blauer Knopf mit Symbol (Vorgabe 17.11.2026).
+  assert.match(context.renderMeet(),/<button class="meet-primary meet-icon-button" data-action="meet-leave">[^<]*<span>Abmelden<\/span><\/button>/);
   // Abmelden: Das Feld ist wieder leer (Vorname jedes Mal neu eingeben). Ohne Eingabe keine Anmeldung.
   await click('meet-leave');assert.equal(own.length,0);
   assert.match(context.renderMeet(),/id="meet-first-name"[^>]*value=""/);
