@@ -27,13 +27,12 @@ const catalog: Record<string,Record<string,Check>>={
   meet_open:{entry:oneOf('list','menu_hint')},
   meet_date_changed:{slot},
   meet_signup_started:{slot},
-  meet_input_rejected:{reason:oneOf('name_missing','name_format','name_blocked','email_invalid','email_not_wu')},
+  meet_input_rejected:{reason:oneOf('name_missing','name_format','name_blocked','email_invalid')},
   meet_code_requested:{resend:oneOf('no','yes')},
   meet_code_result:{result:oneOf('ok','invalid')},
   meet_joined:{slot,weekday:oneOf(1,3)},
   meet_left:{slot},
   meet_maps_opened:{source:oneOf('fact','button')},
-  meet_mail_opened:{},
 };
 export const usageEvents=Object.keys(catalog);
 export function validateUsage(event: unknown, input: unknown): {event: string; props: Props} | null {

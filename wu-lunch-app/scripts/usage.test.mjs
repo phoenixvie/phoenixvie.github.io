@@ -40,13 +40,12 @@ test('extended catalogue covers Meet to eat, map, links and sharing with fixed v
   ok('meet_open',{entry:'menu_hint'},{entry:'menu_hint'});
   ok('meet_date_changed',{slot:'following'},{slot:'following'});
   ok('meet_signup_started',{slot:'next'},{slot:'next'});
-  ok('meet_input_rejected',{reason:'email_not_wu',email:'someone@gmail.com',name:'Anna'},{reason:'email_not_wu'});   // Eingaben selbst werden nie gesendet
+  ok('meet_input_rejected',{reason:'email_invalid',email:'someone@gmail',name:'Anna'},{reason:'email_invalid'});   // Eingaben selbst werden nie gesendet
   ok('meet_code_requested',{resend:'yes'},{resend:'yes'});
   ok('meet_code_result',{result:'invalid',token:'123456'},{result:'invalid'});
   ok('meet_joined',{slot:'next',weekday:3,first_name:'Anna'},{slot:'next',weekday:3});
   ok('meet_left',{slot:'next'},{slot:'next'});
   ok('meet_maps_opened',{source:'fact',href:'https://maps.example'},{source:'fact'});
-  ok('meet_mail_opened',{},{});
   ok('home_view',{view:'map'},{view:'map'});
   ok('map_pin_selected',{restaurant_id:'finn'},{restaurant_id:'finn'});
   ok('restaurant_link',{restaurant_id:'lia',link:'phone',url:'tel:+431'},{restaurant_id:'lia',link:'phone'});

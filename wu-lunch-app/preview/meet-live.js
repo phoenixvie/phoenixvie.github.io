@@ -38,15 +38,10 @@
     for (const [name, replacement] of Object.entries(values)) value = value.replace('{' + name + '}', replacement);
     return value;
   };
-  // Schalter für die WU-Prüfung der E-Mail-Adresse. Vorgabe des Betreibers (17.11.2026): für den internen
-  // Test der APK vorerst AUS, damit auch andere Adressen funktionieren. Vor dem öffentlichen Start wieder auf
-  // true stellen und meet-preview-wu-email.sql in Supabase einspielen (dort prüft die Datenbank dasselbe).
-  const requireWuEmail = false;
-  const wuEmail = value => /^[^\s@]+@(?:[a-z0-9-]+\.)*wu\.ac\.at$/i.test(String(value || '').trim());
   // Vornamen-Prüfung (Vorgabe 17.11.2026): Der Vorname ist für alle sichtbar. Damit dort keine Botschaften,
   // Beschimpfungen oder Parolen stehen, wird nur eine Namensform angenommen (ein Name aus Buchstaben oder ein
   // Doppelname mit Bindestrich, höchstens 20 Zeichen, keine Leerzeichen) und eine kleine Sperrliste geprüft. Das fängt das Offensichtliche ab,
-  // nicht jede kreative Schreibweise – verbindlich ist zusätzlich die Datenbank-Regel in meet-preview-wu-email.sql.
+  // nicht jede kreative Schreibweise – verbindlich ist zusätzlich die Datenbank-Regel in meet-preview-name-format.sql.
   const blockedParts = ['nazi','nazis','heil','sieg','hitler','himmler','goebbels','stalin','putin','trump','biden','hamas','afd','fpo','fpoe','ovp','oevp','spo','spoe','kpo','kpoe','neos','antifa','arsch','hure','nutte','sex','porn','porno','anal','idiot','trottel','depp','spast','kanake','kanak','jude','juden','free','palestine','palastina','palaestina','israel','gaza','ukraine','russia','russland','krieg','war','stop','vote','wahl','waehlt','boykott','boycott','fck','acab','maga','blm'];
   const blockedInside = ['fuck','bitch','fotze','wichser','schlampe','schwuchtel','nigger','nigga','hitler','arschloch','hurensohn','scheiss','penis','vagina','faschis','kommunis'];
   const rejection = problem => /nicht möglich/.test(problem) ? 'name_blocked' : /nur deinen Vornamen/.test(problem) ? 'name_format' : 'name_missing';
@@ -116,7 +111,7 @@
     meetJoined = !!own;
     const error = state.error ? `<p class="meet-notice" role="alert">${esc(state.error)}</p>` : '';
     const header = `<header class="top detail"><button class="back" data-action="meet-back" aria-label="Zurück">${icon('arrow_back')}</button><h1>${meetForm ? esc(text('Meet to eat: Anmeldung', {}, 'Anmeldung')) : 'Meet to eat'}</h1></header>`;
-    if (meetForm) return `${header}<div class="body"><div class="scroll meet-content">${error}${state.step === 'code' ? `<p>${esc(text('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.', {email: state.pendingEmail}))}</p><a href="https://outlook.cloud.microsoft" data-action="meet-open-url" data-track="mail" class="meet-mail-link" target="_blank" rel="noopener noreferrer">WU-Mail öffnen</a><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button><button class="meet-secondary" data-action="meet-resend-code" ${state.busy?'disabled':''}>Neuen Code anfordern</button>` : state.step === 'name' ? `<p>Deine E-Mail-Adresse ist bestätigt. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || knownName())}"></label><button class="meet-primary" data-action="meet-confirm-name" ${state.busy?'disabled':''}>Teilnehmen</button>` : `<p>Verifizierung deiner WU-Mailadresse, damit nur WU Studenten teilnehmen können. Du bekommst einen Code per E-Mail. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || knownName())}"></label><label>WU E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" placeholder="mustermann@wu.ac.at" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Verifizierung via Mail starten</button>`}</div></div>`;
+    if (meetForm) return `${header}<div class="body"><div class="scroll meet-content">${error}${state.step === 'code' ? `<p>${esc(text('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.', {email: state.pendingEmail}))}</p><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button><button class="meet-secondary" data-action="meet-resend-code" ${state.busy?'disabled':''}>Neuen Code anfordern</button>` : state.step === 'name' ? `<p>Deine E-Mail-Adresse ist bestätigt. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || knownName())}"></label><button class="meet-primary" data-action="meet-confirm-name" ${state.busy?'disabled':''}>Teilnehmen</button>` : `<p>Verifizierung deiner E-Mail-Adresse: Du bekommst einen Code per E-Mail. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || knownName())}"></label><label>E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" placeholder="mustermann@email.com" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Verifizierung via Mail starten</button>`}</div></div>`;
     const people = state.participants.filter(p => p.meeting_date === selected);
     let ownRemoved = false;
     const names = people.filter(p => { if (own && !ownRemoved && p.first_name === own.first_name) { ownRemoved = true; return false; } return true; });
@@ -153,11 +148,9 @@
       { const problem = state.pendingName ? nameProblem(state.pendingName) : ''; if (problem) { track('meet_input_rejected', {reason: rejection(problem)}); state.error = problem; render(); return; } }
       state.pendingEmail = document.getElementById('meet-email').value.trim();
       if (!state.pendingName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.pendingEmail)) { track('meet_input_rejected', {reason: state.pendingName ? 'email_invalid' : 'name_missing'}); state.error='Bitte gib einen Vornamen und eine gültige E-Mail-Adresse ein.'; render(); return; }
-      // Der Text verspricht, dass nur WU-Angehörige teilnehmen: Angenommen werden nur Adressen der WU
-      // (…@wu.ac.at und Unterdomänen wie …@s.wu.ac.at für Studierende). Die Datenbank prüft dasselbe,
-      // sobald meet-preview-wu-email.sql eingespielt ist.
+      // Vorgabe des Betreibers (17.11.2026): keine Einschränkung auf WU-Adressen – jede gültige E-Mail-Adresse
+      // kann verwendet werden. Der Code per E-Mail bestätigt nur, dass die Adresse der Person gehört.
       setName(state.pendingName);
-      if (requireWuEmail && !wuEmail(state.pendingEmail)) { track('meet_input_rejected', {reason: 'email_not_wu'}); state.error='Bitte verwende deine WU-Mailadresse (…@wu.ac.at oder …@s.wu.ac.at).'; render(); return; }
     }
     const code = a === 'meet-verify' ? document.getElementById('meet-code').value.trim() : '';
     state.busy=true; render();
@@ -181,7 +174,7 @@
     const target=e.target.closest('[data-action]');
     if (!target || !['meet-preview','meet-back','meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-confirm-name','meet-leave','meet-open-url'].includes(target.dataset.action)) return;
     e.preventDefault(); e.stopImmediatePropagation();
-    if (target.dataset.action === 'meet-open-url') { if (target.dataset.track) track(target.dataset.track === 'mail' ? 'meet_mail_opened' : 'meet_maps_opened', target.dataset.track === 'mail' ? {} : {source: target.dataset.track}); const url=safeUrl(target.href); if (url && !nativePost('open-source',{url,title:'Meet to eat'})) window.open(url,'_blank','noopener,noreferrer'); return; }
+    if (target.dataset.action === 'meet-open-url') { if (target.dataset.track) track('meet_maps_opened', {source: target.dataset.track}); const url=safeUrl(target.href); if (url && !nativePost('open-source',{url,title:'Meet to eat'})) window.open(url,'_blank','noopener,noreferrer'); return; }
     void action(target);
   }, true);
   // Auswahl eines anderen Termins im Datumsfeld.

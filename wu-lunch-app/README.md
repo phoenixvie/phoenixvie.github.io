@@ -50,6 +50,11 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - **Nicht aufgenommen (Stand 17.11.2026):** Agape (auf der Webseite gibt es kein Mittagsmenü mehr, die genannte Seite existiert nicht), Rex Lounge (unter der Adresse erscheint ein fremdes Online-Casino) und Interspar Restaurant (die Seite sperrt automatische Abrufe).
 - **In der Android-App nicht enthalten:** Die Wels-Ausgabe ist nur eine Webseite.
 
+## Treffpunkt-Foto und Symbole in der installierten App (Stand 17.11.2026)
+
+- Das Treffpunkt-Foto (`preview/meeting-point.webp`) wird beim Bündeln (`npm run bundle:preview`) fest in die App eingebaut. Früher lud die installierte App es von der Webseite und zeigte deshalb das Bild des dort veröffentlichten Stands statt des eigenen.
+- Die App enthält nur eine kleine Auswahl der Symbolschrift (`assets/material-symbols-font.json`). Jedes weitere Symbol muss als Zeichnung in `meetIcons` (`preview/app.js`) stehen, sonst erscheint sein Name als Text (so stand in 0.5.3 „CLOSE" statt des Kreuzes). Ein Test prüft das.
+
 ## Nutzungsstatistik (Stand 17.11.2026)
 
 Die installierte Android-App zählt anonym über Aptabase (EU), ohne Cookies und ohne dauerhafte Gerätekennung. Die Webseite, die Web-Vorschau und die Wels-Ausgabe messen nichts. Auswertung: im Aptabase-Konto des Betreibers.
@@ -77,6 +82,5 @@ Gesendet werden nur Ereignisnamen mit festen Wertelisten (`src/usage.ts` weist a
 | `meet_joined` | Anmeldung abgeschlossen | Termin, Montag oder Mittwoch |
 | `meet_left` | Abmeldung | Termin |
 | `meet_maps_opened` | Google Maps zum Treffpunkt | über die Übersicht oder den Knopf |
-| `meet_mail_opened` | „WU-Mail öffnen" | – |
 
 Neue Ereignisse kommen erst mit einer neuen APK in die Statistik. Der Datenschutztext (Impressum-Seite, `wu-lunch/i18n.js`) nennt diese Kategorien und muss bei Erweiterungen mitgezogen werden.
