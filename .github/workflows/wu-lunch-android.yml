@@ -2,6 +2,12 @@ name: WU Lunch Android APK
 
 on:
   workflow_dispatch:
+    inputs:
+      aufgabe:
+        description: 'app-bauen: APK + App-Bundle für Google Play. upload-schluessel-erzeugen: einmalig den Upload-Schlüssel anlegen. signatur-testen: Probelauf mit Wegwerf-Schlüssel, ohne Ergebnis-Dateien.'
+        type: choice
+        options: [app-bauen, upload-schluessel-erzeugen, signatur-testen]
+        default: app-bauen
   pull_request:
     paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-android.yml']
 
@@ -9,8 +15,41 @@ permissions:
   contents: read
 
 jobs:
+  # Einmalig: Upload-Schlüssel für Google Play erzeugen und direkt als Repository-Secrets speichern.
+  # Der Schlüssel erscheint nirgends im Klartext (nicht im Log, nicht als Datei zum Herunterladen).
+  # Voraussetzung: Secret SECRETS_TOKEN = Fine-grained Token mit "Secrets: Read and write" nur für dieses Repository.
+  # Geht der Schlüssel verloren, lässt er sich in der Play Console zurücksetzen (Play App Signing).
+  upload-key:
+    if: github.event_name == 'workflow_dispatch' && inputs.aufgabe == 'upload-schluessel-erzeugen'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Upload-Schlüssel erzeugen und als Secrets speichern
+        env:
+          GH_TOKEN: ${{ secrets.SECRETS_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ -z "$GH_TOKEN" ]; then echo "::error::Secret SECRETS_TOKEN fehlt (siehe Anleitung)."; exit 1; fi
+          existing=$(gh secret list --repo "$REPO" --json name --jq '.[].name')
+          if printf '%s\n' "$existing" | grep -qx ANDROID_UPLOAD_KEYSTORE_BASE64; then
+            echo "::error::Es gibt bereits einen Upload-Schlüssel. Er wird nicht überschrieben (sonst passt er nicht mehr zur Play Console)."; exit 1
+          fi
+          work=$(mktemp -d); trap 'rm -rf "$work"' EXIT
+          pass=$(openssl rand -hex 32); echo "::add-mask::$pass"
+          keytool -genkeypair -noprompt -storetype PKCS12 -keystore "$work/upload.p12" -alias upload \
+            -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=WU Food, C=AT" -storepass "$pass" -keypass "$pass" >/dev/null 2>&1
+          base64 -w0 "$work/upload.p12" | gh secret set ANDROID_UPLOAD_KEYSTORE_BASE64 --repo "$REPO"
+          printf '%s' "$pass" | gh secret set ANDROID_UPLOAD_KEYSTORE_PASSWORD --repo "$REPO"
+          fingerprint=$(keytool -list -v -keystore "$work/upload.p12" -storepass "$pass" -alias upload | grep -E 'SHA256:' | head -1 | sed 's/.*SHA256: *//')
+          { echo "### Upload-Schlüssel angelegt"; echo; echo "Gespeichert als Secrets ANDROID_UPLOAD_KEYSTORE_BASE64 und ANDROID_UPLOAD_KEYSTORE_PASSWORD."; echo; echo "Zertifikat (öffentlich), SHA-256: \`$fingerprint\`"; } >> "$GITHUB_STEP_SUMMARY"
+
   build-apk:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.title, '[APK]')
+    if: (github.event_name == 'workflow_dispatch' && inputs.aufgabe != 'upload-schluessel-erzeugen') || contains(github.event.pull_request.title, '[APK]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     defaults:
@@ -42,10 +81,35 @@ jobs:
         # der Hintergrund füllt die ganze Vorlage; ein zusätzlicher Innenabstand
         # (früher 20 %) würde wieder einen sichtbaren Rand erzeugen.
         run: test ! -e android/app/src/main/res/drawable/ic_launcher_foreground_inset.xml && grep -rq '@mipmap/ic_launcher_foreground' android/app/src/main/res/mipmap-anydpi-v26/
-      - name: Build standalone test APK with bundled JavaScript
-        run: ./gradlew assembleRelease
+      - name: Build APK and App Bundle (signed with the upload key when it exists)
+        # Mit Upload-Schlüssel (Secrets) entstehen APK und App-Bundle (.aab) für Google Play, beide damit signiert.
+        # Ohne Schlüssel bleibt es beim Test-APK mit dem öffentlichen Debug-Schlüssel (Google Play lehnt das ab).
+        # "signatur-testen" prüft den Ablauf mit einem Wegwerf-Schlüssel; davon wird nichts veröffentlicht.
         working-directory: wu-lunch-app/android
-      - name: Verify packaged design and name the APK
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}
+          TRIAL: ${{ github.event_name == 'workflow_dispatch' && inputs.aufgabe == 'signatur-testen' }}
+        run: |
+          set -euo pipefail
+          store="$RUNNER_TEMP/upload.p12"
+          if [ "$TRIAL" = true ]; then
+            KEYSTORE_PASSWORD=$(openssl rand -hex 32); echo "::add-mask::$KEYSTORE_PASSWORD"
+            keytool -genkeypair -noprompt -storetype PKCS12 -keystore "$store" -alias upload -keyalg RSA -keysize 2048 \
+              -validity 10000 -dname "CN=WU Food Probelauf, C=AT" -storepass "$KEYSTORE_PASSWORD" -keypass "$KEYSTORE_PASSWORD" >/dev/null 2>&1
+          elif [ -n "$KEYSTORE_BASE64" ]; then
+            printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$store"
+          fi
+          if [ -s "$store" ]; then
+            ./gradlew assembleRelease bundleRelease \
+              -Pandroid.injected.signing.store.file="$store" -Pandroid.injected.signing.store.password="$KEYSTORE_PASSWORD" \
+              -Pandroid.injected.signing.key.alias=upload -Pandroid.injected.signing.key.password="$KEYSTORE_PASSWORD"
+            rm -f "$store"; echo "EXPECT_UPLOAD_SIGNATURE=true" >> "$GITHUB_ENV"
+          else
+            echo "::warning::Kein Upload-Schlüssel eingerichtet: nur Test-APK, kein App-Bundle für Google Play."
+            ./gradlew assembleRelease
+          fi
+      - name: Verify packaged design, permissions and signature; name the files
         run: python scripts/verify-apk.py
       - name: Enable emulator acceleration
         run: sudo chmod 666 /dev/kvm
@@ -65,9 +129,12 @@ jobs:
           path: wu-lunch-app/android-proof
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
+        # Beim Probelauf wird nichts veröffentlicht (keine zweite Datei mit derselben Versionsnummer).
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.aufgabe == 'signatur-testen') }}
         with:
           name: wu-food-android-${{ steps.apk.outputs.version }}
           path: |
             wu-lunch-app/android/app/build/outputs/apk/release/WU-Food-*.apk
+            wu-lunch-app/android/app/build/outputs/apk/release/WU-Food-*.aab
             wu-lunch-app/android/app/build/outputs/apk/release/build-info.json
           if-no-files-found: error

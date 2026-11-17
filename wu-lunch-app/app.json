@@ -3,19 +3,25 @@
     "name": "WU Food",
     "slug": "wu-lunch",
     "scheme": "wulunch",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "icon": "./assets/icon.png",
     "orientation": "portrait",
     "newArchEnabled": true,
     "android": {
-      "package": "at.startit.wulunch",
-      "versionCode": 9,
+      "package": "at.startit.wufood",
+      "versionCode": 10,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#092566"
       },
       "permissions": [
         "INTERNET"
+      ],
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.VIBRATE"
       ]
     }
   }

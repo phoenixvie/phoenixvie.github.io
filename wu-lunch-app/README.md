@@ -50,6 +50,28 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - **Nicht aufgenommen (Stand 17.11.2026):** Agape (auf der Webseite gibt es kein Mittagsmenü mehr, die genannte Seite existiert nicht), Rex Lounge (unter der Adresse erscheint ein fremdes Online-Casino) und Interspar Restaurant (die Seite sperrt automatische Abrufe).
 - **In der Android-App nicht enthalten:** Die Wels-Ausgabe ist nur eine Webseite.
 
+## Google Play: Signatur und App-Bundle (Stand 17.11.2026)
+
+- Workflow „WU Lunch Android APK", Eingabe `aufgabe`:
+  - `upload-schluessel-erzeugen`: einmalig. Erzeugt den Upload-Schlüssel und speichert ihn als Secrets `ANDROID_UPLOAD_KEYSTORE_BASE64` und `ANDROID_UPLOAD_KEYSTORE_PASSWORD`. Braucht das Secret `SECRETS_TOKEN` (Fine-grained Token, nur dieses Repository, „Secrets: Read and write"), das danach wieder gelöscht wird. Ein vorhandener Schlüssel wird nie überschrieben.
+  - `app-bauen` (Standard): APK und – sobald der Schlüssel existiert – App-Bundle `WU-Food-<Version>.aab` für Google Play, beide mit dem Upload-Schlüssel signiert. Ohne Schlüssel nur ein Test-APK mit dem öffentlichen Debug-Schlüssel.
+  - `signatur-testen`: Probelauf mit Wegwerf-Schlüssel, ohne Ergebnis-Dateien.
+- `scripts/verify-apk.py` prüft Paketname, Version, Berechtigungen (nur Internet) und Signatur von APK und App-Bundle.
+- Store-Grafiken und Screenshots liegen in `store-listing/`.
+
+## Paketname für Google Play (Stand 17.11.2026)
+
+- Der Android-Paketname ist ab Version 0.5.5 `at.startit.wufood` (so im Google Play Console angelegt). Bis 0.5.4 hieß er `at.startit.wulunch`.
+- Android behandelt das als neue App: Eine installierte 0.5.4 oder älter wird nicht aktualisiert, sondern muss vorher deinstalliert werden.
+- Nach dem ersten Upload zu Google Play ist der Paketname endgültig.
+
+## Meet to eat: Anmeldung nur mit Vornamen (Stand 17.11.2026)
+
+- Angemeldet wird direkt auf der Seite von Meet to eat: Vorname eingeben, „Teilnehmen" tippen. Die Vornamen-Prüfung (Form und Sperrliste) gilt weiter.
+- Im Hintergrund meldet die App ein anonymes Konto an (Supabase „Anonymous sign-ins"); so sieht und löscht jede Person nur ihre eigene Anmeldung.
+- Die Bestätigung per E-Mail-Code ist pausiert, nicht gelöscht: Schalter `emailVerification` in `preview/meet-live.js`.
+- Voraussetzung in Supabase: „Allow anonymous sign-ins" einschalten und `preview/meet-preview-ohne-email.sql` ausführen (Anmelderegel ohne E-Mail-Pflicht, verbindliche Vornamen-Form).
+
 ## Meet to eat: Kontrolle im Admin (Stand 17.11.2026)
 
 - Im Admin der Webseite (`wu-lunch/admin.html`) gibt es den Bereich „Meet to eat: Anmeldungen": alle Vornamen ab heute, nach Termin gruppiert, je Eintrag ein Knopf „Löschen".

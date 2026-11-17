@@ -48,7 +48,7 @@ sys.excepthook = failure
 
 version=json.loads(Path('app.json').read_text())['expo']['version']
 adb('install', '-r', f'android/app/build/outputs/apk/release/WU-Food-{version}.apk')
-adb('shell', 'am', 'start', '-n', 'at.startit.wulunch/.MainActivity')
+adb('shell', 'am', 'start', '-n', 'at.startit.wufood/.MainActivity')
 wait_for('WU Food', 'WU Mensa')
 capture('01-list')
 tap('WU Mensa')
@@ -78,8 +78,8 @@ tap('Change Language')
 english=not english
 list_label='List' if english else 'Liste'
 wait_for(list_label)
-adb('shell','am','force-stop','at.startit.wulunch')
-adb('shell','am','start','-n','at.startit.wulunch/.MainActivity')
+adb('shell','am','force-stop','at.startit.wufood')
+adb('shell','am','start','-n','at.startit.wufood/.MainActivity')
 wait_for('WU Food',list_label)
 capture('05-language-after-restart')
 adb('shell', 'input', 'keyevent', 'KEYCODE_HOME')

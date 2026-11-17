@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 
-test('preview requires verified email before a registration and supports cancellation', async () => {
-  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+test('paused e-mail flow still works when switched back on (verified email, then sign-up and cancellation)', async () => {
+  // Die Bestätigung per E-Mail-Code ist pausiert, nicht gelöscht: Mit eingeschaltetem Schalter läuft der alte Ablauf.
+  const source=(await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8')).replace('const emailVerification = false;','const emailVerification = true;');
   const handlers={}; let session=null, own=[], otpCalls=0, verifyCalls=0, inserts=0, openedUrl='', redirectTo='';
   const store=new Map();
   const client={auth:{getSession:async()=>({data:{session},error:null}),signInWithOtp:async({options})=>{otpCalls++;redirectTo=options.emailRedirectTo;return {error:null}},verifyOtp:async({token})=>{verifyCalls++;if(token==='000000')return {data:null,error:new Error('expired')};session={user:{id:'test-user'}};return {data:{session},error:null}}},from(table){return {
@@ -169,8 +170,11 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   // Vorgabe vom 17.11.2026: ein einziger Fließtext unter jedem Menü, an jedem Tag gleich:
   // "Montags & Mittwochs gemeinsam essen gehen. Prüfe die Menüs auf der Restaurantwebseite. Change language."
   const note=menu.slice(menu.indexOf('<div class="source-note">'));
-  assert.ok(note.startsWith(`<div class="source-note">\${site.standalone?'':'Montags &amp; Mittwochs <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen gehen</button>. '}<span>Prüfe die Menüs auf der</span> \${source?'<button type="button" class="source-link" data-action="open-menu-source">Restaurantwebseite</button>':'<span>Restaurantwebseite</span>'}.\${site.standalone?'':' <a href="#" class="source-link" data-change-language>Change language.</a>'}</div>`));
+  assert.ok(note.startsWith(`<div class="source-note">\${site.standalone?'':'Montags &amp; Mittwochs <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen gehen</button>.<br>'}<span>Prüfe die Menüs auf der</span> \${source?'<button type="button" class="source-link" data-action="open-menu-source">Restaurantwebseite</button>':'<span>Restaurantwebseite</span>'}.\${site.standalone?'':' <a href="#" class="source-link" data-change-language>Change language.</a>'}</div>`));
   assert.doesNotMatch(menu,/\[0,2\]\.includes\(dayIndex\)|Angaben ohne Gewähr|WU Studenten|localize\.language==='en'\?`Every/);
+  // Zwei Zeilen, die erste (Meet to eat) immer kürzer als die zweite (Vorgabe 17.11.2026): fester Umbruch nach dem
+  // ersten Satz; der zweite Satz ist in beiden Sprachen länger, auf schmalen Handys umbricht er weiter unten.
+  for(const [first,second] of [['Montags & Mittwochs gemeinsam essen gehen.','Prüfe die Menüs auf der Restaurantwebseite. Change language.'],['Mondays & Wednesdays: eat together.','Check the menus on the restaurant website. Change language.']])assert.ok(first.length<second.length);
   // Alles hintereinander: der Meet-Link ist kein eigener Block mehr.
   const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8');
   assert.match(css,/\.meet-invite\{display:inline;/);assert.doesNotMatch(css,/\.meet-invite\{display:block/);
@@ -260,7 +264,7 @@ test('list entry shows the number of people signed up for the next date, and not
 });
 
 test('any valid e-mail address can be used, there is no WU restriction', async () => {
-  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const source=(await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8')).replace('const emailVerification = false;','const emailVerification = true;');
   assert.doesNotMatch(source,/wu\.ac\.at|requireWuEmail|email_not_wu|WU-Mail/);
   const handlers={}, tracked=[]; let otpCalls=0;
   const client={auth:{getSession:async()=>({data:{session:null},error:null}),signInWithOtp:async()=>{otpCalls++;return {error:null}}},from(){return {select(){return {in:async()=>({data:[],error:null}),gte:async()=>({data:[],error:null})}}}}};
@@ -276,4 +280,74 @@ test('any valid e-mail address can be used, there is no WU restriction', async (
   assert.equal(await send('keine-adresse'),false);                      // ungültige Eingabe: kein Code
   assert.match(tracked.join('\n'),/email_invalid/);
   for(const email of ['anna@gmail.com','anna@s.wu.ac.at','anna@firma.co.at'])assert.equal(await send(email),true,email);
+});
+
+test('sign-up with first name only: field above the button, same name checks, no e-mail page', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  assert.equal(source.split('const emailVerification = false;').length,2,'E-Mail-Bestätigung ist pausiert');
+  const handlers={}, tracked=[], store=new Map(); let session=null, own=[], anonymous=0, otpCalls=0, failAnonymous=null;
+  const client={auth:{getSession:async()=>({data:{session},error:null}),
+      signInAnonymously:async()=>{anonymous++;if(failAnonymous)return {data:null,error:new Error(failAnonymous)};session={user:{id:'anon-1'}};return {data:{session},error:null}},
+      signInWithOtp:async()=>{otpCalls++;return {error:null}}},
+    from:()=>({select(){return {in:async()=>({data:own,error:null}),gte:async()=>({data:own,error:null})}},insert:async row=>{own.push(row);return {error:null}},
+      delete(){return {eq(){return {eq:async(_key,date)=>{own=own.filter(item=>item.meeting_date!==date);return {error:null}}}}}}})};
+  const inputs={'meet-first-name':{value:''}};store.set('wu-meet-preview-name','Alt');
+  const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
+    app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)},
+    setInterval(){},console:{...console,error(){}},Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d,trackUsage:(event,props)=>tracked.push(event+' '+JSON.stringify(props))};
+  vm.createContext(context);vm.runInContext(source,context);
+  const click=async action=>{handlers.click({target:{closest:()=>({dataset:{action}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));};
+  assert.equal(store.has('wu-meet-preview-name'),false,'früher gespeicherter Vorname wird entfernt');
+  await click('meet-preview');
+  const screen=context.renderMeet();
+  assert.match(screen,/id="meet-first-name"[^>]*value=""/);   // leer, nicht vorausgefüllt
+  // Vornamenfeld steht direkt über dem Knopf, nirgends ist von E-Mail die Rede.
+  assert.match(screen,/<label class="meet-name-field">Dein Vorname<input id="meet-first-name"[^>]*placeholder="Max"[^>]*><\/label><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button>/);
+  assert.doesNotMatch(screen,/E-Mail|Verifizierung|meet-email/);
+  // Die Vornamen-Prüfung gilt weiter, vor jeder Anmeldung.
+  for(const [value,reason] of [['','name_missing'],['Free Palestine','name_format'],['Hitler','name_blocked']]){
+    inputs['meet-first-name'].value=value;await click('meet-show-form');
+    assert.equal(anonymous,0);assert.equal(own.length,0);assert.equal(context.meetForm,false,'keine Formularseite mehr');
+    assert.match(tracked.at(-1),new RegExp('meet_input_rejected .*'+reason));
+    // Die Fehlermeldung steht direkt unter dem Feld (nicht oben auf der Seite), die Eingabe bleibt stehen.
+    const shown=context.renderMeet();
+    assert.match(shown,/<\/label><p class="meet-notice meet-name-error" role="alert">[^<]+<\/p><button class="meet-primary" data-action="meet-show-form"/);
+    assert.equal(shown.split('role="alert"').length,2,'Meldung nur einmal');
+    if(value)assert.ok(shown.includes('value="'+value+'"'),'Eingabe bleibt stehen');
+  }
+  // Gültiger Vorname: anonymes Konto im Hintergrund, Anmeldung, Vorname wird gemerkt. Kein E-Mail-Code.
+  inputs['meet-first-name'].value='  anna ';await click('meet-show-form');
+  assert.equal(anonymous,1);assert.equal(otpCalls,0);assert.equal(own.length,1);assert.equal(own[0].first_name,'Anna');   // erster Buchstabe automatisch großassert.equal(own[0].user_id,'anon-1');
+  assert.equal(store.has('wu-meet-preview-name'),false,'Vorname wird nicht gespeichert');assert.equal(context.meetForm,false);
+  assert.match(context.renderMeet(),/Du bist für diesen Termin angemeldet/);assert.match(tracked.join('\n'),/meet_joined/);
+  // Abmelden: blauer Knopf mit Symbol (Vorgabe 17.11.2026).
+  assert.match(context.renderMeet(),/<button class="meet-primary meet-icon-button" data-action="meet-leave">[^<]*<span>Abmelden<\/span><\/button>/);
+  // Abmelden: Das Feld ist wieder leer (Vorname jedes Mal neu eingeben). Ohne Eingabe keine Anmeldung.
+  await click('meet-leave');assert.equal(own.length,0);
+  assert.match(context.renderMeet(),/id="meet-first-name"[^>]*value=""/);
+  inputs['meet-first-name'].value='';await click('meet-show-form');assert.equal(own.length,0);
+  // Erneut anmelden nutzt dasselbe Konto (kein zweites anonymes Konto).
+  inputs['meet-first-name'].value='Anna';await click('meet-show-form');assert.equal(anonymous,1);assert.equal(own.length,1);
+  await click('meet-preview');assert.match(context.renderMeet(),/Du bist für diesen Termin angemeldet/);
+  // Ist die anonyme Anmeldung in Supabase (noch) ausgeschaltet, erscheint ein verständlicher Hinweis (neues Gerät, kein Konto).
+  own=[];session=null;failAnonymous='Anonymous sign-ins are disabled';
+  const second={...context,app:{addEventListener:(event,fn)=>{handlers[event]=fn}}};vm.createContext(second);vm.runInContext(source,second);
+  await click('meet-preview');inputs['meet-first-name'].value='Mia';await click('meet-show-form');
+  assert.equal(anonymous,2);assert.equal(own.length,0);assert.match(second.renderMeet(),/Die Anmeldung ist momentan nicht verfügbar/);
+});
+
+test('first letter of the first name is capitalised automatically, also while typing', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const handlers={};
+  const client={auth:{getSession:async()=>({data:{session:null},error:null})},from:()=>({select(){return {in:async()=>({data:[],error:null}),gte:async()=>({data:[],error:null})}}})};
+  const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
+    app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:()=>null},localStorage:{getItem:()=>null,setItem(){},removeItem(){}},
+    setInterval(){},console,Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d};
+  vm.createContext(context);vm.runInContext(source,context);
+  const type=value=>{const field={id:'meet-first-name',value,selectionStart:value.length,setSelectionRange(a){this.cursor=a}};handlers.input({target:field});return field;};
+  for(const [typed,shown] of [['a','A'],['anna','Anna'],['anna-lena','Anna-Lena'],['élodie','Élodie'],['ÖZGE','ÖZGE'],['Max','Max'],['','']])assert.equal(type(typed).value,shown,typed);
+  const field=type('mia');assert.equal(field.cursor,3,'Schreibmarke bleibt am Ende');
+  const other={id:'meet-date',value:'x'};handlers.input({target:other});assert.equal(other.value,'x');   // andere Felder bleiben unberührt
 });
