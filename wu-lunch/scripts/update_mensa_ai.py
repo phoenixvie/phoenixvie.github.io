@@ -602,6 +602,14 @@ def run(today, model):
     # A parser reporting 'ok' does not prove that all PDF columns and
     # included side dishes were interpreted correctly.
     now = datetime.now(TZ).isoformat(timespec="seconds")
+    if (not legacy.recheck_all() and prior.get("state") in ("ok", "cached")
+            and prior.get("week_start") == monday.isoformat() and prior.get("version") == REVIEW_VERSION
+            and prior.get("published_days_sha256") == days_digest(mensa.get("days", {}))
+            and all(mensa.get("days", {}).get((monday+timedelta(days=i)).isoformat()) for i in range(5))):
+        # Die KI-geprüfte Wochenkarte ist veröffentlicht: kein erneuter PDF-Abruf,
+        # keine KI-Kosten (Vorgabe des Betreibers; siehe legacy.week_published).
+        print("Mensa-KI: geprüfte Wochenkarte bereits veröffentlicht; kein erneuter Abruf")
+        return False
     audit = {**prior, "checked_at": now}
     try:
         prepared = acquire_pdf(monday)

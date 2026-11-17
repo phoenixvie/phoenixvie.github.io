@@ -6,10 +6,11 @@ instead of "did GitHub hit the planned minute?":
 
 - menus: every scheduled start during the day counts (a late run is better than
   none); skipped only at night or right after another completed import.
-- topf_browser: runs whenever the full weekly menu is not verified yet,
-  otherwise only as an occasional refresh.
+- topf_browser: runs whenever the full weekly menu is not verified yet; a
+  published week is not fetched again (operator's rule, see update_menus.week_published).
 """
 import json
+import os
 import re
 import sys
 from datetime import datetime, timedelta
@@ -57,9 +58,10 @@ def topf_browser_due(now=None, event='schedule', data=None, status=None):
 
     The browser reading is the only way to get all five weekday tabs. Tying it
     to two fixed hours meant a late GitHub start skipped it for the whole day.
+    Once all five days are browser-verified for the week, it is not read again.
     """
-    if event == 'push':
-        return True  # code change: run once as integration test
+    if event == 'push' or os.environ.get('WU_RECHECK_ALL') == '1':
+        return True  # code change or explicit full re-check
     config=policy()
     rule=config['tasks']['topf_browser']
     zone=ZoneInfo(config['timezone'])
@@ -73,14 +75,11 @@ def topf_browser_due(now=None, event='schedule', data=None, status=None):
     monday=today+timedelta(days=7-today.weekday()) if today.weekday()>=5 else today-timedelta(days=today.weekday())
     restaurant=next((r for r in data.get('restaurants',[]) if r.get('id')=='topfdeckel'),{})
     verified=_moment(restaurant.get('browser_verified_at'))
+    # The coming week may already be verified during the weekend preview.
     week_ok=(data.get('weekStart')==monday.isoformat() and restaurant.get('validFrom')==monday.isoformat()
-             and verified is not None and verified.date()>=monday
+             and verified is not None and verified.date()>=monday-timedelta(days=3)
              and all(restaurant.get('days',{}).get((monday+timedelta(days=i)).isoformat()) for i in range(5)))
-    if not week_ok:
-        return True
-    if now.hour not in rule['hours'].get(str(now.isoweekday()%7),[]):
-        return False
-    return now-verified >= timedelta(hours=rule['refresh_hours'])
+    return not week_ok
 
 def check_workflows():
     config=policy()

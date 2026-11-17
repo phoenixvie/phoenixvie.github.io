@@ -161,10 +161,24 @@ class RefreshTests(unittest.TestCase):
             dp,sp,jp=[Path(tmp)/x for x in ('menus.json','status.json','data.js')]
             dp.write_text(json.dumps(data),encoding='utf-8')
             sp.write_text(json.dumps(status),encoding='utf-8')
-            with patch.multiple(mensa,DATA=dp,STATUS=sp,JS=jp), patch.object(mensa,'acquire_pdf',return_value=(b'pdf','text',{'url':'https://www.wumensa.at/menuplan-deutsch/','sha256':'old'})), patch.object(mensa,'extract_for_week') as extract:
+            unchanged=(b'pdf','text',{'url':'https://www.wumensa.at/menuplan-deutsch/','sha256':'old'})
+            changed=(b'new pdf','text',{'url':'https://www.wumensa.at/menuplan-deutsch/','sha256':'new'})
+            # Veröffentlichte, KI-geprüfte Wochenkarte: kein Abruf und keine KI – auch nicht,
+            # wenn das PDF inzwischen ausgetauscht wurde (Vorgabe des Betreibers, 17.11.2026).
+            for source in (unchanged,changed):
+                with patch.multiple(mensa,DATA=dp,STATUS=sp,JS=jp), patch.dict('os.environ',{'OPENAI_API_KEY':'fake-test-key','WU_RECHECK_ALL':'0'}), \
+                     patch.object(mensa,'acquire_pdf',return_value=source) as acquire, patch.object(mensa,'extract_for_week') as extract:
+                    self.assertFalse(mensa.run(MON,'gpt-6-luna'))
+                    acquire.assert_not_called()
+                    extract.assert_not_called()
+            # Ausdrückliche Vollprüfung: unverändertes PDF bleibt ohne KI-Aufruf ...
+            with patch.multiple(mensa,DATA=dp,STATUS=sp,JS=jp), patch.dict('os.environ',{'OPENAI_API_KEY':'fake-test-key','WU_RECHECK_ALL':'1'}), \
+                 patch.object(mensa,'acquire_pdf',return_value=unchanged), patch.object(mensa,'extract_for_week') as extract:
                 self.assertFalse(mensa.run(MON,'gpt-6-luna'))
                 extract.assert_not_called()
-            with patch.multiple(mensa,DATA=dp,STATUS=sp,JS=jp), patch.object(mensa,'acquire_pdf',return_value=(b'new pdf','text',{'url':'https://www.wumensa.at/menuplan-deutsch/','sha256':'new'})), patch.dict('os.environ',{'OPENAI_API_KEY':'fake-test-key'}), patch.object(mensa,'extract_for_week',side_effect=ValueError('test validation blocked')) as extract:
+            # ... ein geändertes PDF wird neu gelesen; scheitert das, bleibt der Stand unberührt.
+            with patch.multiple(mensa,DATA=dp,STATUS=sp,JS=jp), patch.dict('os.environ',{'OPENAI_API_KEY':'fake-test-key','WU_RECHECK_ALL':'1'}), \
+                 patch.object(mensa,'acquire_pdf',return_value=changed), patch.object(mensa,'extract_for_week',side_effect=ValueError('test validation blocked')) as extract:
                 self.assertFalse(mensa.run(MON,'gpt-6-luna'))
                 extract.assert_called_once()
             self.assertEqual(json.loads(dp.read_text(encoding='utf-8')),data)

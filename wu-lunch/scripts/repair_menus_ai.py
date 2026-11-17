@@ -396,6 +396,12 @@ def run(today, *, model="gpt-6-luna", max_calls=2, selected=None):
                                "karmafood","mensa","topfdeckel","finn","omakueche")
             if needs_ai_review(ident,status,today)
         ])
+    if selected is None:
+        # Vorgabe des Betreibers: Eine geprüft und vollständig veröffentlichte Wochenkarte
+        # wird nicht mehr neu abgerufen – auch nicht für die KI-Kontrolllesung. Zeigt der
+        # Stand noch einen Mangel (z. B. fehlender Preis), bleibt die Kontrolle aktiv.
+        targets = [ident for ident in targets
+                   if not (legacy.week_published(data, ident, monday) and not issue_codes(data, status, ident, today))]
     if any(x not in IDS for x in targets):
         raise ValueError("Unbekanntes Restaurant")
     key = os.environ.get("OPENAI_API_KEY", "").strip()

@@ -476,6 +476,11 @@ def run(today, *, karma_only=False):
     for ident in (("karmafood",) if karma_only else ("karmafood", "finn")):
         previous = source_states.get(ident, {})
         restaurant = legacy.restaurant(data, ident)
+        if legacy.week_published(data, ident, monday) and previous.get("state") in ("ok", "cached"):
+            # Wochenkarte bereits geprüft veröffentlicht: kein erneuter Abruf, keine KI-Kosten.
+            source_states[ident] = {**previous, "state": "cached",
+                                    "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"}
+            continue
         try:
             if ident == "karmafood":
                 days, digest, source_url = fetch_karma(monday)
@@ -532,8 +537,8 @@ def run(today, *, karma_only=False):
     status["quality_warning_count"] = len(status["quality_warnings"])
     status["health"] = ("degraded" if status["problems"] or status["quality_warning_count"]
                         else "healthy")
-    status["next_run"] = ("Wachlauf So 17:00 – Mo 13:30 (alle 15–60 Minuten), sonst mehrmals "
-                          "täglich nach GitHub-Zeitplan (Europe/Vienna; Zeitpunkte nicht garantiert)")
+    status["next_run"] = ("Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, "
+                          "solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)")
     DATA.write_text(json.dumps(data, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     FRONT.write_text("window.CAMPUS_LUNCH_DATA = "+
                      json.dumps(data, ensure_ascii=False, separators=(",", ":"))+";\n", encoding="utf-8")

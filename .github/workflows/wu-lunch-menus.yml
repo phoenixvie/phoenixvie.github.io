@@ -7,10 +7,16 @@ on:
     # und oft Stunden zu spät – deshalb zählt jeder tatsächliche Start und kein
     # Lauf wird mehr wegen "falscher Stunde" übersprungen. UTC deckt Sommer- und
     # Winterzeit ab; die Prüfung unten filtert nur die Nacht heraus.
-    # Pünktlich zum Wochenstart sorgt der Taktgeber (wu-lunch-takt.yml), der
-    # diesen Workflow über workflow_dispatch auslöst.
+    # Pünktlich (Freitagnacht, Sa/So je dreimal, Montag engmaschig, Di–Fr täglich)
+    # sorgt der Taktgeber (wu-lunch-takt.yml), der diesen Workflow über
+    # workflow_dispatch auslöst.
     - cron: '15 3-21 * * *'
   workflow_dispatch:
+    inputs:
+      recheck_all:
+        description: 'Alle Restaurants neu prüfen – auch bereits veröffentlichte Wochenkarten'
+        type: boolean
+        default: false
   push:
     # Clean-room test: menu data and cache cleared on 2026-11-06; run on this push.
     paths:
@@ -62,6 +68,11 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      # Normalfall "0": Restaurants mit bereits geprüft veröffentlichter Wochenkarte
+      # werden nicht erneut abgerufen. "1" bei Code-Änderungen (Integrationstest)
+      # und wenn beim manuellen Start das Häkchen gesetzt wurde.
+      WU_RECHECK_ALL: ${{ (github.event_name == 'push' || inputs.recheck_all == true) && '1' || '0' }}
     steps:
       - uses: actions/checkout@v4
         with:
