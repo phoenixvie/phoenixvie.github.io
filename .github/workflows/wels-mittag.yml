@@ -1,0 +1,72 @@
+name: Wels – Mittagsmenüs aktualisieren
+
+# Zwischenprojekt: Zweit-Ausgabe der App für Wels (wu-lunch-app/preview/wels/).
+# Bewusst getrennt vom WU-Import: eigene Datei, keine Zugangsschlüssel, keine KI.
+# Ein Fehler hier kann WU Food nicht stören.
+#
+# Zeitpunkte: GitHubs eigener Zeitplan startet in diesem Repository nur wenige
+# Male pro Tag und oft Stunden zu spät. Deshalb läuft dieser Workflow zusätzlich
+# nach jedem WU-Import mit – der wird vom Taktgeber pünktlich ausgelöst.
+
+on:
+  workflow_run:
+    workflows: ['WU Lunch – Speisepläne aktualisieren']
+    types: [completed]
+    branches: [master]
+  schedule:
+    - cron: '23 5-16 * * *'
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - 'wu-lunch/scripts/update_wels.py'
+      - '.github/workflows/wels-mittag.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wels-mittag
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: wu-lunch/requirements.txt
+      - name: Abhängigkeiten installieren
+        run: pip install -r wu-lunch/requirements.txt
+      - name: Mittagsmenüs der Welser Restaurants lesen
+        run: python wu-lunch/scripts/update_wels.py
+      - name: Nur bei Änderung veröffentlichen
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="wu-lunch-app/preview/wels/menus.json"
+          git add "$file"
+          if git diff --cached --quiet; then
+            echo "Keine Änderung"
+            exit 0
+          fi
+          git config user.name "wu-lunch-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Wels: Mittagsmenüs $(TZ=Europe/Vienna date +%F)"
+          # Die Datei schreibt nur dieser Workflow; bei einem abgelehnten Push
+          # genügt es daher, den eigenen Commit auf den neuen Stand zu setzen.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:master; then
+              exit 0
+            fi
+            echo "Push abgelehnt ($attempt/5), neuer Stand wird eingearbeitet"
+            git fetch origin master
+            git rebase origin/master
+          done
+          echo "::warning::Wels-Daten konnten nicht veröffentlicht werden"
+          exit 1
