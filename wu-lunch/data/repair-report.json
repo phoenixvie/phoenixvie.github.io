@@ -1,39 +1,9 @@
 {
-  "checked_at": "2026-11-17T17:25:30+01:00",
+  "checked_at": "2026-11-17T21:59:18+01:00",
   "week_start": "2026-11-16",
   "model": "gpt-6-luna",
-  "api_calls": 1,
+  "api_calls": 0,
   "results": [
-    {
-      "restaurant": "karmafood",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "a789d224a6c38b9b2e1ecc2cdd087a6b7e9331431031b4a78027a4f581954d45"
-      },
-      "usage": {
-        "input_tokens": 2631,
-        "input_tokens_details": {
-          "cache_write_tokens": 2628,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2628
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 3020,
-        "output_tokens_details": {
-          "reasoning_tokens": 779
-        },
-        "total_tokens": 5651
-      }
-    },
     {
       "restaurant": "mensa",
       "issues": [
@@ -44,16 +14,8 @@
     },
     {
       "restaurant": "topfdeckel",
-      "issues": [
-        "source_not_published"
-      ],
-      "action": "browser_import",
-      "repairs": []
-    },
-    {
-      "restaurant": "finn",
       "issues": [],
-      "action": "dedicated_image_ai",
+      "action": "browser_import",
       "repairs": []
     },
     {

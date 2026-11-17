@@ -2,7 +2,7 @@
   "weekStart": "2026-11-16",
   "weekEnd": "2026-11-20",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-17T17:24:57+01:00",
+  "checkedAt": "2026-11-17T21:59:14+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -63,7 +63,7 @@
       "id": "topfdeckel",
       "name": "Topf & Deckel",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "not_published",
+      "status": "daily",
       "note": "",
       "validFrom": "2026-11-16",
       "validUntil": "2026-11-20"
@@ -1972,7 +1972,7 @@
       "name": "Topf & Deckel",
       "monogram": "T",
       "url": "https://topfdeckel.at/wochenmenu",
-      "status": "not_published",
+      "status": "daily",
       "note": "Alle fünf Wochentage über echte Browser-Tabs der offiziellen Wochenmenü-Seite geprüft.",
       "validFrom": "2026-11-16",
       "validUntil": "2026-11-20",
@@ -2119,10 +2119,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-17",
-            "source_sha256": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad"
+            "price_large": 5.9
           },
           {
             "name": "Haussalat",
@@ -2134,13 +2131,10 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-17",
-            "source_sha256": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad"
+            "price_large": 5.9
           },
           {
-            "name": "Quesadillas mit Faschiertem, geschmolzenem Cheddar & Sour Cream Dip",
+            "name": "Quesadillas mit Faschiertem, geschmolzenem Cheddar & Sour Cream Dip mit frischem Blattsalat",
             "price": 7.5,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -2149,13 +2143,10 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-17",
-            "source_sha256": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad"
+            "price_large": 11.9
           },
           {
-            "name": "Indisches Butter Chicken in cremiger Cashewsauce mit Joghurt-Dip",
+            "name": "Indisches Butter Chicken in cremiger Cashewsauce mit Joghurt-Dip mit Basmatireis",
             "price": 7.5,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -2164,13 +2155,10 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-17",
-            "source_sha256": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad"
+            "price_large": 11.9
           },
           {
-            "name": "Süßkartoffel-Cashew Tikka Masala in cremiger Kokossauce",
+            "name": "Balsamico Linsen mit hausgemachten Semmelknödeln",
             "price": 7.5,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -2179,10 +2167,19 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-17",
-            "source_sha256": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad"
+            "price_large": 11.9
+          },
+          {
+            "name": "Süßkartoffel-Cashew Tikka Masala in cremiger Kokossauce mit Basmatireis",
+            "price": 7.5,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Preis klein / groß",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "price_small": 7.5,
+            "price_large": 11.9
           },
           {
             "name": "Dessert des Tages",
@@ -2192,10 +2189,7 @@
             "description": "Separat erhältlich",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-17",
-            "source_sha256": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad"
+            "included_choices": []
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -2205,10 +2199,7 @@
             "description": "Eine Option zum kleinen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-17",
-            "source_sha256": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad"
+            "included_choices": []
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -2218,10 +2209,7 @@
             "description": "Eine Option zum großen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-17",
-            "source_sha256": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad"
+            "included_choices": []
           }
         ],
         "2026-11-18": [

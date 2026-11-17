@@ -1,123 +1,117 @@
 {
   "version": 1,
-  "previous_completed": "2026-11-17T11:57:42+00:00",
-  "menus_updated_at": "2026-11-17T09:56:52+00:00",
-  "menu_sha256": "976bb24c25d0e351e03cf348ba4bde6c910ee1351998873114492b09448d2f40",
+  "previous_completed": "2026-11-17T16:26:13+00:00",
+  "menus_updated_at": "2026-11-17T20:59:44+00:00",
+  "menu_sha256": "381314021c4005dd381c7f8698e04a85f9731eece5159457f7ff6ec01a1f2b64",
   "run": {
-    "id": "44125373157",
-    "event": "push",
-    "started_at": "2026-11-17T16:24:56+00:00",
+    "id": "44174912158",
+    "event": "schedule",
+    "started_at": "2026-11-17T20:59:13+00:00",
     "steps": [
       {
         "name": "parser",
-        "started_at": "2026-11-17T16:24:56+00:00",
-        "completed_at": "2026-11-17T16:25:02+00:00",
+        "started_at": "2026-11-17T20:59:13+00:00",
+        "completed_at": "2026-11-17T20:59:17+00:00",
         "exit_code": 0
       },
       {
         "name": "mensa_ai",
-        "started_at": "2026-11-17T16:25:02+00:00",
-        "completed_at": "2026-11-17T16:25:04+00:00",
+        "started_at": "2026-11-17T20:59:17+00:00",
+        "completed_at": "2026-11-17T20:59:17+00:00",
         "exit_code": 0
       },
       {
         "name": "finn_karma",
-        "started_at": "2026-11-17T16:25:04+00:00",
-        "completed_at": "2026-11-17T16:25:06+00:00",
+        "started_at": "2026-11-17T20:59:18+00:00",
+        "completed_at": "2026-11-17T20:59:18+00:00",
         "exit_code": 0
       },
       {
-        "name": "topf_browser",
-        "started_at": "2026-11-17T16:25:26+00:00",
-        "completed_at": "2026-11-17T16:25:30+00:00",
-        "exit_code": 1
-      },
-      {
         "name": "html_ai",
-        "started_at": "2026-11-17T16:25:30+00:00",
-        "completed_at": "2026-11-17T16:25:58+00:00",
+        "started_at": "2026-11-17T20:59:18+00:00",
+        "completed_at": "2026-11-17T20:59:18+00:00",
         "exit_code": 0
       },
       {
         "name": "menu_sanity",
-        "started_at": "2026-11-17T16:25:58+00:00",
-        "completed_at": "2026-11-17T16:26:01+00:00",
+        "started_at": "2026-11-17T20:59:18+00:00",
+        "completed_at": "2026-11-17T20:59:24+00:00",
         "exit_code": 0
       },
       {
         "name": "observe",
-        "started_at": "2026-11-17T16:26:03+00:00",
-        "completed_at": "2026-11-17T16:26:13+00:00",
+        "started_at": "2026-11-17T20:59:33+00:00",
+        "completed_at": "2026-11-17T20:59:44+00:00",
         "exit_code": 0
       },
       {
         "name": "source_archive",
-        "started_at": "2026-11-17T16:26:13+00:00",
-        "completed_at": "2026-11-17T16:26:13+00:00",
+        "started_at": "2026-11-17T20:59:44+00:00",
+        "completed_at": "2026-11-17T20:59:44+00:00",
         "exit_code": 0
       }
     ],
-    "completed_at": "2026-11-17T16:26:13+00:00"
+    "completed_at": "2026-11-17T20:59:44+00:00"
   },
   "source_checks": {
     "baschly": {
-      "last_attempt": "2026-11-17T16:26:06+00:00",
-      "last_fetched": "2026-11-17T16:26:06+00:00",
+      "last_attempt": "2026-11-17T20:59:36+00:00",
+      "last_fetched": "2026-11-17T20:59:36+00:00",
       "successful_fetches": 4
     },
     "campus": {
-      "last_attempt": "2026-11-17T16:26:05+00:00",
-      "last_fetched": "2026-11-17T16:26:05+00:00",
+      "last_attempt": "2026-11-17T20:59:35+00:00",
+      "last_fetched": "2026-11-17T20:59:35+00:00",
       "successful_fetches": 2
     },
     "finn": {
-      "last_attempt": "2026-11-17T16:26:11+00:00",
-      "last_fetched": "2026-11-17T16:26:11+00:00",
-      "successful_fetches": 5
-    },
-    "glashaus": {
-      "last_attempt": "2026-11-17T16:26:06+00:00",
-      "last_fetched": "2026-11-17T16:26:06+00:00",
-      "successful_fetches": 2
-    },
-    "gruenehuette": {
-      "last_attempt": "2026-11-17T16:26:08+00:00",
-      "last_fetched": "2026-11-17T16:26:08+00:00",
-      "successful_fetches": 2
-    },
-    "karmafood": {
-      "last_attempt": "2026-11-17T16:26:11+00:00",
-      "last_fetched": "2026-11-17T16:26:11+00:00",
+      "last_attempt": "2026-11-17T20:59:41+00:00",
+      "last_fetched": "2026-11-17T20:59:41+00:00",
       "successful_fetches": 3
     },
+    "glashaus": {
+      "last_attempt": "2026-11-17T20:59:36+00:00",
+      "last_fetched": "2026-11-17T20:59:36+00:00",
+      "successful_fetches": 1
+    },
+    "gruenehuette": {
+      "last_attempt": "2026-11-17T20:59:39+00:00",
+      "last_fetched": "2026-11-17T20:59:39+00:00",
+      "successful_fetches": 1
+    },
+    "karmafood": {
+      "last_attempt": "2026-11-17T20:59:42+00:00",
+      "last_fetched": "2026-11-17T20:59:42+00:00",
+      "successful_fetches": 1
+    },
     "lia": {
-      "last_attempt": "2026-11-17T16:26:10+00:00",
-      "last_fetched": "2026-11-17T16:26:10+00:00",
-      "successful_fetches": 2
+      "last_attempt": "2026-11-17T20:59:40+00:00",
+      "last_fetched": "2026-11-17T20:59:40+00:00",
+      "successful_fetches": 1
     },
     "losteria": {
-      "last_attempt": "2026-11-17T16:26:07+00:00",
-      "last_fetched": "2026-11-17T16:26:07+00:00",
+      "last_attempt": "2026-11-17T20:59:37+00:00",
+      "last_fetched": "2026-11-17T20:59:37+00:00",
       "successful_fetches": 1
     },
     "mensa": {
-      "last_attempt": "2026-11-17T16:26:05+00:00",
-      "last_fetched": "2026-11-17T16:26:05+00:00",
-      "successful_fetches": 3
+      "last_attempt": "2026-11-17T20:59:35+00:00",
+      "last_fetched": "2026-11-17T20:59:35+00:00",
+      "successful_fetches": 1
     },
     "omakueche": {
-      "last_attempt": "2026-11-17T16:26:13+00:00",
-      "last_fetched": "2026-11-17T16:26:13+00:00",
+      "last_attempt": "2026-11-17T20:59:44+00:00",
+      "last_fetched": "2026-11-17T20:59:44+00:00",
       "successful_fetches": 1
     },
     "topfdeckel": {
-      "last_attempt": "2026-11-17T16:26:08+00:00",
-      "last_fetched": "2026-11-17T16:26:08+00:00",
-      "successful_fetches": 4
+      "last_attempt": "2026-11-17T20:59:38+00:00",
+      "last_fetched": "2026-11-17T20:59:38+00:00",
+      "successful_fetches": 2
     }
   },
-  "last_source_fetch": "2026-11-17T16:26:13+00:00",
-  "last_completed": "2026-11-17T16:26:13+00:00",
+  "last_source_fetch": "2026-11-17T20:59:44+00:00",
+  "last_completed": "2026-11-17T20:59:44+00:00",
   "week_start": "2026-11-16",
-  "archive_entries": 20
+  "archive_entries": 21
 }
