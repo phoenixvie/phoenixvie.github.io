@@ -34,3 +34,28 @@ test('Android emulator and automated tests never enter production usage statisti
   assert.equal(isAnalyticsDevice('web',{}),false);
   assert.equal(isAnalyticsDevice('android',{Model:'SM-S918B',Fingerprint:'samsung/dm3qxeea/dm3q'}),true);
 });
+
+test('extended catalogue covers Meet to eat, map, links and sharing with fixed value lists only',()=>{
+  const ok=(event,props,expected)=>assert.deepEqual(validateUsage(event,{language:'de',...props}),{event,props:{app_language:'de',...expected}});
+  ok('meet_open',{entry:'menu_hint'},{entry:'menu_hint'});
+  ok('meet_date_changed',{slot:'following'},{slot:'following'});
+  ok('meet_signup_started',{slot:'next'},{slot:'next'});
+  ok('meet_input_rejected',{reason:'email_not_wu',email:'someone@gmail.com',name:'Anna'},{reason:'email_not_wu'});   // Eingaben selbst werden nie gesendet
+  ok('meet_code_requested',{resend:'yes'},{resend:'yes'});
+  ok('meet_code_result',{result:'invalid',token:'123456'},{result:'invalid'});
+  ok('meet_joined',{slot:'next',weekday:3,first_name:'Anna'},{slot:'next',weekday:3});
+  ok('meet_left',{slot:'next'},{slot:'next'});
+  ok('meet_maps_opened',{source:'fact',href:'https://maps.example'},{source:'fact'});
+  ok('meet_mail_opened',{},{});
+  ok('home_view',{view:'map'},{view:'map'});
+  ok('map_pin_selected',{restaurant_id:'finn'},{restaurant_id:'finn'});
+  ok('restaurant_link',{restaurant_id:'lia',link:'phone',url:'tel:+431'},{restaurant_id:'lia',link:'phone'});
+  ok('restaurant_shared',{restaurant_id:'mensa'},{restaurant_id:'mensa'});
+  ok('footer_link',{link:'imprint'},{link:'imprint'});
+  ok('menu_day_changed',{restaurant_id:'mensa',weekday:2,method:'swipe'},{restaurant_id:'mensa',weekday:2,method:'swipe'});
+  ok('menu_day_changed',{restaurant_id:'mensa',weekday:2},{restaurant_id:'mensa',weekday:2});                          // ältere Aufrufe ohne Methode
+  for(const [event,props] of [['meet_joined',{slot:'next',weekday:2}],['meet_open',{entry:'push'}],['meet_input_rejected',{reason:'Anna ist gesperrt'}],
+    ['restaurant_link',{restaurant_id:'lia',link:'https://example.org'}],['footer_link',{link:'admin'}],['home_view',{view:'settings'}],['meet_code_result',{result:'123456'}],
+    ['menu_day_changed',{restaurant_id:'mensa',weekday:2,method:'shake'}],['constructor',{}],['toString',{}]])
+    assert.equal(validateUsage(event,{language:'de',...props}),null,event);
+});

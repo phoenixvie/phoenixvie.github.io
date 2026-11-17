@@ -17,7 +17,8 @@ test('preview requires verified email before a registration and supports cancell
     app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},
     localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v)},
     setInterval(){},console,Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:'mensa',
-    renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d};
+    renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d,trackUsage:(event,props)=>tracked.push([event,JSON.stringify(props)])};
+  const tracked=[];
   vm.createContext(context);vm.runInContext(source,context);
   const click=async (action,slot)=>{handlers.click({target:{closest:()=>({dataset:{action,slot}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));};
   await click('meet-preview');
@@ -61,7 +62,7 @@ test('preview requires verified email before a registration and supports cancell
   assert.doesNotMatch(context.renderMeet(),/<h3>/);   // keine Überschrift mehr über dem Formular
   assert.equal(inserts,0);await click('meet-send-code');assert.equal(otpCalls,1);assert.equal(inserts,0);assert.equal(redirectTo,'https://phoenixvie.github.io/wu-lunch-app/preview/');
   assert.match(context.renderMeet(),/outlook\.cloud\.microsoft/);assert.match(context.renderMeet(),/Bestätigungscode an anna@s\.wu\.ac\.at gesendet/);
-  handlers.click({target:{closest:()=>({dataset:{action:'meet-open-url'},href:'https://outlook.cloud.microsoft'})},preventDefault(){},stopImmediatePropagation(){}});assert.equal(openedUrl,'https://outlook.cloud.microsoft');
+  handlers.click({target:{closest:()=>({dataset:{action:'meet-open-url',track:'mail'},href:'https://outlook.cloud.microsoft'})},preventDefault(){},stopImmediatePropagation(){}});assert.equal(openedUrl,'https://outlook.cloud.microsoft');
   inputs['meet-code'].value='000000';await click('meet-verify');assert.match(context.renderMeet(),/bereits verwendet/);assert.equal(inserts,0);
   await click('meet-resend-code');assert.equal(otpCalls,2);inputs['meet-code'].value='123456';await click('meet-verify');assert.equal(verifyCalls,2);assert.equal(inserts,1);assert.equal(own[0].first_name,'Anna');
   // Nach der Anmeldung erscheinen Treffpunkt, Foto und Karte.
@@ -71,11 +72,17 @@ test('preview requires verified email before a registration and supports cancell
   // Die Bestätigung trägt ein Häkchen-Symbol vor dem Text.
   assert.match(context.renderMeet(),/<div class="meet-confirm"><p><svg class="meet-check"[^>]*>.*?<\/svg><span>Du bist für diesen Termin angemeldet\.<\/span><\/p><p><svg class="meet-check"[^>]*>.*?<\/svg><span>Bitte melde dich aus Rücksicht/);
   // Der Treffpunkt in der Übersicht ist ein Link zu Google Maps.
-  assert.match(context.renderMeet(),/<a data-action="meet-open-url" href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
+  assert.match(context.renderMeet(),/<a data-action="meet-open-url"[^>]*href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
   await click('meet-leave');assert.equal(own.length,0);
   assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet|meet-reveal|meet-map/);assert.equal(context.meetJoined,false);
   store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);await click('meet-confirm-name');assert.equal(inserts,2);await click('meet-leave');
-  await click('meet-back');assert.equal(context.meetPreviewOpen,false);assert.equal(context.selectedId,'mensa');
+  await click('meet-back');assert.equal(context.meetPreviewOpen,false);assert.equal(context.selectedId,'mensa');  // Anonyme Statistik: Schritte werden gezählt, Eingaben (Name, Adresse, Code) nie mitgeschickt.
+  const events=tracked.map(row=>row[0]);
+  for(const expected of ['meet_open','meet_date_changed','meet_signup_started','meet_input_rejected','meet_code_requested','meet_code_result','meet_joined','meet_left','meet_mail_opened'])
+    assert.ok(events.includes(expected),'Ereignis fehlt: '+expected);
+  assert.deepEqual([...new Set(tracked.filter(row=>row[0]==='meet_input_rejected').map(row=>JSON.parse(row[1]).reason))].sort(),['email_not_wu','name_blocked','name_format']);
+  assert.deepEqual(tracked.filter(row=>row[0]==='meet_code_result').map(row=>JSON.parse(row[1]).result),['invalid','ok']);
+  assert.doesNotMatch(JSON.stringify(tracked),/Anna|anna@|123456|000000|example/);
 });
 
 test('first names must look like a name; obvious insults and political terms are refused', async () => {

@@ -49,3 +49,34 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - **Besonderheiten einzelner Quellen:** Sorry Mama veröffentlicht die Wochenkarte nur als Bild – sie wird per Texterkennung (tesseract) zweimal gelesen und nur übernommen, wenn beide Lesungen übereinstimmen. Hayashi hat eine feste Mittagskarte als Bild; ihr Inhalt ist im Skript hinterlegt und an genau diese Bilddatei gebunden (ändert sich das Bild, wird nichts mehr gezeigt, bis die Karte nachgezogen ist). OX nennt kein Datum; die Karte gilt erst als neue Woche, wenn sie sich gegenüber der Vorwoche geändert hat. Gasthaus Huber veröffentlicht nur die Tageskarte; frühere Tage der Woche bleiben stehen. Gösserbräu nennt im Monatsplan keine Preise.
 - **Nicht aufgenommen (Stand 17.11.2026):** Agape (auf der Webseite gibt es kein Mittagsmenü mehr, die genannte Seite existiert nicht), Rex Lounge (unter der Adresse erscheint ein fremdes Online-Casino) und Interspar Restaurant (die Seite sperrt automatische Abrufe).
 - **In der Android-App nicht enthalten:** Die Wels-Ausgabe ist nur eine Webseite.
+
+## Nutzungsstatistik (Stand 17.11.2026)
+
+Die installierte Android-App zählt anonym über Aptabase (EU), ohne Cookies und ohne dauerhafte Gerätekennung. Die Webseite, die Web-Vorschau und die Wels-Ausgabe messen nichts. Auswertung: im Aptabase-Konto des Betreibers.
+
+Gesendet werden nur Ereignisnamen mit festen Wertelisten (`src/usage.ts` weist alles andere ab) – nie Namen, E-Mail-Adressen, Codes, Gerichte oder Linkziele. Jedes Ereignis trägt zusätzlich die App-Sprache.
+
+| Ereignis | Bedeutung | Angaben |
+|---|---|---|
+| `app_open` | App geöffnet | Kaltstart oder Rückkehr aus dem Hintergrund |
+| `restaurant_open` | Restaurant geöffnet | Restaurant, Einstieg (Liste, Karte, weiter/zurück), Ansicht |
+| `restaurant_view` | Wechsel Menü ↔ Restaurant-Info | Restaurant, Ansicht |
+| `menu_day_changed` | anderer Wochentag | Restaurant, Tag, getippt oder gewischt |
+| `home_view` | Wechsel Liste ↔ Karte | Ansicht |
+| `map_pin_selected` | Punkt auf der Karte angetippt | Restaurant |
+| `restaurant_link` | Link angetippt | Restaurant, Art (Telefon, E-Mail, Webseite, Mittagsmenü-Seite, Google Maps, Hinweis unter dem Menü) |
+| `restaurant_shared` | „Teilen" benutzt | Restaurant |
+| `footer_link` | Link in der Fußzeile | Impressum, Kontakt oder Webseite |
+| `language_changed` | Sprache gewechselt | – |
+| `meet_open` | Meet to eat geöffnet | über die Liste oder den Hinweis unter dem Menü |
+| `meet_date_changed` | anderer Termin gewählt | nächster oder übernächster Termin |
+| `meet_signup_started` | „Verbindlich anmelden" angetippt | Termin |
+| `meet_input_rejected` | Eingabe abgelehnt | Grund (Name fehlt, Namensform, gesperrter Name, E-Mail ungültig, keine WU-Adresse) |
+| `meet_code_requested` | Code angefordert | erstmals oder erneut |
+| `meet_code_result` | Code eingegeben | gültig oder ungültig |
+| `meet_joined` | Anmeldung abgeschlossen | Termin, Montag oder Mittwoch |
+| `meet_left` | Abmeldung | Termin |
+| `meet_maps_opened` | Google Maps zum Treffpunkt | über die Übersicht oder den Knopf |
+| `meet_mail_opened` | „WU-Mail öffnen" | – |
+
+Neue Ereignisse kommen erst mit einer neuen APK in die Statistik. Der Datenschutztext (Impressum-Seite, `wu-lunch/i18n.js`) nennt diese Kategorien und muss bei Erweiterungen mitgezogen werden.

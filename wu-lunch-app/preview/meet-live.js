@@ -45,6 +45,7 @@
   // nicht jede kreative Schreibweise – verbindlich ist zusätzlich die Datenbank-Regel in meet-preview-wu-email.sql.
   const blockedParts = ['nazi','nazis','heil','sieg','hitler','himmler','goebbels','stalin','putin','trump','biden','hamas','afd','fpo','fpoe','ovp','oevp','spo','spoe','kpo','kpoe','neos','antifa','arsch','hure','nutte','sex','porn','porno','anal','idiot','trottel','depp','spast','kanake','kanak','jude','juden','free','palestine','palastina','palaestina','israel','gaza','ukraine','russia','russland','krieg','war','stop','vote','wahl','waehlt','boykott','boycott','fck','acab','maga','blm'];
   const blockedInside = ['fuck','bitch','fotze','wichser','schlampe','schwuchtel','nigger','nigga','hitler','arschloch','hurensohn','scheiss','penis','vagina','faschis','kommunis'];
+  const rejection = problem => /nicht möglich/.test(problem) ? 'name_blocked' : /nur deinen Vornamen/.test(problem) ? 'name_format' : 'name_missing';
   const tidyName = value => String(value || '').trim().replace(/\s+/g, ' ').slice(0, 60);
   const nameProblem = value => {
     const name = tidyName(value);
@@ -54,6 +55,9 @@
     if (plain.split('-').some(part => blockedParts.includes(part)) || blockedInside.some(word => plain.replace(/-/g, '').includes(word))) return 'Dieser Name ist hier nicht möglich. Bitte gib deinen echten Vornamen ein.';
     return '';
   };
+  // Anonyme Nutzungsstatistik (nur in der installierten App, feste Wertelisten, nie Namen oder Adressen).
+  const track = (event, props = {}) => { try { if (typeof trackUsage === 'function') trackUsage(event, props); } catch {} };
+  const slotOf = day => day === dateOptions()[0] ? 'next' : 'following';
   const redraw = () => { if (meetPreviewOpen) render(); };
   const showError = e => { console.error('Meet preview:', e); state.error = 'Das hat nicht funktioniert. Bitte versuche es erneut.'; };
   const getName = () => { try { return localStorage.getItem('wu-meet-preview-name') || ''; } catch { return ''; } };
@@ -85,18 +89,18 @@
     meetJoined = !!own;
     const error = state.error ? `<p class="meet-notice" role="alert">${esc(state.error)}</p>` : '';
     const header = `<header class="top detail"><button class="back" data-action="meet-back" aria-label="Zurück">${icon('arrow_back')}</button><h1>${meetForm ? esc(text('Meet to eat: Anmeldung', {}, 'Anmeldung')) : 'Meet to eat'}</h1></header>`;
-    if (meetForm) return `${header}<div class="body"><div class="scroll meet-content">${error}${state.step === 'code' ? `<p>${esc(text('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.', {email: state.pendingEmail}))}</p><a href="https://outlook.cloud.microsoft" data-action="meet-open-url" class="meet-mail-link" target="_blank" rel="noopener noreferrer">WU-Mail öffnen</a><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button><button class="meet-secondary" data-action="meet-resend-code" ${state.busy?'disabled':''}>Neuen Code anfordern</button>` : state.step === 'name' ? `<p>Deine E-Mail-Adresse ist bestätigt. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || getName())}"></label><button class="meet-primary" data-action="meet-confirm-name" ${state.busy?'disabled':''}>Verbindlich anmelden</button>` : `<p>Verifizierung deiner WU-Mailadresse, damit nur WU Studenten teilnehmen können. Du bekommst einen Code per E-Mail. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || getName())}"></label><label>E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" placeholder="mustermann@wu.ac.at" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Verifizierung via Mail starten</button>`}</div></div>`;
+    if (meetForm) return `${header}<div class="body"><div class="scroll meet-content">${error}${state.step === 'code' ? `<p>${esc(text('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.', {email: state.pendingEmail}))}</p><a href="https://outlook.cloud.microsoft" data-action="meet-open-url" data-track="mail" class="meet-mail-link" target="_blank" rel="noopener noreferrer">WU-Mail öffnen</a><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button><button class="meet-secondary" data-action="meet-resend-code" ${state.busy?'disabled':''}>Neuen Code anfordern</button>` : state.step === 'name' ? `<p>Deine E-Mail-Adresse ist bestätigt. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || getName())}"></label><button class="meet-primary" data-action="meet-confirm-name" ${state.busy?'disabled':''}>Verbindlich anmelden</button>` : `<p>Verifizierung deiner WU-Mailadresse, damit nur WU Studenten teilnehmen können. Du bekommst einen Code per E-Mail. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || getName())}"></label><label>E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" placeholder="mustermann@wu.ac.at" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Verifizierung via Mail starten</button>`}</div></div>`;
     const people = state.participants.filter(p => p.meeting_date === selected);
     let ownRemoved = false;
     const names = people.filter(p => { if (own && !ownRemoved && p.first_name === own.first_name) { ownRemoved = true; return false; } return true; });
     const entries = names.map(p => `<div class="meet-person">${icon('person')}<span data-ui-literal>${esc(p.first_name)}</span></div>`).join('') + (own ? `<div class="meet-person">${icon('person')}<span data-ui-literal>${esc(own.first_name)}</span><button class="meet-remove" data-action="meet-leave" aria-label="Meine Anmeldung entfernen">${icon('close')}</button></div>` : '');
     const mapLink = 'https://www.google.com/maps/search/?api=1&amp;query=48.21289788048291%2C16.409449359855884';
     // Vor der Anmeldung steht der Hinweis fett da, damit klar ist, dass hier noch etwas folgt.
-    const location = own ? `<a data-action="meet-open-url" href="${mapLink}" target="_blank" rel="noopener noreferrer">Vor dem Baum direkt bei der Mensa</a>` : '<b>Info nach Anmeldung</b>';
+    const location = own ? `<a data-action="meet-open-url" data-track="fact" href="${mapLink}" target="_blank" rel="noopener noreferrer">Vor dem Baum direkt bei der Mensa</a>` : '<b>Info nach Anmeldung</b>';
     // Foto und Google-Maps-Link des Treffpunkts erscheinen erst nach der eigenen Anmeldung (die eingebettete
     // Karte wurde am 17.11.2026 auf Wunsch des Betreibers entfernt);
     // vorher wird der Bereich gar nicht angezeigt (kein unscharfer Platzhalter mehr).
-    const reveal = own ? `<section class="meet-reveal"><h3>Treffpunkt auf der WU</h3><p><strong>Vor dem Baum direkt bei der Mensa</strong></p><img class="meet-photo-visible" src="./meeting-point.webp" width="1200" height="1361" alt="Treffpunkt vor dem Baum bei der Mensa" onerror="this.onerror=null;this.src='./meeting-point.png'"><a class="meet-map-button" data-action="meet-open-url" href="${mapLink}" target="_blank" rel="noopener noreferrer">Google Maps öffnen</a></section>` : '';
+    const reveal = own ? `<section class="meet-reveal"><h3>Treffpunkt auf der WU</h3><p><strong>Vor dem Baum direkt bei der Mensa</strong></p><img class="meet-photo-visible" src="./meeting-point.webp" width="1200" height="1361" alt="Treffpunkt vor dem Baum bei der Mensa" onerror="this.onerror=null;this.src='./meeting-point.png'"><a class="meet-map-button" data-action="meet-open-url" data-track="button" href="${mapLink}" target="_blank" rel="noopener noreferrer">Google Maps öffnen</a></section>` : '';
     return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}${groupArt}<p>Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen. Findet jeden Montag und Mittwoch statt.</p><section class="meet-facts">${dateField(selected)}${fact('schedule','Uhrzeit am Treffpunkt','12:00 Uhr')}${fact('directions_walk','Gemeinsam losgehen','12:05 Uhr')}${fact('location_on','Treffpunkt auf der WU',location)}${fact('school','Teilnehmer','WU-Studenten Gruppe')}</section>${entries ? `<h3>Bereits angemeldet</h3>${entries}` : ''}${own ? '<div class="meet-confirm"><p><svg class="meet-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2f9e5b"/><path d="M6.8 12.4l3.4 3.4 7-7.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Du bist für diesen Termin angemeldet.</span></p><p><svg class="meet-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#56718c"/><path d="M12 10.6v6.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="7.2" r="1.5" fill="#fff"/></svg><span>Bitte melde dich aus Rücksicht auf die anderen ab, wenn du doch nicht kommen kannst.</span></p></div><button class="meet-secondary" data-action="meet-leave">' + esc(text('Meet to eat: Abmelden', {}, 'Abmelden')) + '</button>' : !registrationOpen(selected) ? '<p class="meet-notice">Die Anmeldung für diesen Termin ist geschlossen.</p>' : `<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Verbindlich anmelden</button>`}${reveal}</div></div>`;
   }
   async function join(name, meetingDate) {
@@ -104,42 +108,43 @@
     if (!registrationOpen(meetingDate)) { state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false; return; }
     const {error} = await client.from('meet_preview_registrations').insert({user_id:state.session.user.id, meeting_date:meetingDate, first_name:name.trim().slice(0,60)});
     if (error && error.code !== '23505') throw error;
+    track('meet_joined', {slot: slotOf(meetingDate), weekday: new Date(meetingDate + 'T12:00:00Z').getUTCDay()});
     setName(name.trim().slice(0,60)); meetForm = false; await refresh();
   }
   async function action(target) {
     const a = target.dataset.action;
-    if (a === 'meet-preview') { meetPreviewOpen=true; meetSlot=0; meetForm=false; state.error=''; state.selectedDate=null; render(); await refresh(); return; }
+    if (a === 'meet-preview') { track('meet_open', {entry: target.classList?.contains?.('meet-invite') ? 'menu_hint' : 'list'}); meetPreviewOpen=true; meetSlot=0; meetForm=false; state.error=''; state.selectedDate=null; render(); await refresh(); return; }
     if (a === 'meet-back') { state.error=''; if (meetForm) meetForm=false; else { meetSlot=null; meetPreviewOpen=false; } render(); return; }
     if (state.busy) return;
     state.error='';
-    if (a === 'meet-show-form') state.registrationDate=date();
+    if (a === 'meet-show-form') { state.registrationDate=date(); track('meet_signup_started', {slot: slotOf(state.registrationDate)}); }
     if (['meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-confirm-name'].includes(a) && !registrationOpen(state.registrationDate)) { state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false; render(); return; }
     if (a === 'meet-show-form' && (!state.session || !getName())) { state.step=state.session?'name':'form'; meetForm=true; render(); return; }
-    if (a === 'meet-confirm-name') { state.pendingName=tidyName(document.getElementById('meet-first-name').value); const problem=nameProblem(state.pendingName); if (problem) { state.error=problem; render(); return; } }
+    if (a === 'meet-confirm-name') { state.pendingName=tidyName(document.getElementById('meet-first-name').value); const problem=nameProblem(state.pendingName); if (problem) { track('meet_input_rejected', {reason: rejection(problem)}); state.error=problem; render(); return; } }
     if (a === 'meet-send-code') {
       state.pendingName = tidyName(document.getElementById('meet-first-name').value);
-      { const problem = state.pendingName ? nameProblem(state.pendingName) : ''; if (problem) { state.error = problem; render(); return; } }
+      { const problem = state.pendingName ? nameProblem(state.pendingName) : ''; if (problem) { track('meet_input_rejected', {reason: rejection(problem)}); state.error = problem; render(); return; } }
       state.pendingEmail = document.getElementById('meet-email').value.trim();
-      if (!state.pendingName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.pendingEmail)) { state.error='Bitte gib einen Vornamen und eine gültige E-Mail-Adresse ein.'; render(); return; }
+      if (!state.pendingName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.pendingEmail)) { track('meet_input_rejected', {reason: state.pendingName ? 'email_invalid' : 'name_missing'}); state.error='Bitte gib einen Vornamen und eine gültige E-Mail-Adresse ein.'; render(); return; }
       // Der Text verspricht, dass nur WU-Angehörige teilnehmen: Angenommen werden nur Adressen der WU
       // (…@wu.ac.at und Unterdomänen wie …@s.wu.ac.at für Studierende). Die Datenbank prüft dasselbe,
       // sobald meet-preview-wu-email.sql eingespielt ist.
-      if (!wuEmail(state.pendingEmail)) { state.error='Bitte verwende deine WU-Mailadresse (…@wu.ac.at oder …@s.wu.ac.at).'; render(); return; }
+      if (!wuEmail(state.pendingEmail)) { track('meet_input_rejected', {reason: 'email_not_wu'}); state.error='Bitte verwende deine WU-Mailadresse (…@wu.ac.at oder …@s.wu.ac.at).'; render(); return; }
     }
     const code = a === 'meet-verify' ? document.getElementById('meet-code').value.trim() : '';
     state.busy=true; render();
     try {
       if (a === 'meet-show-form') await join(getName(),state.registrationDate);
-      if (a === 'meet-send-code' || a === 'meet-resend-code') { const {error} = await client.auth.signInWithOtp({email:state.pendingEmail,options:{emailRedirectTo}}); if(error) throw error; state.step='code'; }
-      if (a === 'meet-verify') { const {data,error} = await client.auth.verifyOtp({email:state.pendingEmail,token:code,type:'email'}); if(error) throw error; state.session=data.session; await join(state.pendingName,state.registrationDate); }
+      if (a === 'meet-send-code' || a === 'meet-resend-code') { const {error} = await client.auth.signInWithOtp({email:state.pendingEmail,options:{emailRedirectTo}}); if(error) throw error; track('meet_code_requested', {resend: a === 'meet-resend-code' ? 'yes' : 'no'}); state.step='code'; }
+      if (a === 'meet-verify') { const {data,error} = await client.auth.verifyOtp({email:state.pendingEmail,token:code,type:'email'}); if(error) throw error; track('meet_code_result', {result: 'ok'}); state.session=data.session; await join(state.pendingName,state.registrationDate); }
       if (a === 'meet-confirm-name') await join(state.pendingName,state.registrationDate);
-      if (a === 'meet-leave') { const {error}=await client.from('meet_preview_registrations').delete().eq('user_id',state.session.user.id).eq('meeting_date',date()); if(error) throw error; await refresh(); }
+      if (a === 'meet-leave') { const {error}=await client.from('meet_preview_registrations').delete().eq('user_id',state.session.user.id).eq('meeting_date',date()); if(error) throw error; track('meet_left', {slot: slotOf(date())}); await refresh(); }
     } catch(e) {
       if (['meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-confirm-name'].includes(a) && !registrationOpen(state.registrationDate)) {
         state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false;
       }
       else if (e?.message?.includes('meet_registration_closed')) { state.error='Die Anmeldung für diesen Termin ist geschlossen.'; meetForm=false; }
-      else if (a === 'meet-verify') { state.error='Der Code ist ungültig oder bereits verwendet. Bitte fordere einen neuen Code an.'; } else showError(e);
+      else if (a === 'meet-verify') { track('meet_code_result', {result: 'invalid'}); state.error='Der Code ist ungültig oder bereits verwendet. Bitte fordere einen neuen Code an.'; } else showError(e);
     }
     finally { state.busy=false; render(); }
   }
@@ -148,13 +153,13 @@
     const target=e.target.closest('[data-action]');
     if (!target || !['meet-preview','meet-back','meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-confirm-name','meet-leave','meet-open-url'].includes(target.dataset.action)) return;
     e.preventDefault(); e.stopImmediatePropagation();
-    if (target.dataset.action === 'meet-open-url') { const url=safeUrl(target.href); if (url && !nativePost('open-source',{url,title:'Meet to eat'})) window.open(url,'_blank','noopener,noreferrer'); return; }
+    if (target.dataset.action === 'meet-open-url') { if (target.dataset.track) track(target.dataset.track === 'mail' ? 'meet_mail_opened' : 'meet_maps_opened', target.dataset.track === 'mail' ? {} : {source: target.dataset.track}); const url=safeUrl(target.href); if (url && !nativePost('open-source',{url,title:'Meet to eat'})) window.open(url,'_blank','noopener,noreferrer'); return; }
     void action(target);
   }, true);
   // Auswahl eines anderen Termins im Datumsfeld.
   app.addEventListener('change', e => {
     if (e.target?.id !== 'meet-date') return;
-    state.selectedDate = e.target.value; state.error = '';
+    state.selectedDate = e.target.value; state.error = ''; track('meet_date_changed', {slot: slotOf(date())});
     meetJoined = !!state.own.find(item => item.meeting_date === date());
     render();
   });
