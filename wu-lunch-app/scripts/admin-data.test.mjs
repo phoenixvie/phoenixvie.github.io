@@ -7,9 +7,11 @@ test('website live refresh re-enables restaurants from fresh data and keeps prev
   const html=await readFile(new URL('../../wu-lunch/index.html',import.meta.url),'utf8');
   let enabled=false,failed=false;
   const c={window:{WULunchI18n:{refresh:async()=>{}}},DATA:{restaurants:[{id:'mensa'}]},Date,console,realMap:null,locationInfo:{},update(){},loadRealMap(){},fetch:async()=>({ok:true,json:async()=>({restaurants:[{id:'mensa'},{id:'finn'}]})}),loadAnnouncement:async()=>{},manualFetchSucceeded:true,profileFetchSucceeded:true,applyManualMenus:async()=>{}};
-  c.applyRestaurantOverrides=async()=>{c.profileFetchSucceeded=!failed;if(!enabled)c.DATA.restaurants=c.DATA.restaurants.filter(r=>r.id!=='finn');};
+  // Die Einstellungen werden auf einen eigenen Stand angewendet; DATA darf währenddessen nie die rohen Importdaten zeigen.
+  const seenWhileLoading=[];
+  c.applyRestaurantOverrides=async target=>{seenWhileLoading.push(c.DATA.restaurants.length);c.profileFetchSucceeded=!failed;if(!enabled)target.restaurants=target.restaurants.filter(r=>r.id!=='finn');};
   vm.createContext(c);vm.runInContext("let liveRefreshing=false,liveSignature='';"+html.slice(html.indexOf('    async function refreshLiveData('),html.indexOf('    window.setInterval(refreshLiveData')),c);
-  await c.refreshLiveData();assert.equal(c.DATA.restaurants.length,1);
+  await c.refreshLiveData();assert.equal(c.DATA.restaurants.length,1);assert.deepEqual(seenWhileLoading,[1]);   // nicht 2: finn ist deaktiviert
   enabled=true;await c.refreshLiveData();assert.equal(c.DATA.restaurants.length,2);
   enabled=false;failed=true;await c.refreshLiveData();assert.equal(c.DATA.restaurants.length,2);
 });

@@ -130,12 +130,14 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   const source=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
   const menu=source.slice(source.indexOf('function renderMenu('),source.indexOf('function renderInfo('));
   assert.match(menu,/data-action="meet-preview"/);
-  assert.ok(menu.indexOf('gemeinsam essen</span>') < menu.indexOf('Angaben ohne Gewähr'));
+  assert.ok(menu.indexOf('essen gehen</span>') < menu.indexOf('Angaben ohne Gewähr'));
+  // Vorgabe vom 17.11.2026: an jedem Tag derselbe Hinweis (nicht mehr nur Montag und Mittwoch).
+  assert.match(menu,/Jeden Montag und Mittwoch mit anderen WU Studenten <span class="meet-invite-link">essen gehen<\/span>\./);
+  assert.doesNotMatch(menu,/\[0,2\]\.includes\(dayIndex\)/);
   // Unter jedem Menü steht – auf Deutsch wie auf Englisch gleich – der Sprachwechsel (nicht in der Wels-Ausgabe).
   assert.match(menu,/\$\{site\.standalone\?'':' <a href="#" class="source-link" data-change-language>Change language\.<\/a>'\}/);
   // Englisch endet direkt nach dem Link mit einem Punkt ("… Check the restaurant website."), Deutsch mit " prüfen.".
   assert.ok(menu.includes("${source&&localize.language==='en'?'.':' prüfen.'}"));
-  assert.match(menu,/\[0,2\]\.includes\(dayIndex\)/);
 });
 
 test('Vienna dates stay visible until 14:00 and registration closes after 12:05', async () => {

@@ -32,6 +32,24 @@ class FrontendLoadingTests(unittest.TestCase):
         self.assertIn("karmafood:'logo-karmafood'",html)
         self.assertIn("finn:'logo-finn'",html)
 
+    def test_background_refresh_never_exposes_raw_import_data(self):
+        # 17.11.2026: Alle 3 Sekunden wurde DATA zuerst mit den rohen Importdaten überschrieben und
+        # erst nach dem Abruf der Admin-Einstellungen korrigiert. Ein Klick auf einen Tag in diesem
+        # Moment zeigte Standardnamen ("Lia Coffee WU") und das deaktivierte L'Osteria – dauerhaft
+        # bis zur nächsten Bedienung. Jetzt wird ein eigener Stand aufgebaut und in einem Schritt übernommen.
+        html=(ROOT/"index.html").read_text(encoding="utf-8")
+        refresh=html[html.index("async function refreshLiveData()"):html.index("window.setInterval(refreshLiveData")]
+        self.assertNotIn("Object.assign(DATA,incoming)",refresh)
+        self.assertIn("const next={...DATA,...incoming};",refresh)
+        self.assertIn("applyRestaurantOverrides(next)",refresh)
+        self.assertIn("applyManualMenus(next)",refresh)
+        self.assertLess(refresh.index("if(!profileFetchSucceeded||!manualFetchSucceeded)return;"),
+                        refresh.index("Object.assign(DATA,next);"))
+        overrides=html[html.index("async function applyRestaurantOverrides(target=DATA)"):html.index("let manualFetchSucceeded=false;")]
+        self.assertNotIn("DATA.restaurants",overrides)
+        manual=html[html.index("async function applyManualMenus(target=DATA)"):html.index("const RESTAURANT_ORDER")]
+        self.assertNotIn("DATA.restaurants",manual)
+
     def test_weekend_preview_and_mobile_swipe_are_available(self):
         html=(ROOT/"index.html").read_text(encoding="utf-8")
         self.assertIn("const displayMondayIso=weekend",html)
