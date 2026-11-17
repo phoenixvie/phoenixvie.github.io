@@ -50,6 +50,12 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - **Nicht aufgenommen (Stand 17.11.2026):** Agape (auf der Webseite gibt es kein Mittagsmenü mehr, die genannte Seite existiert nicht), Rex Lounge (unter der Adresse erscheint ein fremdes Online-Casino) und Interspar Restaurant (die Seite sperrt automatische Abrufe).
 - **In der Android-App nicht enthalten:** Die Wels-Ausgabe ist nur eine Webseite.
 
+## Meet to eat: Kontrolle im Admin (Stand 17.11.2026)
+
+- Im Admin der Webseite (`wu-lunch/admin.html`) gibt es den Bereich „Meet to eat: Anmeldungen": alle Vornamen ab heute, nach Termin gruppiert, je Eintrag ein Knopf „Löschen".
+- Voraussetzung ist die Datenbank-Freigabe `wu-lunch/supabase/20261117_meet_admin.sql` (einmal in Supabase ausführen). Fehlt sie, zeigt der Bereich einen klaren Hinweis statt einer scheinbar leeren Liste.
+- Eine Deinstallation der App kann technisch nicht erkannt werden (Android meldet sie weder der App noch dem Server). Anmeldungen gelten immer nur für einen Termin und verschwinden danach von selbst; bis dahin lässt sich ein Name im Admin entfernen.
+
 ## Treffpunkt-Foto und Symbole in der installierten App (Stand 17.11.2026)
 
 - Das Treffpunkt-Foto (`preview/meeting-point.webp`) wird beim Bündeln (`npm run bundle:preview`) fest in die App eingebaut. Früher lud die installierte App es von der Webseite und zeigte deshalb das Bild des dort veröffentlichten Stands statt des eigenen.
