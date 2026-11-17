@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "restaurant_id": "karmafood",
+  "week_start": "2026-11-16",
+  "menu_sha256": "f6f13b5b4bb0f57e301ce1a69a40389af4c9e02fdeefe77be5d6f97acdb7aaf2",
+  "captured_at": "2026-11-17T09:56:52+00:00",
+  "run_id": "44059649572",
+  "code_commit": "4dab8a37f004a2a966419027a7aeb52797ffe451",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "ok",
+    "last_success": "2026-11-17T10:53:55+01:00",
+    "checked_at": "2026-11-17T10:53:55+01:00",
+    "consecutive_failures": 0,
+    "content_sha256": "80c8aabcc870a619d4e0c9f4432bd8355a74203d10ab908dd5e11a9967d2c603",
+    "source_image": null,
+    "review_version": null,
+    "review_week_start": "2026-11-16",
+    "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Vegan_Lunch_Wien_KW47.pdf?v=1794905309"
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-17T10:55:59+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-16",
+    "source_fingerprint": "80c8aabcc870a619d4e0c9f4432bd8355a74203d10ab908dd5e11a9967d2c603",
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "karmafood",
+      "url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+      "at": "2026-11-17T09:53:56+00:00",
+      "sha256": "a9040a2806f878402a0b6fd7826c84bbb820bb748ae01fc262d443a6a5cd5071",
+      "bytes": 325078,
+      "format": "html",
+      "blob": "a9040a2806f878402a0b6fd7826c84bbb820bb748ae01fc262d443a6a5cd5071.html",
+      "stage": "finn_karma",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "karmafood",
+      "url": "https://karmafood.at/pages/wochenmenu-karma-food-wien",
+      "at": "2026-11-17T09:56:00+00:00",
+      "sha256": "f4d8554ef70aa3510537e619d0df04bf5305f7053517c62d7732b8383cf155be",
+      "bytes": 325078,
+      "format": "html",
+      "blob": "f4d8554ef70aa3510537e619d0df04bf5305f7053517c62d7732b8383cf155be.html",
+      "stage": "html_ai",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-16": [
+        {
+          "name": "Orientalische Couscous Bowl mit Harissa Dip",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Tofu Mango Coconut Veggie Curry",
+          "price": 11.5,
+          "category": "Special",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Dal Makhni mit veganer Butter",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-17": [
+        {
+          "name": "Veggie Bolognese Lasagne mit Salat",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "veggie",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Veggie Butter Veggie Curry",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "veggie",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Dal mit Punjabi Gewürz Tadka",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-18": [
+        {
+          "name": "Kaffir Lime Kokos Biryani mit Raita",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Vindaloo Veggie Curry",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Veggie Parmesan (M)eatballs",
+          "price": 11.5,
+          "category": "Special",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-19": [
+        {
+          "name": "White Bean Pesto Lasagne mit Salat",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "veggie",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Kashmiri Kokos Süßkartoffel Curry",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "South Indian Dal mit Kürbis",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-20": [
+        {
+          "name": "Bean Power Biryani mit Röstzwiebel",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Gelbes Thai Veggie Curry",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Green Palak Dal",
+          "price": 10.5,
+          "category": "Hauptgericht",
+          "diet": "vegan",
+          "description": "Preis laut offizieller Wochenmenü-PDF; Lunch-Combo mit Lassi separat erhältlich.",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-16",
+    "validUntil": "2026-11-20"
+  }
+}

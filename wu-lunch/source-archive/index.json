@@ -162,6 +162,24 @@
       "menu_status": "verified",
       "manifest": "2026-11-16/topfdeckel/c2083594a3851da399a34ce15234a0e77c2f530f8a49e175ba2df281f036bd86/manifest.json",
       "source_count": 11
+    },
+    {
+      "restaurant_id": "karmafood",
+      "week_start": "2026-11-16",
+      "menu_sha256": "f6f13b5b4bb0f57e301ce1a69a40389af4c9e02fdeefe77be5d6f97acdb7aaf2",
+      "captured_at": "2026-11-17T09:56:52+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/karmafood/f6f13b5b4bb0f57e301ce1a69a40389af4c9e02fdeefe77be5d6f97acdb7aaf2/manifest.json",
+      "source_count": 2
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "week_start": "2026-11-16",
+      "menu_sha256": "1bac8206bdd1cd6db0646186ddea455e7a24a2464700a208dfcb616e1e2e5734",
+      "captured_at": "2026-11-17T09:56:52+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-16/topfdeckel/1bac8206bdd1cd6db0646186ddea455e7a24a2464700a208dfcb616e1e2e5734/manifest.json",
+      "source_count": 11
     }
   ]
 }

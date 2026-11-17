@@ -1,24 +1,24 @@
 {
-  "checked_at": "2026-11-17T09:02:06+01:00",
+  "checked_at": "2026-11-17T10:53:46+01:00",
   "week_start": "2026-11-16",
   "week_end": "2026-11-20",
   "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-17T09:02:12+01:00",
-      "checked_at": "2026-11-17T09:02:12+01:00",
+      "last_success": "2026-11-17T10:53:55+01:00",
+      "checked_at": "2026-11-17T10:53:55+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "fe3db3dd5eeb9dd07e68e0e1a3fc7110c957ba03b28a9296bfbadfcb23e9977c",
+      "content_sha256": "80c8aabcc870a619d4e0c9f4432bd8355a74203d10ab908dd5e11a9967d2c603",
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-16",
-      "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Karma_Food_veganes_Mittagessen_wien_KW_47.pdf?v=1794823404"
+      "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Vegan_Lunch_Wien_KW47.pdf?v=1794905309"
     },
     "finn": {
       "state": "cached",
       "last_success": "2026-11-16T13:44:32+01:00",
-      "checked_at": "2026-11-17T09:02:12+01:00",
+      "checked_at": "2026-11-17T10:53:55+01:00",
       "consecutive_failures": 0,
       "content_sha256": "c88fdb45203f01bf46d9865b1554dec8bfde2f5665f04c8133b76ec4ab7b495e",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw47.jpg?v=1794780079",
@@ -28,7 +28,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-17T09:02:06+01:00",
+      "last_success": "2026-11-17T10:53:46+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -69,14 +69,14 @@
     },
     "topfdeckel": {
       "state": "ok_browser",
-      "last_success": "2026-11-17T09:03:04+01:00",
+      "last_success": "2026-11-17T10:54:19+01:00",
       "consecutive_failures": 0,
       "day_sha256": {
-        "2026-11-16": "ec9001bcc466d010a06fac668e578754f216660ebf4f666ea36b873dcd5d8fb3",
-        "2026-11-17": "50ba00d595e5d4b2cc87e8799f05cc5c50ce61368b75e59da76181739a8b9ae7",
-        "2026-11-18": "6b4efe56a7cbd34ede9f0f76cb37ad9c1fcd88d311294c9fe91394efdf637925",
-        "2026-11-19": "a4b4fc6ee607d6552ac53398fad4b776e14e049167c14fdb935e259400f6d740",
-        "2026-11-20": "187e366552ed9d9e8c48fb4a3917a5f1dad6275bac9b8a7601a40c162aeb15c6"
+        "2026-11-16": "9a88c25a11fdf77b8882e2769f74dbc213b58a2318d6cabbb45e289add60a9af",
+        "2026-11-17": "4ab19716b71eff5b4dab240e3835be09b23b70433a171ce7d74965b8562ff2ad",
+        "2026-11-18": "92bcad60e35469acf96dd4677158a34d9ffc54b382f34415b32ac08920fe82a5",
+        "2026-11-19": "ca82069882d646adf102ecb3002e35c962a32dc41875e349a7aca09165c762b7",
+        "2026-11-20": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
       }
     },
     "gruenehuette": {
@@ -159,10 +159,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-17T09:03:04+01:00",
+      "last_checked": "2026-11-17T10:55:59+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-16",
-      "source_fingerprint": "fe3db3dd5eeb9dd07e68e0e1a3fc7110c957ba03b28a9296bfbadfcb23e9977c",
+      "source_fingerprint": "80c8aabcc870a619d4e0c9f4432bd8355a74203d10ab908dd5e11a9967d2c603",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -172,8 +172,8 @@
   "topf_luna_audit": {
     "state": "review_needed",
     "model": "gpt-6-luna",
-    "fingerprint": "910ee44e63b4f903e499b1cba7709777b25645bfde5de079e1662d11677158d7",
-    "checked_at": "2026-11-17T07:47:54+01:00",
+    "fingerprint": "eb9b8134028a711f74773d70b35b224533940fd5efb05624a9dfee37aae4219e",
+    "checked_at": "2026-11-17T10:55:59+01:00",
     "validation_issues": [
       "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
     ],
@@ -183,28 +183,29 @@
       ]
     },
     "warnings": [
-      "Die Preise sind als Abschnittstarife für Vorspeisen bzw. Hauptspeisen angegeben; ein eigener Kombinationspreis oder eine kostenlose Suppe ist nicht ausgewiesen.",
-      "„Dessert des Tages“ ist nicht näher spezifiziert; der sichtbare Preis beträgt 2,90 €. "
+      "Die Tabs zeigen keine ausdrücklich beschriebenen Menü-Kombinationen oder Kombinationspreise; solche Angebote wurden nicht ergänzt.",
+      "Für den Haussalat sind keine Allergene aufgeführt.",
+      "Bei einzelnen Gerichten fehlen Allergenenangaben; es wurden keine Allergene aus Gerichtsnamen oder Zutaten abgeleitet."
     ],
     "usage": {
-      "input_tokens": 49703,
+      "input_tokens": 49747,
       "input_tokens_details": {
-        "cache_write_tokens": 49700,
+        "cache_write_tokens": 49744,
         "cache_write_tokens_details": {
           "ttl_12h_tokens": 0,
-          "ttl_30m_tokens": 49700
+          "ttl_30m_tokens": 49744
         },
         "cached_tokens": 0
       },
-      "output_tokens": 9010,
+      "output_tokens": 9364,
       "output_tokens_details": {
-        "reasoning_tokens": 810
+        "reasoning_tokens": 1085
       },
-      "total_tokens": 58713
+      "total_tokens": 59111
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-17T09:02:10+01:00",
+    "checked_at": "2026-11-17T10:53:54+01:00",
     "source_sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
     "week_start": "2026-11-16",
