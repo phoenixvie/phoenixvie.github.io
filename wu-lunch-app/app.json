@@ -9,7 +9,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "at.startit.wufood",
-      "buildNumber": "1",
+      "buildNumber": "2",
       "supportsTablet": false,
       "icon": "./assets/icon-ios.png",
       "infoPlist": {
