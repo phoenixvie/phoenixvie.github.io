@@ -122,3 +122,16 @@ test('installed app carries its own meeting-point photo and every icon it shows'
   assert.ok(used.has('close') && used.size >= 10);
   for (const name of used) assert.ok(inline.includes(name) || inFont.includes(name), 'Symbol fehlt in der App: ' + name);
 });
+
+test('iOS screenshots can open a view by launch argument; anything else is ignored', async () => {
+  const read = path => readFile(new URL(path, import.meta.url), 'utf8');
+  const [native, app, meet] = await Promise.all([read('../App.tsx'), read('../preview/app.js'), read('../preview/meet-live.js')]);
+  // Nur iOS, nur bekannte Werte; der Wert landet geprüft im Kopf der eingebetteten Seite.
+  assert.match(native, /Platform\.OS === 'ios' \? String\(Settings\.get\('wuStartScreen'\)/);
+  const pattern = new RegExp(native.match(/return \/(\^\(map\|meet[^/]+)\/\.test\(value\)/)[1]);
+  for (const ok of ['map', 'meet', 'restaurant:mensa', 'info:lia']) assert.ok(pattern.test(ok), ok);
+  for (const bad of ["map';alert(1)//", 'restaurant:', 'info:<b>', 'list ']) assert.ok(!pattern.test(bad), bad);
+  assert.match(native, /window\.WU_START_SCREEN='\$\{startScreen\}'/);
+  assert.match(app, /String\(window\.WU_START_SCREEN\|\|''\)\.split\(':'\)/);
+  assert.match(meet, /window\.WU_START_SCREEN === 'meet'/);
+});

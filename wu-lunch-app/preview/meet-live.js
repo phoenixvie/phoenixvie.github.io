@@ -219,7 +219,7 @@
     meetJoined = !!state.own.find(item => item.meeting_date === date());
     render();
   });
-  if (returningFromLink) { meetPreviewOpen=true; meetSlot=0; void refresh(); }
+  if (returningFromLink || window.WU_START_SCREEN === 'meet') { meetPreviewOpen=true; meetSlot=0; void refresh(); }
   setInterval(() => { if (meetPreviewOpen && !meetForm && !state.busy) void refresh(); }, 30000);
   // Anzahl in der Liste: beim Start, alle fünf Minuten und wenn die App wieder in den Vordergrund kommt.
   if (!returningFromLink) void refreshCount();
