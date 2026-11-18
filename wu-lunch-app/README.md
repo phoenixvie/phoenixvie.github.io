@@ -59,7 +59,7 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
   - `ios-pruefen`: ohne Apple-Konto. Simulator-Build, Start im iPhone-Simulator, App-Store-Screenshots (6,9 Zoll, 1320 × 2868) als Artefakt `wu-food-ios-screenshots`, unsignierter Geräte-Build. Die Nutzungsstatistik ist dabei abgeschaltet.
   - `testflight`: signiert automatisch über den App-Store-Connect-API-Schlüssel und lädt zu App Store Connect hoch. Secrets: `APPLE_TEAM_ID`, `APP_STORE_CONNECT_KEY_ID`, `APP_STORE_CONNECT_ISSUER_ID`, `APP_STORE_CONNECT_KEY` (Inhalt der .p8-Datei).
 - Für Screenshots öffnet die iOS-App per Startargument `-wuStartScreen map|meet|restaurant:<id>|info:<id>` direkt eine Ansicht (nur bekannte Werte).
-- Store-Grafiken für iOS liegen in `store-listing/ios/`.
+- Store-Grafiken für iOS liegen in `store-listing/app-store/`.
 
 ## Google Play: Signatur und App-Bundle (Stand 17.11.2026)
 
