@@ -270,7 +270,23 @@
       "category": "Nachspeise"
      }
     ],
-    "2026-11-18": [],
+    "2026-11-18": [
+     {
+      "name": "Ripperl mit gem. Salat und Hausbrot",
+      "price": 12.9,
+      "included_soup": "Tagessuppe"
+     },
+     {
+      "name": "Kalbsbratwürstel mit Kartoffelschmarren und Sauerkraut",
+      "price": 12.5,
+      "included_soup": "Tagessuppe"
+     },
+     {
+      "name": "Apfelschnitte",
+      "price": 4.5,
+      "category": "Nachspeise"
+     }
+    ],
     "2026-11-19": [],
     "2026-11-20": []
    },
@@ -1001,8 +1017,8 @@
     ]
    },
    "import": {
-    "state": "error",
-    "message": "ConnectionError: HTTPSConnectionPool(host='lalina.at', port=443): Max retries exceeded with url: /lunchevents/ (Caused by NewConnectionError(\"HTTPSConnection(host='lalina.at', port=443): Failed to establish a new connection: [Errno 101] Net"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -1303,5 +1319,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-18T03:56:25+01:00"
+ "updatedAt": "2026-11-18T12:50:47+01:00"
 }
