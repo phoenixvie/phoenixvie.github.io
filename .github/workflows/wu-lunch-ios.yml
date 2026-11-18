@@ -17,7 +17,7 @@ on:
         default: ios-pruefen
   push:
     branches: [claude/arbeit]
-    paths: ['.github/workflows/wu-lunch-ios.yml', 'wu-lunch-app/scripts/ios-screenshots.py']
+    paths: ['.github/workflows/wu-lunch-ios.yml', 'wu-lunch-app/scripts/ios-screenshots.py', 'wu-lunch-app/App.tsx', 'wu-lunch-app/app.json']
 
 permissions:
   contents: read

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Alert, AppState, BackHandler, Linking, Modal, Platform, Pressable, Settings, Share, StatusBar, StyleSheet, Text, View} from 'react-native';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaProvider, SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {previewHtml} from './src/previewHtml';
 import {encodePdf, pdfViewerHtml} from './src/pdfViewer';
@@ -31,6 +31,8 @@ function AppContent() {
   const openExternalLink = (url: string) => openExternal(url, language,texts);
   useEffect(()=>{let active=true;void preferences.load().then(saved=>{if(!active)return;if(saved)setLanguage(saved);setHtmlSource(saved?{html:previewHtml.replace('<head>',headScript(saved)),baseUrl}:defaultHtmlSource);});return()=>{active=false};},[]);
   const languageRef=useRef(language);languageRef.current=language;
+  // iPhone: Der Bereich unter der App (Home-Leiste) ist weiß wie die Liste und die Menüleiste, nicht blau wie die Kopfzeile.
+  const insets=useSafeAreaInsets();const iosBottom=Platform.OS==='ios';
   const main = useRef<WebView<{}>>(null);
   const browser = useRef<WebView<{}>>(null);
   const [page, setPage] = useState<{url: string; title: string; loading?: boolean; pdf?: string} | null>(null);
@@ -82,8 +84,9 @@ function AppContent() {
       usage:(event,props)=>usage.event(event,props),
     });
   };
-  return <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
+  return <SafeAreaView style={styles.screen} edges={iosBottom ? ['top'] : ['top', 'bottom']}>
     <StatusBar barStyle="light-content" />
+    <View style={[styles.web, iosBottom ? {paddingBottom: insets.bottom} : null]}>
     {htmlSource ? <WebView<{}> ref={main} source={htmlSource} originWhitelist={['*']} onMessage={message}
       cacheEnabled={false}
       javaScriptEnabled domStorageEnabled setSupportMultipleWindows={false} style={styles.web}
@@ -92,6 +95,7 @@ function AppContent() {
         const url=webUrl(request.url);
         if(url)void openSource(url,'Restaurant');else openExternalLink(request.url); return false;
       }} /> : <View style={[styles.web,{justifyContent:'center'}]}><ActivityIndicator color="#087cf4" /></View>}
+    </View>
     <Modal visible={!!page} onRequestClose={browserBack} animationType="slide">
       <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
         <StatusBar barStyle="light-content" />
