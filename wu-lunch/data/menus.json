@@ -2,7 +2,7 @@
   "weekStart": "2026-11-16",
   "weekEnd": "2026-11-20",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-18T12:49:39+01:00",
+  "checkedAt": "2026-11-18T21:37:01+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -2265,7 +2265,7 @@
             "name": "Kürbis-Feta Lasagne mit Bechamelsauce",
             "price": 7.5,
             "category": "Hauptgericht",
-            "diet": "veggie",
+            "diet": "unknown",
             "description": "Preis klein / groß",
             "allergens": [],
             "included_soup": null,
@@ -2277,7 +2277,7 @@
             "name": "Red Thai Curry in cremiger Kokos Sauce & Wokgemüse",
             "price": 7.5,
             "category": "Hauptgericht",
-            "diet": "veggie",
+            "diet": "unknown",
             "description": "Preis klein / groß",
             "allergens": [],
             "included_soup": null,
