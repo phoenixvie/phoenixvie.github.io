@@ -50,6 +50,17 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - **Nicht aufgenommen (Stand 17.11.2026):** Agape (auf der Webseite gibt es kein Mittagsmenü mehr, die genannte Seite existiert nicht), Rex Lounge (unter der Adresse erscheint ein fremdes Online-Casino) und Interspar Restaurant (die Seite sperrt automatische Abrufe).
 - **In der Android-App nicht enthalten:** Die Wels-Ausgabe ist nur eine Webseite.
 
+## iOS und App Store (Stand 18.11.2026)
+
+- Bundle-ID `at.startit.wufood`, nur iPhone, Version aus `expo.version`, Build-Nummer `expo.ios.buildNumber` (bei jedem Upload erhöhen).
+- Symbol `assets/icon-ios.png` (1024 px, herangezoomt wie Android) aus `scripts/make-ios-icon.py`; das Skript erzeugt auch `store-listing/app-icon-512.png`.
+- Datenschutz-Manifest und `ITSAppUsesNonExemptEncryption: false` stehen in `app.json` (keine Exportfrage bei jedem Upload).
+- Workflow „WU Lunch iOS" (macOS-Runner):
+  - `ios-pruefen`: ohne Apple-Konto. Simulator-Build, Start im iPhone-Simulator, App-Store-Screenshots (6,9 Zoll, 1320 × 2868) als Artefakt `wu-food-ios-screenshots`, unsignierter Geräte-Build. Die Nutzungsstatistik ist dabei abgeschaltet.
+  - `testflight`: signiert automatisch über den App-Store-Connect-API-Schlüssel und lädt zu App Store Connect hoch. Secrets: `APPLE_TEAM_ID`, `APP_STORE_CONNECT_KEY_ID`, `APP_STORE_CONNECT_ISSUER_ID`, `APP_STORE_CONNECT_KEY` (Inhalt der .p8-Datei).
+- Für Screenshots öffnet die iOS-App per Startargument `-wuStartScreen map|meet|restaurant:<id>|info:<id>` direkt eine Ansicht (nur bekannte Werte).
+- Store-Grafiken für iOS liegen in `store-listing/ios/`.
+
 ## Google Play: Signatur und App-Bundle (Stand 17.11.2026)
 
 - Workflow „WU Lunch Android APK", Eingabe `aufgabe`:
