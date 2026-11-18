@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 
+// Feste Uhrzeit für die Abläufe: Dienstag, 17.11.2026, 10:00 Uhr Wien. Sonst hingen die Tests von der echten Uhrzeit ab
+// (z. B. montags und mittwochs zwischen 12:05 und 14:00 ist die Anmeldung für den angezeigten Termin geschlossen).
+const fixedNow = Date.parse('2026-11-17T09:00:00Z');
+class FixedDate extends Date { constructor(...args) { super(...(args.length ? args : [fixedNow])); } static now() { return fixedNow; } }
+
 test('paused e-mail flow still works when switched back on (verified email, then sign-up and cancellation)', async () => {
   // Die Bestätigung per E-Mail-Code ist pausiert, nicht gelöscht: Mit eingeschaltetem Schalter läuft der alte Ablauf.
   const source=(await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8')).replace('const emailVerification = false;','const emailVerification = true;');
@@ -17,7 +22,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   const context={window:{supabase:{createClient:()=>client},open:url=>{openedUrl=url}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
     app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},
     localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v)},
-    setInterval(){},console,Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:'mensa',
+    setInterval(){},console,Intl,Date:FixedDate,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:'mensa',
     renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d,trackUsage:(event,props)=>tracked.push([event,JSON.stringify(props)])};
   const tracked=[];
   vm.createContext(context);vm.runInContext(source,context);
@@ -238,7 +243,7 @@ test('list entry shows the number of people signed up for the next date, and not
     const warnings=[];
     const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
       app:{addEventListener(){},querySelector:selector=>selector==='[data-action="meet-preview"].restaurant-row'?row:null},document:{getElementById:()=>null,addEventListener(){}},
-      localStorage:{getItem:()=>null,setItem(){}},setInterval(){},console:{...console,warn:(...args)=>warnings.push(args.join(' '))},Intl,Date,
+      localStorage:{getItem:()=>null,setItem(){}},setInterval(){},console:{...console,warn:(...args)=>warnings.push(args.join(' '))},Intl,Date:FixedDate,
       meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
       renderMeet(){},render(){},icon:name=>`<i>${name}</i>`,esc:s=>String(s),dateValue:d=>d,localize:{label:key=>key==='{count} angemeldet'?'{count} signed up':key}};
     vm.createContext(context);vm.runInContext(source,context);
@@ -271,7 +276,7 @@ test('any valid e-mail address can be used, there is no WU restriction', async (
   const inputs={'meet-first-name':{value:'Anna'},'meet-email':{value:''}};
   const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
     app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},localStorage:{getItem:()=>null,setItem(){}},
-    setInterval(){},console,Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    setInterval(){},console,Intl,Date:FixedDate,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
     renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d,trackUsage:(event,props)=>tracked.push(event+' '+JSON.stringify(props))};
   vm.createContext(context);vm.runInContext(source,context);
   const click=async action=>{handlers.click({target:{closest:()=>({dataset:{action}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));};
@@ -294,7 +299,7 @@ test('sign-up with first name only: field above the button, same name checks, no
   const inputs={'meet-first-name':{value:''}};store.set('wu-meet-preview-name','Alt');
   const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
     app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)},
-    setInterval(){},console:{...console,error(){}},Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    setInterval(){},console:{...console,error(){}},Intl,Date:FixedDate,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
     renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d,trackUsage:(event,props)=>tracked.push(event+' '+JSON.stringify(props))};
   vm.createContext(context);vm.runInContext(source,context);
   const click=async action=>{handlers.click({target:{closest:()=>({dataset:{action}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));};
@@ -343,7 +348,7 @@ test('first letter of the first name is capitalised automatically, also while ty
   const client={auth:{getSession:async()=>({data:{session:null},error:null})},from:()=>({select(){return {in:async()=>({data:[],error:null}),gte:async()=>({data:[],error:null})}}})};
   const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
     app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:()=>null},localStorage:{getItem:()=>null,setItem(){},removeItem(){}},
-    setInterval(){},console,Intl,Date,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    setInterval(){},console,Intl,Date:FixedDate,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
     renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d};
   vm.createContext(context);vm.runInContext(source,context);
   const type=value=>{const field={id:'meet-first-name',value,selectionStart:value.length,setSelectionRange(a){this.cursor=a}};handlers.input({target:field});return field;};

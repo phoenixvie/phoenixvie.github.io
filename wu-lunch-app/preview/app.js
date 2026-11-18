@@ -16,6 +16,8 @@ const app=document.getElementById('app');
 const nativePost=(type,values={})=>{if(!window.ReactNativeWebView)return false;window.ReactNativeWebView.postMessage(JSON.stringify({type,...values}));return true};
 let mapAssetsLoading=false;
 let data=null,selectedId=new URLSearchParams(location.search).get('restaurant'),selectedMapId=null,homeTab='list',detailTab='menu',dayIndex=0,map=null,lastPayload='',sourceViewUrl=null;
+// Nur für App-Store-Screenshots (iOS-Startargument, siehe App.tsx): gewünschte Ansicht direkt öffnen.
+{const [startKind,startId]=String(window.WU_START_SCREEN||'').split(':');if(startKind==='map')homeTab='map';else if((startKind==='restaurant'||startKind==='info')&&startId){selectedId=startId;if(startKind==='info')detailTab='info'}}
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const safeUrl=value=>{try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:''}catch{return ''}};
 // Google Material Icons: bundled SVGs keep these symbols available offline.

@@ -7,3 +7,4 @@ export.log
 prebuild.log
 android/
 ios/
+ios-screenshots/

@@ -1,0 +1,118 @@
+name: WU Lunch iOS
+
+# iOS-Ausgabe von WU Food auf einem macOS-Runner (für öffentliche Repositories kostenlos).
+# ios-pruefen: ohne Apple-Konto – im Simulator bauen und starten, App-Store-Screenshots aufnehmen,
+#              zusätzlich einen unsignierten Geräte-Build prüfen. Nichts wird veröffentlicht.
+# testflight:  signieren (automatisch über den App-Store-Connect-API-Schlüssel) und zu App Store Connect
+#              hochladen. Secrets: APPLE_TEAM_ID, APP_STORE_CONNECT_KEY_ID, APP_STORE_CONNECT_ISSUER_ID,
+#              APP_STORE_CONNECT_KEY (Inhalt der .p8-Datei). Jede Übertragung braucht eine neue buildNumber in app.json.
+
+on:
+  workflow_dispatch:
+    inputs:
+      aufgabe:
+        description: 'ios-pruefen (ohne Apple-Konto) oder testflight (signieren und hochladen)'
+        type: choice
+        options: [ios-pruefen, testflight]
+        default: ios-pruefen
+  push:
+    branches: [claude/arbeit]
+    paths: ['.github/workflows/wu-lunch-ios.yml', 'wu-lunch-app/scripts/ios-screenshots.py', 'wu-lunch-app/App.tsx', 'wu-lunch-app/app.json']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wu-lunch-ios
+  cancel-in-progress: false
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        working-directory: wu-lunch-app
+    env:
+      TESTFLIGHT: ${{ github.event_name == 'workflow_dispatch' && inputs.aufgabe == 'testflight' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: wu-lunch-app/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Unit tests and type check
+        run: npm run test && npx tsc --noEmit
+      - name: No usage statistics from simulator test runs
+        if: env.TESTFLIGHT != 'true'
+        run: |
+          sed -i '' "s/export const aptabaseAppKey='[^']*'/export const aptabaseAppKey=''/" src/analytics.ts
+          grep -q "aptabaseAppKey=''" src/analytics.ts
+      - name: Generate iOS project
+        run: CI=1 npx expo prebuild --platform ios
+      - name: Find workspace and scheme
+        run: |
+          ws=$(ls -d ios/*.xcworkspace | head -1)
+          echo "WORKSPACE=$ws" >> "$GITHUB_ENV"
+          echo "SCHEME=$(basename "$ws" .xcworkspace)" >> "$GITHUB_ENV"
+          xcodebuild -version
+      - name: Build for the iPhone simulator
+        if: env.TESTFLIGHT != 'true'
+        run: |
+          set -o pipefail
+          xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath build CODE_SIGNING_ALLOWED=NO build -quiet
+      - name: Start the app in the simulator and take App Store screenshots
+        if: env.TESTFLIGHT != 'true'
+        run: python3 scripts/ios-screenshots.py
+      - uses: actions/upload-artifact@v4
+        if: always() && env.TESTFLIGHT != 'true'
+        with:
+          name: wu-food-ios-screenshots
+          path: wu-lunch-app/ios-screenshots
+          if-no-files-found: ignore
+      - name: Check the device build (unsigned)
+        if: env.TESTFLIGHT != 'true'
+        run: |
+          set -o pipefail
+          xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/check.xcarchive" CODE_SIGNING_ALLOWED=NO archive -quiet
+      - name: Sign, archive and upload to App Store Connect (TestFlight)
+        if: env.TESTFLIGHT == 'true'
+        env:
+          TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+          ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+          KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY }}
+        run: |
+          set -euo pipefail
+          for name in TEAM_ID KEY_ID ISSUER_ID KEY_CONTENT; do
+            if [ -z "${!name}" ]; then echo "::error::Secret für $name fehlt (siehe Anleitung)."; exit 1; fi
+          done
+          key="$RUNNER_TEMP/AuthKey_$KEY_ID.p8"; printf '%s\n' "$KEY_CONTENT" > "$key"
+          auth=(-allowProvisioningUpdates -authenticationKeyPath "$key" -authenticationKeyID "$KEY_ID" -authenticationKeyIssuerID "$ISSUER_ID")
+          xcodebuild -workspace "$WORKSPACE" -scheme "$SCHEME" -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$RUNNER_TEMP/WUFood.xcarchive" DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic "${auth[@]}" archive -quiet
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>teamID</key><string>$TEAM_ID</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+            <key>uploadSymbols</key><true/>
+          </dict></plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/WUFood.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -exportPath "$RUNNER_TEMP/export" "${auth[@]}"
+          rm -f "$key"
+          version=$(node -p "require('./app.json').expo.version"); build=$(node -p "require('./app.json').expo.ios.buildNumber")
+          echo "### An App Store Connect übertragen: Version $version (Build $build)" >> "$GITHUB_STEP_SUMMARY"

@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ActivityIndicator, Alert, AppState, BackHandler, Linking, Modal, Pressable, Share, StatusBar, StyleSheet, Text, View} from 'react-native';
-import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import {ActivityIndicator, Alert, AppState, BackHandler, Linking, Modal, Platform, Pressable, Settings, Share, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaProvider, SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {previewHtml} from './src/previewHtml';
 import {encodePdf, pdfViewerHtml} from './src/pdfViewer';
@@ -13,7 +13,11 @@ const baseUrl = 'https://phoenixvie.github.io/wu-lunch-app/preview/';
 const nativeLanguage = /^de(?:-|$)/i.test(Intl.DateTimeFormat().resolvedOptions().locale) ? 'de' : 'en';
 const nativeText = (de: string, en: string, language = nativeLanguage) => language === 'de' ? de : en;
 const preferences=languagePreferences(AsyncStorage);
-const defaultHtmlSource = {html: previewHtml.replace('<head>',`<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';</script>`), baseUrl};
+// Nur für App-Store-Screenshots: Die iOS-App kann per Startargument (-wuStartScreen map|meet|restaurant:<id>|info:<id>)
+// direkt eine Ansicht öffnen. Nutzer können keine Startargumente setzen; unbekannte Werte werden ignoriert.
+const startScreen = (() => {try {const value = Platform.OS === 'ios' ? String(Settings.get('wuStartScreen') ?? '') : ''; return /^(map|meet|(restaurant|info):[a-z0-9-]+)$/.test(value) ? value : '';} catch {return '';}})();
+const headScript = (saved?: string) => `<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';${saved ? `window.WU_SAVED_LANGUAGE='${saved}';` : ''}${startScreen ? `window.WU_START_SCREEN='${startScreen}';` : ''}</script>`;
+const defaultHtmlSource = {html: previewHtml.replace('<head>',headScript()), baseUrl};
 function openExternal(url: string, language = nativeLanguage, texts: Record<string,string> = {}) {
   if (/^(https?:|mailto:|tel:)/i.test(url)) Linking.openURL(url).catch(() => {
     Alert.alert(texts['Link konnte nicht geöffnet werden']??nativeText('Link konnte nicht geöffnet werden','Could not open link',language),texts['Bitte prüfe, ob eine passende App installiert ist.']??nativeText('Bitte prüfe, ob eine passende App installiert ist.','Please check that a suitable app is installed.',language));
@@ -25,8 +29,10 @@ function AppContent() {
   const [htmlSource,setHtmlSource]=useState<typeof defaultHtmlSource|null>(null);
   const nativeText = (de: string, en: string) => texts[de]??(language === 'de' ? de : en);
   const openExternalLink = (url: string) => openExternal(url, language,texts);
-  useEffect(()=>{let active=true;void preferences.load().then(saved=>{if(!active)return;if(saved)setLanguage(saved);setHtmlSource(saved?{html:previewHtml.replace('<head>',`<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';window.WU_SAVED_LANGUAGE='${saved}';</script>`),baseUrl}:defaultHtmlSource);});return()=>{active=false};},[]);
+  useEffect(()=>{let active=true;void preferences.load().then(saved=>{if(!active)return;if(saved)setLanguage(saved);setHtmlSource(saved?{html:previewHtml.replace('<head>',headScript(saved)),baseUrl}:defaultHtmlSource);});return()=>{active=false};},[]);
   const languageRef=useRef(language);languageRef.current=language;
+  // iPhone: Der Bereich unter der App (Home-Leiste) ist weiß wie die Liste und die Menüleiste, nicht blau wie die Kopfzeile.
+  const insets=useSafeAreaInsets();const iosBottom=Platform.OS==='ios';
   const main = useRef<WebView<{}>>(null);
   const browser = useRef<WebView<{}>>(null);
   const [page, setPage] = useState<{url: string; title: string; loading?: boolean; pdf?: string} | null>(null);
@@ -78,8 +84,9 @@ function AppContent() {
       usage:(event,props)=>usage.event(event,props),
     });
   };
-  return <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
+  return <SafeAreaView style={styles.screen} edges={iosBottom ? ['top'] : ['top', 'bottom']}>
     <StatusBar barStyle="light-content" />
+    <View style={[styles.web, iosBottom ? {paddingBottom: insets.bottom} : null]}>
     {htmlSource ? <WebView<{}> ref={main} source={htmlSource} originWhitelist={['*']} onMessage={message}
       cacheEnabled={false}
       javaScriptEnabled domStorageEnabled setSupportMultipleWindows={false} style={styles.web}
@@ -88,6 +95,7 @@ function AppContent() {
         const url=webUrl(request.url);
         if(url)void openSource(url,'Restaurant');else openExternalLink(request.url); return false;
       }} /> : <View style={[styles.web,{justifyContent:'center'}]}><ActivityIndicator color="#087cf4" /></View>}
+    </View>
     <Modal visible={!!page} onRequestClose={browserBack} animationType="slide">
       <SafeAreaView style={styles.screen} edges={['top', 'bottom']}>
         <StatusBar barStyle="light-content" />
