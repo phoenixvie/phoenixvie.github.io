@@ -1001,8 +1001,8 @@
     ]
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "error",
+    "message": "ConnectionError: HTTPSConnectionPool(host='lalina.at', port=443): Max retries exceeded with url: /lunchevents/ (Caused by NewConnectionError(\"HTTPSConnection(host='lalina.at', port=443): Failed to establish a new connection: [Errno 101] Net"
    }
   },
   {
@@ -1303,5 +1303,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-17T17:26:46+01:00"
+ "updatedAt": "2026-11-18T03:56:25+01:00"
 }
