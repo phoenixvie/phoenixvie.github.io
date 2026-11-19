@@ -287,7 +287,23 @@
       "category": "Nachspeise"
      }
     ],
-    "2026-11-19": [],
+    "2026-11-19": [
+     {
+      "name": "Speckknödel mit Gulaschsaft und gem. Salat",
+      "price": 12.5,
+      "included_soup": "Tagessuppe"
+     },
+     {
+      "name": "Palatschinken mit Selchfleisch gebacken mit Kartoffeln, Sauerrazhmdip und gem. Salat",
+      "price": 12.9,
+      "included_soup": "Tagessuppe"
+     },
+     {
+      "name": "Apfelschnitte",
+      "price": 4.5,
+      "category": "Nachspeise"
+     }
+    ],
     "2026-11-20": []
    },
    "import": {
@@ -1319,5 +1335,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-18T12:50:47+01:00"
+ "updatedAt": "2026-11-19T12:46:59+01:00"
 }
