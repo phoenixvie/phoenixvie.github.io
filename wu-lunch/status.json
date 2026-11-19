@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-18T21:37:01+01:00",
+  "checked_at": "2026-11-19T12:45:19+01:00",
   "week_start": "2026-11-16",
   "week_end": "2026-11-20",
   "health": "degraded",
@@ -30,7 +30,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-18T21:37:01+01:00",
+      "last_success": "2026-11-19T12:45:19+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -73,7 +73,7 @@
     },
     "topfdeckel": {
       "state": "ok",
-      "last_success": "2026-11-18T21:37:01+01:00",
+      "last_success": "2026-11-19T12:45:19+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": null
@@ -150,7 +150,7 @@
       "error": null
     },
     "losteria": {
-      "last_checked": "2026-11-18T12:49:45+01:00",
+      "last_checked": "2026-11-19T12:45:23+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-16",
       "source_fingerprint": null,
@@ -230,8 +230,9 @@
   "quality_warnings": [
     "mensa 2026-11-16: Preis fehlt: Spezialpasta lt. Tagesaushang",
     "mensa 2026-11-17: Preis fehlt: Spezialpasta lt. Tagesaushang",
-    "mensa 2026-11-18: Preis fehlt: Spezialpasta lt. Tagesaushang"
+    "mensa 2026-11-18: Preis fehlt: Spezialpasta lt. Tagesaushang",
+    "mensa 2026-11-19: Preis fehlt: Spezialpasta lt. Tagesaushang"
   ],
-  "quality_warning_count": 3,
+  "quality_warning_count": 4,
   "next_run": "Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)"
 }
