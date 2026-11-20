@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-20T12:46:29+01:00",
+  "checked_at": "2026-11-20T21:27:06+01:00",
   "week_start": "2026-11-16",
   "week_end": "2026-11-20",
   "health": "degraded",
@@ -30,7 +30,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-20T12:46:29+01:00",
+      "last_success": "2026-11-20T21:27:06+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -51,10 +51,10 @@
       "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     },
     "campus": {
-      "state": "cached",
+      "state": "error",
+      "error": "ValueError: Campus: Plan nicht für KW 2026-11-16: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))",
       "last_success": "2026-11-14T10:55:35+01:00",
-      "consecutive_failures": 0,
-      "parser_version": null,
+      "consecutive_failures": 1,
       "content_sha256": "24b15c299c556796e0019c5427774d6fcc26f291291e6d79c3e30e668a28e7ec"
     },
     "baschly": {
@@ -73,7 +73,7 @@
     },
     "topfdeckel": {
       "state": "ok",
-      "last_success": "2026-11-20T12:46:29+01:00",
+      "last_success": "2026-11-20T21:27:06+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": null
@@ -95,7 +95,9 @@
       "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     }
   },
-  "problems": [],
+  "problems": [
+    "campus: ValueError: Campus: Plan nicht für KW 2026-11-16: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))"
+  ],
   "schedule_url": "update-policy.json",
   "format_version": 1,
   "ai_repair": {
