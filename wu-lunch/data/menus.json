@@ -2,7 +2,7 @@
   "weekStart": "2026-11-16",
   "weekEnd": "2026-11-20",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-20T10:30:40+01:00",
+  "checkedAt": "2026-11-20T12:46:29+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -2458,7 +2458,7 @@
             "price_large": 11.9
           },
           {
-            "name": "Köfte-Braten vom Rind mit orientalischem Bulgur & Tahini Sauce",
+            "name": "Köfte-Braten mit orientalischem Bulgur & Tahini-Paprika Sauce",
             "price": 7.5,
             "category": "Hauptgericht",
             "diet": "unknown",
@@ -2473,7 +2473,7 @@
             "name": "Tomaten-Mozzarella Lasagne mit Spinat und frischem Salat",
             "price": 7.5,
             "category": "Hauptgericht",
-            "diet": "unknown",
+            "diet": "veggie",
             "description": "Preis klein / groß",
             "allergens": [],
             "included_soup": null,
