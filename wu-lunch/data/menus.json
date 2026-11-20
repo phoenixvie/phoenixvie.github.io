@@ -2,7 +2,7 @@
   "weekStart": "2026-11-16",
   "weekEnd": "2026-11-20",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-19T21:42:26+01:00",
+  "checkedAt": "2026-11-20T07:00:35+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -2431,10 +2431,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-20",
-            "source_sha256": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
+            "price_large": 5.9
           },
           {
             "name": "Haussalat",
@@ -2446,10 +2443,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 3.9,
-            "price_large": 5.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-20",
-            "source_sha256": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
+            "price_large": 5.9
           },
           {
             "name": "Chicken-Stroganoff in Senf-Rahmsauce mit Waldpilzen",
@@ -2461,10 +2455,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-20",
-            "source_sha256": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
+            "price_large": 11.9
           },
           {
             "name": "Köfte-Braten vom Rind mit orientalischem Bulgur & Tahini Sauce",
@@ -2476,10 +2467,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-20",
-            "source_sha256": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
+            "price_large": 11.9
           },
           {
             "name": "Tomaten-Mozzarella Lasagne mit Spinat und frischem Salat",
@@ -2491,10 +2479,7 @@
             "included_soup": null,
             "included_choices": [],
             "price_small": 7.5,
-            "price_large": 11.9,
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-20",
-            "source_sha256": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
+            "price_large": 11.9
           },
           {
             "name": "Dessert des Tages",
@@ -2504,10 +2489,7 @@
             "description": "Separat erhältlich",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-20",
-            "source_sha256": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
+            "included_choices": []
           },
           {
             "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -2517,10 +2499,7 @@
             "description": "Eine Option zum kleinen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-20",
-            "source_sha256": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
+            "included_choices": []
           },
           {
             "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
@@ -2530,10 +2509,7 @@
             "description": "Eine Option zum großen Hauptgericht wählbar",
             "allergens": [],
             "included_soup": null,
-            "included_choices": [],
-            "source_url": "https://topfdeckel.at/wochenmenu",
-            "source_day": "2026-11-20",
-            "source_sha256": "5353e068ff0a3c198dd07643196c03ef874c1bd8d0850c939292e2917861716d"
+            "included_choices": []
           }
         ]
       },
