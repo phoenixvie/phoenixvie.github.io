@@ -1,22 +1,22 @@
 {
   "version": "menu-sanity-v2-word-forms-and-courses",
   "model": "gpt-6-luna",
-  "week_start": "2026-11-16",
-  "checked_at": "2026-11-20T20:27:12.991766+00:00",
+  "week_start": "2026-11-23",
+  "checked_at": "2026-11-20T23:13:49.596367+00:00",
   "cleanup": [],
   "issues": [],
   "state": "passed",
   "reviewed": {
-    "mensa": "bffa0860e1fcda51217ec7a80915aa27d50eff54a351851f819e9bf874c70e60",
-    "baschly": "59eac00bc948b6c12205600d6958ebf7ecef639f8e9adc06ec50937416ee69fe",
-    "finn": "c679ec54e68cf9cf4635dd717b9bbf613613f9adb8b58bfb1bb3156da4ec4830",
-    "lia": "73259ed6cb2063d896e4a0e3f600041c18dd24c2599a10f1463d31181ae88dca",
-    "campus": "155790f95d26731a4ed4463ed38ea1e339683e392e5134480c4d0525ed7eaa38",
-    "karmafood": "a67b2f3137db435b5e030d9f59108431780b1e7f0f2a828c0f68d6ea2cb1cbdd",
-    "topfdeckel": "c3f7b8c71c6d222345d841c62764e15c09650d9c7a4dc807ec963777cf1ea2fb",
-    "omakueche": "dea7d33b1ef3d776acbabb1627c2a23f7efcf96f8e2f1ca6333a61ada014e870",
-    "gruenehuette": "da40245d6f14d040836db6870615257cea8c2087d6d864b003d670e2781995e8",
-    "glashaus": "02b40feeafd1bb0f2401f1db0f8f6ee24506270d8b4c0fa123e225e3863d6c69",
-    "losteria": "dd78575117f13f5679257e2b68aba83fd402cf045b05ba1d738a24f9f71c4aa8"
+    "mensa": "42b059b76e8d1f558ad1652e7fa618b939d3bba53659eb7c690e842aee16083f",
+    "baschly": "88b88e0aab317c28ebdbb472c32d54f9b2acbec5d70bdab273aa7102e02b290a",
+    "finn": "3b04da0b2f7128f3c13d3f6a6ed4ddb695f15ad72007b3510ef814b5d8cb6c68",
+    "lia": "2bee7297e729036e2940273aa1f4c9bf8fcfb489b71670791afde15db0f660e4",
+    "campus": "535aae8e85f4b427b91e31fd670b30a2b8e2793b20066c2e925c5b4fdb46aaca",
+    "karmafood": "418ab637e827102887d1410949a5cde996a54f3fcfe4c0d454a5e1bc87511ae9",
+    "topfdeckel": "98b822f05250f1b3d779fd4f0ddc1aed2f083afb28ea1c085bf52f445114aa77",
+    "omakueche": "4492eb8b88d551604b21c6034cbded644c69d2a8dc86d5504a77d983a0e023e6",
+    "gruenehuette": "3933b9b60dde8fd4b66e725981bbaafae45e79ca4bdc1b466e9ca2806c054348",
+    "glashaus": "562608e1e4e60f812bf89cbef825a7fd894bffefac7803575699bf14d6c9512d",
+    "losteria": "2bf518a245b7c809dd59657c26444f7895f89e8d6aa9e760c14e2c9a8387cf07"
   }
 }

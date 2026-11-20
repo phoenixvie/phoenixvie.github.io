@@ -1,65 +1,80 @@
 {
-  "checked_at": "2026-11-20T21:27:06+01:00",
-  "week_start": "2026-11-16",
-  "week_end": "2026-11-20",
+  "checked_at": "2026-11-21T00:10:35+01:00",
+  "week_start": "2026-11-23",
+  "week_end": "2026-11-27",
   "health": "degraded",
   "sources": {
     "karmafood": {
-      "state": "cached",
+      "state": "error",
       "last_success": "2026-11-17T17:25:04+01:00",
-      "checked_at": "2026-11-17T17:25:04+01:00",
-      "consecutive_failures": 0,
+      "checked_at": "2026-11-21T00:12:36+01:00",
+      "consecutive_failures": 1,
       "content_sha256": "95bb3bea2d99faf7f30f912b6cd730ab5655128d804020ad9348a28e1a372c31",
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-16",
       "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Vegan_Lunch_Wien_KW47.pdf?v=1794905309",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "note": "Karma Food: ungewöhnliches Enddatum"
     },
     "finn": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-16T13:44:32+01:00",
-      "checked_at": "2026-11-17T17:25:04+01:00",
+      "checked_at": "2026-11-21T00:12:36+01:00",
       "consecutive_failures": 0,
       "content_sha256": "c88fdb45203f01bf46d9865b1554dec8bfde2f5665f04c8133b76ec4ab7b495e",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw47.jpg?v=1794780079",
       "review_version": "image-v2-year-warning",
       "review_week_start": "2026-11-16",
       "source_pdf": null,
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "note": "Finn: aktuelle deutschsprachige Wochenkarte noch nicht veröffentlicht"
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-20T21:27:06+01:00",
+      "last_success": "2026-11-21T00:10:35+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
     "mensa": {
-      "state": "cached",
-      "last_success": "2026-11-17T07:46:08+01:00",
+      "state": "ok",
+      "last_success": "2026-11-21T00:12:34+01:00",
       "consecutive_failures": 0,
       "parser_version": "ai-pdf-9-notice-wording",
-      "content_sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "content_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
+      "model": "gpt-6-luna",
+      "usage": {
+        "input_tokens": 19215,
+        "input_tokens_details": {
+          "cache_write_tokens": 10140,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 10140
+          },
+          "cached_tokens": 9072
+        },
+        "output_tokens": 9687,
+        "output_tokens_details": {
+          "reasoning_tokens": 1011
+        },
+        "total_tokens": 28902
+      }
     },
     "glashaus": {
-      "state": "cached",
-      "last_success": "2026-11-17T01:26:11+01:00",
+      "state": "ok",
+      "last_success": "2026-11-21T00:10:35+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
-      "content_sha256": "8469e1d0257ca1c4140dea0341ce037c00835b7ba56916a8c9da80c440d97e7c",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "content_sha256": "8469e1d0257ca1c4140dea0341ce037c00835b7ba56916a8c9da80c440d97e7c"
     },
     "campus": {
-      "state": "error",
-      "error": "ValueError: Campus: Plan nicht für KW 2026-11-16: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))",
-      "last_success": "2026-11-14T10:55:35+01:00",
-      "consecutive_failures": 1,
-      "content_sha256": "24b15c299c556796e0019c5427774d6fcc26f291291e6d79c3e30e668a28e7ec"
+      "state": "ok",
+      "last_success": "2026-11-21T00:10:35+01:00",
+      "consecutive_failures": 0,
+      "parser_version": null,
+      "content_sha256": "1b0895f89e70b5e1ff093dcc596dbeb4c8fbf7798bc1ccaf0194843e0553bf59"
     },
     "baschly": {
-      "state": "cached",
-      "last_success": "2026-11-16T13:43:06+01:00",
+      "state": "ok",
+      "last_success": "2026-11-21T00:10:35+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": "e646d37cc8f938047ccf67d6df5ccc52d5cc82327f56ca95afbf2706b65acad2"
@@ -72,50 +87,46 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-20T21:27:06+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
       "content_sha256": null
     },
     "gruenehuette": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-16T13:43:06+01:00",
       "consecutive_failures": 0,
-      "parser_version": null,
-      "content_sha256": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "note": "Grüne Hütte: Plan ist nicht von aktueller Woche: 2026-11-16"
     },
     "lia": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-17T01:26:11+01:00",
       "consecutive_failures": 0,
-      "parser_version": 4,
-      "content_sha256": "2365a9ddbcd802ee5f500fdc341f132a6c85c55212847709a8a89ac22a393dc8",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "note": "Lia WU: kein gültiger Wochenplan für 2026-11-23 (veröffentlichte Daten: 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20)"
     }
   },
   "problems": [
-    "campus: ValueError: Campus: Plan nicht für KW 2026-11-16: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))"
+    "karmafood: ValueError: Karma Food: ungewöhnliches Enddatum"
   ],
   "schedule_url": "update-policy.json",
   "format_version": 1,
   "ai_repair": {
     "lia": {
-      "last_checked": "2026-11-17T01:30:23+01:00",
+      "last_checked": "2026-11-21T00:13:03+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-16",
-      "source_fingerprint": "2365a9ddbcd802ee5f500fdc341f132a6c85c55212847709a8a89ac22a393dc8",
+      "review_week_start": "2026-11-23",
+      "source_fingerprint": null,
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
       "error": null
     },
     "campus": {
-      "last_checked": "2026-11-14T10:56:07+01:00",
+      "last_checked": "2026-11-21T00:13:03+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-16",
-      "source_fingerprint": "24b15c299c556796e0019c5427774d6fcc26f291291e6d79c3e30e668a28e7ec",
+      "review_week_start": "2026-11-23",
+      "source_fingerprint": "1b0895f89e70b5e1ff093dcc596dbeb4c8fbf7798bc1ccaf0194843e0553bf59",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -132,19 +143,19 @@
       "error": null
     },
     "gruenehuette": {
-      "last_checked": "2026-11-14T10:56:07+01:00",
+      "last_checked": "2026-11-21T00:13:03+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-16",
-      "source_fingerprint": "269ef38e5c2f7c3b8170d5d49cb9aeb033f8bc00aa8b49d0d646fc1714ee3d53",
+      "review_week_start": "2026-11-23",
+      "source_fingerprint": null,
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
       "error": null
     },
     "baschly": {
-      "last_checked": "2026-11-16T13:45:25+01:00",
+      "last_checked": "2026-11-21T00:13:03+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-16",
+      "review_week_start": "2026-11-23",
       "source_fingerprint": "e646d37cc8f938047ccf67d6df5ccc52d5cc82327f56ca95afbf2706b65acad2",
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -152,9 +163,9 @@
       "error": null
     },
     "losteria": {
-      "last_checked": "2026-11-20T07:00:41+01:00",
+      "last_checked": "2026-11-21T00:13:03+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-16",
+      "review_week_start": "2026-11-23",
       "source_fingerprint": null,
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -162,9 +173,9 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-17T17:25:30+01:00",
+      "last_checked": "2026-11-21T00:13:03+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-16",
+      "review_week_start": "2026-11-23",
       "source_fingerprint": "95bb3bea2d99faf7f30f912b6cd730ab5655128d804020ad9348a28e1a372c31",
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -208,36 +219,28 @@
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-17T17:25:02+01:00",
-    "source_sha256": "f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
+    "checked_at": "2026-11-21T00:10:43+01:00",
+    "source_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-    "week_start": "2026-11-16",
+    "week_start": "2026-11-23",
     "version": "ai-pdf-9-notice-wording",
-    "last_attempt_at": "2026-11-17T07:46:06+01:00",
-    "state": "cached",
+    "last_attempt_at": "2026-11-21T00:10:43+01:00",
+    "state": "ok",
     "error": null,
-    "last_success": "2026-11-17T07:46:06+01:00",
-    "published_days_sha256": "80a8232e6b6dab4c7ff30c95d89d7d4f963832374cd07ad35911df48b50c3d45",
+    "last_success": "2026-11-21T00:10:43+01:00",
+    "published_days_sha256": "9cb45bb8b26c73898ae167744417527018040ffd1e6a3df2e3b377994df22a73",
     "attempts": {
-      "identity": "2026-11-16|ai-pdf-9-notice-wording|f7e6d78c1df545715bc49f674197a17b80fb720fa15adc759485a64cbe85150b",
-      "day": "2026-11-17",
+      "identity": "2026-11-23|ai-pdf-9-notice-wording|ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
+      "day": "2026-11-21",
       "count": 1,
-      "last_at": "2026-11-17T07:46:07+01:00"
+      "last_at": "2026-11-21T00:10:44+01:00"
     }
   },
   "topf_browser_attempt": {
-    "at": "2026-11-17T17:25:30+01:00",
-    "error": "Topf&Deckel: Menübereich fehlt: {'starters', 'vorspeisen', 'suppen & vorspeisen'}"
+    "at": "2026-11-21T00:13:02+01:00",
+    "error": "Topf-Browser: Wochenquelle 2026-11-16 bis 2026-11-20 ist nicht aktuelle Woche 2026-11-23"
   },
-  "quality_warnings": [
-    "mensa 2026-11-16: Preis fehlt: Spezialpasta lt. Tagesaushang",
-    "mensa 2026-11-17: Preis fehlt: Spezialpasta lt. Tagesaushang",
-    "mensa 2026-11-18: Preis fehlt: Spezialpasta lt. Tagesaushang",
-    "mensa 2026-11-19: Preis fehlt: Spezialpasta lt. Tagesaushang",
-    "mensa 2026-11-20: Preis fehlt: Spezialpasta lt. Tagesaushang",
-    "mensa 2026-11-20: Preis fehlt: Stop Food Waste'",
-    "campus 2026-11-20: kein Menü vorhanden"
-  ],
-  "quality_warning_count": 7,
+  "quality_warnings": [],
+  "quality_warning_count": 0,
   "next_run": "Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)"
 }

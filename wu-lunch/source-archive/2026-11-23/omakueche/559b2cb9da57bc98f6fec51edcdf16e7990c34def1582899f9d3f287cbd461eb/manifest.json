@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "restaurant_id": "omakueche",
+  "week_start": "2026-11-23",
+  "menu_sha256": "559b2cb9da57bc98f6fec51edcdf16e7990c34def1582899f9d3f287cbd461eb",
+  "captured_at": "2026-11-20T23:15:03+00:00",
+  "run_id": "44834739454",
+  "code_commit": "a58bd0689dd3575a6e443605d8a8b1327be6c775",
+  "menu_status": "recurring",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "recurring",
+    "last_success": "2026-11-21T00:10:35+01:00",
+    "consecutive_failures": 0,
+    "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
+  },
+  "ai_audit": null,
+  "sources": [
+    {
+      "restaurant_id": "omakueche",
+      "url": "https://www.xn--omakche-q2a.at/",
+      "at": "2026-11-20T23:15:02+00:00",
+      "sha256": "2c7164eec8ec25f609f6006bc62bb4007c143bd0d6b342a7f8542189fbaa6b81",
+      "bytes": 165901,
+      "format": "html",
+      "blob": "2c7164eec8ec25f609f6006bc62bb4007c143bd0d6b342a7f8542189fbaa6b81.html",
+      "stage": "observe",
+      "context": null,
+      "used_for_extraction": false
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-23": [
+        {
+          "name": "All-you-can-eat-Buffet (Erwachsene)",
+          "price": 10.9,
+          "category": "Buffet",
+          "diet": "unknown",
+          "description": "Mo–Fr 11:00–15:00; Buffet to go 10,90 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-24": [
+        {
+          "name": "All-you-can-eat-Buffet (Erwachsene)",
+          "price": 10.9,
+          "category": "Buffet",
+          "diet": "unknown",
+          "description": "Mo–Fr 11:00–15:00; Buffet to go 10,90 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-25": [
+        {
+          "name": "All-you-can-eat-Buffet (Erwachsene)",
+          "price": 10.9,
+          "category": "Buffet",
+          "diet": "unknown",
+          "description": "Mo–Fr 11:00–15:00; Buffet to go 10,90 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-26": [
+        {
+          "name": "All-you-can-eat-Buffet (Erwachsene)",
+          "price": 10.9,
+          "category": "Buffet",
+          "diet": "unknown",
+          "description": "Mo–Fr 11:00–15:00; Buffet to go 10,90 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-27": [
+        {
+          "name": "Chinesisches All-you-can-eat-Buffet (Erwachsene)",
+          "price": 10.9,
+          "category": "Buffet",
+          "diet": "unknown",
+          "description": "Mo–Fr 11:00–15:00; Buffet to go 10,90 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": null,
+    "validUntil": null
+  }
+}

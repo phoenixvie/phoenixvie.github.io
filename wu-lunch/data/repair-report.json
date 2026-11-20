@@ -1,21 +1,246 @@
 {
-  "checked_at": "2026-11-20T21:27:12+01:00",
-  "week_start": "2026-11-16",
+  "checked_at": "2026-11-21T00:13:03+01:00",
+  "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 0,
+  "api_calls": 6,
   "results": [
     {
-      "restaurant": "mensa",
+      "restaurant": "lia",
       "issues": [
-        "missing_price"
+        "source_not_published"
       ],
-      "action": "dedicated_pdf_ai",
-      "repairs": []
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die gesuchte Woche ist in der lesbaren Quelle nicht veröffentlicht bzw. nicht belegt.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://lia.coffee/": "55a99602c1a8b562569ca1eab01c73ff4cb423d5bf57e67b039dece538e90346"
+      },
+      "usage": {
+        "input_tokens": 7252,
+        "input_tokens_details": {
+          "cache_write_tokens": 7249,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 7249
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 195,
+        "output_tokens_details": {
+          "reasoning_tokens": 69
+        },
+        "total_tokens": 7447
+      }
+    },
+    {
+      "restaurant": "campus",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Für Freitag, 27.11.2026, ist in der Quelle kein Menü aufgeführt.",
+        "Für keines der Gerichte ist ein Preis angegeben; price_eur ist daher null."
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.dascampus.at/dc-mittagsmenues": "230f3b5c95abfa86755ebd203c5090102f579b7975cbbd0fcf9168242c010d3d"
+      },
+      "usage": {
+        "input_tokens": 2282,
+        "input_tokens_details": {
+          "cache_write_tokens": 2279,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2279
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 1193,
+        "output_tokens_details": {
+          "reasoning_tokens": 176
+        },
+        "total_tokens": 3475
+      }
+    },
+    {
+      "restaurant": "gruenehuette",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die angefragte Woche ist in der übergebenen Quelle nicht belegt.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.zurgruenenhuette.com/mittags-menu": "9bf98e22eb2ee1e1a09715ff6a524801e86ad2b374d3c86619abf28cc09381bf"
+      },
+      "usage": {
+        "input_tokens": 2264,
+        "input_tokens_details": {
+          "cache_write_tokens": 2261,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2261
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 204,
+        "output_tokens_details": {
+          "reasoning_tokens": 83
+        },
+        "total_tokens": 2468
+      }
+    },
+    {
+      "restaurant": "baschly",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Bildinhalte selbst sind in den übergebenen Quellen nicht lesbar; daraus wurden keine Angaben abgeleitet.",
+        "Es ist nicht bestätigt, ob Baschly für die gesuchte Woche ein Mittagsangebot veröffentlicht hat.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 10,
+      "ai_only_examples": [],
+      "parser_only_examples": [
+        "2026-11-23: knackiger gemüse wok mit jasminreis frühlingsrolle und sweet chili sauce",
+        "2026-11-23: tandori chicken curry masala mit basmatireis allergene glutenfrei laktosefrei",
+        "2026-11-24: hühnerschnitzel mit kartoffelsalat und preiselbeeren",
+        "2026-11-24: öfen süss kartoffel mit gegrilltem gemüse parmesan und rukola salat auf kräuterjoghurt sauce",
+        "2026-11-25: crispy chicken mit gebratenem eierreis"
+      ],
+      "source_hashes": {
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "6f458d40c9a7b7c22b76b7bd490e48c1abb7e23bb133aa3708d45f357537080c",
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "773f62704c7b6171f544f05417f303f04fad22b773aa2842734a58c83d050229"
+      },
+      "usage": {
+        "input_tokens": 2749,
+        "input_tokens_details": {
+          "cache_write_tokens": 2746,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2746
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 301,
+        "output_tokens_details": {
+          "reasoning_tokens": 135
+        },
+        "total_tokens": 3050
+      }
+    },
+    {
+      "restaurant": "losteria",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Quelle belegt keine Zuordnung zu den angefragten Wochentagen 2026-11-23 bis 2026-11-27.",
+        "Allergene sind in der bereitgestellten Quelle nicht einzeln ausgewiesen."
+      ],
+      "ai_only_items": 4,
+      "parser_only_items": 0,
+      "ai_only_examples": [
+        "None: crema di patate con tartufo",
+        "None: pizza bianca tacchino e cipolletartufo di cielo",
+        "None: tagliatelle tartufo e funghi",
+        "None: tortina di mandorle"
+      ],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://losteria.net/at/menue/menu-della-casa/": "ffc6bece33f71597e2f454691984cb35adbcfdc03e8d76db7f95d78c3203b0e0"
+      },
+      "usage": {
+        "input_tokens": 1922,
+        "input_tokens_details": {
+          "cache_write_tokens": 1919,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 1919
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 875,
+        "output_tokens_details": {
+          "reasoning_tokens": 129
+        },
+        "total_tokens": 2797
+      }
+    },
+    {
+      "restaurant": "karmafood",
+      "issues": [
+        "source_error"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Der Zeitraum im Seitenkopf endet am 25.11.; Donnerstag und Freitag sind auf der Seite dennoch aufgeführt und wurden wegen der widersprüchlichen Datierung ausgelassen.",
+        "Für die Hauptgerichte ist kein Einzelpreis ausgewiesen, außer bei den ausdrücklich als „Special“ markierten Gerichten.",
+        "Die Seite weist „Lunch Combo €13,50“ aus, nennt aber nicht ausdrücklich, welche Bestandteile enthalten sind.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 9,
+      "parser_only_items": 0,
+      "ai_only_examples": [
+        "2026-11-23: chana masala quinoa bowl mit lemon tahini dip",
+        "2026-11-23: dal tadka mit roten linsen",
+        "2026-11-23: tofu tikka masala veggie curry",
+        "2026-11-24: fruchtiges chana veggie curry",
+        "2026-11-24: tandoori style veggie lasagne mit salat"
+      ],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "79e41533e1d95da1dee66c3467b59254fa44faa4f362bd873d42b7053a02987f"
+      },
+      "usage": {
+        "input_tokens": 2665,
+        "input_tokens_details": {
+          "cache_write_tokens": 2662,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2662
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 2355,
+        "output_tokens_details": {
+          "reasoning_tokens": 735
+        },
+        "total_tokens": 5020
+      }
     },
     {
       "restaurant": "topfdeckel",
       "issues": [],
       "action": "browser_import",
+      "repairs": []
+    },
+    {
+      "restaurant": "finn",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "dedicated_image_ai",
       "repairs": []
     },
     {
