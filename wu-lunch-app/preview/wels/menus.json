@@ -304,7 +304,20 @@
       "category": "Nachspeise"
      }
     ],
-    "2026-11-20": []
+    "2026-11-20": [
+     {
+      "name": "Schollenfilet im Knuspermantel (Ei+ Mandelsplitter) serviert mit Kartoffeln und Blattsalat",
+      "price": 12.9
+     },
+     {
+      "name": "Palatschinken mit Selchfleisch gebacken mit Kartoffeln, Sauerrazhmdip und gem. Salat",
+      "price": 12.9
+     },
+     {
+      "name": "Ofenkartoffel mit Grillgemüse und Sauerrahmdip",
+      "price": 12.9
+     }
+    ]
    },
    "import": {
     "state": "ok",
@@ -1335,5 +1348,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-19T12:46:59+01:00"
+ "updatedAt": "2026-11-20T12:47:41+01:00"
 }
