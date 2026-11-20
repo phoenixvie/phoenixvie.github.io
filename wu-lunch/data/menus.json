@@ -2,7 +2,7 @@
   "weekStart": "2026-11-16",
   "weekEnd": "2026-11-20",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-20T07:00:35+01:00",
+  "checkedAt": "2026-11-20T10:30:40+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -2473,7 +2473,7 @@
             "name": "Tomaten-Mozzarella Lasagne mit Spinat und frischem Salat",
             "price": 7.5,
             "category": "Hauptgericht",
-            "diet": "veggie",
+            "diet": "unknown",
             "description": "Preis klein / groß",
             "allergens": [],
             "included_soup": null,

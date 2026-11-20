@@ -1,117 +1,117 @@
 {
   "version": 1,
-  "previous_completed": "2026-11-19T20:42:44+00:00",
-  "menus_updated_at": "2026-11-19T11:46:08+00:00",
-  "menu_sha256": "551ebb86b0ff201f55d0070991990d49804a4b805d4ed42fd8c9ec2884dc3e55",
+  "previous_completed": "2026-11-20T06:01:12+00:00",
+  "menus_updated_at": "2026-11-20T09:31:06+00:00",
+  "menu_sha256": "904e2cc02986772d2c16e5f55483e87188014b17d315c8a3aa27a53d6c25c1c2",
   "run": {
-    "id": "44684703891",
+    "id": "44711227007",
     "event": "workflow_dispatch",
-    "started_at": "2026-11-20T06:00:34+00:00",
+    "started_at": "2026-11-20T09:30:39+00:00",
     "steps": [
       {
         "name": "parser",
-        "started_at": "2026-11-20T06:00:34+00:00",
-        "completed_at": "2026-11-20T06:00:40+00:00",
+        "started_at": "2026-11-20T09:30:39+00:00",
+        "completed_at": "2026-11-20T09:30:45+00:00",
         "exit_code": 0
       },
       {
         "name": "mensa_ai",
-        "started_at": "2026-11-20T06:00:40+00:00",
-        "completed_at": "2026-11-20T06:00:40+00:00",
+        "started_at": "2026-11-20T09:30:45+00:00",
+        "completed_at": "2026-11-20T09:30:45+00:00",
         "exit_code": 0
       },
       {
         "name": "finn_karma",
-        "started_at": "2026-11-20T06:00:41+00:00",
-        "completed_at": "2026-11-20T06:00:41+00:00",
+        "started_at": "2026-11-20T09:30:45+00:00",
+        "completed_at": "2026-11-20T09:30:46+00:00",
         "exit_code": 0
       },
       {
         "name": "html_ai",
-        "started_at": "2026-11-20T06:00:41+00:00",
-        "completed_at": "2026-11-20T06:00:51+00:00",
+        "started_at": "2026-11-20T09:30:46+00:00",
+        "completed_at": "2026-11-20T09:30:46+00:00",
         "exit_code": 0
       },
       {
         "name": "menu_sanity",
-        "started_at": "2026-11-20T06:00:51+00:00",
-        "completed_at": "2026-11-20T06:00:55+00:00",
+        "started_at": "2026-11-20T09:30:46+00:00",
+        "completed_at": "2026-11-20T09:30:51+00:00",
         "exit_code": 0
       },
       {
         "name": "observe",
-        "started_at": "2026-11-20T06:00:57+00:00",
-        "completed_at": "2026-11-20T06:01:12+00:00",
+        "started_at": "2026-11-20T09:30:54+00:00",
+        "completed_at": "2026-11-20T09:31:05+00:00",
         "exit_code": 0
       },
       {
         "name": "source_archive",
-        "started_at": "2026-11-20T06:01:12+00:00",
-        "completed_at": "2026-11-20T06:01:12+00:00",
+        "started_at": "2026-11-20T09:31:06+00:00",
+        "completed_at": "2026-11-20T09:31:06+00:00",
         "exit_code": 0
       }
     ],
-    "completed_at": "2026-11-20T06:01:12+00:00"
+    "completed_at": "2026-11-20T09:31:06+00:00"
   },
   "source_checks": {
     "baschly": {
-      "last_attempt": "2026-11-20T06:01:04+00:00",
-      "last_fetched": "2026-11-20T06:01:04+00:00",
+      "last_attempt": "2026-11-20T09:30:58+00:00",
+      "last_fetched": "2026-11-20T09:30:58+00:00",
       "successful_fetches": 4
     },
     "campus": {
-      "last_attempt": "2026-11-20T06:01:00+00:00",
-      "last_fetched": "2026-11-20T06:01:00+00:00",
+      "last_attempt": "2026-11-20T09:30:55+00:00",
+      "last_fetched": "2026-11-20T09:30:55+00:00",
       "successful_fetches": 2
     },
     "finn": {
-      "last_attempt": "2026-11-20T06:01:09+00:00",
-      "last_fetched": "2026-11-20T06:01:09+00:00",
+      "last_attempt": "2026-11-20T09:31:03+00:00",
+      "last_fetched": "2026-11-20T09:31:03+00:00",
       "successful_fetches": 3
     },
     "glashaus": {
-      "last_attempt": "2026-11-20T06:01:03+00:00",
-      "last_fetched": "2026-11-20T06:01:03+00:00",
+      "last_attempt": "2026-11-20T09:30:56+00:00",
+      "last_fetched": "2026-11-20T09:30:56+00:00",
       "successful_fetches": 1
     },
     "gruenehuette": {
-      "last_attempt": "2026-11-20T06:01:06+00:00",
-      "last_fetched": "2026-11-20T06:01:06+00:00",
+      "last_attempt": "2026-11-20T09:31:00+00:00",
+      "last_fetched": "2026-11-20T09:31:00+00:00",
       "successful_fetches": 1
     },
     "karmafood": {
-      "last_attempt": "2026-11-20T06:01:09+00:00",
-      "last_fetched": "2026-11-20T06:01:09+00:00",
+      "last_attempt": "2026-11-20T09:31:04+00:00",
+      "last_fetched": "2026-11-20T09:31:04+00:00",
       "successful_fetches": 1
     },
     "lia": {
-      "last_attempt": "2026-11-20T06:01:08+00:00",
-      "last_fetched": "2026-11-20T06:01:08+00:00",
+      "last_attempt": "2026-11-20T09:31:02+00:00",
+      "last_fetched": "2026-11-20T09:31:02+00:00",
       "successful_fetches": 1
     },
     "losteria": {
-      "last_attempt": "2026-11-20T06:01:05+00:00",
-      "last_fetched": "2026-11-20T06:01:05+00:00",
-      "successful_fetches": 3
+      "last_attempt": "2026-11-20T09:30:58+00:00",
+      "last_fetched": "2026-11-20T09:30:58+00:00",
+      "successful_fetches": 1
     },
     "mensa": {
-      "last_attempt": "2026-11-20T06:01:00+00:00",
-      "last_fetched": "2026-11-20T06:01:00+00:00",
+      "last_attempt": "2026-11-20T09:30:55+00:00",
+      "last_fetched": "2026-11-20T09:30:55+00:00",
       "successful_fetches": 1
     },
     "omakueche": {
-      "last_attempt": "2026-11-20T06:01:12+00:00",
-      "last_fetched": "2026-11-20T06:01:12+00:00",
+      "last_attempt": "2026-11-20T09:31:05+00:00",
+      "last_fetched": "2026-11-20T09:31:05+00:00",
       "successful_fetches": 1
     },
     "topfdeckel": {
-      "last_attempt": "2026-11-20T06:01:05+00:00",
-      "last_fetched": "2026-11-20T06:01:05+00:00",
+      "last_attempt": "2026-11-20T09:30:59+00:00",
+      "last_fetched": "2026-11-20T09:30:59+00:00",
       "successful_fetches": 2
     }
   },
-  "last_source_fetch": "2026-11-20T06:01:12+00:00",
-  "last_completed": "2026-11-20T06:01:12+00:00",
+  "last_source_fetch": "2026-11-20T09:31:05+00:00",
+  "last_completed": "2026-11-20T09:31:06+00:00",
   "week_start": "2026-11-16",
-  "archive_entries": 23
+  "archive_entries": 24
 }
