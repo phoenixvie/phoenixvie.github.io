@@ -525,8 +525,8 @@
     ]
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Hannibal zeigt die Woche ab 2026-11-23"
    }
   },
   {
@@ -1142,8 +1142,8 @@
     ]
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Naschmarkt zeigt die Woche ab 2026-11-23"
    }
   },
   {
@@ -1348,5 +1348,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-20T12:47:41+01:00"
+ "updatedAt": "2026-11-20T21:27:53+01:00"
 }
