@@ -2,7 +2,7 @@
   "weekStart": "2026-11-23",
   "weekEnd": "2026-11-27",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-21T13:00:36+01:00",
+  "checkedAt": "2026-11-21T18:00:35+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -27,19 +27,19 @@
       "id": "finn",
       "name": "Finn",
       "url": "https://finn.wien/blogs/news/mittagsmenu",
-      "status": "empty",
+      "status": "ai_crosschecked",
       "note": "Original-Wochenkarte als Bild; automatischer Bildimport nur nach aktueller Wochenprüfung",
-      "validFrom": null,
-      "validUntil": null
+      "validFrom": "2026-11-23",
+      "validUntil": "2026-11-27"
     },
     {
       "id": "lia",
       "name": "Lia Coffee WU",
       "url": "https://lia.coffee/",
-      "status": "not_published",
+      "status": "verified",
       "note": "",
-      "validFrom": null,
-      "validUntil": null
+      "validFrom": "2026-11-23",
+      "validUntil": "2026-11-27"
     },
     {
       "id": "campus",
@@ -1383,33 +1383,393 @@
       "monogram": "FI",
       "url": "https://finn.wien/blogs/news/mittagsmenu",
       "note": "Wochenbild, Wochenkennzeichnung und zwei KI-Modellprüfungen",
-      "status": "not_published",
+      "status": "ai_crosschecked",
       "days": {
-        "2026-11-23": [],
-        "2026-11-24": [],
-        "2026-11-25": [],
-        "2026-11-26": [],
-        "2026-11-27": []
+        "2026-11-23": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "ai_confidence": "two-model-price-agreement"
+          },
+          {
+            "name": "Süßkartoffel-Kicherebsen-Eintopf mit Reis",
+            "price": 10,
+            "category": "Vegan",
+            "diet": "vegan",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "VEGAN Süßkartoffel-Kicherebsen-Eintopf mit Reis L",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          },
+          {
+            "name": "Rindsgulasch mit Serviettenknödel",
+            "price": 10,
+            "category": "Fleisch",
+            "diet": "meat",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "FLEISCH Rindsgulasch mit Serviettenknödel ACGLO",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          }
+        ],
+        "2026-11-24": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "ai_confidence": "two-model-price-agreement"
+          },
+          {
+            "name": "Pilz-Gemüse-Gulasch mit Rösti und Sauerrahm",
+            "price": 10,
+            "category": "Veggie",
+            "diet": "veggie",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "VEGGIE Pilz-Gemüse-Gulasch mit Rösti und Sauerrahm GLO",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          },
+          {
+            "name": "Lasagne mit Tomatensauce und Parmesan",
+            "price": 10,
+            "category": "Fleisch",
+            "diet": "meat",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "FLEISCH Lasagne mit Tomatensauce und Parmesan ACGLO",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          }
+        ],
+        "2026-11-25": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "ai_confidence": "two-model-price-agreement"
+          },
+          {
+            "name": "Zucchini mit Käse-Reis-Gemüsefüllung und Tomatensauce",
+            "price": 10,
+            "category": "Veggie",
+            "diet": "veggie",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "VEGGIE Zucchini mit Käse-Reis-Gemüsefüllung und Tomatensauce GLO",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          },
+          {
+            "name": "Gegrillte Hühnerbrust mit Tomatensauce und Reis",
+            "price": 10,
+            "category": "Fleisch",
+            "diet": "meat",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "FLEISCH Gegrillte Hühnerbrust mit Tomatensauce und Reis LO",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          }
+        ],
+        "2026-11-26": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "ai_confidence": "two-model-price-agreement"
+          },
+          {
+            "name": "Pflanzliches Schnitzel mit Petersilkartoffeln",
+            "price": 10,
+            "category": "Veggie",
+            "diet": "veggie",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "VEGGIE Pflanzliches Schnitzel mit Petersilkartoffeln ACFL",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          },
+          {
+            "name": "Putenschnitzel mit Petersilkartoffeln",
+            "price": 10,
+            "category": "Fleisch",
+            "diet": "meat",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "FLEISCH Putenschnitzel mit Petersilkartoffeln AC",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          }
+        ],
+        "2026-11-27": [
+          {
+            "name": "Tagessuppe oder Salat",
+            "price": 3.5,
+            "category": "Suppe/Salat",
+            "diet": "unknown",
+            "description": "Separat erhältlich; nicht im Hauptgerichtpreis enthalten.",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "ai_confidence": "two-model-price-agreement"
+          },
+          {
+            "name": "Pasta mit Gemüse-Tomatensauce und Parmesan",
+            "price": 10,
+            "category": "Veggie",
+            "diet": "veggie",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "VEGGIE Pasta mit Gemüse-Tomatensauce und Parmesan AGLO",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          },
+          {
+            "name": "Gegrillter Zander mit Petersilkartoffeln",
+            "price": 10,
+            "category": "Fisch",
+            "diet": "meat",
+            "description": "",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": [],
+            "source_url": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
+            "evidence_excerpt": "FISCH Gegrillter Zander mit Petersilkartoffeln D",
+            "ai_confidence": "two-model-agreement",
+            "menu_options": [
+              {
+                "label": "Hauptgericht mit Suppe",
+                "total_price": 11.0
+              }
+            ]
+          }
+        ]
       },
       "seasonal": [],
-      "validFrom": null,
-      "validUntil": null
+      "validFrom": "2026-11-23",
+      "validUntil": "2026-11-27"
     },
     {
       "id": "lia",
       "name": "Lia Coffee WU",
       "monogram": "L",
       "url": "https://lia.coffee/",
-      "status": "not_published",
+      "status": "verified",
       "note": "",
-      "validFrom": null,
-      "validUntil": null,
+      "validFrom": "2026-11-23",
+      "validUntil": "2026-11-27",
       "days": {
-        "2026-11-23": [],
-        "2026-11-24": [],
-        "2026-11-25": [],
-        "2026-11-26": [],
-        "2026-11-27": []
+        "2026-11-23": [
+          {
+            "name": "Rindsgulasch mit Serviettenknödel",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Süßkartoffel-Kichererbsen-Eintopf mit Reis",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-24": [
+          {
+            "name": "Lasagne mit Tomatensauce und Parmesan",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Pilz-Gemüse-Gulasch mit Rösti und Sauerrahm",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-25": [
+          {
+            "name": "Gegrillte Hühnerbrust mit Tomatensauce und Reis",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Zucchini mit Käse-Reis-Gemüsefüllung und Tomatensauce",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-26": [
+          {
+            "name": "Putenschnitzel mit Petersilkartoffeln",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Pflanzliches Schnitzel mit Petersilkartoffeln",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-27": [
+          {
+            "name": "Gegrillter Zander mit Petersilkartoffeln",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Pasta mit Gemüse-Tomatensauce und Parmesan",
+            "price": 10.0,
+            "category": "Hauptgericht",
+            "diet": "unknown",
+            "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ]
       }
     },
     {

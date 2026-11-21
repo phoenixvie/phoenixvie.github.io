@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "restaurant_id": "lia",
+  "week_start": "2026-11-23",
+  "menu_sha256": "97fdf383aec0e1d5117aa2dd11e2225e46f73fdfe5174be71563d7df1eb260b9",
+  "captured_at": "2026-11-21T17:02:40+00:00",
+  "run_id": "44927593889",
+  "code_commit": "6539ed6d5f85caaf8cc30e35a9c9238f51957eaa",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "ok",
+    "last_success": "2026-11-21T18:00:35+01:00",
+    "consecutive_failures": 0,
+    "parser_version": 4,
+    "content_sha256": null
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-21T00:13:03+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-23",
+    "source_fingerprint": null,
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "lia",
+      "url": "https://lia.coffee/",
+      "at": "2026-11-21T17:00:38+00:00",
+      "sha256": "62c5ab1fd96b20c2e7bfc08172b11b06b2931a809c006ebae47f425ff7a2bef8",
+      "bytes": 228980,
+      "format": "html",
+      "blob": "62c5ab1fd96b20c2e7bfc08172b11b06b2931a809c006ebae47f425ff7a2bef8.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-23": [
+        {
+          "name": "Rindsgulasch mit Serviettenknödel",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Süßkartoffel-Kichererbsen-Eintopf mit Reis",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-24": [
+        {
+          "name": "Lasagne mit Tomatensauce und Parmesan",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Pilz-Gemüse-Gulasch mit Rösti und Sauerrahm",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-25": [
+        {
+          "name": "Gegrillte Hühnerbrust mit Tomatensauce und Reis",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Zucchini mit Käse-Reis-Gemüsefüllung und Tomatensauce",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-26": [
+        {
+          "name": "Putenschnitzel mit Petersilkartoffeln",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Pflanzliches Schnitzel mit Petersilkartoffeln",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-27": [
+        {
+          "name": "Gegrillter Zander mit Petersilkartoffeln",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Pasta mit Gemüse-Tomatensauce und Parmesan",
+          "price": 10.0,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Suppe oder Salat auf Wunsch; Preis bestätigt; AG-Sticker -1,00 €",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-23",
+    "validUntil": "2026-11-27"
+  }
+}

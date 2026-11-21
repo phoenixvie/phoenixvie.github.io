@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-21T13:01:02+01:00",
+  "checked_at": "2026-11-21T18:01:59+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
   "api_calls": 0,
@@ -8,14 +8,6 @@
       "restaurant": "topfdeckel",
       "issues": [],
       "action": "browser_import",
-      "repairs": []
-    },
-    {
-      "restaurant": "finn",
-      "issues": [
-        "source_not_published"
-      ],
-      "action": "dedicated_image_ai",
       "repairs": []
     },
     {

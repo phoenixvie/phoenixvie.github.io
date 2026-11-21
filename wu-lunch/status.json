@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-21T13:00:36+01:00",
+  "checked_at": "2026-11-21T18:00:35+01:00",
   "week_start": "2026-11-23",
   "week_end": "2026-11-27",
   "health": "degraded",
@@ -7,8 +7,8 @@
     "karmafood": {
       "state": "error",
       "last_success": "2026-11-17T17:25:04+01:00",
-      "checked_at": "2026-11-21T13:00:42+01:00",
-      "consecutive_failures": 4,
+      "checked_at": "2026-11-21T18:00:39+01:00",
+      "consecutive_failures": 5,
       "content_sha256": "95bb3bea2d99faf7f30f912b6cd730ab5655128d804020ad9348a28e1a372c31",
       "source_image": null,
       "review_version": null,
@@ -17,20 +17,19 @@
       "note": "Karma Food: ungewöhnliches Enddatum"
     },
     "finn": {
-      "state": "not_published",
-      "last_success": "2026-11-16T13:44:32+01:00",
-      "checked_at": "2026-11-21T13:00:42+01:00",
+      "state": "ok",
+      "last_success": "2026-11-21T18:00:39+01:00",
+      "checked_at": "2026-11-21T18:00:39+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "c88fdb45203f01bf46d9865b1554dec8bfde2f5665f04c8133b76ec4ab7b495e",
-      "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw47.jpg?v=1794780079",
+      "content_sha256": "58313a2c3ae047259f25991493a9f9606a72a9410f112afec747d986bcf97103",
+      "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
       "review_version": "image-v2-year-warning",
-      "review_week_start": "2026-11-16",
-      "source_pdf": null,
-      "note": "Finn: aktuelle deutschsprachige Wochenkarte noch nicht veröffentlicht"
+      "review_week_start": "2026-11-23",
+      "source_pdf": null
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-21T13:00:36+01:00",
+      "last_success": "2026-11-21T18:00:35+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -102,10 +101,11 @@
       "note": "Grüne Hütte: Plan ist nicht von aktueller Woche: 2026-11-16"
     },
     "lia": {
-      "state": "not_published",
-      "last_success": "2026-11-17T01:26:11+01:00",
+      "state": "ok",
+      "last_success": "2026-11-21T18:00:35+01:00",
       "consecutive_failures": 0,
-      "note": "Lia WU: kein gültiger Wochenplan für 2026-11-23 (veröffentlichte Daten: 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20)"
+      "parser_version": 4,
+      "content_sha256": null
     }
   },
   "problems": [
@@ -239,7 +239,7 @@
     }
   },
   "topf_browser_attempt": {
-    "at": "2026-11-21T13:01:02+01:00",
+    "at": "2026-11-21T18:01:59+01:00",
     "error": "Topf-Browser: Wochenquelle 2026-11-16 bis 2026-11-20 ist nicht aktuelle Woche 2026-11-23"
   },
   "quality_warnings": [],
