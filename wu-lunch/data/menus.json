@@ -2,7 +2,7 @@
   "weekStart": "2026-11-23",
   "weekEnd": "2026-11-27",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-21T18:00:35+01:00",
+  "checkedAt": "2026-11-21T19:00:50+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -81,10 +81,10 @@
       "id": "gruenehuette",
       "name": "Zur Grünen Hütte",
       "url": "https://www.zurgruenenhuette.com/mittags-menu",
-      "status": "not_published",
+      "status": "verified",
       "note": "",
-      "validFrom": null,
-      "validUntil": null
+      "validFrom": "2026-11-23",
+      "validUntil": "2026-11-27"
     },
     {
       "id": "glashaus",
@@ -1994,16 +1994,161 @@
       "name": "Zur Grünen Hütte",
       "monogram": "H",
       "url": "https://www.zurgruenenhuette.com/mittags-menu",
-      "status": "not_published",
+      "status": "verified",
       "note": "",
-      "validFrom": null,
-      "validUntil": null,
+      "validFrom": "2026-11-23",
+      "validUntil": "2026-11-27",
       "days": {
-        "2026-11-23": [],
-        "2026-11-24": [],
-        "2026-11-25": [],
-        "2026-11-26": [],
-        "2026-11-27": []
+        "2026-11-23": [
+          {
+            "name": "Schweinskotelette vom Grill mit Letschogemüse und Braterdäpfel",
+            "price": 13.5,
+            "category": "Tagesteller",
+            "diet": "unknown",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Buchweizenrisotto mit Champignons, Wurzelgemüse, Mozzarella u. Blattsalat",
+            "price": 13.5,
+            "category": "Vegetarisch",
+            "diet": "veggie",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Rote Rübensuppe mit Frischkäse",
+            "price": 2.0,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-24": [
+          {
+            "name": "Paprika mit Faschiertem, Reis und Gemüse gefüllt auf Paradeisersosse",
+            "price": 13.5,
+            "category": "Tagesteller",
+            "diet": "unknown",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Feine Kürbisquiche mit Maroni und Vogerlsalat mit Kernöl",
+            "price": 13.5,
+            "category": "Vegetarisch",
+            "diet": "veggie",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Rote Rübensuppe mit Frischkäse",
+            "price": 2.0,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-25": [
+          {
+            "name": "Szegediner Krautfleisch mit Kümmelerdäpfel und Sauerrahm",
+            "price": 13.5,
+            "category": "Tagesteller",
+            "diet": "unknown",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Melanzani-Lasagne mit Mozzarellahaube, Tomatensauce und Salat",
+            "price": 13.5,
+            "category": "Vegetarisch",
+            "diet": "veggie",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Rote Rübensuppe mit Frischkäse",
+            "price": 2.0,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-26": [
+          {
+            "name": "Schweinsbauch mit Semmelfülle, Speck-Krautsalat und Bratsaftl",
+            "price": 13.5,
+            "category": "Tagesteller",
+            "diet": "unknown",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Frische Pasta mit Gorgonzolasauce, Champignons, Walnusskaramell und Blattsalat",
+            "price": 13.5,
+            "category": "Vegetarisch",
+            "diet": "veggie",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Rote Rübensuppe mit Frischkäse",
+            "price": 2.0,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ],
+        "2026-11-27": [
+          {
+            "name": "Frischer Kabeljau gebacken mit Erdäpfelsalat",
+            "price": 14.5,
+            "category": "Tagesteller",
+            "diet": "unknown",
+            "description": "Suppe optional +2,00 €",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          },
+          {
+            "name": "Suppen zur Auswahl: Frittatensuppe, Griessnockerlsuppe, Leberknödelsuppe oder, Rote Rübensuppe mit Frischkäse",
+            "price": 2.0,
+            "category": "Suppe (Aufpreis)",
+            "diet": "unknown",
+            "description": "Optional zum Tagesteller; +2,00 €, kein eigener Hauptgerichtpreis",
+            "allergens": [],
+            "included_soup": null,
+            "included_choices": []
+          }
+        ]
       }
     },
     {

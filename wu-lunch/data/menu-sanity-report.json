@@ -2,7 +2,7 @@
   "version": "menu-sanity-v2-word-forms-and-courses",
   "model": "gpt-6-luna",
   "week_start": "2026-11-23",
-  "checked_at": "2026-11-21T17:02:04.237092+00:00",
+  "checked_at": "2026-11-21T18:01:20.678379+00:00",
   "cleanup": [],
   "issues": [],
   "state": "passed",
@@ -15,7 +15,7 @@
     "karmafood": "418ab637e827102887d1410949a5cde996a54f3fcfe4c0d454a5e1bc87511ae9",
     "topfdeckel": "98b822f05250f1b3d779fd4f0ddc1aed2f083afb28ea1c085bf52f445114aa77",
     "omakueche": "4492eb8b88d551604b21c6034cbded644c69d2a8dc86d5504a77d983a0e023e6",
-    "gruenehuette": "3933b9b60dde8fd4b66e725981bbaafae45e79ca4bdc1b466e9ca2806c054348",
+    "gruenehuette": "c3eff07062a9bf6f05997e7c5a450643832f5b0a594439b30c9c07dd52ce7eef",
     "glashaus": "562608e1e4e60f812bf89cbef825a7fd894bffefac7803575699bf14d6c9512d",
     "losteria": "2bf518a245b7c809dd59657c26444f7895f89e8d6aa9e760c14e2c9a8387cf07"
   }

@@ -297,6 +297,15 @@
       "menu_status": "verified",
       "manifest": "2026-11-23/lia/97fdf383aec0e1d5117aa2dd11e2225e46f73fdfe5174be71563d7df1eb260b9/manifest.json",
       "source_count": 1
+    },
+    {
+      "restaurant_id": "gruenehuette",
+      "week_start": "2026-11-23",
+      "menu_sha256": "b480dcd5ac1fdb2db06fdea756842c3dfa48af5264cb2a41ca6e8fa14261cbc5",
+      "captured_at": "2026-11-21T18:01:44+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-23/gruenehuette/b480dcd5ac1fdb2db06fdea756842c3dfa48af5264cb2a41ca6e8fa14261cbc5/manifest.json",
+      "source_count": 2
     }
   ]
 }
