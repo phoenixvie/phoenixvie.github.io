@@ -614,14 +614,54 @@
    "brandColor": "#b0607a",
    "days": {
     "2026-11-23": [],
-    "2026-11-24": [],
-    "2026-11-25": [],
-    "2026-11-26": [],
-    "2026-11-27": []
+    "2026-11-24": [
+     {
+      "name": "Rindsuppe mit Backerbsen – Cordon Bleu mit Reis",
+      "price": 14.9
+     },
+     {
+      "name": "Wrap mit Pommes",
+      "price": 14.9,
+      "description": "Vegetarisches Wochengericht"
+     }
+    ],
+    "2026-11-25": [
+     {
+      "name": "Gemüsesuppe – Kalbgeschnetzeltes mit Nockerl",
+      "price": 14.9
+     },
+     {
+      "name": "Wrap mit Pommes",
+      "price": 14.9,
+      "description": "Vegetarisches Wochengericht"
+     }
+    ],
+    "2026-11-26": [
+     {
+      "name": "Kartoffelcremesuppe – Faschierter Braten mit Kartoffeln und Bratensaft",
+      "price": 14.9
+     },
+     {
+      "name": "Wrap mit Pommes",
+      "price": 14.9,
+      "description": "Vegetarisches Wochengericht"
+     }
+    ],
+    "2026-11-27": [
+     {
+      "name": "Hühnerbrust im Knoblauchrahmsauce – Schokomousse",
+      "price": 14.9
+     },
+     {
+      "name": "Wrap mit Pommes",
+      "price": 14.9,
+      "description": "Vegetarisches Wochengericht"
+     }
+    ]
    },
    "import": {
-    "state": "not_published",
-    "message": "La lina zeigt die Woche ab 2026-11-17"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -777,5 +817,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-21T03:22:08+01:00"
+ "updatedAt": "2026-11-21T19:02:18+01:00"
 }
