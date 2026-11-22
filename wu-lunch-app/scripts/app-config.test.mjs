@@ -60,6 +60,9 @@ test('iOS build requires arm64, not the outdated armv7 that Expo writes by defau
   // Prüfgerät (iPad Air M3, iPadOS 27) nicht installieren. Alle unterstützten Geräte sind arm64.
   const ios = (await json('app.json')).expo.ios;
   assert.deepEqual(ios.infoPlist.UIRequiredDeviceCapabilities, ['arm64']);
+  // Restaurant-Webseiten öffnen im eingebauten Browser; einzelne liefern noch http-Inhalte. Apple akzeptiert die
+  // Ausnahme nur für Web-Inhalte ohne Begründung; beliebige unverschlüsselte Verbindungen bleiben verboten.
+  assert.deepEqual(ios.infoPlist.NSAppTransportSecurity, {NSAllowsArbitraryLoads: false, NSAllowsArbitraryLoadsInWebContent: true, NSAllowsLocalNetworking: true});
   assert.ok(Number(ios.buildNumber) >= 2, 'jeder Upload braucht eine neue Build-Nummer');
 });
 

@@ -9,7 +9,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "at.startit.wufood",
-      "buildNumber": "2",
+      "buildNumber": "3",
       "supportsTablet": false,
       "icon": "./assets/icon-ios.png",
       "infoPlist": {
@@ -17,6 +17,11 @@
         "UIRequiredDeviceCapabilities": [
           "arm64"
         ],
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSAllowsArbitraryLoadsInWebContent": true,
+          "NSAllowsLocalNetworking": true
+        },
         "CFBundleDevelopmentRegion": "de",
         "CFBundleLocalizations": [
           "de",
