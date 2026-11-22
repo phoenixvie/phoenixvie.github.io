@@ -224,6 +224,8 @@ test('Meet to eat icons are bundled as SVG and inherit their screen colours', as
     assert.match(icons[name], /<svg/); assert.match(icons[name], /class="material-svg"/);
   }
   assert.match(css,/\.meet-fact>\.material-svg\{[^}]*color:#6f8192/);
+  // Werte der Tabelle fett, Namensliste nicht (Vorgabe 22.11.2026).
+  assert.match(css,/\.meet-fact:not\(\.meet-people\)>div>span\{font-weight:700\}\.meet-date-picker select\{font-weight:700\}/);
   assert.match(css,/\.meet-person \.material-svg\{[^}]*color:#8a98a5/);
   assert.match(css,/\.meet-brand-logo \.material-svg\{[^}]*width:34px/);
 });
