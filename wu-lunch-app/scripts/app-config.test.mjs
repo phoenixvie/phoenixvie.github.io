@@ -121,3 +121,15 @@ test('adaptive Android icon shows the cutlery large, cut slightly by the lower e
   const upper = image.at(size / 2, 2), lower = image.at(size / 2, size - 3);
   assert.ok(lower[0] + lower[1] > upper[0] + upper[1], 'Verlauf (oben dunkler, unten heller) bleibt erhalten');
 });
+
+test('portrait orientation is declared as optional hardware, so Google Play does not restrict availability', async () => {
+  // Google Play meldete bei 0.5.8: „Erklärungen zu erforderlichen Hardwarefunktionen schränken die Verfügbarkeit ein"
+  // (android.hardware.screen.portrait, abgeleitet aus der Hochformat-Festlegung). verify-apk.py prüft das fertige APK.
+  const app = (await json('app.json')).expo;
+  assert.ok(app.plugins.includes('./plugins/optional-portrait'));
+  const {createRequire} = await import('node:module');
+  const {addOptionalPortrait} = createRequire(import.meta.url)('../plugins/optional-portrait.js');
+  const manifest = addOptionalPortrait({'uses-feature': [{$: {'android:name': 'android.hardware.screen.portrait'}}, {$: {'android:name': 'x'}}]});
+  assert.deepEqual(manifest['uses-feature'], [{$: {'android:name': 'x'}}, {$: {'android:name': 'android.hardware.screen.portrait', 'android:required': 'false'}}]);
+  assert.deepEqual(addOptionalPortrait({})['uses-feature'].length, 1);
+});

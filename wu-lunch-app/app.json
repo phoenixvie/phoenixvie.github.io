@@ -6,6 +6,7 @@
     "version": "0.5.9",
     "icon": "./assets/icon.png",
     "orientation": "portrait",
+    "plugins": ["./plugins/optional-portrait"],
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "at.startit.wufood",

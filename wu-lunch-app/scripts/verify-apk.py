@@ -24,6 +24,10 @@ assert f"versionCode='{version_code}'" in badging, 'APK has the wrong version co
 assert f"versionName='{version}'" in badging, 'APK has the wrong version name'
 assert "name='at.startit.wufood'" in badging, 'APK has the wrong application id'
 # Nur die Internet-Berechtigung (plus die interne von Android); keine ungenutzten Berechtigungen der Vorlage.
+# Hochformat darf keine Pflicht-Hardware sein, sonst warnt Google Play vor eingeschränkter Verfügbarkeit.
+assert "uses-feature-not-required: name='android.hardware.screen.portrait'" in badging, 'Portrait screen must be declared as an optional feature'
+required_features = set(re.findall(r"uses-feature: name='([^']+)'", badging))
+assert 'android.hardware.screen.portrait' not in required_features, 'Portrait screen is still a required feature'
 permissions = set(re.findall(r"uses-permission: name='([^']+)'", badging))
 allowed = {'android.permission.INTERNET', 'at.startit.wufood.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'}
 assert permissions <= allowed, f'APK requests unexpected permissions: {sorted(permissions - allowed)}'
