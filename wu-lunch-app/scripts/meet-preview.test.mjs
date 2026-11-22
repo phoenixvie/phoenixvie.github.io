@@ -28,7 +28,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   vm.createContext(context);vm.runInContext(source,context);
   const click=async (action,slot)=>{handlers.click({target:{closest:()=>({dataset:{action,slot}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));};
   await click('meet-preview');
-  assert.equal(context.meetSlot,0);assert.match(context.renderMeet(),/Meet to eat/);assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet/);
+  assert.equal(context.meetSlot,0);assert.match(context.renderMeet(),/Meet to eat/);assert.match(context.renderMeet(),/Bereits angemeldet<\/strong><span>Noch niemand – sei die erste Person\./);
   assert.match(context.renderMeet(),/WU-Studenten Gruppe/);assert.doesNotMatch(context.renderMeet(),/Testvorschau|Testteilnehmer|Testtermin/);
   // Keine Terminleiste, keine Wischpunkte, kein Wischen. Das Datum ist eine Auswahlliste mit genau
   // zwei Terminen: dem nächsten und dem danach.
@@ -78,7 +78,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   // Der Treffpunkt in der Übersicht ist ein Link zu Google Maps.
   assert.match(context.renderMeet(),/<a data-action="meet-open-url"[^>]*href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
   await click('meet-leave');assert.equal(own.length,0);
-  assert.doesNotMatch(context.renderMeet(),/Bereits angemeldet|Noch niemand angemeldet|meet-reveal|meet-map/);assert.equal(context.meetJoined,false);
+  assert.doesNotMatch(context.renderMeet(),/meet-reveal|meet-map|meet-own/);assert.match(context.renderMeet(),/Noch niemand – sei die erste Person/);assert.equal(context.meetJoined,false);
   // Abgemeldet, Name lokal gemerkt: erneutes Anmelden braucht kein Formular mehr.
   assert.equal(store.get('wu-meet-preview-name'),'Anna');
   store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);
@@ -358,4 +358,45 @@ test('first letter of the first name is capitalised automatically, also while ty
   for(const [typed,shown] of [['a','A'],['anna','Anna'],['anna-lena','Anna-Lena'],['élodie','Élodie'],['ÖZGE','ÖZGE'],['Max','Max'],['','']])assert.equal(type(typed).value,shown,typed);
   const field=type('mia');assert.equal(field.cursor,3,'Schreibmarke bleibt am Ende');
   const other={id:'meet-date',value:'x'};handlers.input({target:other});assert.equal(other.value,'x');   // andere Felder bleiben unberührt
+});
+
+test('UX follow-ups: one active sign-up per device, long names get a message, load errors offer a retry, English alt texts', async () => {
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const handlers={}, store=new Map(); let session={user:{id:'anon-1'}}, own=[], failLoad=false, inserts=0;
+  const client={auth:{getSession:async()=>({data:{session},error:null}),signInAnonymously:async()=>({data:{session},error:null})},
+    from:()=>({select(){return {in:async()=>failLoad?{data:null,error:new Error('Failed to fetch')}:{data:own,error:null},gte:async()=>failLoad?{data:null,error:new Error('Failed to fetch')}:{data:own,error:null}}},insert:async row=>{inserts++;own.push(row);return {error:null}},
+      delete(){return {eq(){return {eq:async(_key,date)=>{own=own.filter(item=>item.meeting_date!==date);return {error:null}}}}}}})};
+  const inputs={'meet-first-name':{value:''}};
+  const context={window:{supabase:{createClient:()=>client}},navigator:{onLine:false},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
+    app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:id=>inputs[id]},localStorage:{getItem:k=>store.get(k),setItem:(k,v)=>store.set(k,v),removeItem:k=>store.delete(k)},
+    setInterval(){},console:{...console,error(){}},Intl,Date:FixedDate,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:(d,o)=>o?.weekday?'Mittwoch, 18. November':d,localize:{label:key=>({'Personen kommen an einem Treffpunkt zum gemeinsamen Essen zusammen':'People meet at a meeting point to eat together','Treffpunkt vor dem Baum bei der Mensa':'Meeting point in front of the tree next to the Mensa'}[key]||key)}};
+  vm.createContext(context);vm.runInContext(source,context);
+  const click=async action=>{handlers.click({target:{closest:()=>({dataset:{action}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));};
+  const change=async value=>{handlers.change({target:{id:'meet-date',value}});for(let i=0;i<4;i++)await new Promise(resolve=>setImmediate(resolve));};
+  // Offline: klare Meldung und Knopf „Erneut versuchen“, der neu lädt.
+  failLoad=true;await click('meet-preview');
+  assert.match(context.renderMeet(),/Keine Verbindung\. Bitte prüfe dein Internet und versuche es erneut\./);
+  assert.match(context.renderMeet(),/<button class="meet-secondary meet-retry" data-action="meet-retry">Erneut versuchen<\/button>/);
+  failLoad=false;await click('meet-retry');assert.doesNotMatch(context.renderMeet(),/Keine Verbindung|meet-retry/);
+  // 25 Zeichen: Meldung statt stillem Kürzen; das Feld erlaubt die Eingabe (maxlength 40).
+  assert.match(context.renderMeet(),/id="meet-first-name"[^>]*maxlength="40"/);
+  inputs['meet-first-name'].value='Abcdefghijklmnopqrstuvwxy';await click('meet-show-form');
+  assert.equal(inserts,0);assert.match(context.renderMeet(),/höchstens 20 Zeichen/);
+  // Anmeldung für den nächsten Termin, dann zum übernächsten wechseln: Hinweis statt Formular, keine zweite Anmeldung.
+  inputs['meet-first-name'].value='Testa';await click('meet-show-form');assert.equal(inserts,1);
+  const dates=[...context.renderMeet().matchAll(/<option value="(\d{4}-\d\d-\d\d)"/g)].map(m=>m[1]);assert.equal(dates.length,2);
+  await change(dates[1]);
+  const other=context.renderMeet();
+  assert.match(other,/Du bist bereits für Mittwoch, 18\. November angemeldet\. Melde dich dort ab, wenn du lieber zu diesem Termin kommst\./);
+  assert.doesNotMatch(other,/id="meet-first-name"|data-action="meet-show-form"/);
+  await click('meet-show-form');assert.equal(inserts,1,'keine zweite Anmeldung');
+  // Zurück zum ersten Termin: eigene Anmeldung mit Kreuz, Foto mit englischem Alt-Text (Übersetzung aus dem Katalog).
+  await change(dates[0]);
+  assert.match(context.renderMeet(),/alt="Meeting point in front of the tree next to the Mensa"/);
+  assert.match(context.renderMeet(),/aria-label="People meet at a meeting point to eat together"/);
+  // Kreuz zum Abmelden ist groß genug (CSS) und entfernt die Anmeldung.
+  const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8');
+  assert.match(css,/\.meet-own \.meet-remove\{[^}]*padding:12px/);
+  await click('meet-leave');assert.equal(own.length,0);assert.match(context.renderMeet(),/Noch niemand – sei die erste Person/);
 });

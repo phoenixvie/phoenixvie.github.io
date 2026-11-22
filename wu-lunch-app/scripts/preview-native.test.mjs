@@ -51,7 +51,7 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.match(app.innerHTML,/<h1>WU Mensa<\/h1>/);
   assert.match(app.innerHTML,/weekday active" data-day="3"/);
   await click({action:'share'});
-  assert.equal(messages.at(-1).text,'Gehen wir heute WU Mensa zu Mittag?');
+  assert.equal(messages.at(-1).text,'Gehen wir heute zu WU Mensa Mittag essen? https://phoenixvie.github.io/wu-lunch-app/preview/?restaurant=mensa');
   await click({detail:'info'});
   assert.match(app.innerHTML,/<h1>Restaurant<\/h1>/);
   assert.match(app.innerHTML,/data-detail="info"[^>]*><span[^>]*>info<\/span>Restaurant/);
@@ -134,4 +134,48 @@ test('iOS screenshots can open a view by launch argument; anything else is ignor
   assert.match(native, /window\.WU_START_SCREEN='\$\{startScreen\}'/);
   assert.match(app, /String\(window\.WU_START_SCREEN\|\|''\)\.split\(':'\)/);
   assert.match(meet, /window\.WU_START_SCREEN === 'meet'/);
+});
+
+test('UX follow-ups in the restaurant screens: readable small print, decorative dots and logos, diet badges, share, map fit, readable umlaut hosts', async () => {
+  const read = path => readFile(new URL(path, import.meta.url), 'utf8');
+  const [app, css] = await Promise.all([read('../preview/app.js'), read('../preview/style.css')]);
+  // Kleinschrift mindestens 12,5 px in dunklerem Grau; Fußzeile 13 px.
+  assert.match(css, /\.source-note\{color:#6b6b6b;font-size:12\.5px/);
+  assert.match(css, /\.list-footer a\{[^}]*color:#5f6a75;font-size:13px/);
+  assert.match(app, /size>10\.5\)\{size-=0\.25/);
+  // Wischpunkte sind reine Anzeige (keine 7-px-Tippziele, keine doppelten Fokus-Stopps); Logos dekorativ.
+  assert.match(app, /<div class="day-dots" aria-hidden="true">\$\{ds\.map\(\(x,i\)=>`<span class="day-dot/);
+  assert.doesNotMatch(app, /class="day-dot[^"]*" data-day/);
+  assert.match(app, /alt="" aria-hidden="true">`;/);
+  assert.match(app, /aria-hidden="true">\$\{esc\(letter\)\}<\/span>`\}/);
+  // Vegetarisch/vegan aus dem Import am Gericht.
+  const context = {};
+  vm.createContext(context);
+  vm.runInContext(app.slice(app.indexOf('const dietBadge='), app.indexOf('\n', app.indexOf('const dietBadge='))).replace('const dietBadge=', 'var dietBadge='), context);
+  assert.equal(context.dietBadge({diet: 'veggie'}), '<span class="dish-diet">vegetarisch</span>');
+  assert.equal(context.dietBadge({diet: 'vegan'}), '<span class="dish-diet">vegan</span>');
+  assert.equal(context.dietBadge({diet: 'meat'}), ''); assert.equal(context.dietBadge({}), '');
+  assert.match(app, /\$\{dietBadge\(d\)\}<\/span><span class="dish-price">/);
+  // Umlaut-Adressen lesbar; gewöhnliche Adressen unverändert.
+  const linkContext = {};
+  vm.createContext(linkContext);
+  const start = app.indexOf('function punyDecode('), end = app.indexOf('\n', app.indexOf('const linkLabel='));
+  vm.runInContext(app.slice(start, end).replace('const readableHost=', 'var readableHost=').replace('const linkLabel=', 'var linkLabel='), linkContext);
+  assert.equal(linkContext.linkLabel('https://www.xn--omakche-q2a.at/'), 'www.omaküche.at');
+  assert.equal(linkContext.linkLabel('https://www.xn--mnchen-3ya.de/speisekarte/'), 'www.münchen.de/speisekarte');
+  assert.equal(linkContext.linkLabel('https://www.wumensa.at/menuplan-deutsch/'), 'www.wumensa.at/menuplan-deutsch');
+  // Pins: zwei Buchstaben nur bei gleichem Anfangsbuchstaben.
+  const pins = {};
+  vm.createContext(pins);
+  vm.runInContext(app.slice(app.indexOf('function pinLabels('), app.indexOf('\n', app.indexOf('function pinLabels('))), pins);
+  const label = pins.pinLabels([{name: 'WU Mensa'}, {name: 'Das Campus'}, {name: 'Das Glashaus'}, {name: 'Finn'}]);
+  assert.deepEqual([{name: 'WU Mensa'}, {name: 'Das Campus'}, {name: 'Das Glashaus'}, {name: 'Finn'}].map(label), ['M', 'DC', 'DG', 'F']);
+  // Karte: alle Pins einpassen, Zoom-Knöpfe, Ladetext weg; Teilen-Knopf im Kopf mit Link zur App.
+  assert.match(app, /map\.fitBounds\(bounds,\{padding:/);
+  assert.match(app, /new maplibregl\.NavigationControl\(\{showCompass:false/);
+  assert.match(app, /element\.innerHTML='';map=new maplibregl\.Map/);
+  assert.match(app, /<button type="button" class="share" data-action="share" aria-label="Teilen">/);
+  assert.match(app, /preview\/\?restaurant='\+encodeURIComponent\(selectedId\)/);
+  // Menü-Link nur, wenn er sich von der Webseite unterscheidet.
+  assert.match(app, /menuWebsite&&menuWebsite\.replace\(\/\\\/\+\$\/,''\)!==website\.replace/);
 });
