@@ -65,7 +65,7 @@
 .restaurant-row,.map-selected{color:inherit}
 .meet-content a.meet-report{display:inline-block;margin-top:6px;font-size:12px;color:#6f8192}
 /* UX-Test 22.11.2026: Kennzeichnung vegetarisch/vegan, Teilen-Knopf, zweibuchstabige Pins, Erneut versuchen */
-.dish-diet{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:999px;background:#e6f4ea;color:#1e6b3a;font-size:11px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.dish-diet{display:inline-flex;align-items:center;gap:2px;margin-left:5px;color:#8a949e;font-size:11px;font-weight:400;vertical-align:-3px;white-space:nowrap}.dish-diet svg{width:16px;height:16px;fill:currentColor}
 .top.detail .share{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:0;color:#fff;padding:10px;line-height:0}.top.detail .share .material-svg{width:22px;height:22px;color:#fff}
 .map-letter-pin.two{font-size:13px;padding-top:8px;letter-spacing:-.3px}
 .meet-retry{margin-top:10px}

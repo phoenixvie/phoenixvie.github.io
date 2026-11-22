@@ -1,5 +1,5 @@
 -- WU Food: Einstellungen des Betreibers, die ohne neue App-Version wirken (Stand 22.11.2026):
---   meet_weekdays   Wochentage von Meet to eat (1 = Montag … 5 = Freitag)
+--   meet_weekdays   Wochentage von Meet to eat (1 = Montag … 5 = Freitag), Vorgabe Mittwoch
 --   update_notice   manuell ausgelöster Update-Hinweis für ältere App-Versionen
 -- Einmal im Supabase-Projekt (SQL-Editor) ausführen; kann gefahrlos wiederholt werden.
 -- Alle dürfen lesen (die App braucht die Werte), nur der Admin darf schreiben.
@@ -20,11 +20,12 @@ drop policy if exists "lunch admins update settings" on public.lunch_settings;
 create policy "lunch admins update settings" on public.lunch_settings for update to authenticated
   using ((select private.is_lunch_admin())) with check ((select private.is_lunch_admin()));
 insert into public.lunch_settings (key, value) values
-  ('meet_weekdays', '[1, 3]'::jsonb),
+  ('meet_weekdays', '[3]'::jsonb),
   ('update_notice', '{"enabled": false, "min_version": "", "message_de": "", "message_en": ""}'::jsonb)
 on conflict (key) do nothing;
 
 -- Meet to eat: Anmeldungen sind an den eingestellten Wochentagen möglich (bisher fest Montag und Mittwoch).
+-- Wurde diese Datei schon einmal mit der alten Vorgabe ausgeführt, den Tag im Admin unter „Meet to eat: Wochentage“ umstellen.
 alter table public.meet_preview_registrations drop constraint if exists meet_preview_monday_wednesday;
 alter table public.meet_preview_registrations drop constraint if exists meet_preview_registrations_meeting_date_check;
 alter table public.meet_preview_registrations drop constraint if exists meet_preview_weekday;

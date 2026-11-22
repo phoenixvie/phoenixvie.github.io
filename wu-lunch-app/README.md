@@ -79,7 +79,7 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 ## Einstellungen ohne App-Update (Stand 22.11.2026)
 
 - Tabelle `lunch_settings` in Supabase (`wu-lunch/supabase/20261122_settings.sql`), im Admin der Webseite bearbeitbar; die App lädt sie beim Start, alle fünf Minuten und beim Zurückkehren in den Vordergrund.
-- `meet_weekdays`: Wochentage von Meet to eat (1 = Montag … 5 = Freitag, Vorgabe Montag und Mittwoch). Termine, Einleitung („Findet jeden … statt.") und der Hinweis unter dem Menü („Mittwochs gemeinsam essen gehen.") folgen der Einstellung; die Datenbank prüft den Wochentag gegen dieselbe Einstellung.
+- `meet_weekdays`: Wochentage von Meet to eat (1 = Montag … 5 = Freitag, Vorgabe Mittwoch). Termine, Einleitung („Findet jeden … statt.") und der Hinweis unter dem Menü („Mittwochs gemeinsam essen gehen.") folgen der Einstellung; die Datenbank prüft den Wochentag gegen dieselbe Einstellung.
 - `update_notice`: manuell ausgelöster Update-Hinweis. Er erscheint nur in der installierten App (ab 0.5.6, sie nennt ihre Version in `window.WU_APP`) und nur, wenn die Version älter ist als `min_version`. „Jetzt aktualisieren" öffnet den Store (fester Link in `App.tsx`), „Später" blendet bis zum nächsten Start aus.
 - Fehlt die Tabelle, gelten die Vorgaben und es erscheint kein Hinweis.
 

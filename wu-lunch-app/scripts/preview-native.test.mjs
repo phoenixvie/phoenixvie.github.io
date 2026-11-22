@@ -151,9 +151,11 @@ test('UX follow-ups in the restaurant screens: readable small print, decorative 
   // Vegetarisch/vegan aus dem Import am Gericht.
   const context = {};
   vm.createContext(context);
-  vm.runInContext(app.slice(app.indexOf('const dietBadge='), app.indexOf('\n', app.indexOf('const dietBadge='))).replace('const dietBadge=', 'var dietBadge='), context);
-  assert.equal(context.dietBadge({diet: 'veggie'}), '<span class="dish-diet">vegetarisch</span>');
-  assert.equal(context.dietBadge({diet: 'vegan'}), '<span class="dish-diet">vegan</span>');
+  vm.runInContext(app.slice(app.indexOf('const leafIcon='), app.indexOf('\n', app.indexOf('const dietBadge='))).replace('const dietBadge=', 'var dietBadge='), context);
+  // Graues Blatt-Symbol statt Text; die Bedeutung steht für Screenreader im aria-label (wird ins Englische übersetzt).
+  assert.match(context.dietBadge({diet: 'veggie'}), /^<span class="dish-diet" role="img" aria-label="vegetarisch"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="[^"]+"\/><\/svg><\/span>$/);
+  assert.match(context.dietBadge({diet: 'vegan'}), /^<span class="dish-diet" role="img" aria-label="vegan"><svg[^>]*>.*<\/svg><span aria-hidden="true">vegan<\/span><\/span>$/);
+  assert.match(css, /\.dish-diet\{[^}]*color:#8a949e/);
   assert.equal(context.dietBadge({diet: 'meat'}), ''); assert.equal(context.dietBadge({}), '');
   assert.match(app, /\$\{dietBadge\(d\)\}<\/span><span class="dish-price">/);
   // Umlaut-Adressen lesbar; gewöhnliche Adressen unverändert.

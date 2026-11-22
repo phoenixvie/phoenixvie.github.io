@@ -20,7 +20,7 @@ Auffälligkeiten meldet. Es geht um Bedienbarkeit, Verständlichkeit und Vertrau
 2. Jeder Befund bekommt: Persona, Schritt, Gerät/Ausgabe, Erwartung, Beobachtung, Schweregrad, Screenshot.
 3. Schweregrade: **A** Abbruch (Ziel nicht erreichbar, Absturz, falsche Daten) · **B** Hürde (Ziel mit Umweg oder Verwirrung erreicht) · **C** Schönheitsfehler · **W** Wunsch/Idee.
 4. **Echte Daten:** Meet to eat arbeitet mit der echten Datenbank. Namen, die du einträgst, sehen alle. Verwende nur den Vornamen `Testa`, melde dich am Ende jedes Durchlaufs wieder ab und prüfe, dass `Testa` verschwunden ist. Trage niemals mehr als eine Testanmeldung gleichzeitig ein.
-5. **Uhrzeit (Wien):** Die App richtet sich nach der Wiener Zeit. Montags und mittwochs zwischen 12:05 und 14:00 Uhr ist die Anmeldung für den angezeigten Termin geschlossen; ab 14:00 rückt der nächste Termin nach. Am Wochenende zeigt die Menüansicht die kommende Woche („Noch nicht veröffentlicht", solange die Lokale nichts veröffentlicht haben). Notiere bei jedem Durchlauf Datum und Uhrzeit.
+5. **Uhrzeit (Wien):** Die App richtet sich nach der Wiener Zeit. Meet to eat findet mittwochs statt (im Admin änderbar). Am Termintag zwischen 12:05 und 14:00 Uhr ist die Anmeldung für den angezeigten Termin geschlossen; ab 14:00 rückt der nächste Termin nach. Am Wochenende zeigt die Menüansicht die kommende Woche („Noch nicht veröffentlicht", solange die Lokale nichts veröffentlicht haben). Notiere bei jedem Durchlauf Datum und Uhrzeit.
 6. Sprache: Die App startet in der Systemsprache (Deutsch oder Englisch), „Change language." unter jedem Menü wechselt. Prüfe jede Persona in ihrer Sprache und einmal den Wechsel.
 7. Keine Bewertung der Küche, keine Preisvergleiche. Menüinhalte nur stichprobenartig mit der Lokal-Webseite vergleichen (Abschnitt 4).
 
@@ -121,7 +121,7 @@ Jedes Szenario: Schritte ausführen, Erwartung prüfen, abweichende Beobachtung 
 2. Doppelt anmelden: nach „Teilnehmen" sofort nochmals (anderer Termin). Erwartung: höchstens eine aktive Anmeldung pro Gerät; Verhalten beim zweiten Termin dokumentieren (Fehlermeldung verständlich?).
 3. Fremde Namen: Gibt es eine Möglichkeit, andere zu löschen? Erwartung: nein; nur „Unpassenden Namen melden" (öffnet Mail an Kontaktadresse mit Betreff).
 4. Schnell tippen: „Teilnehmen" fünfmal hintereinander. Erwartung: Knopf gesperrt, keine Mehrfacheinträge.
-5. Zeitgrenzen (wenn möglich zu diesen Zeiten testen): Montag/Mittwoch 12:04 anmelden (geht), 12:06 (Meldung „Anmeldung geschlossen"), 14:01 (nächster Termin wird angezeigt).
+5. Zeitgrenzen (wenn möglich zu diesen Zeiten testen): am Termintag 12:04 anmelden (geht), 12:06 (Meldung „Anmeldung geschlossen"), 14:01 (nächster Termin wird angezeigt).
 6. App-Daten löschen/App neu installieren: Alte Anmeldung ist nicht mehr „meine" (kein Kreuz) – ist das für Max verständlich? Befund W, falls verwirrend.
 7. Links manipulieren: Restaurant-Webseite im eingebauten Browser auf eine fremde Seite weiterklicken. Erwartung: bleibt im Browser der App, „Zurück" funktioniert, keine Download-Dialoge.
 

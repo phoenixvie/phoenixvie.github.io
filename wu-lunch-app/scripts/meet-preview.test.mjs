@@ -51,7 +51,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   assert.match(context.renderMeet(),/<b>Info nach Anmeldung<\/b>/);
   // Über dem Einleitungstext steht eine schlichte Zeichnung (Treffpunkt mit Besteck, Personen kommen zusammen), nicht im Formular.
   assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^>]*aria-label="Personen kommen an einem Treffpunkt zum gemeinsamen Essen zusammen"/);
-  assert.match(context.renderMeet(),/Findet jeden Montag und Mittwoch statt\./);
+  assert.match(context.renderMeet(),/Findet jeden Mittwoch statt\./);assert.doesNotMatch(context.renderMeet(),/Montag/);
   await click('meet-show-form');
   assert.match(context.renderMeet(),/Verifizierung deiner E-Mail-Adresse: Du bekommst einen Code per E-Mail\. Nur dein Vorname ist für alle sichtbar\./);
   assert.doesNotMatch(context.renderMeet(),/WU-Mail|WU E-Mail|nur WU Studenten|wu\.ac\.at/);   // keine Einschränkung auf WU-Adressen
@@ -116,7 +116,8 @@ test('the next date is shown until 14:00 and the one after it can always be chos
   let current='2026-11-16T09:00:00Z';   // Montag 10:00 Uhr Wien
   class Clock extends Date { constructor(...args){super(...(args.length?args:[current]));} }
   const state={own:[],selectedDate:null};
-  const context={Intl,Date:Clock,state};vm.createContext(context);vm.runInContext(helper,context);
+  // Die Zeitregeln werden mit zwei Tagen pro Woche geprüft (Montag und Mittwoch, im Admin einstellbar) …
+  const context={Intl,Date:Clock,state,meetWeekdays:()=>[1,3]};vm.createContext(context);vm.runInContext(helper,context);
   const shown=()=>vm.runInContext('date()',context);
   const options=()=>[...vm.runInContext('dateOptions()',context)];
   assert.equal(shown(),'2026-11-16');assert.deepEqual(options(),['2026-11-16','2026-11-18']);
@@ -129,6 +130,12 @@ test('the next date is shown until 14:00 and the one after it can always be chos
   state.selectedDate='2026-11-16';assert.equal(shown(),'2026-11-18');    // abgelaufene Auswahl fällt zurück
   state.selectedDate=null;current='2026-11-17T08:00:00Z';assert.equal(shown(),'2026-11-18'); // Dienstag
   current='2026-11-19T08:00:00Z';assert.deepEqual(options(),['2026-11-23','2026-11-25']);   // Donnerstag
+  // … und mit der Vorgabe „jeden Mittwoch“: der nächste und der übernächste Mittwoch, Wechsel am Mittwoch um 14:00.
+  const wednesday={Intl,Date:Clock,state:{own:[],selectedDate:null}};vm.createContext(wednesday);vm.runInContext(helper,wednesday);
+  const next=()=>[...vm.runInContext('dateOptions()',wednesday)];
+  current='2026-11-16T09:00:00Z';assert.deepEqual(next(),['2026-11-18','2026-11-25']);      // Montag
+  current='2026-11-18T12:59:00Z';assert.deepEqual(next(),['2026-11-18','2026-11-25']);      // Mittwoch 13:59
+  current='2026-11-18T13:00:00Z';assert.deepEqual(next(),['2026-11-25','2026-12-02']);      // Mittwoch 14:00
 });
 
 test('texts fall back to German and use the shared catalogue for English', async () => {
@@ -193,7 +200,7 @@ test('Vienna dates stay visible until 14:00 and registration closes after 12:05'
   const helper=source.slice(source.indexOf('  const viennaClock'),source.indexOf('  const date ='));
   let current='2026-11-15T23:01:00Z';
   class Clock extends Date { constructor(...args){super(...(args.length?args:[current]));} }
-  const context={Intl,Date:Clock};vm.createContext(context);vm.runInContext(helper,context);
+  const context={Intl,Date:Clock,meetWeekdays:()=>[1,3]};vm.createContext(context);vm.runInContext(helper,context);
   const days=()=>Array.from(vm.runInContext('slotDates()',context));
   const open=(date)=>vm.runInContext(`registrationOpen('${date}')`,context);
   assert.deepEqual(days(),['2026-11-16','2026-11-18','2026-11-23','2026-11-25','2026-11-30']);assert.equal(open('2026-11-16'),true);
@@ -401,19 +408,19 @@ test('UX follow-ups: one active sign-up per device, long names get a message, lo
   await click('meet-leave');assert.equal(own.length,0);assert.match(context.renderMeet(),/Noch niemand – sei die erste Person/);
 });
 
-test('Meet-to-eat weekdays come from the operator settings and drive dates and texts; defaults stay Monday and Wednesday', async () => {
+test('Meet-to-eat weekdays come from the operator settings and drive dates and texts; the default is Wednesday', async () => {
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
   const start=app.indexOf("const settingsKey='wu-food-settings-v1';"), end=app.indexOf('async function loadSettings(');
   const make=(settings,language='de')=>{const context={localStorage:{getItem:()=>JSON.stringify(settings)},localize:{language}};vm.createContext(context);
     vm.runInContext(app.slice(start,end).replace('const meetWeekdays=','var meetWeekdays=').replace('const meetDaysText=','var meetDaysText='),context);return context;};
-  assert.deepEqual([...make({}).meetWeekdays()],[1,3]);                                   // Vorgabe
-  assert.deepEqual([...make({meet_weekdays:[3]}).meetWeekdays()],[3]);
+  assert.deepEqual([...make({}).meetWeekdays()],[3]);                                     // Vorgabe: jeden Mittwoch
+  assert.deepEqual([...make({meet_weekdays:[1,3]}).meetWeekdays()],[1,3]);
   assert.deepEqual([...make({meet_weekdays:['4',2,2,9,0,'x']}).meetWeekdays()],[2,4]);    // nur Montag bis Freitag, sortiert, ohne Doppelte
-  assert.deepEqual([...make({meet_weekdays:[]}).meetWeekdays()],[1,3]);                   // leer -> Vorgabe
-  assert.equal(make({}).meetDaysText('hint'),'Montags & Mittwochs');
-  assert.equal(make({}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch statt.');
-  assert.equal(make({meet_weekdays:[3]}).meetDaysText('hint'),'Mittwochs');
-  assert.equal(make({meet_weekdays:[3]}).meetDaysText('intro'),'Findet jeden Mittwoch statt.');
+  assert.deepEqual([...make({meet_weekdays:[]}).meetWeekdays()],[3]);                     // leer -> Vorgabe
+  assert.equal(make({}).meetDaysText('hint'),'Mittwochs');
+  assert.equal(make({}).meetDaysText('intro'),'Findet jeden Mittwoch statt.');
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('hint'),'Montags & Mittwochs');
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch statt.');
   assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('hint'),'Wednesdays:');
   assert.equal(make({meet_weekdays:[1,3,5]},'en').meetDaysText('intro'),'Takes place every Monday, Wednesday and Friday.');
   // Termine in Meet to eat folgen den Einstellungen (feste Uhr: Dienstag, 17.11.2026).

@@ -407,7 +407,7 @@
     }
     function renderSettingsAdmin(settings){
       const days=validWeekdays(settings.meet_weekdays),box=document.getElementById('meetDays');box.replaceChildren();
-      weekdayLabels.forEach((label,index)=>{const item=document.createElement('label');item.innerHTML='<input type="checkbox" value="'+(index+1)+'"> '+label;item.querySelector('input').checked=(days.length?days:[1,3]).includes(index+1);box.append(item);});
+      weekdayLabels.forEach((label,index)=>{const item=document.createElement('label');item.innerHTML='<input type="checkbox" value="'+(index+1)+'"> '+label;item.querySelector('input').checked=(days.length?days:[3]).includes(index+1);box.append(item);});
       const notice=settings.update_notice||{};
       document.getElementById('updateEnabled').checked=notice.enabled===true;document.getElementById('updateVersion').value=notice.min_version||'';
       document.getElementById('updateMessageDe').value=notice.message_de||'';document.getElementById('updateMessageEn').value=notice.message_en||'';
