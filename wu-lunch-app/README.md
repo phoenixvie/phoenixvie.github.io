@@ -70,6 +70,17 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - `scripts/verify-apk.py` prüft Paketname, Version, Berechtigungen (nur Internet) und Signatur von APK und App-Bundle.
 - Store-Grafiken und Screenshots liegen in `store-listing/`.
 
+## Google Play: automatischer Upload in den internen Test (Stand 22.11.2026)
+
+- Workflow „WU Lunch Android APK", Eingabe `aufgabe`:
+  - `play-zugang-pruefen`: prüft nur, ob das Dienstkonto auf die App zugreifen darf. Baut nichts, ändert nichts.
+  - `app-bauen-und-play-intern`: wie `app-bauen`; nach bestandener Prüfung (auch im Emulator) lädt `scripts/upload-play.py` das App-Bundle in den Track „Interne Tests". Ohne diese ausdrückliche Auswahl wird nie hochgeladen.
+- Zugang: Secret `PLAY_SERVICE_ACCOUNT_JSON` (gesamter Inhalt der Schlüsseldatei eines Google-Cloud-Dienstkontos). Das Dienstkonto wird in der Play Console unter „Nutzer und Berechtigungen" eingeladen, nur für WU Food und nur mit dem Recht für Test-Tracks. Im Cloud-Projekt muss die „Google Play Android Developer API" aktiviert sein. Der Schlüssel steht nie im Quellcode und wird nie ausgegeben.
+- Versionshinweise je Sprache: `store-listing/release-notes.json` (höchstens 500 Zeichen), vor jedem Build anpassen.
+- Solange die App bei Google im Entwurf ist, legt das Skript den Release als Entwurf an; die Einführung wird dann einmal in der Play Console bestätigt. Geschlossener Test und Produktion bleiben Handarbeit in der Play Console.
+- Regel des Betreibers: vor jedem Upload nachfragen.
+- Tests: `wu-lunch/scripts/test_upload_play.py` (nachgestellte Google-Schnittstelle, kein Netz).
+
 ## Paketname für Google Play (Stand 17.11.2026)
 
 - Der Android-Paketname ist ab Version 0.5.5 `at.startit.wufood` (so im Google Play Console angelegt). Bis 0.5.4 hieß er `at.startit.wulunch`.
