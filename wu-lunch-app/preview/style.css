@@ -63,3 +63,4 @@
 .meet-icon-button{display:flex;align-items:center;justify-content:center;gap:8px}.meet-icon-button .material-svg{width:20px;height:20px;color:#fff}
 /* iOS färbt Knöpfe ohne eigene Textfarbe systemblau; die Restaurantzeilen sind Knöpfe und sollen schwarz bleiben. */
 .restaurant-row,.map-selected{color:inherit}
+.meet-content a.meet-report{display:inline-block;margin-top:6px;font-size:12px;color:#6f8192}

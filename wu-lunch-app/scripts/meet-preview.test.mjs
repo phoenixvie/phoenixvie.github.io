@@ -245,13 +245,14 @@ test('list entry shows the number of people signed up for the next date, and not
       app:{addEventListener(){},querySelector:selector=>selector==='[data-action="meet-preview"].restaurant-row'?row:null},document:{getElementById:()=>null,addEventListener(){}},
       localStorage:{getItem:()=>null,setItem(){}},setInterval(){},console:{...console,warn:(...args)=>warnings.push(args.join(' '))},Intl,Date:FixedDate,
       meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
-      renderMeet(){},render(){},icon:name=>`<i>${name}</i>`,esc:s=>String(s),dateValue:d=>d,localize:{label:key=>key==='{count} angemeldet'?'{count} signed up':key}};
+      renderMeet(){},render(){},icon:name=>`<i>${name}</i>`,esc:s=>String(s),dateValue:d=>d,contactEmail:()=>'kontakt@example.test',localize:{label:key=>key==='{count} angemeldet'?'{count} signed up':key}};
     vm.createContext(context);vm.runInContext(source,context);
     for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));
     return {context,asked,warnings,get painted(){return painted},get removed(){return removed}};
   };
   // Drei Personen beim nächsten Termin, eine beim übernächsten: gezählt wird nur der nächste.
   const busy=await start(days=>[...['Lena','Jonas','Mia'].map(first_name=>({meeting_date:days[0],first_name})),{meeting_date:days[1],first_name:'Tom'}]);
+  assert.match(busy.context.renderMeet(),/<a class="meet-report" href="mailto:kontakt@example\.test\?subject=WU%20Food%3A%20Namen%20melden%20\(\d{4}-\d\d-\d\d\)">Unpassenden Namen melden<\/a>/);
   assert.deepEqual(busy.asked,[['meet_preview_participants','meeting_date,first_name','meeting_date']],'nur die öffentliche Teilnehmerliste wird gelesen');
   assert.match(busy.context.meetBadge(),/^<span class="meet-count" data-ui-literal aria-label="3 signed up"><i>person<\/i>3<\/span>$/);
   assert.deepEqual(busy.painted,['beforebegin',busy.context.meetBadge()],'Zahl steht vor dem Pfeil des Eintrags');
@@ -326,6 +327,8 @@ test('sign-up with first name only: field above the button, same name checks, no
   assert.equal(anonymous,1);assert.equal(otpCalls,0);assert.equal(own.length,1);assert.equal(own[0].first_name,'Anna');   // erster Buchstabe automatisch großassert.equal(own[0].user_id,'anon-1');
   assert.equal(store.has('wu-meet-preview-name'),false,'Vorname wird nicht gespeichert');assert.equal(context.meetForm,false);
   assert.match(context.renderMeet(),/Du bist für diesen Termin angemeldet/);assert.match(tracked.join('\n'),/meet_joined/);
+  // Melde-Link (App-Store-Richtlinie 1.2): nur, wenn andere Namen zu sehen sind; führt per E-Mail an die Kontaktadresse.
+  assert.doesNotMatch(context.renderMeet(),/meet-report/);   // nur der eigene Name steht da
   // Abmelden: blauer Knopf mit Symbol (Vorgabe 17.11.2026).
   assert.match(context.renderMeet(),/<button class="meet-primary meet-icon-button" data-action="meet-leave">[^<]*<span>Abmelden<\/span><\/button>/);
   // Abmelden: Das Feld ist wieder leer (Vorname jedes Mal neu eingeben). Ohne Eingabe keine Anmeldung.
