@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       aufgabe:
-        description: 'app-bauen: APK + App-Bundle für Google Play. upload-schluessel-erzeugen: einmalig den Upload-Schlüssel anlegen. signatur-testen: Probelauf mit Wegwerf-Schlüssel, ohne Ergebnis-Dateien.'
+        description: 'app-bauen: APK + App-Bundle für Google Play. app-bauen-und-play-intern: zusätzlich in den internen Test von Google Play hochladen. play-zugang-pruefen: nur den Play-Zugang prüfen, nichts ändern. upload-schluessel-erzeugen: einmalig den Upload-Schlüssel anlegen. signatur-testen: Probelauf mit Wegwerf-Schlüssel, ohne Ergebnis-Dateien.'
         type: choice
-        options: [app-bauen, upload-schluessel-erzeugen, signatur-testen]
+        options: [app-bauen, app-bauen-und-play-intern, play-zugang-pruefen, upload-schluessel-erzeugen, signatur-testen]
         default: app-bauen
   pull_request:
     paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-android.yml']
@@ -48,8 +48,26 @@ jobs:
           fingerprint=$(keytool -list -v -keystore "$work/upload.p12" -storepass "$pass" -alias upload | grep -E 'SHA256:' | head -1 | sed 's/.*SHA256: *//')
           { echo "### Upload-Schlüssel angelegt"; echo; echo "Gespeichert als Secrets ANDROID_UPLOAD_KEYSTORE_BASE64 und ANDROID_UPLOAD_KEYSTORE_PASSWORD."; echo; echo "Zertifikat (öffentlich), SHA-256: \`$fingerprint\`"; } >> "$GITHUB_STEP_SUMMARY"
 
+  # Nur prüfen, ob das Dienstkonto für Google Play funktioniert (Secret PLAY_SERVICE_ACCOUNT_JSON). Ändert nichts.
+  play-check:
+    if: github.event_name == 'workflow_dispatch' && inputs.aufgabe == 'play-zugang-pruefen'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: wu-lunch-app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Play-Zugang prüfen
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          python3 -m venv "$RUNNER_TEMP/play"
+          "$RUNNER_TEMP/play/bin/pip" install --quiet google-auth==2.38.0 requests==2.32.3
+          "$RUNNER_TEMP/play/bin/python" scripts/upload-play.py --check
+
   build-apk:
-    if: (github.event_name == 'workflow_dispatch' && inputs.aufgabe != 'upload-schluessel-erzeugen') || contains(github.event.pull_request.title, '[APK]')
+    if: (github.event_name == 'workflow_dispatch' && inputs.aufgabe != 'upload-schluessel-erzeugen' && inputs.aufgabe != 'play-zugang-pruefen') || contains(github.event.pull_request.title, '[APK]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     defaults:
@@ -138,3 +156,12 @@ jobs:
             wu-lunch-app/android/app/build/outputs/apk/release/WU-Food-*.aab
             wu-lunch-app/android/app/build/outputs/apk/release/build-info.json
           if-no-files-found: error
+      - name: Upload the App Bundle to the Google Play internal test
+        # Nur bei der ausdrücklich gewählten Aufgabe, nach bestandener Prüfung im Emulator.
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.aufgabe == 'app-bauen-und-play-intern' }}
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          python3 -m venv "$RUNNER_TEMP/play"
+          "$RUNNER_TEMP/play/bin/pip" install --quiet google-auth==2.38.0 requests==2.32.3
+          "$RUNNER_TEMP/play/bin/python" scripts/upload-play.py "android/app/build/outputs/apk/release/WU-Food-${{ steps.apk.outputs.version }}.aab"
