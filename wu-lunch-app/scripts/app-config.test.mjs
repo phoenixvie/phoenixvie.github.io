@@ -55,6 +55,14 @@ test('unused Android permissions of the Expo template are blocked (Google Play d
     assert.ok(app.android.blockedPermissions.includes('android.permission.' + name), name);
 });
 
+test('iOS build requires arm64, not the outdated armv7 that Expo writes by default', async () => {
+  // Apple lehnte 0.5.5 (1) ab (Richtlinie 2.3): Mit "armv7" in UIRequiredDeviceCapabilities ließ sich die App auf dem
+  // Prüfgerät (iPad Air M3, iPadOS 27) nicht installieren. Alle unterstützten Geräte sind arm64.
+  const ios = (await json('app.json')).expo.ios;
+  assert.deepEqual(ios.infoPlist.UIRequiredDeviceCapabilities, ['arm64']);
+  assert.ok(Number(ios.buildNumber) >= 2, 'jeder Upload braucht eine neue Build-Nummer');
+});
+
 test('Android package name is the one registered in the Google Play Console', async () => {
   // Vorgabe des Betreibers (17.11.2026): Paketname at.startit.wufood. Er ist nach dem ersten Upload bei
   // Google Play endgültig und darf nicht mehr geändert werden (bis 0.5.4 hieß das Paket at.startit.wulunch).
