@@ -306,6 +306,15 @@
       "menu_status": "verified",
       "manifest": "2026-11-23/gruenehuette/b480dcd5ac1fdb2db06fdea756842c3dfa48af5264cb2a41ca6e8fa14261cbc5/manifest.json",
       "source_count": 2
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "week_start": "2026-11-23",
+      "menu_sha256": "9d09b8e2e2ffc72727010ba041bd79de5a72043f0b645039e5156756171e2332",
+      "captured_at": "2026-11-22T08:03:09+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-23/topfdeckel/9d09b8e2e2ffc72727010ba041bd79de5a72043f0b645039e5156756171e2332/manifest.json",
+      "source_count": 10
     }
   ]
 }
