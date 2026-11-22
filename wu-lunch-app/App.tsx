@@ -118,7 +118,7 @@ function AppContent() {
             openExternalLink(request.url); return false;
           }} /> : null}
         {failed ? <View style={styles.failure}><Text>{nativeText('Die Restaurantseite konnte nicht geladen werden.','The restaurant website could not be loaded.')}</Text><Pressable onPress={() => {setFailed(false); browser.current?.reload();}}><Text style={styles.link}>{nativeText('Erneut versuchen','Try again')}</Text></Pressable></View> : null}
-        <View style={styles.browserFooter}><Pressable accessibilityLabel={nativeText('Zurück zum Menü','Back to menu')} onPress={closePage} style={styles.back}><Text style={styles.footerText}>{'←  ' + nativeText('Zurück','Back')}</Text></Pressable></View>
+        <View style={styles.browserFooter}><Pressable accessibilityRole="button" accessibilityLabel={nativeText('Zurück zum Menü','Back to menu')} onPress={closePage} style={styles.back}><View style={styles.arrow}><View style={styles.arrowHead} /><View style={styles.arrowLine} /></View><Text style={styles.footerText} numberOfLines={1} maxFontSizeMultiplier={1.3}>{nativeText('Zurück','Back')}</Text></Pressable></View>
       </SafeAreaView>
     </Modal>
   </SafeAreaView>;
@@ -128,7 +128,12 @@ const styles = StyleSheet.create({
   screen: {flex: 1, backgroundColor: '#087cf4'}, web: {flex: 1, backgroundColor: '#fff'},
   browserFooter: {height: 60, alignItems:'center',justifyContent:'center',backgroundColor:'#087cf4',borderTopWidth:1,borderTopColor:'#087cf4'},
   footerText: {fontSize:16,color:'#fff'},
-  back: {width: 65, height: 48, alignItems: 'center', justifyContent: 'center'}, backText: {fontSize: 12, color: '#fff'},
+  // Pfeil und Wort stehen nebeneinander in einer Zeile. Vorher war der Knopf fest 65 breit: „←  Zurück“ brach um, der
+  // Pfeil stand als eigenes Zeichen über dem Wort (Meldung des Betreibers, 22.11.2026). Der Pfeil ist jetzt gezeichnet.
+  back: {height: 48, paddingHorizontal: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10}, backText: {fontSize: 12, color: '#fff'},
+  arrow: {width: 20, height: 20},
+  arrowLine: {position: 'absolute', left: 2, right: 1, top: 9, height: 2, borderRadius: 1, backgroundColor: '#fff'},
+  arrowHead: {position: 'absolute', left: 3, top: 5, width: 10, height: 10, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: '#fff', transform: [{rotate: '45deg'}]},
   title: {flex: 1, textAlign: 'center', color: '#fff', fontSize: 22, fontWeight: '500'},
   loader: {position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff'},
   failure: {padding: 18, gap: 12, alignItems: 'center', backgroundColor: '#fff'}, link: {color: '#087cf4'},
