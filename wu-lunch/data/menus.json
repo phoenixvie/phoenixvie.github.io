@@ -2,14 +2,14 @@
   "weekStart": "2026-11-23",
   "weekEnd": "2026-11-27",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-22T21:00:42+01:00",
+  "checkedAt": "2026-11-22T21:35:32+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
       "id": "mensa",
       "name": "WU Mensa",
       "url": "https://www.wumensa.at/menuplan-deutsch/",
-      "status": "ai_checked",
+      "status": "verified",
       "note": "Original PDF KW45 direkt als Dokument gelesen, SHA256 9dd2156f00184a29c8419dbb87fc6e16d578ad6d9f7ca4417bcc6118410b94b9",
       "validFrom": "2026-11-23",
       "validUntil": "2026-11-27"
@@ -111,7 +111,7 @@
       "name": "WU Mensa",
       "monogram": "WU",
       "url": "https://www.wumensa.at/menuplan-deutsch/",
-      "status": "ai_checked",
+      "status": "verified",
       "note": "KI-PDF-Auswertung; Datums-, Text- und Schema-Prüfung bestanden",
       "validFrom": "2026-11-23",
       "validUntil": "2026-11-27",
@@ -2535,7 +2535,7 @@
           }
         ]
       },
-      "browser_verified_at": "2026-11-22T09:01:12+01:00"
+      "browser_verified_at": "2026-11-22T21:36:05+01:00"
     },
     {
       "id": "omakueche",

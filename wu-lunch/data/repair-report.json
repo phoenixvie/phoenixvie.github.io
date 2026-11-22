@@ -1,9 +1,138 @@
 {
-  "checked_at": "2026-11-22T21:00:46+01:00",
+  "checked_at": "2026-11-22T21:36:05+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 0,
+  "api_calls": 3,
   "results": [
+    {
+      "restaurant": "lia",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die optionale Tagessuppe und/oder der Salat sind nicht als separat bepreiste Gerichte erfasst, da weder konkrete Speisen für die Woche noch Einzelpreise genannt werden.",
+        "Der €1,00-Rabatt gilt laut Quelle für Studierende mit AG-Sticker; der To-Go-Behälter kostet zusätzlich €0,50."
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://lia.coffee/": "5e81acd96ba8b4f6fd5c0ce39b4607874ed7bdb12772f85cf7678cfc4daabbfb"
+      },
+      "usage": {
+        "input_tokens": 7600,
+        "input_tokens_details": {
+          "cache_write_tokens": 7597,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 7597
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 2760,
+        "output_tokens_details": {
+          "reasoning_tokens": 744
+        },
+        "total_tokens": 10360
+      }
+    },
+    {
+      "restaurant": "glashaus",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Bei jedem Tag steht zusätzlich „FEIERTAG“, obwohl für alle fünf Tage Gerichte aufgeführt sind.",
+        "Es sind keine konkreten Suppen oder Salate als separate Speisen mit Einzelpreis aufgeführt."
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.dasglashaus.at/menues": "d54ece6ef09cb42aef7cf8bf3224510593640b88877d42458d10b1735d983c14"
+      },
+      "usage": {
+        "input_tokens": 2778,
+        "input_tokens_details": {
+          "cache_write_tokens": 2775,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2775
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 2321,
+        "output_tokens_details": {
+          "reasoning_tokens": 832
+        },
+        "total_tokens": 5099
+      }
+    },
+    {
+      "restaurant": "gruenehuette",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Suppen sind als Auswahl gelistet. Ihr Einzelpreis ist nicht ausgewiesen; +2,00 EUR steht ausdrücklich als Aufpreis zum Tagesteller.",
+        "Der Take-out-Tarif ist als Alternative zum regulären Tagestellerpreis erfasst."
+      ],
+      "ai_only_items": 20,
+      "parser_only_items": 5,
+      "ai_only_examples": [
+        "2026-11-23: frittatensuppe",
+        "2026-11-23: griessnockerlsuppe",
+        "2026-11-23: leberknödelsuppe",
+        "2026-11-23: rote rübensuppe mit frischkäse",
+        "2026-11-24: frittatensuppe"
+      ],
+      "parser_only_examples": [
+        "2026-11-23: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder rote rübensuppe mit frischkäse",
+        "2026-11-24: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder rote rübensuppe mit frischkäse",
+        "2026-11-25: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder rote rübensuppe mit frischkäse",
+        "2026-11-26: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder rote rübensuppe mit frischkäse",
+        "2026-11-27: suppen zur auswahl frittatensuppe griessnockerlsuppe leberknödelsuppe oder rote rübensuppe mit frischkäse"
+      ],
+      "source_hashes": {
+        "https://www.zurgruenenhuette.com/mittags-menu": "d734335aed16def13e6de7897f391fffe490f571d26370f1646fff5726b923ff"
+      },
+      "usage": {
+        "input_tokens": 2258,
+        "input_tokens_details": {
+          "cache_write_tokens": 2255,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2255
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 6404,
+        "output_tokens_details": {
+          "reasoning_tokens": 1147
+        },
+        "total_tokens": 8662
+      }
+    },
+    {
+      "restaurant": "mensa",
+      "issues": [],
+      "action": "dedicated_pdf_ai",
+      "repairs": []
+    },
+    {
+      "restaurant": "topfdeckel",
+      "issues": [],
+      "action": "browser_import",
+      "repairs": []
+    },
+    {
+      "restaurant": "finn",
+      "issues": [],
+      "action": "dedicated_image_ai",
+      "repairs": []
+    },
     {
       "restaurant": "omakueche",
       "issues": [],
