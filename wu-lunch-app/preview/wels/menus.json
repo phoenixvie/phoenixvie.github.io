@@ -87,15 +87,87 @@
    "longitude": 13.9704601,
    "brandColor": "#6a9a2d",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [],
-    "2026-11-25": [],
-    "2026-11-26": [],
-    "2026-11-27": []
+    "2026-11-23": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "description": "Vegetarisch",
+      "category": "Suppe"
+     },
+     {
+      "name": "Kartoffel-Linsen-Curry",
+      "price": 6.9,
+      "description": "Vegan"
+     },
+     {
+      "name": "Paprika-Hühnchen mit Basmati-Vollkorn-Reis",
+      "price": 7.9
+     }
+    ],
+    "2026-11-24": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "description": "Vegetarisch",
+      "category": "Suppe"
+     },
+     {
+      "name": "Kürbis-Kichererbsen-Curry",
+      "price": 6.9,
+      "description": "Vegan"
+     },
+     {
+      "name": "Kartoffel-Lachs-Bratlinge mit Kürbisragout",
+      "price": 7.9
+     }
+    ],
+    "2026-11-25": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "description": "Vegetarisch",
+      "category": "Suppe"
+     },
+     {
+      "name": "Hirse-Pfanne mit Gemüse",
+      "price": 6.9,
+      "description": "Vegan"
+     },
+     {
+      "name": "Thai-Fleischpfanne mit Basmati",
+      "price": 7.9
+     }
+    ],
+    "2026-11-26": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "description": "Vegetarisch",
+      "category": "Suppe"
+     },
+     {
+      "name": "Ratatouille & Farfalle d`oliva",
+      "price": 6.9,
+      "description": "Vegan"
+     }
+    ],
+    "2026-11-27": [
+     {
+      "name": "Tagessuppe",
+      "price": 4.5,
+      "description": "Vegetarisch",
+      "category": "Suppe"
+     },
+     {
+      "name": "Scharfer Gemüse-Curry-WOK auf Kurkuma-Curry-Reis mit Erbsen",
+      "price": 7.9,
+      "description": "Vegan"
+     }
+    ]
    },
    "import": {
-    "state": "not_published",
-    "message": "Denns: keine Wochenkarte für die gesuchte Woche"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -817,5 +889,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-21T19:02:18+01:00"
+ "updatedAt": "2026-11-22T12:31:53+01:00"
 }
