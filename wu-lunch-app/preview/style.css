@@ -71,5 +71,5 @@
 .meet-retry{margin-top:10px}
 /* Update-Hinweis (im Admin ausgelöst) */
 .update-notice{position:absolute;inset:0;z-index:60;background:#0b1c3d99;display:flex;align-items:flex-end;justify-content:center}.update-card{width:100%;margin:16px;padding:20px 18px 14px;border-radius:14px;background:#fff;box-shadow:0 10px 40px #0006;text-align:center}.update-card p{margin:0 0 16px;font-size:16px;line-height:1.45;color:#191919}.update-now,.update-later{display:block;width:100%;border:0;border-radius:8px;padding:13px;font-size:16px}.update-now{background:#087cf4;color:#fff}.update-later{margin-top:8px;background:none;color:#5f6a75}
-/* Werte der Meet-to-eat-Tabelle fett (Datum, Uhrzeiten, Treffpunkt, Teilnehmer); die Namensliste bleibt normal. */
-.meet-fact:not(.meet-people)>div>span{font-weight:700}.meet-date-picker select{font-weight:700}
+/* „Change language.“ bricht auf schmalen Handys als Ganzes um, nicht mitten im Ausdruck. */
+.source-note [data-change-language]{white-space:nowrap}
