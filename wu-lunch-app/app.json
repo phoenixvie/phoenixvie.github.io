@@ -14,6 +14,9 @@
       "icon": "./assets/icon-ios.png",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
+        "UIRequiredDeviceCapabilities": [
+          "arm64"
+        ],
         "CFBundleDevelopmentRegion": "de",
         "CFBundleLocalizations": [
           "de",
