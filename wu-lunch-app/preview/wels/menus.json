@@ -189,8 +189,8 @@
     "2026-11-27": []
    },
    "import": {
-    "state": "not_published",
-    "message": "Dok Khun zeigt die Woche ab 2026-11-17"
+    "state": "error",
+    "message": "ValueError: Dok Khun: Zeitraum des Wochenmenüs nicht gefunden"
    }
   },
   {
@@ -938,5 +938,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-22T20:46:11+01:00"
+ "updatedAt": "2026-11-22T21:38:23+01:00"
 }
