@@ -63,7 +63,7 @@ test('iOS build requires arm64, not the outdated armv7 that Expo writes by defau
   // Restaurant-Webseiten öffnen im eingebauten Browser; einzelne liefern noch http-Inhalte. Apple akzeptiert die
   // Ausnahme nur für Web-Inhalte ohne Begründung; beliebige unverschlüsselte Verbindungen bleiben verboten.
   assert.deepEqual(ios.infoPlist.NSAppTransportSecurity, {NSAllowsArbitraryLoads: false, NSAllowsArbitraryLoadsInWebContent: true, NSAllowsLocalNetworking: true});
-  assert.ok(Number(ios.buildNumber) >= 2, 'jeder Upload braucht eine neue Build-Nummer');
+  assert.ok(Number(ios.buildNumber) >= 4, 'jeder Upload braucht eine neue Build-Nummer (1 bis 3 sind bei App Store Connect)');
 });
 
 test('Android package name is the one registered in the Google Play Console', async () => {
