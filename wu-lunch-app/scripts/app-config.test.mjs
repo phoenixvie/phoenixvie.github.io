@@ -63,7 +63,17 @@ test('iOS build requires arm64, not the outdated armv7 that Expo writes by defau
   // Restaurant-Webseiten öffnen im eingebauten Browser; einzelne liefern noch http-Inhalte. Apple akzeptiert die
   // Ausnahme nur für Web-Inhalte ohne Begründung; beliebige unverschlüsselte Verbindungen bleiben verboten.
   assert.deepEqual(ios.infoPlist.NSAppTransportSecurity, {NSAllowsArbitraryLoads: false, NSAllowsArbitraryLoadsInWebContent: true, NSAllowsLocalNetworking: true});
-  assert.ok(Number(ios.buildNumber) >= 4, 'jeder Upload braucht eine neue Build-Nummer (1 bis 3 sind bei App Store Connect)');
+  assert.ok(Number(ios.buildNumber) >= 6, 'jeder Upload braucht eine neue Build-Nummer (1 bis 5 sind bei App Store Connect)');
+});
+
+test('native back bar keeps arrow and label on one line', async () => {
+  // Der Knopf hatte eine feste Breite von 65; „←  Zurück“ brach um und der Pfeil stand über dem Wort.
+  const {readFile} = await import('node:fs/promises');
+  const native = await readFile(new URL('../App.tsx', import.meta.url), 'utf8');
+  assert.doesNotMatch(native, /back: \{width: 65/);
+  assert.match(native, /back: \{height: 48, paddingHorizontal: 24, flexDirection: 'row'/);
+  assert.match(native, /<View style=\{styles\.arrow\}><View style=\{styles\.arrowHead\} \/><View style=\{styles\.arrowLine\} \/><\/View><Text style=\{styles\.footerText\} numberOfLines=\{1\}/);
+  assert.doesNotMatch(native, /'←/);
 });
 
 test('Android package name is the one registered in the Google Play Console', async () => {
