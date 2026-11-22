@@ -145,7 +145,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Gemeinsam essen gehen','Datum','Uhrzeit am Treffpunkt','12:00 Uhr','Gemeinsam losgehen','12:05 Uhr','Treffpunkt auf der WU','Info nach Anmeldung','Vor dem Baum direkt bei der Mensa','Teilnehmer','WU-Studenten Gruppe','Bereits angemeldet','Teilnehmen','Google Maps öffnen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen. Findet jeden Montag und Mittwoch statt.']){
+  for(const key of ['Gemeinsam essen gehen','Datum','Uhrzeit am Treffpunkt','12:00 Uhr','Gemeinsam losgehen','12:05 Uhr','Treffpunkt auf der WU','Info nach Anmeldung','Vor dem Baum direkt bei der Mensa','Teilnehmer','WU-Studenten Gruppe','Bereits angemeldet','Teilnehmen','Google Maps öffnen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
@@ -175,7 +175,7 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   // Vorgabe vom 17.11.2026: ein einziger Fließtext unter jedem Menü, an jedem Tag gleich:
   // "Montags & Mittwochs gemeinsam essen gehen. Prüfe die Menüs auf der Restaurantwebseite. Change language."
   const note=menu.slice(menu.indexOf('<div class="source-note">'));
-  assert.ok(note.startsWith(`<div class="source-note">\${site.standalone?'':'Montags &amp; Mittwochs <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen gehen</button>.<br>'}<span>Prüfe die Menüs auf der</span> \${source?'<button type="button" class="source-link" data-action="open-menu-source">Restaurantwebseite</button>':'<span>Restaurantwebseite</span>'}.\${site.standalone?'':' <a href="#" class="source-link" data-change-language>Change language.</a>'}</div>`));
+  assert.ok(note.startsWith('<div class="source-note">${site.standalone?\'\':`<span data-ui-literal>${esc(meetDaysText(\'hint\'))}</span> <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen gehen</button>.<br>`}<span>Prüfe die Menüs auf der</span> '));
   assert.doesNotMatch(menu,/\[0,2\]\.includes\(dayIndex\)|Angaben ohne Gewähr|WU Studenten|localize\.language==='en'\?`Every/);
   // Zwei Zeilen, die erste (Meet to eat) immer kürzer als die zweite (Vorgabe 17.11.2026): fester Umbruch nach dem
   // ersten Satz; der zweite Satz ist in beiden Sprachen länger, auf schmalen Handys umbricht er weiter unten.
@@ -185,7 +185,7 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   assert.match(css,/\.meet-invite\{display:inline;/);assert.doesNotMatch(css,/\.meet-invite\{display:block/);
   // Englische Fassungen aller Teile des Satzes.
   const {ui}=globalThis.WULunchI18n;
-  assert.deepEqual(['Montags & Mittwochs','gemeinsam essen gehen','Prüfe die Menüs auf der','Restaurantwebseite'].map(key=>ui[key]),['Mondays & Wednesdays:','eat together','Check the menus on the','restaurant website']);
+  assert.deepEqual(['gemeinsam essen gehen','Prüfe die Menüs auf der','Restaurantwebseite'].map(key=>ui[key]),['eat together','Check the menus on the','restaurant website']);
 });
 
 test('Vienna dates stay visible until 14:00 and registration closes after 12:05', async () => {
@@ -223,15 +223,15 @@ test('Meet to eat icons are bundled as SVG and inherit their screen colours', as
 
 test('Meet to eat keeps its scroll position during background redraws', async () => {
   const source=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  const start=source.indexOf('function render(){');
+  const start=source.indexOf('function renderScreen(){');
   const end=source.indexOf('const r=currentRestaurant();',start);
   assert.ok(start>=0 && end>start);
   let screen={scrollTop:540};
   const app={querySelector:()=>screen, set innerHTML(value){screen={scrollTop:0};}};
   const context={data:{},meetPreviewOpen:true,app,map:null,renderMeet:()=>'<div id="meet-screen"></div>',document:{getElementById:()=>null},Number};
   vm.createContext(context);vm.runInContext(source.slice(start,end)+'}',context);
-  context.render();assert.equal(screen.scrollTop,540);
-  screen.scrollTop=320;context.render();assert.equal(screen.scrollTop,320);
+  context.renderScreen();assert.equal(screen.scrollTop,540);
+  screen.scrollTop=320;context.renderScreen();assert.equal(screen.scrollTop,320);
 });
 
 test('list entry shows the number of people signed up for the next date, and nothing when nobody is', async () => {
@@ -399,4 +399,65 @@ test('UX follow-ups: one active sign-up per device, long names get a message, lo
   const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8');
   assert.match(css,/\.meet-own \.meet-remove\{[^}]*padding:12px/);
   await click('meet-leave');assert.equal(own.length,0);assert.match(context.renderMeet(),/Noch niemand – sei die erste Person/);
+});
+
+test('Meet-to-eat weekdays come from the operator settings and drive dates and texts; defaults stay Monday and Wednesday', async () => {
+  const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  const start=app.indexOf("const settingsKey='wu-food-settings-v1';"), end=app.indexOf('async function loadSettings(');
+  const make=(settings,language='de')=>{const context={localStorage:{getItem:()=>JSON.stringify(settings)},localize:{language}};vm.createContext(context);
+    vm.runInContext(app.slice(start,end).replace('const meetWeekdays=','var meetWeekdays=').replace('const meetDaysText=','var meetDaysText='),context);return context;};
+  assert.deepEqual([...make({}).meetWeekdays()],[1,3]);                                   // Vorgabe
+  assert.deepEqual([...make({meet_weekdays:[3]}).meetWeekdays()],[3]);
+  assert.deepEqual([...make({meet_weekdays:['4',2,2,9,0,'x']}).meetWeekdays()],[2,4]);    // nur Montag bis Freitag, sortiert, ohne Doppelte
+  assert.deepEqual([...make({meet_weekdays:[]}).meetWeekdays()],[1,3]);                   // leer -> Vorgabe
+  assert.equal(make({}).meetDaysText('hint'),'Montags & Mittwochs');
+  assert.equal(make({}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch statt.');
+  assert.equal(make({meet_weekdays:[3]}).meetDaysText('hint'),'Mittwochs');
+  assert.equal(make({meet_weekdays:[3]}).meetDaysText('intro'),'Findet jeden Mittwoch statt.');
+  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('hint'),'Wednesdays:');
+  assert.equal(make({meet_weekdays:[1,3,5]},'en').meetDaysText('intro'),'Takes place every Monday, Wednesday and Friday.');
+  // Termine in Meet to eat folgen den Einstellungen (feste Uhr: Dienstag, 17.11.2026).
+  const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+  const handlers={};
+  const client={auth:{getSession:async()=>({data:{session:null},error:null})},from:()=>({select(){return {in:async()=>({data:[],error:null}),gte:async()=>({data:[],error:null})}}})};
+  const context={window:{supabase:{createClient:()=>client}},supabase:'https://example.test',publishableKey:'public',nativePost:()=>false,safeUrl:url=>url,
+    app:{addEventListener:(event,fn)=>{handlers[event]=fn}},document:{getElementById:()=>null},localStorage:{getItem:()=>null,setItem(){},removeItem(){}},
+    setInterval(){},console,Intl,Date:FixedDate,meetPreviewOpen:false,meetSlot:null,meetJoined:false,meetForm:false,selectedId:null,meetBadge:()=>'',
+    meetWeekdays:()=>[4],meetDaysText:kind=>kind==='intro'?'Findet jeden Donnerstag statt.':'Donnerstags',
+    renderMeet(){},render(){},icon:()=>'',esc:s=>String(s),dateValue:d=>d};
+  vm.createContext(context);vm.runInContext(source,context);
+  handlers.click({target:{closest:()=>({dataset:{action:'meet-preview'}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));
+  const screen=context.renderMeet();
+  assert.deepEqual([...screen.matchAll(/<option value="(\d{4}-\d\d-\d\d)"/g)].map(m=>m[1]),['2026-11-19','2026-11-26']);   // nur Donnerstage
+  assert.match(screen,/essen\. <span data-ui-literal>Findet jeden Donnerstag statt\.<\/span><\/p>/);
+  // Datenbank: der Wochentag wird gegen dieselbe Einstellung geprüft; nur der Admin darf sie ändern.
+  const sql=await readFile(new URL('../../wu-lunch/supabase/20261122_settings.sql',import.meta.url),'utf8');
+  assert.match(sql,/from public\.lunch_settings where key = 'meet_weekdays'/);
+  assert.match(sql,/for insert to authenticated with check \(\(select private\.is_lunch_admin\(\)\)\)/);
+  assert.match(sql,/grant select on public\.lunch_settings to anon, authenticated/);
+  assert.doesNotMatch(sql,/grant (insert|update|all)[^;]*\banon\b/);
+});
+
+test('manual update notice: only in the installed app, only for older versions, dismissible, texts from the operator', async () => {
+  const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  const start=app.indexOf('const versionParts='), end=app.indexOf('function paintUpdateNotice(');
+  const make=(notice,info,language='de')=>{const context={appSettings:{update_notice:notice},window:{WU_APP:info},localize:{language},esc:s=>String(s).replace(/</g,'&lt;')};vm.createContext(context);
+    vm.runInContext(app.slice(start,end).replace('const versionOlder=','var versionOlder='),context);return context;};
+  const on={enabled:true,min_version:'0.5.7',message_de:'',message_en:''};
+  const older=make(on,{version:'0.5.6',platform:'android'});
+  assert.equal(older.versionOlder('0.5.6','0.5.7'),true);assert.equal(older.versionOlder('0.5.10','0.5.9'),false);assert.equal(older.versionOlder('0.5.7','0.5.7'),false);assert.equal(older.versionOlder('0.9.9','1.0.0'),true);
+  assert.match(older.updateNotice(),/Es gibt eine neue Version von WU Food\. Bitte aktualisiere die App\./);
+  assert.match(older.updateNotice(),/data-action="update-now">Jetzt aktualisieren<.*data-action="update-later">Später</);
+  assert.equal(make(on,{version:'0.5.7',platform:'ios'}).updateNotice(),'');            // aktuelle Version: nichts
+  assert.equal(make(on,undefined).updateNotice(),'');                                   // Web-Vorschau ohne Versionsangabe: nichts
+  assert.equal(make({...on,enabled:false},{version:'0.5.6'}).updateNotice(),'');        // ausgeschaltet
+  assert.equal(make({...on,min_version:'bald'},{version:'0.5.6'}).updateNotice(),'');   // ungültige Angabe
+  assert.match(make({...on,message_de:'Wichtig: <b>bitte</b> aktualisieren'},{version:'0.5.6'}).updateNotice(),/Wichtig: &lt;b>bitte&lt;\/b> aktualisieren/);   // eigener Text, als Text ausgegeben
+  assert.match(make({...on,message_en:'Please update'},{version:'0.5.6'},'en').updateNotice(),/Please update<\/p>.*Update now<.*Later</);
+  // „Später“ blendet bis zum nächsten Start aus; der Store-Link steht fest in der App, nicht in der Nachricht.
+  assert.match(app,/case'update-later':[^\n]*updateNoticeDismissed=true/);
+  assert.match(app,/case'update-now':[^\n]*nativePost\('open-store'\)/);
+  const native=await readFile(new URL('../App.tsx',import.meta.url),'utf8');
+  assert.match(native,/window\.WU_APP=\{version:'\$\{appVersion\}'/);
+  assert.match(native,/apps\.apple\.com\/app\/id6836345799/);assert.match(native,/market:\/\/details\?id=at\.startit\.wufood/);
 });

@@ -50,7 +50,9 @@ function mensaStations(raw){
     const prices=[...new Set(rows.map(item=>item.price))];
     const common=prices.length===1?prices[0]:null;
     const lines=rows.map(item=>[item.name+(prices.length>1?' – '+(item.price==null?'X €':euro(item.price)):''),item.description,item.energy_kcal?item.energy_kcal+' kcal':''].filter(Boolean).join('\n'));
-    out.push({category:label,name:((label==='Ausgabe 1+2'||label==='Ausgabe 3+4')&&soup?soup.name+'\n':'')+lines.join('\n\n'),price:common,priceLabel:prices.length>1?' ':undefined,description:''});
+    // Kennzeichnung der Ausgabe: vegan nur, wenn alle Gerichte vegan sind; vegetarisch, wenn alle vegetarisch oder vegan sind.
+    const diets=rows.map(item=>item.diet),diet=diets.every(value=>value==='vegan')?'vegan':diets.every(value=>value==='veggie'||value==='vegan')?'veggie':undefined;
+    out.push({category:label,name:((label==='Ausgabe 1+2'||label==='Ausgabe 3+4')&&soup?soup.name+'\n':'')+lines.join('\n\n'),price:common,priceLabel:prices.length>1?' ':undefined,description:'',diet});
   }
   // Soup and conditional menu offers retain their original terms and prices.
   return [...out.filter(item=>!['Ausgabe 5','Ausgabe 6','Ausgabe 7'].includes(item.category)),...raw.filter(item=>!assigned.has(item)&&! /tagess?uppe|soup deal|menüoption|smart menü/i.test(item.category||item.name))];

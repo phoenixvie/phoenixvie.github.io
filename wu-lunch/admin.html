@@ -76,6 +76,23 @@
         <p class="notice" id="announcementNotice" aria-live="polite"></p>
       </section>
       <section class="panel">
+        <h2>Meet to eat: Wochentage</h2>
+        <p class="muted">An diesen Tagen findet Meet to eat statt. Die Änderung wirkt in App und Vorschau ohne Update (nach spätestens fünf Minuten). Bestehende Anmeldungen für abgewählte Tage werden nicht mehr angezeigt; bitte vorher unter „Anmeldungen“ prüfen.</p>
+        <div id="meetDays" class="restaurant"></div>
+        <button id="saveMeetDays" type="button">Wochentage speichern</button>
+        <p class="notice" id="meetDaysNotice" aria-live="polite"></p>
+      </section>
+      <section class="panel">
+        <h2>App-Update-Hinweis</h2>
+        <p class="muted">Zeigt beim Öffnen der App einen Hinweis mit Knopf zum Store, solange die installierte Version älter ist als die hier genannte. Funktioniert ab App-Version 0.5.6; ältere Versionen können den Hinweis nicht anzeigen.</p>
+        <label><input id="updateEnabled" type="checkbox" style="width:auto"> Hinweis anzeigen</label>
+        <label for="updateVersion">Mindestens diese Version (z. B. 0.5.7)</label><input id="updateVersion" type="text" inputmode="decimal" maxlength="12" placeholder="0.5.7">
+        <label for="updateMessageDe">Text Deutsch (leer = Standardtext)</label><textarea id="updateMessageDe" maxlength="300" placeholder="Es gibt eine neue Version von WU Food. Bitte aktualisiere die App."></textarea>
+        <label for="updateMessageEn">Text Englisch (leer = Standardtext)</label><textarea id="updateMessageEn" maxlength="300" placeholder="A new version of WU Food is available. Please update the app."></textarea>
+        <button id="saveUpdateNotice" type="button">Update-Hinweis speichern</button>
+        <p class="notice" id="updateNotice" aria-live="polite"></p>
+      </section>
+      <section class="panel">
         <h2>Meet to eat: Anmeldungen</h2>
         <p class="muted">Angemeldete Vornamen ab heute. „Löschen" entfernt den Eintrag sofort für alle; die Person kann sich danach neu anmelden.</p>
         <button id="reloadMeet" type="button" class="secondary">Anmeldungen aktualisieren</button>
@@ -93,7 +110,7 @@
     </section>
     <p class="footer">WU Lunch · <a href="impressum.html">Impressum</a></p>
   </main>
-  <script src="update-info.js?v=20261114-policy1"></script><script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261122-ux1"></script><script src="admin-menu-rules.js"></script>
+  <script src="update-info.js?v=20261114-policy1"></script><script src="supabase-config.js?v=1"></script><script src="i18n.js?v=20261122-tage1"></script><script src="admin-menu-rules.js"></script>
   <script>
   (()=>{
     const config=window.WU_LUNCH_SUPABASE;
@@ -137,6 +154,7 @@
       const rows=await response.json();
       if(!response.ok||!Array.isArray(rows)||rows.length!==1){accessToken='';throw new Error('Dieses Konto hat keinen Admin-Zugang.');}
       loginPanel.classList.add('hidden');adminPanel.classList.remove('hidden');
+      void refreshSettingsAdmin();
       void refreshMeetRegistrations();   // eigener Bereich: lädt nebenher, ein Fehler hier darf den Rest des Admins nicht stören
       await Promise.all([loadRestaurants(),loadAnnouncementSettings(),loadHistory()]);
       await loadEnglishRows();await loadUiTexts();await loadMenuEditor();await loadPublicationHistory();
@@ -363,6 +381,38 @@
     async function loadEnglishRows(){let rows=[];for(let offset=0;;offset+=1000){const response=await api('/rest/v1/lunch_translations?select=*&order=source_text&limit=1000&offset='+offset);if(!response.ok)throw new Error('Übersetzungen konnten nicht geladen werden.');const batch=await response.json();rows.push(...batch);if(batch.length<1000)break;}englishRows=new Map(rows.map(row=>[row.source_text,row]));renderTranslationList();}
     async function saveEnglishPairs(pairs){const unique=new Map();for(const [source,english] of pairs)if(source?.trim()&&english?.trim()){unique.set(source,english.trim());if(source.includes('\n')){const de=source.split('\n'),en=english.trim().split('\n');if(de.length!==en.length)throw new Error('Bitte die Zeilenstruktur der deutschen Fassung beibehalten.');de.forEach((line,i)=>{if(line.trim()&&en[i].trim())unique.set(line.trim(),en[i].trim());});}}if(!unique.size)throw new Error('Bitte mindestens einen englischen Text eingeben.');const records=await Promise.all([...unique].map(async([source_text,english_text])=>({source_text,english_text,source_sha256:[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source_text)))].map(b=>b.toString(16).padStart(2,'0')).join(''),origin:'manual',model:null,updated_at:new Date().toISOString()})));const response=await api('/rest/v1/lunch_translations?on_conflict=source_sha256',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(records)});if(!response.ok)throw new Error('English konnte nicht gespeichert werden.');for(const row of records)englishRows.set(row.source_text,row);renderTranslationList();}
     function renderTranslationList(){const list=document.getElementById('translationList');if(!list)return;const filter=document.getElementById('translationSearch').value.toLowerCase();list.replaceChildren();for(const row of [...englishRows.values()].filter(row=>(row.source_text+' '+row.english_text).toLowerCase().includes(filter)).slice(0,100)){const item=document.createElement('div');item.className='day';item.innerHTML='<p style="white-space:pre-line"></p><textarea></textarea><button type="button">English speichern</button><span class="notice"></span>';item.querySelector('p').textContent=row.source_text+' · '+(row.origin==='manual'?'manuell':'KI');item.querySelector('textarea').value=row.english_text;item.querySelector('button').onclick=async()=>{try{await saveEnglishPairs([[row.source_text,item.querySelector('textarea').value]]);}catch(e){item.querySelector('.notice').textContent=e.message;}};list.append(item);}}
+    // Einstellungen, die ohne App-Update wirken (Tabelle lunch_settings, supabase/20261122_settings.sql):
+    // Wochentage von Meet to eat und der manuell ausgelöste Update-Hinweis.
+    const weekdayLabels=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag'];
+    const validWeekdays=days=>[...new Set((Array.isArray(days)?days:[]).map(Number).filter(day=>Number.isInteger(day)&&day>=1&&day<=5))].sort();
+    async function loadSettingsAdmin(){
+      const response=await api('/rest/v1/lunch_settings?select=key,value');
+      if(!response.ok)throw new Error('Einstellungen konnten nicht geladen werden. Fehlt die Datenbank-Tabelle? Datei supabase/20261122_settings.sql in Supabase ausführen.');
+      const rows=await response.json();return Object.fromEntries((Array.isArray(rows)?rows:[]).map(row=>[row.key,row.value]));
+    }
+    async function saveSetting(key,value){
+      const response=await api('/rest/v1/lunch_settings?on_conflict=key',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'resolution=merge-duplicates,return=representation'},body:JSON.stringify({key,value,updated_at:new Date().toISOString()})});
+      const saved=response.ok?await response.json():null;
+      if(!Array.isArray(saved)||saved.length!==1)throw new Error('Einstellung konnte nicht gespeichert werden.');
+      return saved[0].value;
+    }
+    async function saveMeetDays(days){
+      const value=validWeekdays(days);if(!value.length)throw new Error('Bitte mindestens einen Wochentag wählen.');
+      return saveSetting('meet_weekdays',value);
+    }
+    async function saveUpdateNotice(input){
+      const value={enabled:input.enabled===true,min_version:String(input.min_version||'').trim(),message_de:String(input.message_de||'').trim().slice(0,300),message_en:String(input.message_en||'').trim().slice(0,300)};
+      if(value.enabled&&!/^\d+\.\d+\.\d+$/.test(value.min_version))throw new Error('Bitte die Version in der Form 0.5.7 angeben.');
+      return saveSetting('update_notice',value);
+    }
+    function renderSettingsAdmin(settings){
+      const days=validWeekdays(settings.meet_weekdays),box=document.getElementById('meetDays');box.replaceChildren();
+      weekdayLabels.forEach((label,index)=>{const item=document.createElement('label');item.innerHTML='<input type="checkbox" value="'+(index+1)+'"> '+label;item.querySelector('input').checked=(days.length?days:[1,3]).includes(index+1);box.append(item);});
+      const notice=settings.update_notice||{};
+      document.getElementById('updateEnabled').checked=notice.enabled===true;document.getElementById('updateVersion').value=notice.min_version||'';
+      document.getElementById('updateMessageDe').value=notice.message_de||'';document.getElementById('updateMessageEn').value=notice.message_en||'';
+    }
+    const refreshSettingsAdmin=()=>loadSettingsAdmin().then(renderSettingsAdmin).catch(error=>{renderSettingsAdmin({});text(document.getElementById('meetDaysNotice'),error.message,'error');});
     // Meet to eat: Vornamen der Angemeldeten ansehen und einzeln löschen (Kontrollmöglichkeit).
     // Die Datenbank erlaubt das nur dem Admin (supabase/20261117_meet_admin.sql).
     let meetRows=[];
@@ -422,6 +472,8 @@
     document.getElementById('reloadUiTexts').onclick=()=>loadUiTexts().catch(error=>alert(error.message));
     document.getElementById('editLanguage').onchange=async event=>{if(menuEditor.dataset.dirty==='true'&&!confirm('Nicht gespeicherte Menüänderungen verwerfen?')){event.target.value=editLanguage;return;}editLanguage=event.target.value;await loadEnglishRows();renderProfile();renderSelectedMenu();renderAnnouncementLanguage();renderUiTexts();document.getElementById('addDishButton').disabled=editLanguage==='en';document.getElementById('resetMenuButton').disabled=editLanguage==='en';};
     document.getElementById('reloadMeet').onclick=refreshMeetRegistrations;
+    document.getElementById('saveMeetDays').onclick=async()=>{const notice=document.getElementById('meetDaysNotice');text(notice,'Speichert …');try{const days=[...document.querySelectorAll('#meetDays input:checked')].map(input=>Number(input.value));const saved=await saveMeetDays(days);text(notice,'Gespeichert: '+saved.map(day=>weekdayLabels[day-1]).join(', ')+'.','success');}catch(error){text(notice,error.message,'error');}};
+    document.getElementById('saveUpdateNotice').onclick=async()=>{const notice=document.getElementById('updateNotice');text(notice,'Speichert …');try{const saved=await saveUpdateNotice({enabled:document.getElementById('updateEnabled').checked,min_version:document.getElementById('updateVersion').value,message_de:document.getElementById('updateMessageDe').value,message_en:document.getElementById('updateMessageEn').value});text(notice,saved.enabled?'Aktiv: Versionen vor '+saved.min_version+' sehen den Hinweis.':'Gespeichert, Hinweis ist aus.','success');}catch(error){text(notice,error.message,'error');}};
     document.getElementById('translationSearch').oninput=renderTranslationList;
     document.getElementById('reloadTranslations').onclick=()=>loadEnglishRows().catch(e=>alert(e.message));
     document.getElementById('logoutButton').addEventListener('click',()=>{accessToken='';password.value='';adminPanel.classList.add('hidden');loginPanel.classList.remove('hidden');text(loginNotice,'Abgemeldet.');});

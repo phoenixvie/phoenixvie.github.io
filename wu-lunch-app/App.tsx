@@ -8,6 +8,7 @@ import {routeAppMessage, webUrl} from './src/nativeLinks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {languagePreferences} from './src/preferences';
 import {usage} from './src/analytics';
+import appConfig from './app.json';
 
 const baseUrl = 'https://phoenixvie.github.io/wu-lunch-app/preview/';
 const nativeLanguage = /^de(?:-|$)/i.test(Intl.DateTimeFormat().resolvedOptions().locale) ? 'de' : 'en';
@@ -16,7 +17,11 @@ const preferences=languagePreferences(AsyncStorage);
 // Nur für App-Store-Screenshots: Die iOS-App kann per Startargument (-wuStartScreen map|meet|restaurant:<id>|info:<id>)
 // direkt eine Ansicht öffnen. Nutzer können keine Startargumente setzen; unbekannte Werte werden ignoriert.
 const startScreen = (() => {try {const value = Platform.OS === 'ios' ? String(Settings.get('wuStartScreen') ?? '') : ''; return /^(map|meet|(restaurant|info):[a-z0-9-]+)$/.test(value) ? value : '';} catch {return '';}})();
-const headScript = (saved?: string) => `<head><script>window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';${saved ? `window.WU_SAVED_LANGUAGE='${saved}';` : ''}${startScreen ? `window.WU_START_SCREEN='${startScreen}';` : ''}</script>`;
+// Version und System für den Update-Hinweis (im Admin ausgelöst); der Store-Link steht fest in der App.
+const appVersion = /^\d+\.\d+\.\d+$/.test(appConfig.expo.version) ? appConfig.expo.version : '0.0.0';
+const storeUrl = Platform.OS === 'ios' ? 'https://apps.apple.com/app/id6836345799' : 'market://details?id=at.startit.wufood';
+const openStore = () => {Linking.openURL(storeUrl).catch(() => {Linking.openURL('https://play.google.com/store/apps/details?id=at.startit.wufood').catch(() => {});});};
+const headScript = (saved?: string) => `<head><script>window.WU_APP={version:'${appVersion}',platform:'${Platform.OS === 'ios' ? 'ios' : 'android'}'};window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';${saved ? `window.WU_SAVED_LANGUAGE='${saved}';` : ''}${startScreen ? `window.WU_START_SCREEN='${startScreen}';` : ''}</script>`;
 const defaultHtmlSource = {html: previewHtml.replace('<head>',headScript()), baseUrl};
 function openExternal(url: string, language = nativeLanguage, texts: Record<string,string> = {}) {
   if (/^(https?:|mailto:|tel:)/i.test(url)) Linking.openURL(url).catch(() => {
@@ -81,6 +86,7 @@ function AppContent() {
       openSource: (url, title) => {void openSource(url, title);}, openExternal: openExternalLink, setLanguage:(next,copy,manual)=>{setLanguage(next);languageRef.current=next;if(copy)setTexts(previous=>JSON.stringify(previous)===JSON.stringify(copy)?previous:copy);if(manual)void preferences.save(next).catch(()=>{});},
       share: text => {Share.share({message: text}).catch(() => {});},
       exit: () => BackHandler.exitApp(),
+      openStore,
       usage:(event,props)=>usage.event(event,props),
     });
   };

@@ -30,9 +30,10 @@ const catalog: Record<string,Record<string,Check>>={
   meet_input_rejected:{reason:oneOf('name_missing','name_format','name_blocked','email_invalid')},
   meet_code_requested:{resend:oneOf('no','yes')},
   meet_code_result:{result:oneOf('ok','invalid')},
-  meet_joined:{slot,weekday:oneOf(1,3)},
+  meet_joined:{slot,weekday:oneOf(1,2,3,4,5)},
   meet_left:{slot},
   meet_maps_opened:{source:oneOf('fact','button')},
+  update_notice:{action:oneOf('shown','update','later')},
 };
 export const usageEvents=Object.keys(catalog);
 export function validateUsage(event: unknown, input: unknown): {event: string; props: Props} | null {
