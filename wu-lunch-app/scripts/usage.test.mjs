@@ -51,9 +51,11 @@ test('extended catalogue covers Meet to eat, map, links and sharing with fixed v
   ok('restaurant_link',{restaurant_id:'lia',link:'phone',url:'tel:+431'},{restaurant_id:'lia',link:'phone'});
   ok('restaurant_shared',{restaurant_id:'mensa'},{restaurant_id:'mensa'});
   ok('footer_link',{link:'imprint'},{link:'imprint'});
+  ok('meet_joined',{slot:'next',weekday:2},{slot:'next',weekday:2});   // Tage sind im Admin einstellbar (Montag bis Freitag)
+  ok('update_notice',{action:'later',version:'0.5.6'},{action:'later'});
   ok('menu_day_changed',{restaurant_id:'mensa',weekday:2,method:'swipe'},{restaurant_id:'mensa',weekday:2,method:'swipe'});
   ok('menu_day_changed',{restaurant_id:'mensa',weekday:2},{restaurant_id:'mensa',weekday:2});                          // ältere Aufrufe ohne Methode
-  for(const [event,props] of [['meet_joined',{slot:'next',weekday:2}],['meet_open',{entry:'push'}],['meet_input_rejected',{reason:'Anna ist gesperrt'}],
+  for(const [event,props] of [['meet_joined',{slot:'next',weekday:6}],['meet_open',{entry:'push'}],['meet_input_rejected',{reason:'Anna ist gesperrt'}],
     ['restaurant_link',{restaurant_id:'lia',link:'https://example.org'}],['footer_link',{link:'admin'}],['home_view',{view:'settings'}],['meet_code_result',{result:'123456'}],
     ['menu_day_changed',{restaurant_id:'mensa',weekday:2,method:'shake'}],['constructor',{}],['toString',{}]])
     assert.equal(validateUsage(event,{language:'de',...props}),null,event);

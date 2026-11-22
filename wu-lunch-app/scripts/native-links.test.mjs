@@ -40,3 +40,13 @@ test('only the trusted app can select supported native interface languages',()=>
   routeAppMessage('https://example.test',JSON.stringify({type:'language-changed',language:'en'}),base,handlers);
   assert.deepEqual(languages,['en','de']);
 });
+
+test('the update notice can open the store only through a fixed native action, never with a URL from the page', () => {
+  let opened=0; const calls=[];
+  const handlers={openSource:(...a)=>calls.push(['source',...a]),openExternal:(...a)=>calls.push(['external',...a]),share(){},exit(){},openStore:()=>{opened++;}};
+  const base='https://phoenixvie.github.io/wu-lunch-app/preview/';
+  routeAppMessage(base,JSON.stringify({type:'open-store',url:'https://evil.example/app'}),base,handlers);
+  assert.equal(opened,1);assert.deepEqual(calls,[]);
+  routeAppMessage('https://evil.example/',JSON.stringify({type:'open-store'}),base,handlers);   // fremde Seite: wirkungslos
+  assert.equal(opened,1);
+});

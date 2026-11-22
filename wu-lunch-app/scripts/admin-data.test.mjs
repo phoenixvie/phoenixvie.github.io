@@ -67,3 +67,32 @@ test('admin lists Meet-to-eat sign-ups, deletes single names and notices a missi
   // Der neue Bereich darf den übrigen Admin beim Anmelden nicht blockieren.
   assert.match(html,/void refreshMeetRegistrations\(\);/);assert.match(html,/<h2>Meet to eat: Anmeldungen<\/h2>/);
 });
+
+test('admin saves Meet-to-eat weekdays and the update notice with validation; a missing table is reported clearly',async()=>{
+  const html=await readFile(new URL('../../wu-lunch/admin.html',import.meta.url),'utf8');
+  const start=({ok=true,rows=[{key:'meet_weekdays',value:[1,3]}]}={})=>{
+    const requests=[];
+    const c={Date,api:async(path,options={})=>{requests.push({path,options});
+      if(options.method==='POST'){const body=JSON.parse(options.body);return {ok,json:async()=>[{key:body.key,value:body.value}]};}
+      return {ok,json:async()=>rows};}};
+    vm.createContext(c);vm.runInContext(html.slice(html.indexOf("    const weekdayLabels="),html.indexOf('    function renderSettingsAdmin(')),c);
+    return {c,requests};
+  };
+  const fine=start();
+  assert.equal(JSON.stringify(await fine.c.loadSettingsAdmin()),'{"meet_weekdays":[1,3]}');
+  // Nur Montag bis Freitag, sortiert, ohne Doppelte; mindestens ein Tag.
+  assert.deepEqual([...await fine.c.saveMeetDays([3,'3',9,0])],[3]);
+  const call=fine.requests.at(-1);assert.equal(call.path,'/rest/v1/lunch_settings?on_conflict=key');assert.equal(call.options.method,'POST');
+  assert.match(call.options.headers.Prefer,/resolution=merge-duplicates/);assert.equal(JSON.parse(call.options.body).key,'meet_weekdays');
+  await assert.rejects(()=>fine.c.saveMeetDays([]),/mindestens einen Wochentag/);
+  await assert.rejects(()=>fine.c.saveMeetDays([6,7]),/mindestens einen Wochentag/);
+  // Update-Hinweis: eingeschaltet nur mit Version in der Form 0.5.7; Texte werden gekürzt und bereinigt.
+  await assert.rejects(()=>fine.c.saveUpdateNotice({enabled:true,min_version:'neu'}),/Form 0\.5\.7/);
+  const saved=await fine.c.saveUpdateNotice({enabled:true,min_version:' 0.5.7 ',message_de:'  Bitte aktualisieren  ',message_en:'x'.repeat(400)});
+  assert.equal(saved.enabled,true);assert.equal(saved.min_version,'0.5.7');assert.equal(saved.message_de,'Bitte aktualisieren');assert.equal(saved.message_en.length,300);
+  assert.equal((await fine.c.saveUpdateNotice({enabled:false,min_version:''})).enabled,false);   // ausschalten geht ohne Version
+  // Fehlt die Tabelle (SQL noch nicht eingespielt), nennt die Meldung die Datei.
+  await assert.rejects(()=>start({ok:false}).c.loadSettingsAdmin(),/20261122_settings\.sql/);
+  await assert.rejects(()=>start({ok:false}).c.saveMeetDays([3]),/nicht gespeichert/);
+  assert.match(html,/<h2>Meet to eat: Wochentage<\/h2>/);assert.match(html,/<h2>App-Update-Hinweis<\/h2>/);assert.match(html,/void refreshSettingsAdmin\(\);/);
+});
