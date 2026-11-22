@@ -237,14 +237,38 @@
    "brandColor": "#4f7d3a",
    "days": {
     "2026-11-23": [],
-    "2026-11-24": [],
-    "2026-11-25": [],
-    "2026-11-26": [],
-    "2026-11-27": []
+    "2026-11-24": [
+     {
+      "name": "Gebratene Leberwurst mit Kartoffeln und Sauerkraut",
+      "price": 14.8,
+      "included_soup": "Nudelsuppe oder Tagessuppe"
+     }
+    ],
+    "2026-11-25": [
+     {
+      "name": "Reisfleisch mit Salat",
+      "price": 14.8,
+      "included_soup": "Nudelsuppe oder Tagessuppe"
+     }
+    ],
+    "2026-11-26": [
+     {
+      "name": "Gebackenes Schweinsschnitzel mit Reis und Kartoffelmayonnaisesalat",
+      "price": 14.8,
+      "included_soup": "Nudelsuppe oder Tagessuppe"
+     }
+    ],
+    "2026-11-27": [
+     {
+      "name": "Kalbsbeuschel mit Semmeklnödel",
+      "price": 14.8,
+      "included_soup": "Nudelsuppe oder Tagessuppe"
+     }
+    ]
    },
    "import": {
-    "state": "not_published",
-    "message": "Zur Linde zeigt 2026-11-17 bis 2026-11-20"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -632,15 +656,40 @@
    ],
    "brandColor": "#35607f",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [],
-    "2026-11-25": [],
-    "2026-11-26": [],
-    "2026-11-27": []
+    "2026-11-23": [
+     {
+      "name": "Restaurant geschlossen.",
+      "price": 13.4
+     }
+    ],
+    "2026-11-24": [
+     {
+      "name": "Restaurant geschlossen.",
+      "price": 13.4
+     }
+    ],
+    "2026-11-25": [
+     {
+      "name": "Restaurant geschlossen.",
+      "price": 13.4
+     }
+    ],
+    "2026-11-26": [
+     {
+      "name": "Restaurant geschlossen.",
+      "price": 13.4
+     }
+    ],
+    "2026-11-27": [
+     {
+      "name": "Restaurant geschlossen.",
+      "price": 13.4
+     }
+    ]
    },
    "import": {
-    "state": "not_published",
-    "message": "Im Turm zeigt die Woche ab 16.11."
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -889,5 +938,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-22T12:31:53+01:00"
+ "updatedAt": "2026-11-22T20:46:11+01:00"
 }
