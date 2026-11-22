@@ -63,7 +63,7 @@ test('iOS build requires arm64, not the outdated armv7 that Expo writes by defau
   // Restaurant-Webseiten öffnen im eingebauten Browser; einzelne liefern noch http-Inhalte. Apple akzeptiert die
   // Ausnahme nur für Web-Inhalte ohne Begründung; beliebige unverschlüsselte Verbindungen bleiben verboten.
   assert.deepEqual(ios.infoPlist.NSAppTransportSecurity, {NSAllowsArbitraryLoads: false, NSAllowsArbitraryLoadsInWebContent: true, NSAllowsLocalNetworking: true});
-  assert.ok(Number(ios.buildNumber) >= 5, 'jeder Upload braucht eine neue Build-Nummer (1 bis 4 sind bei App Store Connect)');
+  assert.ok(Number(ios.buildNumber) >= 6, 'jeder Upload braucht eine neue Build-Nummer (1 bis 5 sind bei App Store Connect)');
 });
 
 test('native back bar keeps arrow and label on one line', async () => {
