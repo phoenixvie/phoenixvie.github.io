@@ -28,7 +28,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   vm.createContext(context);vm.runInContext(source,context);
   const click=async (action,slot)=>{handlers.click({target:{closest:()=>({dataset:{action,slot}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));};
   await click('meet-preview');
-  assert.equal(context.meetSlot,0);assert.match(context.renderMeet(),/Meet to eat/);assert.match(context.renderMeet(),/<p class="meet-dabei">[^]*?<strong>Sei die erste Person\.<\/strong><\/span><\/p>/);
+  assert.equal(context.meetSlot,0);assert.match(context.renderMeet(),/Meet to eat/);assert.match(context.renderMeet(),/<div class="meet-fact meet-joined">[^]*?<strong>Teilnehmer<\/strong><span class="meet-count">Sei die erste Person\.<\/span><\/div><\/div>/);
   assert.doesNotMatch(context.renderMeet(),/WU-Studenten Gruppe|Info nach Anmeldung/);assert.doesNotMatch(context.renderMeet(),/Testvorschau|Testteilnehmer|Testtermin/);
   // Keine Terminleiste, keine Wischpunkte, kein Wischen. Das Datum ist eine Auswahlliste mit genau
   // zwei Terminen: dem nächsten und dem danach.
@@ -47,12 +47,12 @@ test('paused e-mail flow still works when switched back on (verified email, then
   assert.doesNotMatch(context.renderMeet(),new RegExp('<option value="'+later+'" selected>'));
   assert.equal((context.renderMeet().match(/placeholder="Max"/g)||[]).length,0);
   // Aufbau seit 23.11.2026: Zeichnung, Satz, Tabelle mit Foto, „… schon dabei", unten die Anmeldung.
-  assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,4);   // Tabelle mit vier Zeilen (Datum, Uhrzeit, Losgehen, Treffpunkt)
-  const order=['class="meet-art"','class="meet-lead"','class="meet-facts"','class="meet-place"','class="meet-dabei"','class="meet-why"','</div><div class="meet-cta"'].map(part=>context.renderMeet().indexOf(part));
+  assert.equal((context.renderMeet().match(/class="meet-fact[ "]/g)||[]).length,5);   // Tabelle mit fünf Zeilen (Datum, Uhrzeit, Losgehen, Teilnehmer, Treffpunkt)
+  const order=['class="meet-art"','class="meet-lead"','class="meet-facts"','class="meet-fact meet-joined"','Treffpunkt auf der WU','class="meet-place"','class="meet-why"','</div><div class="meet-cta"'].map(part=>context.renderMeet().indexOf(part));
   assert.ok(order.every((at,index)=>at>=0&&(index===0||order[index-1]<at)),'Reihenfolge der Bereiche: '+order);
   // Tabelle (Vorgabe 23.11.2026): Datum, Uhrzeit am Treffpunkt, Gemeinsam losgehen und als letzte Zeile der Treffpunkt;
   // das Foto schließt direkt an. Die Uhrzeit steht nur noch in der Tabelle; „So läuft's ab" ist entfallen.
-  assert.match(context.renderMeet(),/<div class="meet-facts"><div class="meet-fact">[^]*?<div><strong>Datum<\/strong><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Uhrzeit am Treffpunkt<\/strong><span>12:00 Uhr<\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Gemeinsam losgehen<\/strong><span>12:05 Uhr<\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Treffpunkt auf der WU<\/strong><span>Vor dem Baum direkt bei der Mensa<\/span><\/div><\/div><figure class="meet-place">/);
+  assert.match(context.renderMeet(),/<div class="meet-facts"><div class="meet-fact">[^]*?<div><strong>Datum<\/strong><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Uhrzeit am Treffpunkt<\/strong><span>12:00 Uhr<\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Gemeinsam losgehen<\/strong><span>12:05 Uhr<\/span><\/div><\/div><div class="meet-fact meet-joined">[^]*?<\/div><\/div><div class="meet-fact">[^]*?<strong>Treffpunkt auf der WU<\/strong><span>Vor dem Baum direkt bei der Mensa<\/span><\/div><\/div><figure class="meet-place">/);
   assert.doesNotMatch(context.renderMeet(),/meet-steps|So läuft|meet-when|meet-info|Zusammenwarten| um 12:00 Uhr<\/option>/);
   // Das Datumsfeld ist nur so breit wie sein Text (Vorgabe 23.11.2026).
   assert.match(await readFile(new URL('../preview/style.css',import.meta.url),'utf8'),/\.meet-facts \.meet-fact \.meet-date-picker select\{width:auto;max-width:100%\}/);
@@ -94,7 +94,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   // Die Bestätigung trägt ein Häkchen-Symbol vor dem Text.
   assert.match(context.renderMeet(),/<div class="meet-confirm"><p><svg class="meet-check"[^>]*>.*?<\/svg><span>Du bist für diesen Termin angemeldet\.<\/span><\/p><p><svg class="meet-check"[^>]*>.*?<\/svg><span>Bitte melde dich aus Rücksicht/);
   // Nach der Anmeldung: Bestätigung, dann die Namen, dann „Abmelden".
-  assert.match(context.renderMeet(),/<div class="meet-confirm">[^]*?<div class="meet-fact meet-people">[^]*?<strong>Bereits angemeldet<\/strong><span class="meet-names">[^]*?data-action="meet-leave">/);
+  assert.match(context.renderMeet(),/<div class="meet-fact meet-people">[^]*?<strong>Bereits angemeldet<\/strong><span class="meet-names">[^]*?<strong>Treffpunkt auf der WU<\/strong>[^]*?<figure class="meet-place">[^]*?<div class="meet-confirm">[^]*?data-action="meet-leave">/);
   await click('meet-leave');assert.equal(own.length,0);
   assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-own/);assert.match(context.renderMeet(),/meet-place/);assert.match(context.renderMeet(),/Sei die erste Person\./);assert.equal(context.meetJoined,false);
   // Abgemeldet, Name lokal gemerkt: erneutes Anmelden braucht kein Formular mehr.
@@ -170,7 +170,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Uhrzeit am Treffpunkt','Gemeinsam losgehen','Treffpunkt auf der WU','12:00 Uhr','12:05 Uhr','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Uhrzeit am Treffpunkt','Gemeinsam losgehen','Treffpunkt auf der WU','12:00 Uhr','12:05 Uhr','Teilnehmer','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
@@ -286,7 +286,7 @@ test('list entry shows the number of people signed up for the next date, and not
   // Drei Personen beim nächsten Termin, eine beim übernächsten: gezählt wird nur der nächste.
   const busy=await start(days=>[...['Lena','Jonas','Mia'].map(first_name=>({meeting_date:days[0],first_name})),{meeting_date:days[1],first_name:'Tom'}]);
   // Vor der eigenen Anmeldung steht dort nur die Zahl (Vorgabe 23.11.2026): keine Namen, also auch kein Melde-Link.
-  assert.match(busy.context.renderMeet(),/<p class="meet-dabei">[^]*?<strong>3 sind schon dabei\.<\/strong><small>Die Namen siehst du nach deiner Anmeldung\.<\/small><\/span><\/p>/);
+  assert.match(busy.context.renderMeet(),/<div class="meet-fact meet-joined">[^]*?<span class="meet-count">3 sind schon dabei\.<\/span><small>Die Namen siehst du nach deiner Anmeldung\.<\/small><\/div><\/div>/);
   assert.doesNotMatch(busy.context.renderMeet(),/Lena|Jonas|Mia|meet-report|meet-names/);
   // Der Melde-Link gehört zur Namensliste, die erst nach der eigenen Anmeldung erscheint.
   assert.match(source,/<span class="meet-names">\$\{entries\}<\/span>\$\{names\.length \? `<a class="meet-report" href="mailto:\$\{esc\(contactEmail\(\)\)\}\?subject=/);
