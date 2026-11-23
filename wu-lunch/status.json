@@ -1,15 +1,15 @@
 {
-  "checked_at": "2026-11-23T17:50:23+01:00",
+  "checked_at": "2026-11-23T19:57:41+01:00",
   "week_start": "2026-11-23",
   "week_end": "2026-11-27",
-  "health": "healthy",
+  "health": "degraded",
   "sources": {
     "karmafood": {
       "state": "ok",
-      "last_success": "2026-11-23T17:50:29+01:00",
-      "checked_at": "2026-11-23T17:50:29+01:00",
+      "last_success": "2026-11-23T19:57:52+01:00",
+      "checked_at": "2026-11-23T19:57:52+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "9ee8191177c7f2d58d73b5a99ff9460de1d72e806b2a2b05d57089e9e5cbfc1c",
+      "content_sha256": "99bac5f103f6015055603b46129e86746f157161eab868c4146cbb826d8e2885",
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-23",
@@ -18,7 +18,7 @@
     "finn": {
       "state": "cached",
       "last_success": "2026-11-21T18:00:39+01:00",
-      "checked_at": "2026-11-23T17:50:29+01:00",
+      "checked_at": "2026-11-23T19:57:52+01:00",
       "consecutive_failures": 0,
       "content_sha256": "58313a2c3ae047259f25991493a9f9606a72a9410f112afec747d986bcf97103",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
@@ -29,7 +29,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-23T17:50:23+01:00",
+      "last_success": "2026-11-23T19:57:41+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -48,10 +48,10 @@
       "content_sha256": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1"
     },
     "campus": {
-      "state": "cached",
+      "state": "error",
+      "error": "ValueError: Campus: Plan nicht für KW 2026-11-23: None",
       "last_success": "2026-11-21T00:10:35+01:00",
-      "consecutive_failures": 0,
-      "parser_version": null,
+      "consecutive_failures": 1,
       "content_sha256": "1b0895f89e70b5e1ff093dcc596dbeb4c8fbf7798bc1ccaf0194843e0553bf59"
     },
     "baschly": {
@@ -71,14 +71,14 @@
     },
     "topfdeckel": {
       "state": "ok_browser",
-      "last_success": "2026-11-23T17:53:22+01:00",
+      "last_success": "2026-11-23T19:58:17+01:00",
       "consecutive_failures": 0,
       "day_sha256": {
-        "2026-11-23": "89c79ffb51ace725024f9a408f76c25e76c57f3326e0012a79fa7108e2edb389",
-        "2026-11-24": "6739444b1ec757ae47a299780c29810efdb23fa44ea6ed47dd8b7a7b4f0597e9",
-        "2026-11-25": "37c1803055bd216d4cec98e0391aa7a25530c5bc40a3078a1100ed0740fb76a6",
-        "2026-11-26": "24e496d90a14fc7ee96d77313f04e48c2ce2b13c7fc0f873bb27bf7f6d6aa50f",
-        "2026-11-27": "858e14c034ef926e8921ac08d3ddcb149b0b4ee388eaadc2920789ed0eea5ab8"
+        "2026-11-23": "1953ca73bc514eb54ee1f682cd0e3a7d5d72da3c26ef295cc3937fdf5851ef8a",
+        "2026-11-24": "64a9e5d65bf4cec754f9e4d6a8b5710776b2f27d7d25bb6be9d446bef647076c",
+        "2026-11-25": "344ba9fdf320a416854a75d606eb5e06db15f28de317905b2cbfe09729574521",
+        "2026-11-26": "01f96a4f48c7925ea495e8d11e7566d22ed5322188a90bfd10109621116e41ba",
+        "2026-11-27": "8fd3364069452fd328e8e9fdcf24ad045ffa6eca326173acf39c5319714ccbb8"
       }
     },
     "gruenehuette": {
@@ -96,7 +96,9 @@
       "content_sha256": "c02f93ff1d6f0dac569ca1ac4388bff16af066af388dcc319773d4c2cf4038b9"
     }
   },
-  "problems": [],
+  "problems": [
+    "campus: ValueError: Campus: Plan nicht für KW 2026-11-23: None"
+  ],
   "schedule_url": "update-policy.json",
   "format_version": 1,
   "ai_repair": {
@@ -161,10 +163,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-23T17:54:29+01:00",
+      "last_checked": "2026-11-23T19:59:19+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-23",
-      "source_fingerprint": "9ee8191177c7f2d58d73b5a99ff9460de1d72e806b2a2b05d57089e9e5cbfc1c",
+      "source_fingerprint": "99bac5f103f6015055603b46129e86746f157161eab868c4146cbb826d8e2885",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -174,35 +176,36 @@
   "topf_luna_audit": {
     "state": "review_needed",
     "model": "gpt-6-luna",
-    "fingerprint": "ac2d455750482ce06f2834db387d5c42352b6f932bb2b8d04c828d5cccf6f560",
-    "checked_at": "2026-11-23T17:54:28+01:00",
+    "fingerprint": "8c3234895286d9c477c4610592ad8c4641951aa1e259d14e23bb11609145e1ad",
+    "checked_at": "2026-11-23T19:59:19+01:00",
     "validation_issues": [
       "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
     ],
     "ai_only_examples": {},
     "warnings": [
-      "Die Tabs weisen keine ausdrückliche Menükombination aus; es wurde keine Kombination oder kostenlose Suppe abgeleitet.",
-      "Bei der Marokkanischen Karfiol-Pfanne steht Couscous bereits im Namen und erneut in der Beschreibung; nicht doppelt erfasst."
+      "In den Allergeneinträgen vorkommende Kürzel GF und LF sind nicht in der auf der Seite aufgeführten Allergenliste enthalten und wurden daher nicht als Allergene nach den Codes A–R ausgegeben.",
+      "Der Hinweis „Gratis-Dessert zum Start“ bezieht sich auf die Newsletter-Anmeldung und belegt keine kostenlose Dessertbeilage zu einem Menü.",
+      "Am Mittwoch ist bei der Marokanischen Karfiol-Pfanne Couscous sowohl im Gerichtsnamen als auch in der Beschreibung genannt; nicht doppelt als Beilage erfasst."
     ],
     "usage": {
-      "input_tokens": 48956,
+      "input_tokens": 49159,
       "input_tokens_details": {
-        "cache_write_tokens": 48953,
+        "cache_write_tokens": 49156,
         "cache_write_tokens_details": {
           "ttl_12h_tokens": 0,
-          "ttl_30m_tokens": 48953
+          "ttl_30m_tokens": 49156
         },
         "cached_tokens": 0
       },
-      "output_tokens": 9080,
+      "output_tokens": 8481,
       "output_tokens_details": {
-        "reasoning_tokens": 997
+        "reasoning_tokens": 710
       },
-      "total_tokens": 58036
+      "total_tokens": 57640
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-23T17:50:27+01:00",
+    "checked_at": "2026-11-23T19:57:49+01:00",
     "source_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
     "week_start": "2026-11-23",

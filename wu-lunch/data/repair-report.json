@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-23T17:54:29+01:00",
+  "checked_at": "2026-11-23T19:59:19+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
   "api_calls": 1,
@@ -10,9 +10,9 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Seite zeigt auch Abschnitte für Donnerstag und Freitag, aber diese liegen außerhalb des in der Überschrift genannten Zeitraums und wurden daher nicht als aktuelle Gerichte übernommen.",
-        "„Lunch Combo €13,50“ steht im Kopfbereich, ist aber keinem konkreten Gericht eindeutig als Einzel- oder Menügesamtpreis zugeordnet.",
-        "Die undatierten Extras wurden keinem konkreten Tag zugeordnet."
+        "Donnerstag und Freitag sind zwar im HTML aufgeführt, liegen aber außerhalb des in der Kopfzeile angegebenen Zeitraums und wurden daher nicht als Gerichte der gesuchten Woche erfasst.",
+        "Extras wie „Samosas“ und „Sweets & Mango Lassi“ sind nicht einzelnen Tagen zugeordnet und haben keinen ausgewiesenen Einzelpreis; sie wurden nicht auf Tage verteilt.",
+        "Für Tagessuppen, separat angebotene Salate oder Nachspeisen ist im datierten Menü kein entsprechendes Angebot belegt."
       ],
       "ai_only_items": 0,
       "parser_only_items": 6,
@@ -25,23 +25,23 @@
         "2026-11-27: dal makhni mit veganer butter"
       ],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "b4652dc7792bb7f42ea1c46c78ed40f1381b2670af7403330d0a0b4fa7cd3cc1"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "66527d1480f72635165a7c3672d8413609fe1068e1a7db7be0f26717b5026fba"
       },
       "usage": {
-        "input_tokens": 2669,
+        "input_tokens": 2667,
         "input_tokens_details": {
-          "cache_write_tokens": 2666,
+          "cache_write_tokens": 2664,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2666
+            "ttl_30m_tokens": 2664
           },
           "cached_tokens": 0
         },
-        "output_tokens": 2192,
+        "output_tokens": 2191,
         "output_tokens_details": {
-          "reasoning_tokens": 807
+          "reasoning_tokens": 898
         },
-        "total_tokens": 4861
+        "total_tokens": 4858
       }
     },
     {
