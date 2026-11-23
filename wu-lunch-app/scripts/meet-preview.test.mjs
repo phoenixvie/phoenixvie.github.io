@@ -44,19 +44,19 @@ test('paused e-mail flow still works when switched back on (verified email, then
   await click('meet-preview');   // erneutes Öffnen beginnt wieder beim nächsten Termin
   assert.doesNotMatch(context.renderMeet(),new RegExp('<option value="'+later+'" selected>'));
   assert.equal((context.renderMeet().match(/placeholder="Max"/g)||[]).length,0);
-  // Aufbau seit 23.11.2026: Satz, Foto mit Beschriftung, darunter Termin und Uhrzeit, „… schon dabei", Ablauf, unten die Anmeldung.
+  // Aufbau seit 23.11.2026: Satz, Foto, darunter Termin mit Uhrzeit, Ort und Wartezeit, „… schon dabei", Ablauf, unten die Anmeldung.
   assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,0);   // keine Tabelle mehr
-  const order=['class="meet-lead"','class="meet-place"','class="meet-when"','class="meet-dabei"','class="meet-why"','class="meet-steps"','</div><div class="meet-cta"'].map(part=>context.renderMeet().indexOf(part));
+  const order=['class="meet-lead"','class="meet-place"','class="meet-when"','class="meet-info"','class="meet-dabei"','class="meet-why"','class="meet-steps"','</div><div class="meet-cta"'].map(part=>context.renderMeet().indexOf(part));
   assert.ok(order.every((at,index)=>at>=0&&(index===0||order[index-1]<at)),'Reihenfolge der Bereiche: '+order);
   // Die Uhrzeit steht im Einleitungssatz ("… um 12:00 Uhr statt."), nicht mehr neben der Terminauswahl.
-  assert.match(context.renderMeet(),/<div class="meet-when"><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><span class="meet-time">Treffpunkt von 12:00 bis 12:05 Uhr<\/span><\/div>/);assert.match(context.renderMeet(),/<\/figcaption><\/figure><div class="meet-when">/);
+  assert.match(context.renderMeet(),/<div class="meet-when"><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><\/div>/);assert.match(context.renderMeet(),/<\/figure><div class="meet-when">[^]*?<\/div><ul class="meet-info"><li>[^]*?<span><strong>Vor dem Baum direkt bei der Mensa<\/strong><\/span><\/li><li>[^]*?<span>Zusammenwarten von 12:00 bis 12:05 Uhr<\/span><\/li><\/ul>/);assert.match(context.renderMeet(),/<option value="[0-9-]+" selected>[^<]+ um 12:00 Uhr<\/option>/);
   assert.match(context.renderMeet(),/<section class="meet-steps"><h3>So läuft's ab<\/h3><ol><li>Mit deinem Vornamen anmelden\.<\/li><li>Um 12:00 Uhr beim Baum vor der Mensa treffen\.<\/li><li>Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen\.<\/li><\/ol><\/section>/);
   assert.equal(handlers.touchstart,undefined);assert.equal(handlers.touchend,undefined);
   // Vorgabe vom 23.11.2026: Treffpunkt, Foto und Google-Maps-Link sind schon vor der Anmeldung sichtbar –
   // nichts wird mehr versteckt ("Info nach Anmeldung" gibt es nicht mehr). Keine eingebettete Karte, kein Platzhalter.
   assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-locked|Nach Anmeldung sichtbar|Info nach Anmeldung|meet-reveal/);
   // Das Foto steht oben (statt der Zeichnung); der Treffpunkt ist Beschriftung, kein Link. Auch der Google-Maps-Link ist entfallen (Vorgabe 23.11.2026).
-  assert.match(context.renderMeet(),/<figure class="meet-place"><img class="meet-photo-visible" src="\.\/meeting-point\.webp"[^>]*><figcaption>[^]*?<strong>Vor dem Baum direkt bei der Mensa<\/strong><\/span><\/figcaption><\/figure>/);
+  assert.match(context.renderMeet(),/<figure class="meet-place"><img class="meet-photo-visible" src="\.\/meeting-point\.webp"[^>]*><\/figure>/);
   assert.doesNotMatch(context.renderMeet(),/google\.com\/maps|Google Maps|meet-map-link/);
   assert.doesNotMatch(context.renderMeet(),/<a [^>]*>Vor dem Baum direkt bei der Mensa<\/a>|meet-art/);
   // Wozu die Anmeldung dient, steht im Text; Vorname und Knopf stehen in einer festen Leiste unter dem scrollenden Inhalt.
@@ -165,7 +165,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht :)','Treffpunkt von 12:00 bis 12:05 Uhr','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.',"So läuft's ab",'Mit deinem Vornamen anmelden.','Um 12:00 Uhr beim Baum vor der Mensa treffen.','Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht :)','Zusammenwarten von 12:00 bis 12:05 Uhr','{date} um 12:00 Uhr','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.',"So läuft's ab",'Mit deinem Vornamen anmelden.','Um 12:00 Uhr beim Baum vor der Mensa treffen.','Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }

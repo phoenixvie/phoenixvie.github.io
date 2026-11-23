@@ -129,14 +129,16 @@
     let ownRemoved = false;
     const names = people.filter(p => { if (own && !ownRemoved && p.first_name === own.first_name) { ownRemoved = true; return false; } return true; });
     // Aufbau seit 23.11.2026 (Vorgabe des Betreibers): 1. ein Satz, worum es geht (mit Tag und Uhrzeit);
-    // 2. das Foto des Treffpunkts statt der Zeichnung, darunter der Ort, die Terminauswahl und „Treffpunkt von 12:00 bis 12:05 Uhr“; 3. wie viele schon dabei
+    // 2. das Foto des Treffpunkts statt der Zeichnung, darunter die Terminauswahl („Mittwoch, 25. November um 12:00 Uhr“), der Ort und
+    // „Zusammenwarten von 12:00 bis 12:05 Uhr“ (jeweils mit Symbol); 3. wie viele schon dabei
     // sind; 4. Vorname und Knopf, am unteren Rand angeheftet und damit immer erreichbar; 5. „So läuft's ab".
     // Der Treffpunkt ist kein Link mehr (er führte aus der App hinaus und war das Auffälligste der Seite); auch der
     // Google-Maps-Link ist entfallen (WU-Studierende kennen den Ort, das Foto genügt). Die Namen der anderen
     // erscheinen erst nach der eigenen Anmeldung.
     const entries = names.map(p => `<span class="meet-name" data-ui-literal>${esc(p.first_name)}</span>`).join('') + (own ? `<span class="meet-name meet-own"><span data-ui-literal>${esc(own.first_name)}</span><button class="meet-remove" data-action="meet-leave" aria-label="Meine Anmeldung entfernen">${icon('close')}</button></span>` : '');
-    const when = `<div class="meet-when"><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">${dateOptions().map(day => `<option value="${day}" ${day === selected ? 'selected' : ''}>${esc(dateValue(day,{weekday:'long',day:'numeric',month:'long'}))}</option>`).join('')}</select></span><span class="meet-time">Treffpunkt von 12:00 bis 12:05 Uhr</span></div>`;
-    const place = `<figure class="meet-place"><img class="meet-photo-visible" src="./meeting-point.webp" width="1200" height="1360" alt="${esc(text('Treffpunkt vor dem Baum bei der Mensa'))}" onerror="this.onerror=null;this.src='./meeting-point.png'"><figcaption>${icon('location_on')}<span><strong>Vor dem Baum direkt bei der Mensa</strong></span></figcaption></figure>`;
+    const when = `<div class="meet-when"><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">${dateOptions().map(day => `<option value="${day}" ${day === selected ? 'selected' : ''}>${esc(text('{date} um 12:00 Uhr', {date: dateValue(day,{weekday:'long',day:'numeric',month:'long'})}))}</option>`).join('')}</select></span></div>`;
+    const place = `<figure class="meet-place"><img class="meet-photo-visible" src="./meeting-point.webp" width="1200" height="1360" alt="${esc(text('Treffpunkt vor dem Baum bei der Mensa'))}" onerror="this.onerror=null;this.src='./meeting-point.png'"></figure>`;
+    const where = `<ul class="meet-info"><li>${icon('location_on')}<span><strong>Vor dem Baum direkt bei der Mensa</strong></span></li><li>${icon('schedule')}<span>Zusammenwarten von 12:00 bis 12:05 Uhr</span></li></ul>`;
     // Vor der eigenen Anmeldung nur die Zahl – der Grund mitzumachen; danach die Namen (mit Melde-Link).
     const dabei = own
       ? `<div class="meet-fact meet-people">${icon('group')}<div><strong>Bereits angemeldet</strong><span class="meet-names">${entries}</span>${names.length ? `<a class="meet-report" href="mailto:${esc(contactEmail())}?subject=${encodeURIComponent('WU Food: Namen melden (' + selected + ')')}">Unpassenden Namen melden</a>` : ''}</div></div>`
@@ -150,7 +152,7 @@
     // Feste Leiste unter dem scrollenden Inhalt (wie der Hinweis unter den Menüs): Vorname und Knopf in einer Zeile,
     // eine Meldung zum Namen direkt darüber. So ist die Anmeldung immer erreichbar.
     const cta = own || !registrationOpen(selected) || elsewhere ? '' : `<div class="meet-cta">${nameError ? errorHtml.replace('class="meet-notice"', 'class="meet-notice meet-name-error"') : ''}<div class="meet-cta-row">${emailVerification ? '' : `<input id="meet-first-name" aria-label="Dein Vorname" autocomplete="off" maxlength="40" placeholder="Dein Vorname" autocapitalize="words" value="${esc(state.pendingName)}">`}<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Teilnehmen</button></div></div>`;
-    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}<p class="meet-lead">Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen. <span data-ui-literal>${esc(typeof meetDaysText === 'function' ? meetDaysText('intro') : 'Findet jeden Mittwoch um 12:00 Uhr statt.')}</span></p>${place}${when}${action}${steps}</div>${cta}</div>`;
+    return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}<p class="meet-lead">Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen. <span data-ui-literal>${esc(typeof meetDaysText === 'function' ? meetDaysText('intro') : 'Findet jeden Mittwoch um 12:00 Uhr statt.')}</span></p>${place}${when}${where}${action}${steps}</div>${cta}</div>`;
   }
   async function join(name, meetingDate) {
     if (!emailVerification && (!state.session || nameProblem(name))) { state.error = nameProblem(name) || 'Die Anmeldung ist momentan nicht verfügbar. Bitte versuche es später erneut.'; return; }
