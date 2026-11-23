@@ -1,0 +1,74 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Suppe oder Salat",
+     "price": null
+    },
+    {
+     "name": "Naturschnitzerl vom Steirerschwein, Serviettenknödel",
+     "price": null
+    },
+    {
+     "name": "Gebackene Maishenderlbrust mit Erbsenreis",
+     "price": null
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Suppe oder Salat",
+     "price": null
+    },
+    {
+     "name": "Gebackene Maishenderlbrust mit Erbsenreis",
+     "price": null
+    },
+    {
+     "name": "Open Pulled Pork Sandwich mit spicy wedges, Cole slaw",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Suppe oder Salat",
+     "price": null
+    },
+    {
+     "name": "Open Pulled Pork Sandwich mit spicy wedges, Cole slaw",
+     "price": null
+    },
+    {
+     "name": "Überbackene Schinkenspätzle mit Blattsalat",
+     "price": null
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Überbackene Schinkenspätzle mit Blattsalat",
+     "price": null
+    },
+    {
+     "name": "Zanderfilet nach Mailänder Art, Selleriepüree, Basilikumpesto",
+     "price": null
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Suppe oder Salat",
+     "price": null
+    },
+    {
+     "name": "Zanderfilet nach Mailänder Art, Selleriepüree, Basilikumpesto",
+     "price": null
+    }
+   ]
+  },
+  "ok": true
+ },
+ "id": "rondo",
+ "verdict": "nur_ersatzleser",
+ "week": "2026-11-23"
+}

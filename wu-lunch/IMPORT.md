@@ -175,3 +175,29 @@ Weitere Regeln aus der Durchsicht vom 23.11.2026:
 
 Auslöser: Vom Taktgeber gestartete Importe lösen bei GitHub keine `workflow_run`-Folgeläufe aus. Der Import
 startet den Wels-Import und die englischen Menüs deshalb im letzten Schritt ausdrücklich.
+
+## Leseübung an fremden Karten (seit 23.11.2026)
+
+Damit die allgemeinen Leser immer mehr Kartenformen kennen, üben sie jede Woche an Wochenkarten von Lokalen,
+die WU Food gar nicht zeigt (`wu-lunch/practice/sources.json`, derzeit 16 Karten aus ganz Österreich).
+
+1. **Dienstags** holt der Workflow „WU Lunch – Leseübung an fremden Karten“ die Karten. Der Ersatzleser (Regeln)
+   und der KI-Leser lesen jede Karte unabhängig; der KI-Leser dient als Vergleichslesung und darf nur übernehmen,
+   was wörtlich in der Karte steht.
+2. Je Karte gibt es ein Urteil: `einig`, `nur_ki` (der Ersatzleser scheitert, die Karte ist lesbar – der Lernfall),
+   `uneinig`, `beide_gescheitert`, `andere_woche` (alte Karte, kein Lesefehler), `abruf_fehlgeschlagen`.
+3. **Mittwochs** wertet Claude die Fälle aus, verbessert den Ersatzleser mit allgemeinen Regeln (nie mit
+   Sonderregeln für ein Übungslokal) und hält geprüfte Karten als feste Tests fest (`practice/expected`).
+4. Die Punktetafel (`practice/scoreboard.json`) wird über alle gespeicherten Karten neu berechnet
+   (`python3 wu-lunch/scripts/practice.py --rescore`). So sieht man, ob eine Verbesserung wirkt – und die
+   bestehenden Tests zeigen, dass kein gelistetes Lokal darunter leidet.
+
+Quellen sind ausschließlich die eigenen Webseiten der Lokale. Sammelportale wie mittag.at werden nicht gelesen:
+Deren Nutzungsbedingungen untersagen das automatische Auslesen (Stand 23.11.2026); ein Zugang wäre nur über
+eine Anfrage bei mittag.at möglich.
+
+Erste Runde (23.11.2026, nur Ersatzleser): 8 von 14 erreichbaren Karten gelesen, nach vier allgemeinen
+Verbesserungen 11 von 14 (Zeitraum mit „bis“, Datum ohne Jahr, Aufzählungszeichen, Preiszeile mit Zusatz;
+Urlaubshinweise im Seitenkopf gelten nicht mehr als Kartenwoche). Bekannte offene Fälle: zweispaltige PDFs
+(Menü 1 / Menü 2 nebeneinander), PDFs mit verwürfelter Lesereihenfolge, Gericht vor der Tagesüberschrift.
+

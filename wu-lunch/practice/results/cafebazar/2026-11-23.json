@@ -1,0 +1,9 @@
+{
+ "ai": null,
+ "detail": null,
+ "error": "ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
+ "generic": null,
+ "id": "cafebazar",
+ "verdict": "abruf_fehlgeschlagen",
+ "week": "2026-11-23"
+}

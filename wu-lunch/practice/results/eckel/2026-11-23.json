@@ -1,0 +1,12 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "error": "ValueError: Ersatzleser: kein Beleg für die Woche (weder Zeitraum noch Tagesdatum)",
+  "ok": false,
+  "other_week": false
+ },
+ "id": "eckel",
+ "verdict": "beide_gescheitert",
+ "week": "2026-11-23"
+}

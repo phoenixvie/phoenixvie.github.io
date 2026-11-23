@@ -1,0 +1,12 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "error": "ValueError: Ersatzleser: weniger als drei Tage mit Gerichten",
+  "ok": false,
+  "other_week": false
+ },
+ "id": "adlerzirl",
+ "verdict": "beide_gescheitert",
+ "week": "2026-11-23"
+}

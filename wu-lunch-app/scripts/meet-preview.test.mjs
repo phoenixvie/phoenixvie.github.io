@@ -28,12 +28,12 @@ test('paused e-mail flow still works when switched back on (verified email, then
   vm.createContext(context);vm.runInContext(source,context);
   const click=async (action,slot)=>{handlers.click({target:{closest:()=>({dataset:{action,slot}})},preventDefault(){},stopImmediatePropagation(){}});for(let i=0;i<6;i++)await new Promise(resolve=>setImmediate(resolve));};
   await click('meet-preview');
-  assert.equal(context.meetSlot,0);assert.match(context.renderMeet(),/Meet to eat/);assert.match(context.renderMeet(),/Bereits angemeldet<\/strong><span>Noch niemand – sei die erste Person\./);
-  assert.match(context.renderMeet(),/WU-Studenten Gruppe/);assert.doesNotMatch(context.renderMeet(),/Testvorschau|Testteilnehmer|Testtermin/);
+  assert.equal(context.meetSlot,0);assert.match(context.renderMeet(),/Meet to eat/);assert.match(context.renderMeet(),/<p class="meet-dabei">[^]*?<strong>Sei die erste Person\.<\/strong><\/span><\/p>/);
+  assert.doesNotMatch(context.renderMeet(),/WU-Studenten Gruppe|Info nach Anmeldung/);assert.doesNotMatch(context.renderMeet(),/Testvorschau|Testteilnehmer|Testtermin/);
   // Keine Terminleiste, keine Wischpunkte, kein Wischen. Das Datum ist eine Auswahlliste mit genau
   // zwei Terminen: dem nächsten und dem danach.
   assert.doesNotMatch(context.renderMeet(),/weekday-strip|day-dot|meet-select|data-slot/);
-  assert.match(context.renderMeet(),/<select id="meet-date">/);
+  assert.match(context.renderMeet(),/<select id="meet-date" aria-label="Datum">/);
   assert.equal((context.renderMeet().match(/<option /g)||[]).length,2);
   assert.equal((context.renderMeet().match(/<option [^>]*selected/g)||[]).length,1);
   const later=context.renderMeet().match(/<option value="(\d{4}-\d{2}-\d{2})" >/)[1];
@@ -44,19 +44,27 @@ test('paused e-mail flow still works when switched back on (verified email, then
   await click('meet-preview');   // erneutes Öffnen beginnt wieder beim nächsten Termin
   assert.doesNotMatch(context.renderMeet(),new RegExp('<option value="'+later+'" selected>'));
   assert.equal((context.renderMeet().match(/placeholder="Max"/g)||[]).length,0);
-  assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,5);
+  // Aufbau seit 23.11.2026: Satz, Foto, darunter Termin mit Uhrzeit, Ort und Wartezeit, „… schon dabei", Ablauf, unten die Anmeldung.
+  assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,0);   // keine Tabelle mehr
+  const order=['class="meet-lead"','class="meet-place"','class="meet-when"','class="meet-info"','class="meet-dabei"','class="meet-why"','class="meet-steps"','</div><div class="meet-cta"'].map(part=>context.renderMeet().indexOf(part));
+  assert.ok(order.every((at,index)=>at>=0&&(index===0||order[index-1]<at)),'Reihenfolge der Bereiche: '+order);
+  // Die Uhrzeit steht im Einleitungssatz ("… um 12:00 Uhr statt."), nicht mehr neben der Terminauswahl.
+  assert.match(context.renderMeet(),/<div class="meet-when"><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><\/div>/);assert.match(context.renderMeet(),/<\/figure><div class="meet-when">[^]*?<\/div><ul class="meet-info"><li>[^]*?<span><strong>Vor dem Baum direkt bei der Mensa<\/strong><\/span><\/li><li>[^]*?<span>Zusammenwarten von 12:00 bis 12:05 Uhr<\/span><\/li><\/ul>/);assert.match(context.renderMeet(),/<option value="[0-9-]+" selected>[^<]+ um 12:00 Uhr<\/option>/);
+  assert.match(context.renderMeet(),/<section class="meet-steps"><h3>So läuft's ab<\/h3><ol><li>Mit deinem Vornamen anmelden\.<\/li><li>Um 12:00 Uhr beim Baum vor der Mensa treffen\.<\/li><li>Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen\.<\/li><\/ol><\/section>/);
   assert.equal(handlers.touchstart,undefined);assert.equal(handlers.touchend,undefined);
   // Vorgabe vom 23.11.2026: Treffpunkt, Foto und Google-Maps-Link sind schon vor der Anmeldung sichtbar –
   // nichts wird mehr versteckt ("Info nach Anmeldung" gibt es nicht mehr). Keine eingebettete Karte, kein Platzhalter.
-  assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-locked|Nach Anmeldung sichtbar|Info nach Anmeldung/);
-  assert.match(context.renderMeet(),/<section class="meet-reveal"><h3>Treffpunkt auf der WU<\/h3>/);
-  assert.match(context.renderMeet(),/<a data-action="meet-open-url"[^>]*href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
-  assert.match(context.renderMeet(),/meeting-point\.webp/);
-  // Unter dem Knopf steht, wozu die Anmeldung dient.
-  assert.match(context.renderMeet(),/>Teilnehmen<\/button><p class="meet-why">Melde dich an, damit die anderen wissen, dass du kommst\.<\/p>/);
-  // Über dem Einleitungstext steht eine schlichte Zeichnung (Treffpunkt mit Besteck, Personen kommen zusammen), nicht im Formular.
-  assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^>]*aria-label="Personen kommen an einem Treffpunkt zum gemeinsamen Essen zusammen"/);
-  assert.match(context.renderMeet(),/Findet jeden Mittwoch statt\./);assert.doesNotMatch(context.renderMeet(),/Montag/);
+  assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-locked|Nach Anmeldung sichtbar|Info nach Anmeldung|meet-reveal/);
+  // Das Foto steht oben (statt der Zeichnung); der Treffpunkt ist Beschriftung, kein Link. Auch der Google-Maps-Link ist entfallen (Vorgabe 23.11.2026).
+  assert.match(context.renderMeet(),/<figure class="meet-place"><img class="meet-photo-visible" src="\.\/meeting-point\.webp"[^>]*><\/figure>/);
+  assert.doesNotMatch(context.renderMeet(),/google\.com\/maps|Google Maps|meet-map-link/);
+  assert.doesNotMatch(context.renderMeet(),/<a [^>]*>Vor dem Baum direkt bei der Mensa<\/a>|meet-art/);
+  // Wozu die Anmeldung dient, steht im Text; Vorname und Knopf stehen in einer festen Leiste unter dem scrollenden Inhalt.
+  assert.match(context.renderMeet(),/<p class="meet-why">Melde dich bitte an, damit die anderen wissen, dass du kommst\. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎<\/p>/);
+  assert.match(context.renderMeet(),/<\/section><\/div><div class="meet-cta"><div class="meet-cta-row"><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button><\/div><\/div><\/div>$/);
+  // Die Seite beginnt mit dem einen Satz, worum es geht (die Zeichnung ist dem Foto gewichen).
+  assert.match(context.renderMeet(),/id="meet-screen"><p class="meet-lead">Triff dich mit anderen freundlichen WU-Studierenden am WU Campus/);
+  assert.match(context.renderMeet(),/Findet jeden Mittwoch um 12:00 Uhr statt\./);assert.doesNotMatch(context.renderMeet(),/Montag/);
   await click('meet-show-form');
   assert.match(context.renderMeet(),/Verifizierung deiner E-Mail-Adresse: Du bekommst einen Code per E-Mail\. Nur dein Vorname ist für alle sichtbar\./);
   assert.doesNotMatch(context.renderMeet(),/WU-Mail|WU E-Mail|nur WU Studenten|wu\.ac\.at/);   // keine Einschränkung auf WU-Adressen
@@ -75,15 +83,15 @@ test('paused e-mail flow still works when switched back on (verified email, then
   inputs['meet-code'].value='000000';await click('meet-verify');assert.match(context.renderMeet(),/bereits verwendet/);assert.equal(inserts,0);
   await click('meet-resend-code');assert.equal(otpCalls,2);inputs['meet-code'].value='123456';await click('meet-verify');assert.equal(verifyCalls,2);assert.equal(inserts,1);assert.equal(own[0].first_name,'Anna');
   // Nach der Anmeldung erscheinen Treffpunkt, Foto und Karte.
-  assert.match(context.renderMeet(),/Bereits angemeldet/);assert.match(context.renderMeet(),/Anna/);assert.match(context.renderMeet(),/48\.21289788048291%2C16\.409449359855884/);assert.match(context.renderMeet(),/Vor dem Baum direkt bei der Mensa/);
-  assert.match(context.renderMeet(),/<section class="meet-reveal"><h3>Treffpunkt auf der WU<\/h3>/);assert.doesNotMatch(context.renderMeet(),/id="meet-map"/);   // eingebettete Karte entfernt (17.11.2026)assert.match(context.renderMeet(),/meeting-point\.webp/);
+  assert.match(context.renderMeet(),/Bereits angemeldet/);assert.match(context.renderMeet(),/Anna/);assert.doesNotMatch(context.renderMeet(),/google\.com\/maps/);assert.match(context.renderMeet(),/Vor dem Baum direkt bei der Mensa/);
+  assert.match(context.renderMeet(),/<figure class="meet-place">/);assert.doesNotMatch(context.renderMeet(),/id="meet-map"|class="meet-cta"/);   // eingebettete Karte entfernt (17.11.2026)assert.match(context.renderMeet(),/meeting-point\.webp/);
   assert.equal(context.meetJoined,true);
   // Die Bestätigung trägt ein Häkchen-Symbol vor dem Text.
   assert.match(context.renderMeet(),/<div class="meet-confirm"><p><svg class="meet-check"[^>]*>.*?<\/svg><span>Du bist für diesen Termin angemeldet\.<\/span><\/p><p><svg class="meet-check"[^>]*>.*?<\/svg><span>Bitte melde dich aus Rücksicht/);
-  // Der Treffpunkt in der Übersicht ist ein Link zu Google Maps.
-  assert.match(context.renderMeet(),/<a data-action="meet-open-url"[^>]*href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
+  // Nach der Anmeldung: Bestätigung, dann die Namen, dann „Abmelden".
+  assert.match(context.renderMeet(),/<div class="meet-confirm">[^]*?<div class="meet-fact meet-people">[^]*?<strong>Bereits angemeldet<\/strong><span class="meet-names">[^]*?data-action="meet-leave">/);
   await click('meet-leave');assert.equal(own.length,0);
-  assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-own/);assert.match(context.renderMeet(),/meet-reveal/);assert.match(context.renderMeet(),/Noch niemand – sei die erste Person/);assert.equal(context.meetJoined,false);
+  assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-own/);assert.match(context.renderMeet(),/meet-place/);assert.match(context.renderMeet(),/Sei die erste Person\./);assert.equal(context.meetJoined,false);
   // Abgemeldet, Name lokal gemerkt: erneutes Anmelden braucht kein Formular mehr.
   assert.equal(store.get('wu-meet-preview-name'),'Anna');
   store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);
@@ -157,7 +165,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Gemeinsam essen gehen','Datum','Uhrzeit am Treffpunkt','12:00 Uhr','Gemeinsam losgehen','12:05 Uhr','Treffpunkt auf der WU','Vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich an, damit die anderen wissen, dass du kommst.','Teilnehmer','WU-Studenten Gruppe','Bereits angemeldet','Teilnehmen','Google Maps öffnen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎','Zusammenwarten von 12:00 bis 12:05 Uhr','{date} um 12:00 Uhr','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.',"So läuft's ab",'Mit deinem Vornamen anmelden.','Um 12:00 Uhr beim Baum vor der Mensa treffen.','Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
@@ -273,7 +281,7 @@ test('list entry shows the number of people signed up for the next date, and not
   // Drei Personen beim nächsten Termin, eine beim übernächsten: gezählt wird nur der nächste.
   const busy=await start(days=>[...['Lena','Jonas','Mia'].map(first_name=>({meeting_date:days[0],first_name})),{meeting_date:days[1],first_name:'Tom'}]);
   // Vor der eigenen Anmeldung steht dort nur die Zahl (Vorgabe 23.11.2026): keine Namen, also auch kein Melde-Link.
-  assert.match(busy.context.renderMeet(),/<strong>Bereits angemeldet<\/strong><span>3 Personen\. Die Namen siehst du nach deiner Anmeldung\.<\/span>/);
+  assert.match(busy.context.renderMeet(),/<p class="meet-dabei">[^]*?<strong>3 sind schon dabei\.<\/strong><small>Die Namen siehst du nach deiner Anmeldung\.<\/small><\/span><\/p>/);
   assert.doesNotMatch(busy.context.renderMeet(),/Lena|Jonas|Mia|meet-report|meet-names/);
   // Der Melde-Link gehört zur Namensliste, die erst nach der eigenen Anmeldung erscheint.
   assert.match(source,/<span class="meet-names">\$\{entries\}<\/span>\$\{names\.length \? `<a class="meet-report" href="mailto:\$\{esc\(contactEmail\(\)\)\}\?subject=/);
@@ -289,7 +297,7 @@ test('list entry shows the number of people signed up for the next date, and not
   assert.equal(offline.context.meetBadge(),'');assert.equal(offline.painted,null);assert.match(offline.warnings.join('\n'),/Anzahl: offline/);
   // Die Liste baut die Zahl über meetBadge() ein; in der Wels-Ausgabe gibt es den Eintrag gar nicht.
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  assert.match(app,/let meetBadge=\(\)=>'';/);assert.match(app,/Gemeinsam essen gehen<\/span><\/span>\$\{meetBadge\(\)\}\$\{icon\('chevron_right','chevron'\)\}/);
+  assert.match(app,/let meetBadge=\(\)=>'';/);assert.match(app,/data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}<\/span><\/span>\$\{meetBadge\(\)\}\$\{icon\('chevron_right','chevron'\)\}/);
   const {ui}=globalThis.WULunchI18n;assert.equal(ui['{count} angemeldet'],'{count} signed up');
 });
 
@@ -332,8 +340,8 @@ test('sign-up with first name only: field above the button, same name checks, no
   await click('meet-preview');
   const screen=context.renderMeet();
   assert.match(screen,/id="meet-first-name"[^>]*value=""/);   // leer, nicht vorausgefüllt
-  // Vornamenfeld steht direkt über dem Knopf, nirgends ist von E-Mail die Rede.
-  assert.match(screen,/<label class="meet-name-field">Dein Vorname<input id="meet-first-name"[^>]*placeholder="Max"[^>]*><\/label><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button>/);
+  // Vornamenfeld und Knopf stehen in einer Zeile in der angehefteten Leiste, nirgends ist von E-Mail die Rede.
+  assert.match(screen,/<div class="meet-cta"><div class="meet-cta-row"><input id="meet-first-name" aria-label="Dein Vorname"[^>]*placeholder="Dein Vorname"[^>]*><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button><\/div><\/div>/);
   assert.doesNotMatch(screen,/E-Mail|Verifizierung|meet-email/);
   // Die Vornamen-Prüfung gilt weiter, vor jeder Anmeldung.
   for(const [value,reason] of [['','name_missing'],['Free Palestine','name_format'],['Hitler','name_blocked']]){
@@ -342,7 +350,7 @@ test('sign-up with first name only: field above the button, same name checks, no
     assert.match(tracked.at(-1),new RegExp('meet_input_rejected .*'+reason));
     // Die Fehlermeldung steht direkt unter dem Feld (nicht oben auf der Seite), die Eingabe bleibt stehen.
     const shown=context.renderMeet();
-    assert.match(shown,/<\/label><p class="meet-notice meet-name-error" role="alert">[^<]+<\/p><button class="meet-primary" data-action="meet-show-form"/);
+    assert.match(shown,/<div class="meet-cta"><p class="meet-notice meet-name-error" role="alert">[^<]+<\/p><div class="meet-cta-row"><input id="meet-first-name"[^>]*><button class="meet-primary" data-action="meet-show-form"/);
     assert.equal(shown.split('role="alert"').length,2,'Meldung nur einmal');
     if(value)assert.ok(shown.includes('value="'+value+'"'),'Eingabe bleibt stehen');
   }
@@ -418,11 +426,10 @@ test('UX follow-ups: one active sign-up per device, long names get a message, lo
   // Zurück zum ersten Termin: eigene Anmeldung mit Kreuz, Foto mit englischem Alt-Text (Übersetzung aus dem Katalog).
   await change(dates[0]);
   assert.match(context.renderMeet(),/alt="Meeting point in front of the tree next to the Mensa"/);
-  assert.match(context.renderMeet(),/aria-label="People meet at a meeting point to eat together"/);
   // Kreuz zum Abmelden ist groß genug (CSS) und entfernt die Anmeldung.
   const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8');
   assert.match(css,/\.meet-own \.meet-remove\{[^}]*padding:12px/);
-  await click('meet-leave');assert.equal(own.length,0);assert.match(context.renderMeet(),/Noch niemand – sei die erste Person/);
+  await click('meet-leave');assert.equal(own.length,0);assert.match(context.renderMeet(),/Sei die erste Person\./);
 });
 
 test('Meet-to-eat weekdays come from the operator settings and drive dates and texts; the default is Wednesday', async () => {
@@ -436,20 +443,21 @@ test('Meet-to-eat weekdays come from the operator settings and drive dates and t
   assert.deepEqual([...make({meet_weekdays:[]}).meetWeekdays()],[3]);                     // leer -> Vorgabe
   // Vorgabe vom 23.11.2026: "Jeden Mittwoch gemeinsam essen gehen" statt "Mittwochs …".
   assert.equal(make({}).meetDaysText('hint'),'Jeden Mittwoch');
-  assert.equal(make({}).meetDaysText('intro'),'Findet jeden Mittwoch statt.');
+  assert.equal(make({}).meetDaysText('intro'),'Findet jeden Mittwoch um 12:00 Uhr statt.');
   assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('hint'),'Jeden Montag und Mittwoch');
-  // Listeneintrag (Vorgabe 23.11.2026): "Mittwoch: Meet to eat" – der Tag kommt aus den Einstellungen.
-  assert.equal(make({}).meetDaysText('title'),'Mittwoch');
-  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('title'),'Montag & Mittwoch');
-  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('title'),'Wednesday');
+  // Listeneintrag (Vorgabe 23.11.2026): Titel "Meet to eat", darunter "Gemeinsam essen gehen" – ohne Wochentag.
+  assert.equal(make({}).meetDaysText('title'),'Gemeinsam essen gehen');
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('title'),'Gemeinsam essen gehen');
+  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('title'),'Lunch together');
   // Fußzeile der Liste (Vorgabe 23.11.2026): "Change language" mit kleinem l; bei Umbruch immer zwei und zwei.
-  assert.match(app,/<a href="#" data-change-language>Change language<\/a><a data-link="website"/);
+  // "Change language" steht unter jedem Menü und deshalb nicht mehr in der Fußzeile der Liste (Vorgabe 23.11.2026).
+  assert.doesNotMatch(app.slice(app.indexOf('<footer class="list-footer">'),app.indexOf('</footer>',app.indexOf('<footer class="list-footer">'))),/data-change-language/);
   assert.match(app,/function fitListFooter\(\)\{[^}]*classList\.remove\('two-rows'\)/);
   assert.match(app,/localize\.apply\(app\);fitSourceNote\(\);fitListFooter\(\);/);
-  assert.match(app,/<span class="restaurant-name" data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}: Meet to eat<\/span>/);
-  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch statt.');
+  assert.match(app,/<span class="restaurant-name">Meet to eat<\/span><span class="restaurant-type" style="display:block" data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}<\/span>/);
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch um 12:00 Uhr statt.');
   assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('hint'),'Every Wednesday:');
-  assert.equal(make({meet_weekdays:[1,3,5]},'en').meetDaysText('intro'),'Takes place every Monday, Wednesday and Friday.');
+  assert.equal(make({meet_weekdays:[1,3,5]},'en').meetDaysText('intro'),'Takes place every Monday, Wednesday and Friday at 12:00.');
   // Termine in Meet to eat folgen den Einstellungen (feste Uhr: Dienstag, 17.11.2026).
   const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
   const handlers={};

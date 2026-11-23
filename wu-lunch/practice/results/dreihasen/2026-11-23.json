@@ -1,0 +1,62 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Salat oder Schöberlsuppe",
+     "price": null
+    },
+    {
+     "name": "Ofenfrische Ripperl, Ofenkartoffel, Sauerrahmsauce",
+     "price": 13.6
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Salat oder Leberknödelsuppe",
+     "price": null
+    },
+    {
+     "name": "½ gebratenes Maishendl, Natursauce, Basmatireis",
+     "price": 13.6
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Salat oder Frittatensuppe",
+     "price": null
+    },
+    {
+     "name": "Schnitzel Wiener Art vom Schwein, Petersilkartoffeln",
+     "price": 13.6
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Salat oder Nudelsuppe",
+     "price": null
+    },
+    {
+     "name": "Cheese Burger, Ketchup, Pommes",
+     "price": 13.6
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Salat oder Grießnockerlsuppe",
+     "price": null
+    },
+    {
+     "name": "Gebackenes Seelachsfilet, Kartoffel-Rucolasalat",
+     "price": 13.6
+    }
+   ]
+  },
+  "ok": true
+ },
+ "id": "dreihasen",
+ "verdict": "nur_ersatzleser",
+ "week": "2026-11-23"
+}

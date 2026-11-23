@@ -45,12 +45,15 @@ PRICE = r"(\d{1,2})[.,](\d{2})"
 
 # Stammdaten laut den Webseiten der Restaurants (abgerufen am 17.11.2026);
 # Koordinaten aus OpenStreetMap zur jeweiligen Adresse.
+# Öffnungszeiten ("hours"): Wortlaut der eigenen Webseite des Lokals, zuletzt geprüft am 23.11.2026.
+# Die monatliche Kontrolle (geplante Aufgabe „Öffnungszeiten prüfen") gleicht sie neu ab.
 RESTAURANTS = [
     {"id": "naschmarkt", "name": "Naschmarkt Wels", "restaurantType": "Österreichisch",
      "url": "https://www.naschmarkt-wels.at/speisekarte-wels-restaurant/",
      "address": "Kaiser-Josef-Platz 21, 4600 Wels", "latitude": 48.1590092, "longitude": 14.0226595,
      "phone": "+43 7242 45 22 94 44", "email": "office@naschmarkt-wels.at",
-     "hours": ["Montag bis Freitag 08:00–15:00 Uhr"], "brandColor": "#b5462f"},
+     "hours": ["Montag bis Freitag 08:00–15:00 Uhr", "Warme Küche 11:00–14:30 Uhr", "Samstag und Sonntag geschlossen"],
+     "brandColor": "#b5462f"},
     {"id": "inshaas", "name": "In's Haas", "restaurantType": "Café · Bistro",
      "url": "https://www.inshaas.at/mittagskarte/",
      "address": "Stadtplatz 34, 4600 Wels", "latitude": 48.1576037, "longitude": 14.0261885,
@@ -66,7 +69,9 @@ RESTAURANTS = [
     {"id": "dokkhun", "name": "Dok Khun", "restaurantType": "Thailändisch",
      "url": "https://dok-khun.metro.biz/?lang=de",
      "address": "Maria-Theresia-Straße 16, 4600 Wels", "latitude": 48.1553411, "longitude": 14.0170914,
-     "phone": "+43 7242 252670", "email": "office@dok-khun-thai.at", "brandColor": "#c0842b"},
+     "phone": "+43 7242 252670", "email": "office@dok-khun-thai.at",
+     "hours": ["Dienstag bis Samstag 11:30–14:30 und 17:30–22:00 Uhr", "Küche 11:30–14:00 und 17:30–21:00 Uhr",
+               "Sonntag und Montag geschlossen"], "brandColor": "#c0842b"},
     # Welche BILLA-PLUS-Filiale gemeint ist, ist nicht bekannt – daher ohne Adresse und Kartenpunkt.
     {"id": "billa", "name": "BILLA PLUS Marktküche", "restaurantType": "Marktküche",
      "url": "https://www.billa.at/unsere-maerkte/billa-plus/marktkueche",
@@ -74,7 +79,10 @@ RESTAURANTS = [
     # Ergänzt am 17.11.2026 (zweite Liste des Betreibers).
     {"id": "denns", "name": "Denns BioMarkt Bistro", "restaurantType": "Bio-Bistro",
      "url": "https://www.denns-biomarkt.at/wels-malvenstr-5/mittagsgerichte/",
-     "address": "Malvenstraße 5, 4600 Wels", "latitude": 48.1439914, "longitude": 13.9704601, "brandColor": "#6a9a2d"},
+     "address": "Malvenstraße 5, 4600 Wels", "latitude": 48.1439914, "longitude": 13.9704601,
+     # Die Webseite nennt nur die Zeiten des Markts, keine eigenen Bistro-Zeiten.
+     "hours": ["Markt Montag bis Freitag 08:30–19:00 Uhr", "Samstag 08:30–18:00 Uhr", "Sonntag geschlossen"],
+     "brandColor": "#6a9a2d"},
     {"id": "huber", "name": "Gasthaus Huber", "restaurantType": "Österreichisch",
      "url": "https://www.gasthaus-huber.at/tages-menue",
      "address": "Wiesenstraße 69, 4600 Wels", "latitude": 48.1630194, "longitude": 14.0450788,
@@ -84,12 +92,15 @@ RESTAURANTS = [
     {"id": "goesser", "name": "Gösserbräu", "restaurantType": "Österreichisch",
      "url": "https://www.goesserbraeu.at/restaurant/mittagsmenue/",
      "address": "Kaiser-Josef-Platz 27, 4600 Wels", "latitude": 48.1586061, "longitude": 14.0212375,
-     "phone": "+43 7242 60 460", "brandColor": "#1f6b3a"},
+     "phone": "+43 7242 60 460",
+     "hours": ["Täglich 10:00–24:00 Uhr", "Küche 11:00–22:00 Uhr", "Geschlossen am 25.12., 26.12. und 01.01."],
+     "brandColor": "#1f6b3a"},
     {"id": "hannibal", "name": "Hannibal", "restaurantType": "Österreichisch",
      "url": "https://www.restaurant-hannibal.at/mittagskarte/",
      "address": "Maxlheid 9, 4600 Wels", "latitude": 48.1864802, "longitude": 14.0759777,
      "phone": "+43 7242 46716 46", "email": "hotel@maxlhaid.at",
-     "hours": ["Montag bis Freitag 10:00–23:30 Uhr (außer Feiertage)", "Warme Küche 11:30–21:30 Uhr"],
+     "hours": ["Montag bis Freitag 10:00–23:30 Uhr (außer Feiertage)", "Warme Küche 11:30–21:30 Uhr",
+               "Samstag, Sonntag und Feiertage Ruhetag"],
      "brandColor": "#8c2f39"},
     {"id": "hayashi", "name": "Hayashi", "restaurantType": "Asiatisch",
      "url": "https://www.hayashi.at/menu4.html",
@@ -108,7 +119,8 @@ RESTAURANTS = [
      "url": "https://lalina.at/lunchevents/",
      "address": "Europastraße 45, 4600 Wels", "latitude": 48.14983, "longitude": 13.9939371,
      "phone": "+43 690 106 33 193", "email": "office@lalina.at",
-     "hours": ["Lunch Dienstag bis Freitag 11:30–14:00 Uhr"], "brandColor": "#b0607a"},
+     "hours": ["Dienstag bis Samstag 11:00–22:00 Uhr", "Lunch Dienstag bis Freitag 11:30–14:00 Uhr",
+               "Sonntag und Montag Ruhetag"], "brandColor": "#b0607a"},
     {"id": "ox", "name": "OX", "restaurantType": "Steaks & Grill",
      "url": "https://www.ox-wels.at/",
      "address": "Waidhausenstraße 26, 4600 Wels", "latitude": 48.1470255, "longitude": 13.9776431,
@@ -268,13 +280,17 @@ def dish(name, price=None, **extra):
 DAY_WORD = re.compile(r"((?:mon|die|don|fre)[a-zäöü]{0,6}tag|mittwoch|mo|di|mi|do|fr)(?![a-zäöü])[\s.,:–-]*", re.I)
 DAY_KEYS = {"mo": 0, "di": 1, "mi": 2, "do": 3, "fr": 4}
 SHORT_DATE = re.compile(r"(\d{1,2})\.\s?(\d{1,2})\.(?:\s?(\d{4}|\d{2})\b)?")
-SHORT_PERIOD = re.compile(r"(\d{1,2})\.\s?(?:(\d{1,2})\.)?\s?(?:\d{4})?\s*[–-]\s*(\d{1,2})\.\s?(\d{1,2})\.")
+# "23.11. – 27.11.", "23.11. bis 27.11.", "17.-20.11.2026", "Di 17.11- Fr 20.11" (Leseübung 23.11.2026: "bis", Wochentag vor
+# dem Enddatum, fehlender Schlusspunkt). Monat nur 1–12, damit Preise und Uhrzeiten ("8.50 - 12.90") kein Zeitraum sind.
+SHORT_PERIOD = re.compile(r"(?<![\d.,])(\d{1,2})\.\s?(?:(0?[1-9]|1[0-2])\.?)?\s?(?:\d{4})?\s*(?:[–-]|\bbis\b)\s*"
+                          r"(?:(?:Mo|Di|Mi|Do|Fr|Sa|So)[a-zäöü]*[.,]?\s*)?(\d{1,2})\.\s?(0?[1-9]|1[0-2])(?:\.|(?![\d,]))")
 NOT_A_DISH = re.compile(r"@|https?:|www\.|\bUhr\b|\d{1,2}[:.]\d{2}\s*(?:–|-|bis)\s*\d{1,2}[:.]\d{2}|©|\+43|\bTel\b|"
                         r"reservier|geschlossen|ruhetag|öffnungszeit|impressum|datenschutz|cookie|gutschein|newsletter|"
                         r"änderungen vorbehalten|solange der vorrat|aufpreis|sonderw[uü]nsch|nur hauptspeise", re.I)
 LABEL = re.compile(r"(vorspeise|hauptspeise|nachspeise|dessert|suppe|menü\s*\d?|tagesteller|tagesmenü|oder|und|"
                    r"vegetarisch|vegan|fleisch|fisch|×)\s*:?", re.I)
 PRICE_ONLY = re.compile(r"(?:€\s*" + PRICE + r"|" + PRICE + r"\s*€)")
+PRICE_LEAD = re.compile(r"€\s*" + PRICE + r"(?=\s*(?:\(|$))")
 PRICE_END = re.compile(r"\s*(?:€\s*" + PRICE + r"|" + PRICE + r"\s*€)\s*$")
 
 
@@ -292,6 +308,21 @@ def _day_heading(line):
 def _short_date(text, monday):
     found = SHORT_DATE.search(text)
     return near_date(int(found.group(1)), int(found.group(2)), monday) if found and 1 <= int(found.group(2)) <= 12 else None
+
+
+MONTH_DATE = re.compile(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]{3,})\.?\s*(\d{4})?")
+
+
+def _month_date(text, monday):
+    """'23. November', '23. November2026', '23. Nov. 2026' → Datum; ohne Jahr das zur gesuchten Woche nächste."""
+    found = MONTH_DATE.search(text)
+    month = MONTHS.get(found.group(2).lower()) if found else None
+    if not month:
+        return None
+    try:
+        return date(int(found.group(3)), month, int(found.group(1))) if found.group(3) else near_date(int(found.group(1)), month, monday)
+    except ValueError:
+        return None
 
 
 def generic_week(text, monday):
@@ -313,15 +344,22 @@ def generic_week(text, monday):
     head = " ".join(rows[max(0, run[0][0] - 12):run[0][0]])
     period = period_of(head, monday)
     if not period:
-        short = SHORT_PERIOD.search(head)
-        if short:
+        # Im Seitenkopf stehen oft weitere Zeiträume (Betriebsurlaub "27.12 bis 4.1"): Es zählt der, der die Woche trifft.
+        for short in SHORT_PERIOD.finditer(head):
             last = near_date(int(short.group(3)), int(short.group(4)), monday)
             first = near_date(int(short.group(1)), int(short.group(2) or short.group(4)), monday)
-            period = (first, last) if first and last else None
+            if first and last and (not period or any(first <= day <= last for day in week)):
+                period = (first, last)
+                if any(first <= day <= last for day in week):
+                    break
+    # Ein Zeitraum, der die Woche nicht trifft, ist nur dann ein Gegenbeweis, wenn sonst nichts die Woche belegt
+    # (Leseübung 23.11.2026: Urlaubshinweis über einer Karte mit richtigen Tagesdaten).
+    stale = None
     if period:
-        if not any(period[0] <= day <= period[1] for day in week):
-            raise NotThisWeek(f"Ersatzleser: Karte gilt ab {period[0].isoformat()}")
-        proof = "Zeitraum"
+        if any(period[0] <= day <= period[1] for day in week):
+            proof = "Zeitraum"
+        else:
+            stale = NotThisWeek(f"Ersatzleser: Karte gilt ab {period[0].isoformat()}")
     week_number = re.search(r"\bKW\s*(\d{1,2})\b", head, re.I)
     if week_number and not proof:
         if int(week_number.group(1)) != monday.isocalendar().week:
@@ -336,14 +374,17 @@ def generic_week(text, monday):
         entries, day_price, next_price, after_label = [], None, None, False
         for offset, line in enumerate(lines):
             # Tagesdatum: steht allein in der Zeile direkt bei der Überschrift ("16.11.", "16. November 2026").
-            bare = clean(SHORT_DATE.sub(" ", re.sub(r"\d{1,2}\.\s*[A-Za-zäöüÄÖÜ]+\s+\d{4}", " ", line)))
-            stated = (long_date(line) or _short_date(line, monday)) if offset < 2 and len(bare) < 4 else None
+            # Auch ohne Jahr ("Montag, 23. November", das Jahr steht in der nächsten Zeile oder gar nicht).
+            named = _month_date(line, monday)
+            bare = clean(SHORT_DATE.sub(" ", MONTH_DATE.sub(" ", line) if named else line))
+            stated = (named or _short_date(line, monday)) if offset < 2 and len(bare) < 4 else None
             if stated:
                 if stated != week[weekday]:
                     raise NotThisWeek(f"Ersatzleser: Karte zeigt den {stated.isoformat()}")
                 proof = "Tagesdatum"
                 continue
-            cost = PRICE_ONLY.fullmatch(line)
+            # Auch mit Zusatz dahinter: "€ 13,60 (ohne Vorspeise: € 12,50)" ist eine Preiszeile, kein Gericht.
+            cost = PRICE_ONLY.fullmatch(line) or PRICE_LEAD.match(line)
             if cost:
                 value = euro(cost.group(1) or cost.group(3), cost.group(2) or cost.group(4))
                 if 2 <= value <= 45:
@@ -363,7 +404,8 @@ def generic_week(text, monday):
             if PERIOD.search(line) or SHORT_PERIOD.search(line):
                 continue  # wiederholter Kartenkopf (mehrseitige PDFs)
             cost = PRICE_END.search(line)
-            name = clean(PRICE_END.sub("", line)) if cost else line
+            # Aufzählungszeichen vor dem Gericht ("◦Pasta bolognese") gehören nicht zum Namen.
+            name = re.sub(r"^[◦•▪■●○‣⁃·*»›]+\s*", "", clean(PRICE_END.sub("", line)) if cost else line)
             price = euro(cost.group(1) or cost.group(3), cost.group(2) or cost.group(4)) if cost else None
             if price is not None and not 2 <= price <= 45:
                 continue  # z. B. "Nur Hauptspeise: - € 1,00" ist kein Gericht
@@ -393,6 +435,8 @@ def generic_week(text, monday):
             days[week[weekday].isoformat()] = entries
             most = max(most, len(entries))
     if not proof:
+        if stale:
+            raise stale
         raise ValueError("Ersatzleser: kein Beleg für die Woche (weder Zeitraum noch Tagesdatum)")
     if len(days) < 3:
         raise ValueError("Ersatzleser: weniger als drei Tage mit Gerichten")

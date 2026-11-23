@@ -1,0 +1,48 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Broccolicremesuppe",
+     "price": null
+    },
+    {
+     "name": "Faschierte Laibchen mit Bratensoße und Kartoffelpüree",
+     "price": null
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Naturschnitzel vom Schwein mit Champignonsoße und Butterreis",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Kräuterschöberlsuppe",
+     "price": null
+    },
+    {
+     "name": "Gebackene Hendloberkeule mit Kartoffel-Endiviensalat und Preiselbeeren",
+     "price": null
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Rinderroulade “Hausfrauenart“ mit Bandnudeln",
+     "price": null
+    },
+    {
+     "name": "Bayrische Creme",
+     "price": null
+    }
+   ]
+  },
+  "ok": true
+ },
+ "id": "innswirtshaus",
+ "verdict": "nur_ersatzleser",
+ "week": "2026-11-23"
+}
