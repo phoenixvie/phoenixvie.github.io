@@ -26,7 +26,7 @@ Auffälligkeiten meldet. Es geht um Bedienbarkeit, Verständlichkeit und Vertrau
 
 **Aufbau der App (zur Orientierung)**
 
-- Startseite: Liste der Lokale (Name, Küche), oben Umschalter „Liste | Karte", unten Fußzeile mit Impressum, Kontakt, Change Language, Webseite. Letzter Eintrag der Liste: „Meet to eat", rechts ggf. eine kleine Zahl (Angemeldete beim nächsten Termin).
+- Startseite: Liste der Lokale (Name, Küche), oben Umschalter „Liste | Karte", unten Fußzeile mit Impressum, Kontakt, Change language, Webseite. Letzter Eintrag der Liste: „Meet to eat", rechts ggf. eine kleine Zahl (Angemeldete beim nächsten Termin).
 - Lokal → Menü: Wochentage Montag bis Freitag als Leiste und Wischen zwischen Tagen; unten Reiter „Menü | Restaurant | Zurück | Weiter"; unter dem Menü ein zweizeiliger Hinweis mit Links (Meet to eat, Restaurantwebseite, Change language).
 - Lokal → Restaurant: Telefon, E-Mail, Webseite, Menü-Seite, Adresse, Öffnungszeiten, Kartenausschnitt; Links öffnen den eingebauten Browser (PDF-Menüs im eingebauten PDF-Betrachter) oder Telefon/Mail-App.
 - Karte: alle Lokale als farbige Buchstaben-Pins; Tipp auf Pin zeigt eine Zeile zum Lokal.
@@ -128,7 +128,7 @@ Jedes Szenario: Schritte ausführen, Erwartung prüfen, abweichende Beobachtung 
 ### P8 Reviewer – „Zehn Minuten, kein Login"
 
 1. Gerät: iPad (App läuft im iPhone-Modus) bzw. Android-Tablet. Hochformat. Erwartung: Darstellung zentriert, nichts abgeschnitten, Start ohne Abfragen.
-2. Jeden Reiter und jeden Link der Fußzeile öffnen (Impressum, Kontakt, Change Language, Webseite). Erwartung: alle führen irgendwohin Sinnvolles; Impressum nennt Betreiber und Datenschutz.
+2. Jeden Reiter und jeden Link der Fußzeile öffnen (Impressum, Kontakt, Change language, Webseite). Erwartung: alle führen irgendwohin Sinnvolles; Impressum nennt Betreiber und Datenschutz.
 3. Alle elf Lokale öffnen, pro Lokal Menü und Restaurant. Erwartung: keine leeren Bildschirme außer „Noch nicht veröffentlicht" mit sichtbarem Datum.
 4. Meet to eat vollständig durchspielen (anmelden `Testa`, abmelden). Erwartung: funktioniert ohne Konto; Meldelink vorhanden; Datenschutzlink im Impressum erklärt Vorname und Kennung.
 5. Inhalte Dritter: Kartenquelle (OpenStreetMap/OpenFreeMap) am Kartenrand genannt? Treffpunkt-Foto zeigt ein „Google Maps"-Wasserzeichen – als Risiko melden (Richtlinie Inhalte Dritter).
