@@ -184,7 +184,8 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   const note=menu.slice(menu.indexOf('<div class="source-note">'));
   // Vorgabe vom 23.11.2026: drei Zeilen – "Change language." steht als eigene Zeile über dem Meet-to-eat-Satz.
   // "Change" ist kein Link, nur das Wort "language" (Vorgabe 23.11.2026) – wie bei "Prüfe die Menüs auf der Restaurantwebseite".
-  assert.ok(note.startsWith('<div class="source-note">${site.standalone?\'\':`<span data-ui-literal>Change</span> <a href="#" class="source-link" data-change-language>language</a>.<br><span data-ui-literal>${esc(meetDaysText(\'hint\'))}</span> <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen gehen</button>.<br>`}<span>Prüfe die Menüs auf der</span> '));
+  assert.ok(note.startsWith('<div class="source-note">${site.standalone?\'\':`<span data-ui-literal>Change</span> <a href="#" class="source-link" data-change-language>language</a>.<br><span data-ui-literal>${esc(meetDaysText(\'hint\'))}</span> <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen</button>${localize.language===\'en\'?\'\':\' <span data-ui-literal>gehen</span>\'}.<br>`}<span>Prüfe die Menüs auf der</span> '));
+  // "gehen" ist kein Link (Vorgabe 23.11.2026); im Englischen gibt es das Wort nicht ("Every Wednesday: eat together.").
   assert.equal(note.slice(0,note.indexOf('</section>')).split('data-change-language').length,2);   // genau einmal
   assert.match(source,/const wanted=\(note\.querySelectorAll\?\.\('br'\)\.length\|\|1\)\+1;/);
   assert.doesNotMatch(menu,/\[0,2\]\.includes\(dayIndex\)|Angaben ohne Gewähr|WU Studenten|localize\.language==='en'\?`Every/);
@@ -196,7 +197,7 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   assert.match(css,/\.meet-invite\{display:inline;/);assert.doesNotMatch(css,/\.meet-invite\{display:block/);
   // Englische Fassungen aller Teile des Satzes.
   const {ui}=globalThis.WULunchI18n;
-  assert.deepEqual(['gemeinsam essen gehen','Prüfe die Menüs auf der','Restaurantwebseite'].map(key=>ui[key]),['eat together','Check the menus on the','restaurant website']);
+  assert.deepEqual(['gemeinsam essen','Prüfe die Menüs auf der','Restaurantwebseite'].map(key=>ui[key]),['eat together','Check the menus on the','restaurant website']);
 });
 
 test('Vienna dates stay visible until 14:00 and registration closes after 12:05', async () => {
