@@ -315,6 +315,15 @@
       "menu_status": "verified",
       "manifest": "2026-11-23/topfdeckel/9d09b8e2e2ffc72727010ba041bd79de5a72043f0b645039e5156756171e2332/manifest.json",
       "source_count": 10
+    },
+    {
+      "restaurant_id": "baschly",
+      "week_start": "2026-11-23",
+      "menu_sha256": "1e0a9b7af0485c1fc8686976bb30ce56760a1f01570d390bae79880144cb7056",
+      "captured_at": "2026-11-23T04:31:23+00:00",
+      "menu_status": "undated",
+      "manifest": "2026-11-23/baschly/1e0a9b7af0485c1fc8686976bb30ce56760a1f01570d390bae79880144cb7056/manifest.json",
+      "source_count": 4
     }
   ]
 }

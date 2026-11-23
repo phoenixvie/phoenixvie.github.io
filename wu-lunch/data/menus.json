@@ -2,7 +2,7 @@
   "weekStart": "2026-11-23",
   "weekEnd": "2026-11-27",
   "timezone": "Europe/Vienna",
-  "checkedAt": "2026-11-22T21:35:32+01:00",
+  "checkedAt": "2026-11-23T05:30:35+01:00",
   "origin": "Originalquellen; Mensa KW45 direkt aus frisch heruntergeladener PDF geprüft (nicht durch bisherigen PDF-Parser)",
   "sources": [
     {
@@ -1250,7 +1250,7 @@
             ]
           },
           {
-            "name": "Tandori-Chicken-Curry-Masala mit Basmatireis Allergene: Glutenfrei, Laktosefrei",
+            "name": "Indisches Chicken Tikka Masala mit Basmatireis Allergene: Glutenfrei, Laktosefrei",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
@@ -1265,7 +1265,7 @@
         ],
         "2026-11-24": [
           {
-            "name": "Öfen Süß-Kartoffel mit gegrilltem Gemüse, Parmesan und Rukola Salat auf Kräuterjoghurt Sauce",
+            "name": "Hausgemachtes Gemüse-Ratatouille Granatapfel",
             "price": 9.5,
             "category": "Veggie",
             "diet": "veggie",
@@ -1278,7 +1278,7 @@
             ]
           },
           {
-            "name": "Hühnerschnitzel mit Kartoffelsalat und Preiselbeeren",
+            "name": "Hühnerschnitzel mit Kartoffelsalat",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
@@ -1293,7 +1293,7 @@
         ],
         "2026-11-25": [
           {
-            "name": "Thai Kokos Gemüse Curry mit Basmatireis",
+            "name": "Süßkartoffel Kokos Gemüse Curry mit Basmatireis",
             "price": 9.5,
             "category": "Veggie",
             "diet": "veggie",
@@ -1321,7 +1321,7 @@
         ],
         "2026-11-26": [
           {
-            "name": "Kirche Erbsen Curry mit Basmatireis & Joghurt Sauce",
+            "name": "Ofen-Süßkartoffel mit gegrilltem Gemüse Parmesan und Rukola-Salat & Joghurt Sauce",
             "price": 9.5,
             "category": "Veggie",
             "diet": "veggie",
@@ -1334,7 +1334,7 @@
             ]
           },
           {
-            "name": "Chicken Manchurian mit Basmatireis",
+            "name": "Thai Chicken Massaman Curry mit Basmatireis",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
@@ -1362,7 +1362,7 @@
             ]
           },
           {
-            "name": "Butter Chicken Masala mit Basmatireis",
+            "name": "Gebackener Fisch mit Petersilien-Kartoffeln",
             "price": 9.5,
             "category": "Fleisch",
             "diet": "meat",
