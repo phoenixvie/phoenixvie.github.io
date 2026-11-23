@@ -1,97 +1,9 @@
 {
-  "checked_at": "2026-11-23T10:02:29+01:00",
+  "checked_at": "2026-11-23T10:07:59+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 2,
+  "api_calls": 0,
   "results": [
-    {
-      "restaurant": "lia",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://lia.coffee/": "56e5bbaab7fa8f276f1fc6dcd28da4706261cdae382228e764b855a7a2ceb7ea"
-      },
-      "usage": {
-        "input_tokens": 7599,
-        "input_tokens_details": {
-          "cache_write_tokens": 7596,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 7596
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 1887,
-        "output_tokens_details": {
-          "reasoning_tokens": 300
-        },
-        "total_tokens": 9486
-      }
-    },
-    {
-      "restaurant": "karmafood",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Quelle deckt den angefragten Zeitraum 23.11.–27.11. nicht eindeutig vollständig ab.",
-        "Keine separat bepreisten Tagessuppen, Salate oder Nachspeisen erkennbar. Undatierte Extras wurden keinem Tag zugeordnet.",
-        "Keine eindeutig veröffentlichte aktuelle Karte"
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 6,
-      "ai_only_examples": [],
-      "parser_only_examples": [
-        "2026-11-26: mama masala linsen dal",
-        "2026-11-26: sweet potato quinoa bowl mit limetten dip",
-        "2026-11-26: veggie bolognese lasagne mit salat",
-        "2026-11-27: cremiges goa veggie curry",
-        "2026-11-27: dal makhni mit veganer butter"
-      ],
-      "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "f637e60f90d9b37824872e7f7fe0a6abb467306190dc54b2457bf5f99026a77b"
-      },
-      "usage": {
-        "input_tokens": 2666,
-        "input_tokens_details": {
-          "cache_write_tokens": 2663,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2663
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 2171,
-        "output_tokens_details": {
-          "reasoning_tokens": 880
-        },
-        "total_tokens": 4837
-      }
-    },
-    {
-      "restaurant": "mensa",
-      "issues": [],
-      "action": "dedicated_pdf_ai",
-      "repairs": []
-    },
-    {
-      "restaurant": "topfdeckel",
-      "issues": [],
-      "action": "browser_import",
-      "repairs": []
-    },
-    {
-      "restaurant": "finn",
-      "issues": [],
-      "action": "dedicated_image_ai",
-      "repairs": []
-    },
     {
       "restaurant": "omakueche",
       "issues": [],
