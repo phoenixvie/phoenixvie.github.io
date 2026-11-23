@@ -1,88 +1,9 @@
 {
-  "checked_at": "2026-11-23T05:30:38+01:00",
+  "checked_at": "2026-11-23T05:47:38+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 2,
+  "api_calls": 0,
   "results": [
-    {
-      "restaurant": "baschly",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Seiten enthalten keine Wochentage, Gerichte, Preise oder Angaben zu Suppen, Salaten, Nachspeisen oder Menü-Kombinationen.",
-        "Die Seiten verweisen auf Produktbilder, deren Inhalt im übergebenen HTML nicht lesbar ist; daraus werden keine Gerichte oder Preise abgeleitet.",
-        "Keine eindeutig veröffentlichte aktuelle Karte"
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 10,
-      "ai_only_examples": [],
-      "parser_only_examples": [
-        "2026-11-23: indisches chicken tikka masala mit basmatireis allergene glutenfrei laktosefrei",
-        "2026-11-23: knackiger gemüse wok mit jasminreis frühlingsrolle und sweet chili sauce",
-        "2026-11-24: hausgemachtes gemüse ratatouille granatapfel",
-        "2026-11-24: hühnerschnitzel mit kartoffelsalat",
-        "2026-11-25: crispy chicken mit gebratenem eierreis"
-      ],
-      "source_hashes": {
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "54d79293ffb0e1844547798cc78d4f8bb3f3b821162b51a02154ddc5132cf251",
-        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "740e769cd55b9a69dfb8af6214c7e75f524449d15303f6eab354c08c444b5bd2"
-      },
-      "usage": {
-        "input_tokens": 2751,
-        "input_tokens_details": {
-          "cache_write_tokens": 2748,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2748
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 313,
-        "output_tokens_details": {
-          "reasoning_tokens": 165
-        },
-        "total_tokens": 3064
-      }
-    },
-    {
-      "restaurant": "losteria",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Gerichte sind nicht ausdrücklich einer bestimmten Woche zugeordnet.",
-        "Eine Allergenkarte wird verlinkt, ihr Inhalt ist in der übergebenen Quelle nicht enthalten."
-      ],
-      "ai_only_items": 4,
-      "parser_only_items": 0,
-      "ai_only_examples": [
-        "None: crema di patate con tartufo",
-        "None: pizza bianca tacchino e cipolletartufo di cielo",
-        "None: tagliatelle tartufo e funghi",
-        "None: tortina di mandorle"
-      ],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "ffc6bece33f71597e2f454691984cb35adbcfdc03e8d76db7f95d78c3203b0e0"
-      },
-      "usage": {
-        "input_tokens": 1922,
-        "input_tokens_details": {
-          "cache_write_tokens": 1919,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 1919
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 1003,
-        "output_tokens_details": {
-          "reasoning_tokens": 93
-        },
-        "total_tokens": 2925
-      }
-    },
     {
       "restaurant": "omakueche",
       "issues": [],
