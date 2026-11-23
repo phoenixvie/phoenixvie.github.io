@@ -6,7 +6,9 @@ name: Wels – Mittagsmenüs aktualisieren
 #
 # Zeitpunkte: GitHubs eigener Zeitplan startet in diesem Repository nur wenige
 # Male pro Tag und oft Stunden zu spät. Deshalb läuft dieser Workflow zusätzlich
-# nach jedem WU-Import mit – der wird vom Taktgeber pünktlich ausgelöst.
+# nach jedem WU-Import mit. Vom Taktgeber ausgelöste Importe starten ihn im
+# letzten Schritt ausdrücklich (workflow_dispatch) – der workflow_run-Auslöser
+# greift nur bei Importen, die GitHub selbst gestartet hat.
 
 on:
   workflow_run:
