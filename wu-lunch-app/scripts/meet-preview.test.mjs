@@ -34,6 +34,8 @@ test('paused e-mail flow still works when switched back on (verified email, then
   // zwei Terminen: dem nächsten und dem danach.
   assert.doesNotMatch(context.renderMeet(),/weekday-strip|day-dot|meet-select|data-slot/);
   assert.match(context.renderMeet(),/<select id="meet-date" aria-label="Datum">/);
+  // Teilen-Knopf im Kopf der Übersicht (Vorgabe 23.11.2026); die Einladung nennt den Termin und führt mit wufood.at/?meet=1 direkt hierher.
+  assert.match(context.renderMeet(),/<h1>Meet to eat<\/h1><button type="button" class="share" data-action="meet-share" aria-label="Teilen">/);
   assert.equal((context.renderMeet().match(/<option /g)||[]).length,2);
   assert.equal((context.renderMeet().match(/<option [^>]*selected/g)||[]).length,1);
   const later=context.renderMeet().match(/<option value="(\d{4}-\d{2}-\d{2})" >/)[1];
@@ -165,7 +167,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Datum','Treffpunkt: vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎','Zusammenwarten von 12:00 bis 12:05 Uhr','{date} um 12:00 Uhr','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.',"So läuft's ab",'Mit deinem Vornamen anmelden.','Um 12:00 Uhr beim Baum vor der Mensa treffen.','Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Datum','Treffpunkt: vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎','Zusammenwarten von 12:00 bis 12:05 Uhr','{date} um 12:00 Uhr','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.',"So läuft's ab",'Mit deinem Vornamen anmelden.','Um 12:00 Uhr beim Baum vor der Mensa treffen.','Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }

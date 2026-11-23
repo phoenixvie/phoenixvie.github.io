@@ -123,7 +123,7 @@
     // Ohne E-Mail steht die Meldung direkt unter dem Vornamenfeld, damit man sie neben der Eingabe sieht.
     const nameError = !meetForm && !emailVerification && state.error && !state.retry && !own && registrationOpen(selected);
     const error = nameError ? '' : errorHtml;
-    const header = `<header class="top detail"><button class="back" data-action="meet-back" aria-label="Zurück">${icon('arrow_back')}</button><h1>${meetForm ? esc(text('Meet to eat: Anmeldung', {}, 'Anmeldung')) : 'Meet to eat'}</h1></header>`;
+    const header = `<header class="top detail"><button class="back" data-action="meet-back" aria-label="Zurück">${icon('arrow_back')}</button><h1>${meetForm ? esc(text('Meet to eat: Anmeldung', {}, 'Anmeldung')) : 'Meet to eat'}</h1>${meetForm ? '' : `<button type="button" class="share" data-action="meet-share" aria-label="Teilen">${icon('share')}</button>`}</header>`;
     if (meetForm) return `${header}<div class="body"><div class="scroll meet-content">${error}${state.step === 'code' ? `<p>${esc(text('Wir haben einen Bestätigungscode an {email} gesendet. Bitte gib den Code hier ein. Der Link in der E-Mail und der Code sind nur einmal verwendbar.', {email: state.pendingEmail}))}</p><label>Bestätigungscode<input id="meet-code" inputmode="numeric" autocomplete="one-time-code" maxlength="12"></label><button class="meet-primary" data-action="meet-verify" ${state.busy?'disabled':''}>Code bestätigen und anmelden</button><button class="meet-secondary" data-action="meet-resend-code" ${state.busy?'disabled':''}>Neuen Code anfordern</button>` : state.step === 'name' ? `<p>Deine E-Mail-Adresse ist bestätigt. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || knownName())}"></label><button class="meet-primary" data-action="meet-confirm-name" ${state.busy?'disabled':''}>Teilnehmen</button>` : `<p>Verifizierung deiner E-Mail-Adresse: Du bekommst einen Code per E-Mail. Nur dein Vorname ist für alle sichtbar.</p><label>Vorname<input id="meet-first-name" autocomplete="given-name" maxlength="20" placeholder="Max" value="${esc(state.pendingName || knownName())}"></label><label>E-Mail-Adresse<input id="meet-email" type="email" autocomplete="email" placeholder="mustermann@email.com" value="${esc(state.pendingEmail)}"></label><button class="meet-primary" data-action="meet-send-code" ${state.busy?'disabled':''}>Verifizierung via Mail starten</button>`}</div></div>`;
     const people = state.participants.filter(p => p.meeting_date === selected);
     let ownRemoved = false;
@@ -166,6 +166,15 @@
   async function action(target) {
     const a = target.dataset.action;
     if (a === 'meet-preview') { track('meet_open', {entry: target.classList?.contains?.('meet-invite') ? 'menu_hint' : 'list'}); meetPreviewOpen=true; meetSlot=0; meetForm=false; state.error=''; state.selectedDate=null; state.pendingName=''; render(); await refresh(); return; }
+    if (a === 'meet-share') {
+      // Einladung mit dem gewählten Termin; der Link öffnet Meet to eat direkt (wufood.at/?meet=1).
+      const day = dateValue(date(), {weekday: 'long', day: 'numeric', month: 'long'});
+      const message = text('Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.', {date: day}) + ' https://wufood.at/?meet=1';
+      track('meet_shared', {slot: slotOf(date())});
+      if (nativePost('share', {text: message})) return;
+      if (navigator.share) { try { await navigator.share({text: message}); } catch {} } else navigator.clipboard?.writeText(message);
+      return;
+    }
     if (a === 'meet-back') { state.error=''; if (meetForm) meetForm=false; else { meetSlot=null; meetPreviewOpen=false; } render(); return; }
     if (a === 'meet-retry') { state.error=''; state.retry=false; state.loaded=false; render(); await refresh(); return; }
     if (state.busy) return;
@@ -217,7 +226,7 @@
   renderMeet = renderLive;
   app.addEventListener('click', e => {
     const target=e.target.closest('[data-action]');
-    if (!target || !['meet-preview','meet-back','meet-retry','meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-confirm-name','meet-leave','meet-open-url'].includes(target.dataset.action)) return;
+    if (!target || !['meet-preview','meet-back','meet-share','meet-retry','meet-show-form','meet-send-code','meet-resend-code','meet-verify','meet-confirm-name','meet-leave','meet-open-url'].includes(target.dataset.action)) return;
     e.preventDefault(); e.stopImmediatePropagation();
     if (target.dataset.action === 'meet-open-url') { if (target.dataset.track) track('meet_maps_opened', {source: target.dataset.track}); const url=safeUrl(target.href); if (url && !nativePost('open-source',{url,title:'Meet to eat'})) window.open(url,'_blank','noopener,noreferrer'); return; }
     void action(target);
@@ -238,7 +247,7 @@
     meetJoined = !!state.own.find(item => item.meeting_date === date());
     render();
   });
-  if (returningFromLink || window.WU_START_SCREEN === 'meet') { meetPreviewOpen=true; meetSlot=0; void refresh(); }
+  if (returningFromLink || window.WU_START_SCREEN === 'meet' || /[?&]meet=/.test(typeof location === 'undefined' ? '' : location.search || '')) { meetPreviewOpen=true; meetSlot=0; void refresh(); }
   setInterval(() => { if (meetPreviewOpen && !meetForm && !state.busy) void refresh(); }, 30000);
   // Anzahl in der Liste: beim Start, alle fünf Minuten und wenn die App wieder in den Vordergrund kommt.
   if (!returningFromLink) void refreshCount();

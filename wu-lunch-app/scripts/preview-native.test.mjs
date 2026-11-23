@@ -152,8 +152,9 @@ test('UX follow-ups in the restaurant screens: readable small print, decorative 
   const context = {};
   vm.createContext(context);
   vm.runInContext(app.slice(app.indexOf('const leafIcon='), app.indexOf('\n', app.indexOf('const dietBadge='))).replace('const dietBadge=', 'var dietBadge='), context);
-  // Graues Blatt-Symbol statt Text; die Bedeutung steht für Screenreader im aria-label (wird ins Englische übersetzt).
-  assert.match(context.dietBadge({diet: 'veggie'}), /^<span class="dish-diet" role="img" aria-label="vegetarisch"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="[^"]+"\/><\/svg><\/span>$/);
+  // Graues Blatt-Symbol mit kurzer Beschriftung ("veggie" bzw. "vegan", Vorgabe des Betreibers 23.11.2026); die
+  // Bedeutung steht für Screenreader im aria-label (wird ins Englische übersetzt).
+  assert.match(context.dietBadge({diet: 'veggie'}), /^<span class="dish-diet" role="img" aria-label="vegetarisch"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="[^"]+"\/><\/svg><span aria-hidden="true" data-ui-literal>veggie<\/span><\/span>$/);
   assert.match(context.dietBadge({diet: 'vegan'}), /^<span class="dish-diet" role="img" aria-label="vegan"><svg[^>]*>.*<\/svg><span aria-hidden="true">vegan<\/span><\/span>$/);
   assert.match(css, /\.dish-diet\{[^}]*color:#8a949e/);
   assert.equal(context.dietBadge({diet: 'meat'}), ''); assert.equal(context.dietBadge({}), '');
@@ -197,7 +198,7 @@ test('UX follow-ups in the restaurant screens: readable small print, decorative 
   }
   // Geteilte Links sind kurz und führen über die Startseite der Domain in die neue Ansicht (seit 23.11.2026: wufood.at).
   assert.match(app, /https:\/\/wufood\.at\/\?restaurant='\+encodeURIComponent\(selectedId\)/);
-  assert.match(await read('../../index.html'), /has\('restaurant'\) \? '\/wu-lunch-app\/preview\/' : '\/wu-lunch\/'/);
+  assert.match(await read('../../index.html'), /\(restaurant\|meet\)=\/\.test\(location\.search\) \? '\/wu-lunch-app\/preview\/' : '\/wu-lunch\/'/);
   // Menü-Link nur, wenn er sich von der Webseite unterscheidet.
   assert.match(app, /menuWebsite&&menuWebsite\.replace\(\/\\\/\+\$\/,''\)!==website\.replace/);
 });
