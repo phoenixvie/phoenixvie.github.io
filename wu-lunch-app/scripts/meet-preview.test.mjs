@@ -453,7 +453,7 @@ test('Meet-to-eat weekdays come from the operator settings and drive dates and t
   // "Change language" steht unter jedem Menü und deshalb nicht mehr in der Fußzeile der Liste (Vorgabe 23.11.2026).
   assert.doesNotMatch(app.slice(app.indexOf('<footer class="list-footer">'),app.indexOf('</footer>',app.indexOf('<footer class="list-footer">'))),/data-change-language/);
   assert.match(app,/function fitListFooter\(\)\{[^}]*classList\.remove\('two-rows'\)/);
-  assert.match(app,/localize\.apply\(app\);fitSourceNote\(\);fitListFooter\(\);/);
+  assert.match(app,/localize\.apply\(app\);placeSourceNote\(\);fitSourceNote\(\);fitListFooter\(\);/);
   assert.match(app,/<span class="restaurant-name">Meet to eat<\/span><span class="restaurant-type" style="display:block" data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}<\/span>/);
   assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch um 12:00 Uhr statt.');
   assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('hint'),'Every Wednesday:');

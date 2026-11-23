@@ -51,7 +51,7 @@ test('packaged preview boots, wraps restaurants and sends menu sources to native
   assert.match(app.innerHTML,/<h1>WU Mensa<\/h1>/);
   assert.match(app.innerHTML,/weekday active" data-day="3"/);
   await click({action:'share'});
-  assert.equal(messages.at(-1).text,'Gehen wir heute zu WU Mensa Mittag essen? https://phoenixvie.github.io/wu-lunch-app/preview/?restaurant=mensa');
+  assert.equal(messages.at(-1).text,'Gehen wir heute zu WU Mensa Mittag essen? https://wufood.at/?restaurant=mensa');
   await click({detail:'info'});
   assert.match(app.innerHTML,/<h1>Restaurant<\/h1>/);
   assert.match(app.innerHTML,/data-detail="info"[^>]*><span[^>]*>info<\/span>Restaurant/);
@@ -182,7 +182,9 @@ test('UX follow-ups in the restaurant screens: readable small print, decorative 
   assert.match(app, /map\.once\('load',ready\);else ready\(\);setTimeout\(ready,4000\)/);
   assert.match(css, /\.map-pending \.maplibregl-marker,\.map-pending \.maplibregl-ctrl\{visibility:hidden\}/);
   assert.match(app, /<button type="button" class="share" data-action="share" aria-label="Teilen">/);
-  assert.match(app, /preview\/\?restaurant='\+encodeURIComponent\(selectedId\)/);
+  // Geteilte Links sind kurz und führen über die Startseite der Domain in die neue Ansicht (seit 23.11.2026: wufood.at).
+  assert.match(app, /https:\/\/wufood\.at\/\?restaurant='\+encodeURIComponent\(selectedId\)/);
+  assert.match(await read('../../index.html'), /has\('restaurant'\) \? '\/wu-lunch-app\/preview\/' : '\/wu-lunch\/'/);
   // Menü-Link nur, wenn er sich von der Webseite unterscheidet.
   assert.match(app, /menuWebsite&&menuWebsite\.replace\(\/\\\/\+\$\/,''\)!==website\.replace/);
 });
