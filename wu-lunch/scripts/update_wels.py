@@ -1152,6 +1152,9 @@ def fetch(identifier, url, monday, get=http_get):
     raise ValueError("Unbekannte Quelle: " + identifier)
 
 
+CLOSED = re.compile(r"\b(geschlossen|ruhetag|betriebsurlaub|urlaub|kein mittagsmenü)\b", re.I)
+
+
 def check(days, monday):
     """Letzte Sicherung vor dem Übernehmen: nur plausible Einträge der gesuchten Woche."""
     allowed = {day.isoformat() for day in week_dates(monday)}
@@ -1167,6 +1170,10 @@ def check(days, monday):
                 raise ValueError(f"unplausibler Gerichtname am {day}: {row['name'][:60]!r}")
             if row.get("price") is not None and not 2 <= row["price"] <= 45:
                 raise ValueError(f"unplausibler Preis am {day}: {row['price']}")
+            if CLOSED.search(row["name"]):
+                # "Restaurant geschlossen." ist ein Hinweis, kein Gericht: ohne Preis anzeigen
+                # (Im Turm, KW 48/2026: geschlossen, in der App stand daneben "13,40 €").
+                row["price"], row["priceLabel"] = None, " "
     return days
 
 

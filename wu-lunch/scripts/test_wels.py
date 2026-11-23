@@ -249,6 +249,12 @@ class SecondListTests(unittest.TestCase):
         finally:
             wels.parse_ox = original
 
+    def test_closed_notice_is_shown_without_a_price(self):
+        days = wels.check({'2026-11-23': [wels.dish('Restaurant geschlossen.', 13.4)],
+                           '2026-11-24': [wels.dish('Schweinebraten / Kartoffeln / Kraut', 13.4)]}, date(2026, 11, 23))
+        self.assertEqual((days['2026-11-23'][0]['price'], days['2026-11-23'][0]['priceLabel']), (None, ' '))
+        self.assertEqual(days['2026-11-24'][0]['price'], 13.4)
+
     def test_goesser_monthly_plan_without_prices_and_without_allergen_letters(self):
         days = wels.check(wels.parse_goesser(read('goesser-november.txt'), MONDAY), MONDAY)
         self.assertEqual(len(days), 5)
