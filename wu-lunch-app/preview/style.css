@@ -64,6 +64,8 @@
 /* Meet to eat, Aufbau seit 23.11.2026: Termin in einer Zeile, Foto des Treffpunkts, „X sind schon dabei", Ablauf, unten angeheftete Anmeldung. */
 .meet-time{flex:none;font-size:15px;color:#26313c;white-space:nowrap}
 .meet-content>.meet-facts{margin:0 0 16px}
+.meet-facts .meet-fact .meet-date-picker{display:inline-block;max-width:100%;vertical-align:top}
+.meet-facts .meet-fact .meet-date-picker select{width:auto;max-width:100%}
 .meet-facts .meet-place{margin:0}
 .meet-facts .meet-place .meet-photo-visible{border-radius:0;display:block;width:100%;height:auto}
 .meet-place .meet-photo-visible{aspect-ratio:1/1;object-fit:cover;object-position:60% 60%;border-radius:10px}

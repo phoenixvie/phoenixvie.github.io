@@ -54,6 +54,8 @@ test('paused e-mail flow still works when switched back on (verified email, then
   // das Foto schließt direkt an. Die Uhrzeit steht nur noch in der Tabelle; „So läuft's ab" ist entfallen.
   assert.match(context.renderMeet(),/<div class="meet-facts"><div class="meet-fact">[^]*?<div><strong>Datum<\/strong><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Uhrzeit am Treffpunkt<\/strong><span>12:00 Uhr<\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Gemeinsam losgehen<\/strong><span>12:05 Uhr<\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Treffpunkt auf der WU<\/strong><span>Vor dem Baum direkt bei der Mensa<\/span><\/div><\/div><figure class="meet-place">/);
   assert.doesNotMatch(context.renderMeet(),/meet-steps|So läuft|meet-when|meet-info|Zusammenwarten| um 12:00 Uhr<\/option>/);
+  // Das Datumsfeld ist nur so breit wie sein Text (Vorgabe 23.11.2026).
+  assert.match(await readFile(new URL('../preview/style.css',import.meta.url),'utf8'),/\.meet-facts \.meet-fact \.meet-date-picker select\{width:auto;max-width:100%\}/);
   assert.equal(handlers.touchstart,undefined);assert.equal(handlers.touchend,undefined);
   // Vorgabe vom 23.11.2026: Treffpunkt, Foto und Google-Maps-Link sind schon vor der Anmeldung sichtbar –
   // nichts wird mehr versteckt ("Info nach Anmeldung" gibt es nicht mehr). Keine eingebettete Karte, kein Platzhalter.
