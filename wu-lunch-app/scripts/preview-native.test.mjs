@@ -182,6 +182,19 @@ test('UX follow-ups in the restaurant screens: readable small print, decorative 
   assert.match(app, /map\.once\('load',ready\);else ready\(\);setTimeout\(ready,4000\)/);
   assert.match(css, /\.map-pending \.maplibregl-marker,\.map-pending \.maplibregl-ctrl\{visibility:hidden\}/);
   assert.match(app, /<button type="button" class="share" data-action="share" aria-label="Teilen">/);
+  // Datenabrufe gehen an die Adresse der Seite selbst: in der App die GitHub-Adresse, im Web wufood.at. Ein Abruf von
+  // wufood.at an die GitHub-Adresse scheitert an der Weiterleitung ohne Freigabe (23.11.2026: Vorschau im Web blieb leer).
+  {
+    const line = app.slice(app.indexOf('const dataBase='), app.indexOf('\n', app.indexOf('const dataBase=')));
+    const base = location => { const box = {location}; vm.createContext(box); vm.runInContext(line.replace('const dataBase=', 'var dataBase='), box); return box.dataBase; };
+    assert.equal(base({hostname: 'phoenixvie.github.io', origin: 'https://phoenixvie.github.io'}), 'https://phoenixvie.github.io/wu-lunch/data/');
+    assert.equal(base({hostname: 'phoenixvie.github.io'}), 'https://phoenixvie.github.io/wu-lunch/data/');
+    assert.equal(base({hostname: 'wufood.at', origin: 'https://wufood.at'}), 'https://wufood.at/wu-lunch/data/');
+    assert.equal(base({hostname: 'www.wufood.at', origin: 'https://www.wufood.at'}), 'https://www.wufood.at/wu-lunch/data/');
+    for (const hostname of ['localhost', '127.0.0.1', '', 'evil-wufood.at', 'github.io.example.org']) assert.equal(base({hostname, origin: 'http://' + hostname}), 'https://wufood.at/wu-lunch/data/');
+    assert.doesNotMatch(app, /fetch\([^)]*phoenixvie\.github\.io/);
+    assert.match(app, /const menuUrl=site\.menuUrl\|\|dataBase\+'menus\.json';/);
+  }
   // Geteilte Links sind kurz und führen über die Startseite der Domain in die neue Ansicht (seit 23.11.2026: wufood.at).
   assert.match(app, /https:\/\/wufood\.at\/\?restaurant='\+encodeURIComponent\(selectedId\)/);
   assert.match(await read('../../index.html'), /has\('restaurant'\) \? '\/wu-lunch-app\/preview\/' : '\/wu-lunch\/'/);

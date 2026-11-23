@@ -4,13 +4,15 @@ const localize=window.WULunchI18n||{language:'de',locale:'de-AT',apply(){},refre
 // Ohne diese Angabe gilt unverändert WU Food. `standalone` heißt: nur die eigene Menüdatei, keine Admin-Daten,
 // kein Meet to eat, keine Sprachumschaltung.
 const site=window.WU_FOOD_SITE||{};
-// Datenabrufe bleiben bei der GitHub-Adresse: Sie leitet auf wufood.at weiter und funktioniert auch dann, wenn die Domain
-// einmal entfällt – eine fest eingetragene wufood.at-Adresse täte das in installierten Apps nicht.
-const menuUrl=site.menuUrl||'https://phoenixvie.github.io/wu-lunch/data/menus.json';
+// Datenabrufe gehen an die Adresse, von der die Seite selbst stammt. In der App ist das die GitHub-Adresse (sie leitet auf
+// wufood.at weiter und funktioniert auch, falls die Domain einmal entfällt); im Web ist es wufood.at. Ein Abruf von
+// wufood.at an die GitHub-Adresse scheitert dagegen: Deren Weiterleitung trägt keine Freigabe für fremde Seiten (23.11.2026).
+const dataBase=/(^|\.)github\.io$|^(www\.)?wufood\.at$/.test(location.hostname||'')?(location.origin||'https://'+location.hostname)+'/wu-lunch/data/':'https://wufood.at/wu-lunch/data/';
+const menuUrl=site.menuUrl||dataBase+'menus.json';
 const supabase='https://vswnqdqnohbuzbwmsdvv.supabase.co';
 const publishableKey='sb_publishable__LAhcQOUGtE-ACAN-RPKkw_UB7Nrub2';
-const contactUrl=location.hostname==='localhost'||location.hostname==='127.0.0.1'?'./restaurant-contact.json':'https://phoenixvie.github.io/wu-lunch/data/restaurant-contact.json';
-const publishedContactUrl='https://phoenixvie.github.io/wu-lunch/data/restaurant-contact.json';
+const contactUrl=location.hostname==='localhost'||location.hostname==='127.0.0.1'?'./restaurant-contact.json':dataBase+'restaurant-contact.json';
+const publishedContactUrl=dataBase+'restaurant-contact.json';
 const types={mensa:'International',campus:'International',baschly:'Orientalisch',finn:'International',karmafood:'International',losteria:'Italienisch',gruenehuette:'Österreichisch',glashaus:'Österreichisch',lia:'Café',topfdeckel:'Österreichisch',omakueche:'International'};
 const locations={mensa:[16.4098281,48.2129611],campus:[16.41021,48.21213],baschly:[16.40743,48.21445],glashaus:[16.4120651,48.2118847],losteria:[16.4052,48.21468],gruenehuette:[16.40406,48.21758],lia:[16.4082722,48.2138325],topfdeckel:[16.4156227,48.2128709],omakueche:[16.4155067,48.2130071],karmafood:[16.4078761,48.218283]};
 const addresses={mensa:'Welthandelsplatz 1, D1/TC, 1020 Wien',campus:'Welthandelsplatz 1, Gebäude D2, 1020 Wien',baschly:'Welthandelsplatz 1, Gebäude D4, 1020 Wien',glashaus:'Am Grünen Prater 11, 1020 Wien',losteria:'Freudplatz 2, 1020 Wien',omakueche:'Vorgartenstraße 206B/1, 1020 Wien',topfdeckel:'Vorgartenstraße 206B, 1020 Wien',gruenehuette:'Prater 196, 1020 Wien',lia:'Welthandelsplatz 1, LC, 1020 Wien',karmafood:'Ausstellungsstraße 63, 1020 Wien',finn:'Welthandelsplatz 1, Gebäude EA, 1020 Wien'};
