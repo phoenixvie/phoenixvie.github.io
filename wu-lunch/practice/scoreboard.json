@@ -4,12 +4,13 @@
   "andere_woche": 1,
   "beide_gescheitert": 2,
   "cards": 15,
-  "einig": 6,
-  "generic_rate": 0.533,
-  "generic_solved": 8,
+  "einig": 7,
+  "generic_rate": 0.733,
+  "generic_solved": 11,
+  "mehr_gelesen": 2,
   "nur_ersatzleser": 2,
   "nur_ki": 1,
-  "uneinig": 4,
+  "uneinig": 1,
   "week": "2026-11-23"
  }
 ]

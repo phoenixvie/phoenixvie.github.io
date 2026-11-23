@@ -35,10 +35,8 @@
   "ok": true
  },
  "detail": {
-  "agreement": 0.889,
-  "only_ai": [
-   "2026-11-27: gebratene lachsschnitte auf kohlrabirahmsauce und petersilerdäpfeln"
-  ],
+  "agreement": 1.0,
+  "only_ai": [],
   "only_generic": []
  },
  "generic": {
@@ -65,6 +63,12 @@
     {
      "name": "Spinat- Topfennockerl mit brauner Butter und Parmesan",
      "price": 19.9
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Gebratene Lachsschnitte auf Kohlrabirahmsauce und Petersilerdäpfeln",
+     "price": 28.9
     }
    ]
   },

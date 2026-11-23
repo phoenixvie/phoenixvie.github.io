@@ -75,15 +75,15 @@
   "ok": true
  },
  "detail": {
-  "agreement": 0.8,
-  "only_ai": [
-   "2026-11-23: gebackenes gemüseschnitzel petersilkartoffeln",
-   "2026-11-24: gebackenes gemüseschnitzel petersilkartoffeln",
-   "2026-11-25: gebackenes gemüseschnitzel petersilkartoffeln",
-   "2026-11-26: gebackenes gemüseschnitzel petersilkartoffeln",
-   "2026-11-27: gebackenes gemüseschnitzel petersilkartoffeln"
-  ],
-  "only_generic": []
+  "agreement": 0.857,
+  "only_ai": [],
+  "only_generic": [
+   "2026-11-23: salat oder tagessuppe",
+   "2026-11-24: salat oder tagessuppe",
+   "2026-11-25: salat oder tagessuppe",
+   "2026-11-26: salat oder tagessuppe",
+   "2026-11-27: salat oder tagessuppe"
+  ]
  },
  "generic": {
   "days": {
@@ -95,6 +95,14 @@
     {
      "name": "Ofenfrische Ripperl, Ofenkartoffel, Sauerrahmsauce",
      "price": 13.6
+    },
+    {
+     "name": "Salat oder Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
+     "price": 13.6
     }
    ],
    "2026-11-24": [
@@ -104,6 +112,14 @@
     },
     {
      "name": "½ gebratenes Maishendl, Natursauce, Basmatireis",
+     "price": 13.6
+    },
+    {
+     "name": "Salat oder Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
      "price": 13.6
     }
    ],
@@ -115,6 +131,14 @@
     {
      "name": "Schnitzel Wiener Art vom Schwein, Petersilkartoffeln",
      "price": 13.6
+    },
+    {
+     "name": "Salat oder Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
+     "price": 13.6
     }
    ],
    "2026-11-26": [
@@ -124,6 +148,14 @@
     },
     {
      "name": "Cheese Burger, Ketchup, Pommes",
+     "price": 13.6
+    },
+    {
+     "name": "Salat oder Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
      "price": 13.6
     }
    ],
@@ -135,12 +167,20 @@
     {
      "name": "Gebackenes Seelachsfilet, Kartoffel-Rucolasalat",
      "price": 13.6
+    },
+    {
+     "name": "Salat oder Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
+     "price": 13.6
     }
    ]
   },
   "ok": true
  },
  "id": "dreihasen",
- "verdict": "uneinig",
+ "verdict": "einig",
  "week": "2026-11-23"
 }

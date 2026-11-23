@@ -15,11 +15,19 @@
     {
      "name": "Faschierte Laibchen mit Bratensoße und Kartoffelpüree",
      "price": null
+    },
+    {
+     "name": "Spaghetti mit Walnüssen, Kürbis und Blattspinat",
+     "price": null
     }
    ],
    "2026-11-24": [
     {
      "name": "Naturschnitzel vom Schwein mit Champignonsoße und Butterreis",
+     "price": null
+    },
+    {
+     "name": "Semmelknödel mit getrockneten Tomaten und Mozzarella gefüllt, mit Nussbutter und glacierten Tomaten",
      "price": null
     }
    ],
@@ -31,6 +39,10 @@
     {
      "name": "Gebackene Hendloberkeule mit Kartoffel-Endiviensalat und Preiselbeeren",
      "price": null
+    },
+    {
+     "name": "Herbstliches Ofengemüse mit Kartoffelwedges und Sauerrahmdip",
+     "price": null
     }
    ],
    "2026-11-26": [
@@ -40,6 +52,10 @@
     },
     {
      "name": "Bayrische Creme",
+     "price": null
+    },
+    {
+     "name": "Kartoffel-Dinkel-Laibchen auf Kohlrabiragout",
      "price": null
     }
    ]

@@ -9,7 +9,7 @@ Dieses Programm besorgt die Übung dafür:
   1. Es holt einmal pro Woche die Karten der Übungslokale (practice/sources.json – nur deren eigene Webseiten).
   2. Beide Leser lesen dieselbe Karte unabhängig voneinander. Der KI-Leser dient als Vergleichslesung: Er darf
      nur übernehmen, was wörtlich in der Karte steht.
-  3. Der Vergleich ergibt je Karte ein Urteil (einig, nur KI, uneinig, …). Karte, beide Ergebnisse und Urteil
+  3. Der Vergleich ergibt je Karte ein Urteil (einig, mehr gelesen, nur KI, uneinig, …). Karte, beide Ergebnisse und Urteil
      werden abgelegt (practice/cards, practice/results) – das ist die Übungssammlung.
   4. Die Punktetafel (practice/scoreboard.json) zeigt Woche für Woche, wie viele Karten der Ersatzleser allein
      richtig liest. Sie wird über ALLE gespeicherten Karten neu berechnet (--rescore): Nach einer Verbesserung
@@ -36,7 +36,7 @@ SOURCES, CARDS, RESULTS, EXPECTED = ROOT / "sources.json", ROOT / "cards", ROOT 
 SCOREBOARD = ROOT / "scoreboard.json"
 KEEP_WEEKS = 12          # so viele Wochen bleiben Karten ohne geprüftes Soll liegen
 MAX_CARD = 30_000        # Zeichen je gespeicherter Karte
-VERDICTS = ("einig", "nur_ki", "nur_ersatzleser", "uneinig", "beide_gescheitert", "andere_woche", "abruf_fehlgeschlagen")
+VERDICTS = ("einig", "mehr_gelesen", "nur_ki", "nur_ersatzleser", "uneinig", "beide_gescheitert", "andere_woche", "abruf_fehlgeschlagen")
 
 
 # ---------------------------------------------------------------------------
@@ -90,21 +90,9 @@ def read_with(reader, *args):
         return {"ok": False, "other_week": False, "error": f"{type(error).__name__}: {error}"[:200]}
 
 
-def _names(days):
-    return {(day, wels._plain(row["name"])) for day, rows in days.items() for row in rows}
-
-
 def agreement(first, second):
     """Anteil der Gerichte, die beide Leser am selben Tag gleich nennen (0 … 1), dazu die Unterschiede."""
-    a, b = _names(first), _names(second)
-    # Ein Leser darf ein Gericht länger fassen (umbrochene Zeile, Beilage): gleicher Tag und einer enthält den anderen.
-    def matched(item, others):
-        return any(item[0] == other[0] and (item[1] in other[1] or other[1] in item[1]) for other in others)
-    same = sum(matched(item, b) for item in a) + sum(matched(item, a) for item in b)
-    total = len(a) + len(b)
-    only_a = sorted(f"{day}: {name}" for day, name in a if not matched((day, name), b))[:8]
-    only_b = sorted(f"{day}: {name}" for day, name in b if not matched((day, name), a))[:8]
-    return (round(same / total, 3) if total else 0.0), only_a, only_b
+    return wels.readings_agree(first, second)
 
 
 def judge(generic, ai):
@@ -116,7 +104,11 @@ def judge(generic, ai):
     if generic["ok"] and ai["ok"]:
         score, only_generic, only_ai = agreement(generic["days"], ai["days"])
         detail = {"agreement": score, "only_generic": only_generic, "only_ai": only_ai}
-        return ("einig" if score >= 0.85 else "uneinig"), detail
+        if score >= 0.85:
+            return "einig", detail
+        # Alles, was die Vergleichslesung nennt, steht am selben Tag auch beim Ersatzleser – er hat nur mehr gelesen
+        # (Vorspeise, Wochengericht). Das ist keine Abweichung in der Sache, aber einen Blick wert.
+        return ("mehr_gelesen" if not only_ai else "uneinig"), detail
     if ai["ok"]:
         return "nur_ki", None
     if generic["ok"]:
@@ -175,8 +167,8 @@ def scoreboard(results):
         week[row["verdict"]] += 1
     out = []
     for week, counts in sorted(weeks.items()):
-        readable = sum(counts[name] for name in ("einig", "nur_ki", "nur_ersatzleser", "uneinig", "beide_gescheitert"))
-        solved = counts["einig"] + counts["nur_ersatzleser"]
+        readable = sum(counts[name] for name in ("einig", "mehr_gelesen", "nur_ki", "nur_ersatzleser", "uneinig", "beide_gescheitert"))
+        solved = counts["einig"] + counts["mehr_gelesen"] + counts["nur_ersatzleser"]
         out.append({"week": week, "cards": readable, "generic_solved": solved,
                     "generic_rate": round(solved / readable, 3) if readable else None, **counts})
     return out
@@ -247,7 +239,7 @@ def main():
     board = rescore()
     for week in board[-4:]:
         print(f"Woche {week['week']}: Ersatzleser allein {week['generic_solved']} von {week['cards']} Karten "
-              f"(einig {week['einig']}, nur KI {week['nur_ki']}, uneinig {week['uneinig']}, "
+              f"(einig {week['einig']}, mehr gelesen {week['mehr_gelesen']}, nur KI {week['nur_ki']}, uneinig {week['uneinig']}, "
               f"beide gescheitert {week['beide_gescheitert']}, andere Woche {week['andere_woche']})")
     return 0
 

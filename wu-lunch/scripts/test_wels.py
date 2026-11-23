@@ -8,6 +8,7 @@ from pathlib import Path
 import json
 import re
 import unittest
+from unittest import mock
 
 import update_wels as wels
 
@@ -331,6 +332,53 @@ class SecondListTests(unittest.TestCase):
             self.assertEqual((ox(failed)['import']['state'], names(ox(failed)['days']['2026-11-24']), len(asked)), ('error', [], 2))
             wels.build(failed, week, now, get, ai_key='geheim', ai_post=post)
             self.assertEqual(len(asked), 2)
+        finally:
+            wels.parse_ox = original
+
+    def test_fallback_asks_both_readers_and_the_checked_ai_reading_wins_a_disagreement(self):
+        # Leseübung 23.11.2026: Steht das Gericht VOR der Tagesüberschrift, ordnet der Ersatzleser es dem falschen Tag zu.
+        now, week = datetime(2026, 11, 23, 9, 0, tzinfo=wels.TZ), date(2026, 11, 23)
+        dishes = ["Cannelloni mit Ricotta und Spinat", "Tagliatelle al Ragu Bolognese", "Risotto mit Steinpilzen",
+                  "Bistecca vom Rind mit Pommes", "Spaghetti frutti di mare"]
+        card = "Mittagsmenü 23.11. - 27.11.\n" + "\n".join(f"{dish}\n{day}" for dish, day in zip(dishes, wels.DAY_NAMES)) + "\nGemischter Salat vom Buffet"
+        shifted = wels.generic_week(card, week)
+        self.assertEqual(names(shifted["2026-11-23"]), ["Tagliatelle al Ragu Bolognese"])     # falscher Tag, aber ohne Fehler gelesen
+        right = {"week_evidence": "23.11. - 27.11.", "days": [
+            {"date": day.isoformat(), "dishes": [{"name": dish, "price": None}]} for day, dish in zip(wels.week_dates(week), dishes)]}
+        same = {"week_evidence": "23.11. - 27.11.", "days": [
+            {"date": day, "dishes": [{"name": row["name"], "price": None} for row in rows]} for day, rows in shifted.items()]}
+        answer, asked = {}, []
+
+        def post(url, **kwargs):
+            asked.append(url)
+            return type("Response", (), {"status_code": 200, "json": lambda self: {
+                "status": "completed", "output": [{"type": "message", "content": [
+                    {"type": "output_text", "text": json.dumps(answer)}]}]}})()
+
+        def get(url):
+            if 'ox-wels' in url:
+                return ('<html><body>' + ''.join(f'<p>{line}</p>' for line in card.splitlines()) + '</body></html>').encode()
+            raise OSError('offline')
+
+        ox = lambda result: next(row for row in result['restaurants'] if row['id'] == 'ox')
+        original = wels.parse_ox
+        try:
+            wels.parse_ox = lambda text, monday: (_ for _ in ()).throw(ValueError('OX: neue Form'))
+            answer.update(right)
+            result = wels.build(None, week, now, get, ai_key='geheim', ai_post=post)
+            self.assertEqual((ox(result)['import']['state'], ox(result)['import']['reader'], len(asked)), ('fallback', 'ki', 1))
+            self.assertEqual(names(ox(result)['days']['2026-11-23']), ["Cannelloni mit Ricotta und Spinat"])
+            # Sind sich beide einig, gilt der Ersatzleser.
+            answer.clear(); answer.update(same)
+            agreed = wels.build(None, week, now, get, ai_key='geheim', ai_post=post)
+            self.assertEqual((ox(agreed)['import']['state'], ox(agreed)['import']['reader']), ('fallback', 'ersatzleser'))
+            # Ohne Schlüssel bleibt es beim Ersatzleser allein.
+            alone = wels.build(None, week, now, get)
+            self.assertEqual((ox(alone)['import']['state'], ox(alone)['import']['reader']), ('fallback', 'ersatzleser'))
+            # Belegt die KI-Lesung eine andere Woche, wird nichts gezeigt – auch nicht das Ergebnis des Ersatzlesers.
+            with mock.patch.object(wels, 'ai_week', side_effect=wels.NotThisWeek('KI-Leser: Karte gilt für eine andere Woche')):
+                other = wels.build(None, week, now, get, ai_key='geheim', ai_post=post)
+            self.assertEqual((ox(other)['import']['state'], names(ox(other)['days']['2026-11-23'])), ('error', []))
         finally:
             wels.parse_ox = original
 

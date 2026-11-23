@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-23, von Hand mit der Karte verglichen (Montag bis Freitag; die 'Vegetarische Alternative' der ganzen Woche bleibt bewusst weg)",
+ "checked": "2026-11-23, von Hand mit der Karte verglichen: Montag bis Freitag samt 'Vegetarische Alternative' (gilt an jedem Tag)",
  "days": {
   "2026-11-23": [
    {
@@ -8,6 +8,14 @@
    },
    {
     "name": "Ofenfrische Ripperl, Ofenkartoffel, Sauerrahmsauce",
+    "price": 13.6
+   },
+   {
+    "name": "Salat oder Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
     "price": 13.6
    }
   ],
@@ -19,6 +27,14 @@
    {
     "name": "½ gebratenes Maishendl, Natursauce, Basmatireis",
     "price": 13.6
+   },
+   {
+    "name": "Salat oder Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
+    "price": 13.6
    }
   ],
   "2026-11-25": [
@@ -28,6 +44,14 @@
    },
    {
     "name": "Schnitzel Wiener Art vom Schwein, Petersilkartoffeln",
+    "price": 13.6
+   },
+   {
+    "name": "Salat oder Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
     "price": 13.6
    }
   ],
@@ -39,6 +63,14 @@
    {
     "name": "Cheese Burger, Ketchup, Pommes",
     "price": 13.6
+   },
+   {
+    "name": "Salat oder Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
+    "price": 13.6
    }
   ],
   "2026-11-27": [
@@ -48,6 +80,14 @@
    },
    {
     "name": "Gebackenes Seelachsfilet, Kartoffel-Rucolasalat",
+    "price": 13.6
+   },
+   {
+    "name": "Salat oder Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
     "price": 13.6
    }
   ]

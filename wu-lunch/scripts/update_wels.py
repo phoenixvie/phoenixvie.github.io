@@ -286,7 +286,14 @@ SHORT_PERIOD = re.compile(r"(?<![\d.,])(\d{1,2})\.\s?(?:(0?[1-9]|1[0-2])\.?)?\s?
                           r"(?:(?:Mo|Di|Mi|Do|Fr|Sa|So)[a-zäöü]*[.,]?\s*)?(\d{1,2})\.\s?(0?[1-9]|1[0-2])(?:\.|(?![\d,]))")
 NOT_A_DISH = re.compile(r"@|https?:|www\.|\bUhr\b|\d{1,2}[:.]\d{2}\s*(?:–|-|bis)\s*\d{1,2}[:.]\d{2}|©|\+43|\bTel\b|"
                         r"reservier|geschlossen|ruhetag|öffnungszeit|impressum|datenschutz|cookie|gutschein|newsletter|"
-                        r"änderungen vorbehalten|solange der vorrat|aufpreis|sonderw[uü]nsch|nur hauptspeise", re.I)
+                        r"änderungen vorbehalten|solange der vorrat|aufpreis|sonderw[uü]nsch|nur hauptspeise|"
+                        r"\bPDF\b|herunterladen|download|speisekarte", re.I)
+WEEKLY = re.compile(r"(vegetarische|vegane|fleischlose)\s+alternative|wochen(gericht|empfehlung|angebot|hit|teller|special)|"
+                    r"\b(die\s+)?ganze\s+woche\b|\bjeden\s+tag\b", re.I)
+# Gerichte, die aus einem einzigen Wort bestehen ("Käsespätzle"); andere Einzelwörter sind meist Beschriftungen.
+ONE_WORD_DISH = re.compile(r"suppe|salat|knödel|nockerl|schnitzel|strudel|spätzle|gulasch|lasagne|burger|pizza|risotto|"
+                           r"eintopf|braten|laibchen|nudeln|auflauf|geschnetzeltes|palatschinken|schmarrn|curry|"
+                           r"spaghetti|ravioli|gnocchi|cordon|hendl|gröstl|fleckerl|tascherl|krapfen", re.I)
 LABEL = re.compile(r"(vorspeise|hauptspeise|nachspeise|dessert|suppe|menü\s*\d?|tagesteller|tagesmenü|oder|und|"
                    r"vegetarisch|vegan|fleisch|fisch|×)\s*:?", re.I)
 PRICE_ONLY = re.compile(r"(?:€\s*" + PRICE + r"|" + PRICE + r"\s*€)")
@@ -365,21 +372,56 @@ def generic_week(text, monday):
         if int(week_number.group(1)) != monday.isocalendar().week:
             raise NotThisWeek(f"Ersatzleser: Karte der Kalenderwoche {week_number.group(1)}")
         proof = "Kalenderwoche"
+    # Weitere Blöcke mit denselben Wochentagen direkt dahinter sind weitere Menülinien derselben Woche
+    # ("Menü 1" / "Menü 2", "Mittagsmenü I" / "II" – Leseübung 23.11.2026), nicht die Karte ein zweites Mal.
+    blocks = [run]
+    for following in runs[runs.index(run) + 1:]:
+        last = blocks[-1][-1][0]
+        if ({mark[1] for mark in following} != {mark[1] for mark in run} or following[0][0] - last > 30
+                or week_proof(" ".join(rows[last + 1:following[0][0]]), monday) is False):
+            break
+        blocks.append(following)
+    # Manche Seiten nennen jedes Gericht zweimal: einmal direkt VOR der Tagesüberschrift, einmal darunter.
+    # Die Zeile davor gehört dann nicht zum Vortag. Erkennbar daran, dass das bei jeder Überschrift so ist.
+    echo = set()
+    for block in blocks:
+        limits = [mark[0] for mark in block[1:]] + [min(len(rows), block[-1][0] + 12)]
+        if all(index > 0 and rows[index - 1] in rows[index + 1:limit] for (index, _, _), limit in zip(block, limits)):
+            echo.update(index - 1 for index, _, _ in block)
+    # Ein Angebot für die ganze Woche hinter dem letzten Tag ("Vegetarische Alternative", "Wochengericht") gilt an
+    # jedem Tag der Karte. Es wird wie ein weiterer Tag gelesen (Wochentag None) und allen Tagen angehängt.
+    after = blocks[-1][-1][0]
+    weekly = next((row for row in range(after + 1, min(len(rows), after + 13))
+                   if len(rows[row]) <= 45 and WEEKLY.search(rows[row])), None)
+    if weekly is not None:
+        blocks.append([(weekly, None, "")])
     days, most = {}, 0
-    for position, (index, weekday, rest) in enumerate(run):
-        end = run[position + 1][0] if position + 1 < len(run) else min(len(rows), index + 1 + max(most, 3) * 3)
-        lines = ([rest] if rest else []) + rows[index + 1:end]
+    for number, position, index, weekday, rest in [(number, position, *mark) for number, block in enumerate(blocks)
+                                                   for position, mark in enumerate(block)]:
+        run = blocks[number]
+        if position + 1 < len(run):
+            end = run[position + 1][0]
+        elif number + 1 < len(blocks):
+            end = blocks[number + 1][0][0]
+        else:
+            end = min(len(rows), index + 1 + max(most, 3) * 3)
+        lines = ([rest] if rest else []) + [rows[row] for row in range(index + 1, end) if row not in echo]
         # day_price: Preis über allen Gerichten des Tages; next_price: Preis direkt nach einer Beschriftung
         # ("Menü 1", "€ 15,50", Gericht) – gilt nur für das nächste Gericht.
-        entries, day_price, next_price, after_label = [], None, None, False
+        entries, day_price, next_price, after_label, separated = [], None, None, False, False
         for offset, line in enumerate(lines):
+            if not re.search(r"[0-9A-Za-zÄÖÜäöüß]", line):
+                separated = True  # Trennzeile ("***"): kein Ende der Karte, aber das nächste Gericht beginnt neu
+                continue
             # Tagesdatum: steht allein in der Zeile direkt bei der Überschrift ("16.11.", "16. November 2026").
             # Auch ohne Jahr ("Montag, 23. November", das Jahr steht in der nächsten Zeile oder gar nicht).
-            named = _month_date(line, monday)
+            named = _month_date(line, monday) if weekday is not None else None
             bare = clean(SHORT_DATE.sub(" ", MONTH_DATE.sub(" ", line) if named else line))
-            stated = (named or _short_date(line, monday)) if offset < 2 and len(bare) < 4 else None
+            stated = (named or _short_date(line, monday)) if weekday is not None and offset < 2 and len(bare) < 4 else None
             if stated:
                 if stated != week[weekday]:
+                    if number:
+                        break  # ein weiterer Block mit fremdem Datum: nur dieser Tag bleibt weg
                     raise NotThisWeek(f"Ersatzleser: Karte zeigt den {stated.isoformat()}")
                 proof = "Tagesdatum"
                 continue
@@ -409,8 +451,12 @@ def generic_week(text, monday):
             price = euro(cost.group(1) or cost.group(3), cost.group(2) or cost.group(4)) if cost else None
             if price is not None and not 2 <= price <= 45:
                 continue  # z. B. "Nur Hauptspeise: - € 1,00" ist kein Gericht
+            # Bruchstück eines Datums ("mber 2026" aus einer kaputten Seite) ist kein Gericht.
+            if re.search(r"\b20\d\d\b", name) and len(re.findall(r"[A-Za-zÄÖÜäöüß]{4,}", re.sub(r"\b20\d\d\b", " ", name))) < 2:
+                continue
             # Fortsetzungszeile eines umbrochenen Gerichts: offene Klammer, Komma am Ende oder Kleinbuchstabe am Anfang.
-            previous = entries[-1] if entries else None
+            previous = entries[-1] if entries and not separated else None
+            separated = False
             if (previous and len(name) >= 3 and not NOT_A_DISH.search(name) and len(previous["name"]) + len(name) <= 240
                     and (previous["name"].count("(") > previous["name"].count(")") or previous["name"].endswith((",", "-", " und", " mit"))
                          or name[0].islower())):
@@ -419,7 +465,7 @@ def generic_week(text, monday):
                     previous["price"] = price
                 continue
             plausible = (8 <= len(name) <= 220 and re.search(r"[A-Za-zÄÖÜäöü]{4}", name) and not NOT_A_DISH.search(name)
-                         and (" " in name or re.search(r"suppe|salat|knödel|nockerl|schnitzel|strudel", name, re.I)))
+                         and (" " in name or ONE_WORD_DISH.search(name)))
             if not plausible:
                 if position + 1 == len(run):
                     break  # hinter dem letzten Tag beginnt der übrige Seitentext
@@ -431,8 +477,15 @@ def generic_week(text, monday):
         for entry in entries:
             if entry["price"] is None and day_price is not None:
                 entry["price"] = day_price
-        if entries:
-            days[week[weekday].isoformat()] = entries
+        if entries and weekday is None:
+            for known in days.values():
+                seen = {_plain(entry["name"]) for entry in known}
+                known.extend(dict(entry) for entry in entries if _plain(entry["name"]) not in seen)
+        elif entries:
+            # Weitere Menülinie desselben Tages: anhängen, Gleiches ("Tagessuppe") nur einmal.
+            known = days.setdefault(week[weekday].isoformat(), [])
+            seen = {_plain(entry["name"]) for entry in known}
+            known.extend(entry for entry in entries if _plain(entry["name"]) not in seen)
             most = max(most, len(entries))
     if not proof:
         if stale:
@@ -494,6 +547,22 @@ def week_proof(excerpt, monday):
         return int(number.group(1)) == monday.isocalendar().week
     single = long_date(excerpt) or _short_date(excerpt, monday)
     return (single in week) if single else None
+
+
+def readings_agree(first, second):
+    """Anteil der Gerichte, die zwei Lesungen am selben Tag gleich nennen (0 … 1), dazu die Unterschiede.
+
+    Ein Leser darf ein Gericht länger fassen (umbrochene Zeile, Beilage): gleicher Tag und einer enthält den anderen.
+    """
+    a = {(day, _plain(row["name"])) for day, rows in first.items() for row in rows}
+    b = {(day, _plain(row["name"])) for day, rows in second.items() for row in rows}
+
+    def matched(item, others):
+        return any(item[0] == other[0] and (item[1] in other[1] or other[1] in item[1]) for other in others)
+    same, total = sum(matched(item, b) for item in a) + sum(matched(item, a) for item in b), len(a) + len(b)
+    only_a = sorted(f"{day}: {name}" for day, name in a if not matched((day, name), b))[:8]
+    only_b = sorted(f"{day}: {name}" for day, name in b if not matched((day, name), a))[:8]
+    return (round(same / total, 3) if total else 0.0), only_a, only_b
 
 
 def ai_week(text, monday, key, post=None):
@@ -1383,17 +1452,41 @@ def build(previous, monday, now, get=http_get, ai_key="", ai_post=None):
                 if was_fallback and record.get("source") == source and any(days.values()):
                     state, marks = "fallback", {**marks, "source": source, "reader": record.get("reader", "")}
                 elif was_fallback or not any(days.values()):  # ein guter Stand des eigenen Lesers bleibt stehen
-                    recovered, reader = None, ""
+                    # Beide Rückfallleser lesen die Karte. Sind sie sich einig, gilt der Ersatzleser. Weichen sie ab,
+                    # gilt die KI-Lesung: Sie ist Punkt für Punkt wörtlich an der Karte geprüft, während der
+                    # Ersatzleser bei ungewohntem Aufbau Gerichte dem falschen Tag zuordnen kann (Leseübung
+                    # 23.11.2026: bei allen vier Abweichungen lag er falsch). Sagt die KI-Lesung nachweislich
+                    # "andere Woche", wird nichts gezeigt – lieber kein Menü als das der falschen Woche.
+                    recovered, reader, other_week, generic, second_opinion = None, "", False, None, None
                     try:
-                        recovered, reader = check(generic_week(text, monday), monday), "ersatzleser"
+                        generic = check(generic_week(text, monday), monday)
                     except Exception as second:
+                        other_week = isinstance(second, NotThisWeek)
                         print(f"{base['name']}: Ersatzleser ohne Ergebnis – {second}", flush=True)
-                        if ai_key and not isinstance(second, NotThisWeek) and marks.get("ai_tried") != source:
-                            marks["ai_tried"] = source  # je Kartentext höchstens ein KI-Aufruf
-                            try:
-                                recovered, reader = check(ai_week(text, monday, ai_key, ai_post), monday), "ki"
-                            except Exception as third:
-                                print(f"{base['name']}: KI-Leser ohne Ergebnis – {third}", flush=True)
+                    if ai_key and not other_week and marks.get("ai_tried") != source:
+                        marks["ai_tried"] = source  # je Kartentext höchstens ein KI-Aufruf
+                        try:
+                            second_opinion = check(ai_week(text, monday, ai_key, ai_post), monday)
+                        except NotThisWeek as third:
+                            other_week = True
+                            print(f"{base['name']}: KI-Leser – {third}", flush=True)
+                        except Exception as third:
+                            print(f"{base['name']}: KI-Leser ohne Ergebnis – {third}", flush=True)
+                    if other_week:
+                        pass
+                    elif generic and second_opinion:
+                        score, only_generic, only_ai = readings_agree(generic, second_opinion)
+                        # Einig auch dann, wenn der Ersatzleser nur mehr gelesen hat (Vorspeise, Wochengericht):
+                        # Alles aus der KI-Lesung steht dann am selben Tag auch bei ihm.
+                        agreed = score >= 0.85 or not only_ai
+                        recovered, reader = (generic, "ersatzleser") if agreed else (second_opinion, "ki")
+                        if not agreed:
+                            print(f"{base['name']}: Ersatzleser und KI-Leser uneinig ({score}) – KI-Lesung gilt. "
+                                  f"Nur Ersatzleser: {only_generic[:3]}; nur KI: {only_ai[:3]}", flush=True)
+                    elif generic:
+                        recovered, reader = generic, "ersatzleser"
+                    elif second_opinion:
+                        recovered, reader = second_opinion, "ki"
                     if recovered:
                         days, state, marks = recovered, "fallback", {**marks, "source": source, "reader": reader}
         complete = {day.isoformat(): days.get(day.isoformat(), []) for day in week_dates(monday)}

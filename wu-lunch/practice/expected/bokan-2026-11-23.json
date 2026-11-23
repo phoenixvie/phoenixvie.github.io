@@ -1,0 +1,57 @@
+{
+ "checked": "2026-11-23, von Hand mit der Karte verglichen: Trennzeilen '***' zwischen Suppe und Hauptgericht; 'Krautfleckerl' als Gericht aus einem Wort",
+ "days": {
+  "2026-11-23": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Sesamschnitzel mit Petersilienkartoffeln und Salat",
+    "price": null
+   }
+  ],
+  "2026-11-24": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Pasta asciutta mit Salat",
+    "price": null
+   }
+  ],
+  "2026-11-25": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Reisfleisch mit grünem Salat",
+    "price": null
+   }
+  ],
+  "2026-11-26": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "gekochtes Rindfleisch mit Spinat und Röstkartoffeln",
+    "price": null
+   }
+  ],
+  "2026-11-27": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Krautfleckerl",
+    "price": null
+   }
+  ]
+ },
+ "id": "bokan",
+ "week": "2026-11-23"
+}

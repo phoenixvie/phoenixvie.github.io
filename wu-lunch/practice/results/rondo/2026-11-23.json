@@ -55,22 +55,13 @@
   "ok": true
  },
  "detail": {
-  "agreement": 0.435,
-  "only_ai": [
-   "2026-11-23: griechische nudelpfanne mit oliven kapern fetakäse und blattsalat",
-   "2026-11-24: süßkartoffelauflauf mit rotkraut und gemüsejus blattsalat",
-   "2026-11-25: kürbisrisotto mit süßsauren zuchiniwürfel parmesan salat",
-   "2026-11-26: oma s gemüse linsen eintopf mit flaumigen serviettenknödel",
-   "2026-11-27: gebackener blumenkohl auf gemüsebouquet sauce tartar salat"
-  ],
+  "agreement": 0.8,
+  "only_ai": [],
   "only_generic": [
-   "2026-11-23: gebackene maishenderlbrust mit erbsenreis",
    "2026-11-23: suppe oder salat",
-   "2026-11-24: open pulled pork sandwich mit spicy wedges cole slaw",
    "2026-11-24: suppe oder salat",
    "2026-11-25: suppe oder salat",
-   "2026-11-25: überbackene schinkenspätzle mit blattsalat",
-   "2026-11-26: zanderfilet nach mailänder art selleriepüree basilikumpesto",
+   "2026-11-26: suppe oder salat",
    "2026-11-27: suppe oder salat"
   ]
  },
@@ -86,7 +77,7 @@
      "price": null
     },
     {
-     "name": "Gebackene Maishenderlbrust mit Erbsenreis",
+     "name": "Griechische Nudelpfanne mit Oliven, Kapern, Fetakäse und Blattsalat",
      "price": null
     }
    ],
@@ -100,7 +91,7 @@
      "price": null
     },
     {
-     "name": "Open Pulled Pork Sandwich mit spicy wedges, Cole slaw",
+     "name": "Süßkartoffelauflauf mit Rotkraut und Gemüsejus, Blattsalat",
      "price": null
     }
    ],
@@ -114,7 +105,7 @@
      "price": null
     },
     {
-     "name": "Überbackene Schinkenspätzle mit Blattsalat",
+     "name": "Kürbisrisotto mit süßsauren Zuchiniwürfel, Parmesan, Salat",
      "price": null
     }
    ],
@@ -124,7 +115,11 @@
      "price": null
     },
     {
-     "name": "Zanderfilet nach Mailänder Art, Selleriepüree, Basilikumpesto",
+     "name": "Suppe oder Salat",
+     "price": null
+    },
+    {
+     "name": "Oma`s Gemüse-Linsen-Eintopf mit flaumigen Serviettenknödel",
      "price": null
     }
    ],
@@ -136,12 +131,16 @@
     {
      "name": "Zanderfilet nach Mailänder Art, Selleriepüree, Basilikumpesto",
      "price": null
+    },
+    {
+     "name": "Gebackener Blumenkohl auf Gemüsebouquet, Sauce Tartar, Salat",
+     "price": null
     }
    ]
   },
   "ok": true
  },
  "id": "rondo",
- "verdict": "uneinig",
+ "verdict": "mehr_gelesen",
  "week": "2026-11-23"
 }
