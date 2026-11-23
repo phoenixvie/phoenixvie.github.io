@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-23T07:16:47+01:00",
+  "checked_at": "2026-11-23T07:33:11+01:00",
   "week_start": "2026-11-23",
   "week_end": "2026-11-27",
   "health": "degraded",
@@ -7,8 +7,8 @@
     "karmafood": {
       "state": "error",
       "last_success": "2026-11-17T17:25:04+01:00",
-      "checked_at": "2026-11-23T07:16:49+01:00",
-      "consecutive_failures": 20,
+      "checked_at": "2026-11-23T07:33:13+01:00",
+      "consecutive_failures": 21,
       "content_sha256": "95bb3bea2d99faf7f30f912b6cd730ab5655128d804020ad9348a28e1a372c31",
       "source_image": null,
       "review_version": null,
@@ -30,7 +30,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-23T07:16:47+01:00",
+      "last_success": "2026-11-23T07:33:11+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
