@@ -127,3 +127,28 @@ python -m unittest discover -s wu-lunch/ai-pilot -p 'test_*.py'
 
 GitHub-Secrets `OPENAI_API_KEY` (KI-Lesungen) und `SUPABASE_SERVICE_ROLE_KEY` (Archiv, Übersetzungen). Die Workflows brauchen Schreibrechte auf
 Repository-Inhalte sowie das Recht, Workflows zu starten (`actions: write`, in den Dateien gesetzt). Keine Geheimnisse im Frontend.
+
+## Robustheit gegen geänderte Karten (Stand 23.11.2026)
+
+Anlass: Am Montag, 23.11.2026, fehlten Karma Food (WU) sowie Dok Khun und OX (Wels), obwohl die Karten auf den
+Webseiten standen. Ursachen: ein vertipptes Enddatum im Wochenkopf, eine fehlende Jahreszahl, eine neue
+Kartenform – und der Wels-Import lief seit Sonntagabend nicht mehr.
+
+Grundsatz seither: **Der Beleg für die richtige Woche bleibt streng, alles andere ist nachsichtig.** Eine Karte
+einer anderen Woche wird nie gezeigt. Tippfehler, fehlende Jahreszahlen, ein geschlossener Tag oder ein einzelnes
+unvollständiges Gericht sperren aber nicht mehr das ganze Lokal.
+
+Drei Schichten:
+
+1. **Eigener Leser je Lokal** – liefert die beste Darstellung. Jeder Störfall wird mit der Originalquelle als
+   Testfall hinterlegt (`scripts/fixtures/`), damit er nicht wiederkehrt.
+2. **Ersatzleser (Wels, `generic_week` in `update_wels.py`)** – springt ein, wenn der eigene Leser scheitert und
+   für die Woche noch nichts Gutes vorliegt. Er sucht nur Wochentage und übernimmt die Zeilen darunter wörtlich;
+   er zeigt nichts ohne Beleg für die Woche (Zeitraum, Tagesdatum oder Kalenderwoche in der Karte). Zustand
+   `fallback`.
+3. **Störungsmeldung (`scripts/report_problems.py`)** – läuft nach jedem Import. Für jede anhaltende Störung
+   gibt es genau ein offenes GitHub-Issue mit dem Etikett `import-stoerung` (E-Mail an den Betreiber); es
+   schließt sich selbst, sobald die Karte wieder gelesen wird. „Noch nicht veröffentlicht“ ist keine Störung.
+
+Auslöser: Vom Taktgeber gestartete Importe lösen bei GitHub keine `workflow_run`-Folgeläufe aus. Der Import
+startet den Wels-Import und die englischen Menüs deshalb im letzten Schritt ausdrücklich.

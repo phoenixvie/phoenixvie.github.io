@@ -38,6 +38,8 @@ permissions:
   contents: write
   # Nur um den Taktgeber-Workflow starten zu können (siehe letzter Schritt).
   actions: write
+  # Störungsmeldungen als Issues (wu-lunch/scripts/report_problems.py).
+  issues: write
 
 concurrency:
   group: wu-lunch-menus
@@ -314,3 +316,13 @@ jobs:
         run: |
           gh workflow run wels-mittag.yml --ref master || echo "::warning::Wels-Import konnte nicht gestartet werden"
           gh workflow run wu-lunch-english.yml --ref master || echo "::warning::Englische Menüs konnten nicht gestartet werden"
+      - name: Störungen melden (ein Issue je Lokal, schließt sich nach der Behebung)
+        # Scheitert nie den Import. Nur auf master, nicht bei Pull Requests.
+        if: always() && github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          git pull -q --ff-only origin master || true
+          python3 wu-lunch/scripts/report_problems.py --scope wu

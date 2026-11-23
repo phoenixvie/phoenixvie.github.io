@@ -26,6 +26,8 @@ on:
 
 permissions:
   contents: write
+  # Störungsmeldungen als Issues (wu-lunch/scripts/report_problems.py).
+  issues: write
 
 concurrency:
   group: wels-mittag
@@ -76,3 +78,10 @@ jobs:
           done
           echo "::warning::Wels-Daten konnten nicht veröffentlicht werden"
           exit 1
+      - name: Störungen melden (ein Issue je Lokal, schließt sich nach der Behebung)
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: python3 wu-lunch/scripts/report_problems.py --scope wels
