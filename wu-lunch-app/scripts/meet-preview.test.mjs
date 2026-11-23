@@ -46,27 +46,28 @@ test('paused e-mail flow still works when switched back on (verified email, then
   await click('meet-preview');   // erneutes Öffnen beginnt wieder beim nächsten Termin
   assert.doesNotMatch(context.renderMeet(),new RegExp('<option value="'+later+'" selected>'));
   assert.equal((context.renderMeet().match(/placeholder="Max"/g)||[]).length,0);
-  // Aufbau seit 23.11.2026: Satz, Foto, darunter Termin mit Uhrzeit, Ort und Wartezeit, „… schon dabei", Ablauf, unten die Anmeldung.
-  assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,0);   // keine Tabelle mehr
-  const order=['class="meet-lead"','class="meet-place"','class="meet-when"','class="meet-info"','class="meet-dabei"','class="meet-why"','class="meet-steps"','</div><div class="meet-cta"'].map(part=>context.renderMeet().indexOf(part));
+  // Aufbau seit 23.11.2026: Zeichnung, Satz, Tabelle mit Foto, „… schon dabei", unten die Anmeldung.
+  assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,4);   // Tabelle mit vier Zeilen (Datum, Uhrzeit, Losgehen, Treffpunkt)
+  const order=['class="meet-art"','class="meet-lead"','class="meet-facts"','class="meet-place"','class="meet-dabei"','class="meet-why"','</div><div class="meet-cta"'].map(part=>context.renderMeet().indexOf(part));
   assert.ok(order.every((at,index)=>at>=0&&(index===0||order[index-1]<at)),'Reihenfolge der Bereiche: '+order);
-  // Die Uhrzeit steht im Einleitungssatz ("… um 12:00 Uhr statt."), nicht mehr neben der Terminauswahl.
-  assert.match(context.renderMeet(),/<div class="meet-when"><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><\/div>/);assert.match(context.renderMeet(),/<\/figure><div class="meet-when">[^]*?<\/div><ul class="meet-info"><li>[^]*?<span>Treffpunkt: vor dem Baum direkt bei der Mensa<\/span><\/li><li>[^]*?<span>Zusammenwarten von 12:00 bis 12:05 Uhr<\/span><\/li><\/ul>/);assert.match(context.renderMeet(),/<option value="[0-9-]+" selected>[^<]+ um 12:00 Uhr<\/option>/);
-  assert.match(context.renderMeet(),/<section class="meet-steps"><h3>So läuft's ab<\/h3><ol><li>Mit deinem Vornamen anmelden\.<\/li><li>Um 12:00 Uhr beim Baum vor der Mensa treffen\.<\/li><li>Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen\.<\/li><\/ol><\/section>/);
+  // Tabelle (Vorgabe 23.11.2026): Datum, Uhrzeit am Treffpunkt, Gemeinsam losgehen und als letzte Zeile der Treffpunkt;
+  // das Foto schließt direkt an. Die Uhrzeit steht nur noch in der Tabelle; „So läuft's ab" ist entfallen.
+  assert.match(context.renderMeet(),/<div class="meet-facts"><div class="meet-fact">[^]*?<div><strong>Datum<\/strong><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Uhrzeit am Treffpunkt<\/strong><span>12:00 Uhr<\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Gemeinsam losgehen<\/strong><span>12:05 Uhr<\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Treffpunkt auf der WU<\/strong><span>Vor dem Baum direkt bei der Mensa<\/span><\/div><\/div><figure class="meet-place">/);
+  assert.doesNotMatch(context.renderMeet(),/meet-steps|So läuft|meet-when|meet-info|Zusammenwarten| um 12:00 Uhr<\/option>/);
   assert.equal(handlers.touchstart,undefined);assert.equal(handlers.touchend,undefined);
   // Vorgabe vom 23.11.2026: Treffpunkt, Foto und Google-Maps-Link sind schon vor der Anmeldung sichtbar –
   // nichts wird mehr versteckt ("Info nach Anmeldung" gibt es nicht mehr). Keine eingebettete Karte, kein Platzhalter.
   assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-locked|Nach Anmeldung sichtbar|Info nach Anmeldung|meet-reveal/);
   // Das Foto steht oben (statt der Zeichnung); der Treffpunkt ist Beschriftung, kein Link. Auch der Google-Maps-Link ist entfallen (Vorgabe 23.11.2026).
-  assert.match(context.renderMeet(),/<figure class="meet-place"><img class="meet-photo-visible" src="\.\/meeting-point\.webp"[^>]*><\/figure>/);
+  assert.match(context.renderMeet(),/<figure class="meet-place"><img class="meet-photo-visible" src="\.\/meeting-point\.webp"[^>]*><\/figure><\/div>/);
   assert.doesNotMatch(context.renderMeet(),/google\.com\/maps|Google Maps|meet-map-link/);
-  assert.doesNotMatch(context.renderMeet(),/<a [^>]*>Treffpunkt: vor dem Baum direkt bei der Mensa<\/a>|meet-art/);
+  assert.doesNotMatch(context.renderMeet(),/<a [^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
   // Wozu die Anmeldung dient, steht im Text; Vorname und Knopf stehen in einer festen Leiste unter dem scrollenden Inhalt.
   assert.match(context.renderMeet(),/<p class="meet-why">Melde dich bitte an, damit die anderen wissen, dass du kommst\. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎<\/p>/);
-  assert.match(context.renderMeet(),/<\/section><\/div><div class="meet-cta"><div class="meet-cta-row"><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button><\/div><\/div><\/div>$/);
-  // Die Seite beginnt mit dem einen Satz, worum es geht (die Zeichnung ist dem Foto gewichen).
-  assert.match(context.renderMeet(),/id="meet-screen"><p class="meet-lead">Triff dich mit anderen freundlichen WU-Studierenden am WU Campus/);
-  assert.match(context.renderMeet(),/Findet jeden Mittwoch um 12:00 Uhr statt\./);assert.doesNotMatch(context.renderMeet(),/Montag/);
+  assert.match(context.renderMeet(),/<p class="meet-why">[^<]*<\/p><\/div><div class="meet-cta"><div class="meet-cta-row"><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button><\/div><\/div><\/div>$/);
+  // Die Seite beginnt mit der Zeichnung, dann der eine Satz, worum es geht.
+  assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^]*?<\/svg><\/div><p class="meet-lead">Triff dich mit anderen freundlichen WU-Studierenden am WU Campus/);
+  assert.match(context.renderMeet(),/Findet jeden Mittwoch statt\./);assert.doesNotMatch(context.renderMeet(),/Montag/);
   await click('meet-show-form');
   assert.match(context.renderMeet(),/Verifizierung deiner E-Mail-Adresse: Du bekommst einen Code per E-Mail\. Nur dein Vorname ist für alle sichtbar\./);
   assert.doesNotMatch(context.renderMeet(),/WU-Mail|WU E-Mail|nur WU Studenten|wu\.ac\.at/);   // keine Einschränkung auf WU-Adressen
@@ -85,7 +86,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   inputs['meet-code'].value='000000';await click('meet-verify');assert.match(context.renderMeet(),/bereits verwendet/);assert.equal(inserts,0);
   await click('meet-resend-code');assert.equal(otpCalls,2);inputs['meet-code'].value='123456';await click('meet-verify');assert.equal(verifyCalls,2);assert.equal(inserts,1);assert.equal(own[0].first_name,'Anna');
   // Nach der Anmeldung erscheinen Treffpunkt, Foto und Karte.
-  assert.match(context.renderMeet(),/Bereits angemeldet/);assert.match(context.renderMeet(),/Anna/);assert.doesNotMatch(context.renderMeet(),/google\.com\/maps/);assert.match(context.renderMeet(),/Treffpunkt: vor dem Baum direkt bei der Mensa/);
+  assert.match(context.renderMeet(),/Bereits angemeldet/);assert.match(context.renderMeet(),/Anna/);assert.doesNotMatch(context.renderMeet(),/google\.com\/maps/);assert.match(context.renderMeet(),/Vor dem Baum direkt bei der Mensa/);
   assert.match(context.renderMeet(),/<figure class="meet-place">/);assert.doesNotMatch(context.renderMeet(),/id="meet-map"|class="meet-cta"/);   // eingebettete Karte entfernt (17.11.2026)assert.match(context.renderMeet(),/meeting-point\.webp/);
   assert.equal(context.meetJoined,true);
   // Die Bestätigung trägt ein Häkchen-Symbol vor dem Text.
@@ -167,7 +168,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Datum','Treffpunkt: vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎','Zusammenwarten von 12:00 bis 12:05 Uhr','{date} um 12:00 Uhr','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.',"So läuft's ab",'Mit deinem Vornamen anmelden.','Um 12:00 Uhr beim Baum vor der Mensa treffen.','Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Uhrzeit am Treffpunkt','Gemeinsam losgehen','Treffpunkt auf der WU','12:00 Uhr','12:05 Uhr','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
@@ -445,7 +446,7 @@ test('Meet-to-eat weekdays come from the operator settings and drive dates and t
   assert.deepEqual([...make({meet_weekdays:[]}).meetWeekdays()],[3]);                     // leer -> Vorgabe
   // Vorgabe vom 23.11.2026: "Jeden Mittwoch gemeinsam essen gehen" statt "Mittwochs …".
   assert.equal(make({}).meetDaysText('hint'),'Jeden Mittwoch');
-  assert.equal(make({}).meetDaysText('intro'),'Findet jeden Mittwoch um 12:00 Uhr statt.');
+  assert.equal(make({}).meetDaysText('intro'),'Findet jeden Mittwoch statt.');
   assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('hint'),'Jeden Montag und Mittwoch');
   // Listeneintrag (Vorgabe 23.11.2026): Titel "Meet to eat", darunter "Gemeinsam essen gehen" – ohne Wochentag.
   assert.equal(make({}).meetDaysText('title'),'Gemeinsam essen gehen');
@@ -457,9 +458,9 @@ test('Meet-to-eat weekdays come from the operator settings and drive dates and t
   assert.match(app,/function fitListFooter\(\)\{[^}]*classList\.remove\('two-rows'\)/);
   assert.match(app,/localize\.apply\(app\);placeSourceNote\(\);fitSourceNote\(\);fitListFooter\(\);/);
   assert.match(app,/<span class="restaurant-name">Meet to eat<\/span><span class="restaurant-type" style="display:block" data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}<\/span>/);
-  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch um 12:00 Uhr statt.');
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch statt.');
   assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('hint'),'Every Wednesday:');
-  assert.equal(make({meet_weekdays:[1,3,5]},'en').meetDaysText('intro'),'Takes place every Monday, Wednesday and Friday at 12:00.');
+  assert.equal(make({meet_weekdays:[1,3,5]},'en').meetDaysText('intro'),'Takes place every Monday, Wednesday and Friday.');
   // Termine in Meet to eat folgen den Einstellungen (feste Uhr: Dienstag, 17.11.2026).
   const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
   const handlers={};
