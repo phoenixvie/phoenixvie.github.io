@@ -176,6 +176,11 @@ test('UX follow-ups in the restaurant screens: readable small print, decorative 
   assert.match(app, /map\.fitBounds\(bounds,\{padding:/);
   assert.match(app, /new maplibregl\.NavigationControl\(\{showCompass:false/);
   assert.match(app, /element\.innerHTML='';map=new maplibregl\.Map/);
+  // Bis die Karte geladen ist, liegt ein Hinweis darüber und die Markierungen bleiben verborgen (sonst stehen sie kurz auf leerem Grund);
+  // nach spätestens 4 Sekunden erscheinen sie auch ohne Kartenbild.
+  assert.match(app, /element\.classList\.add\('map-pending'\);element\.insertAdjacentHTML\('beforeend','<p class="map-message map-wait">Karte wird geladen …<\/p>'\)/);
+  assert.match(app, /map\.once\('load',ready\);else ready\(\);setTimeout\(ready,4000\)/);
+  assert.match(css, /\.map-pending \.maplibregl-marker,\.map-pending \.maplibregl-ctrl\{visibility:hidden\}/);
   assert.match(app, /<button type="button" class="share" data-action="share" aria-label="Teilen">/);
   assert.match(app, /preview\/\?restaurant='\+encodeURIComponent\(selectedId\)/);
   // Menü-Link nur, wenn er sich von der Webseite unterscheidet.
