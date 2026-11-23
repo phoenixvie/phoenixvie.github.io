@@ -32,6 +32,7 @@ class FakeGoogle:
     def __init__(self, fail=None, draft_app=False, no_review=False):
         self.calls, self.fail, self.draft_app, self.edits, self.committed = [], fail or {}, draft_app, 0, []
         self.no_review = no_review
+        self.languages, self.images, self.pending = ["de-DE", "en-US"], {}, {"releases": [{"status": "completed"}]}
 
     def request(self, method, url, timeout=None, **kwargs):
         path = url.split("/applications/" + play.PACKAGE, 1)[1]
@@ -39,6 +40,15 @@ class FakeGoogle:
         for part, (status, message) in self.fail.items():
             if part in path and method != "DELETE":
                 return Response(status, {"error": {"message": message}})
+        if method == "GET" and path.endswith("/listings"):
+            return Response(200, {"listings": [{"language": language} for language in self.languages]})
+        if method == "DELETE" and path.endswith("/phoneScreenshots"):
+            self.images[path.split("/listings/")[1].split("/")[0]] = []
+            return Response(200, {"deleted": []})
+        if method == "POST" and "/phoneScreenshots" in path:
+            assert kwargs["headers"]["Content-Type"] == "image/png"
+            self.images[path.split("/listings/")[1].split("/")[0]].append(kwargs["data"].read())
+            return Response(200, {"image": {"id": "x"}})
         if method == "POST" and path == "/edits":
             self.edits += 1
             return Response(200, {"id": f"edit{self.edits}"})
@@ -119,6 +129,51 @@ class UploadPlayTests(unittest.TestCase):
         self.assertEqual(methods, ["POST", "GET", "DELETE"])    # nichts hochgeladen, nichts bestätigt
         self.assertEqual(google.committed, [])
 
+    def shots(self, **counts):
+        folder = Path(self.dir.name)
+        for language, count in counts.items():
+            for number in range(1, count + 1):
+                (folder / f"screenshot-{language}-{number}.png").write_bytes(f"{language}{number}".encode())
+        return folder
+
+    def test_screenshots_replace_the_old_ones_per_language_and_commit_once(self):
+        google = FakeGoogle()
+        result = play.upload_screenshots(google, self.shots(de=5, en=5))
+        self.assertEqual(result, {"screenshots": {"de-DE": 5, "en-US": 5}, "sentForReview": True})
+        self.assertEqual(google.images["de-DE"], [b"de1", b"de2", b"de3", b"de4", b"de5"])     # in Reihenfolge, alte vorher entfernt
+        self.assertEqual(google.images["en-US"][0], b"en1")
+        self.assertEqual(len(google.committed), 1)
+        self.assertEqual([call[1] for call in google.calls if "/bundles" in call[1] or "/tracks" in call[1]], [])   # kein Release berührt
+
+    def test_screenshots_only_for_languages_the_listing_has(self):
+        google = FakeGoogle()
+        google.languages = ["de-AT"]
+        result = play.upload_screenshots(google, self.shots(de=3, en=3))
+        self.assertEqual(result["screenshots"], {"de-AT": 3})
+        self.assertNotIn("en-US", google.images)
+
+    def test_failed_screenshot_upload_discards_the_edit_and_explains_missing_rights(self):
+        google = FakeGoogle(fail={"phoneScreenshots?uploadType": (403, "The caller does not have permission")})
+        with self.assertRaises(play.PlayError) as raised:
+            play.upload_screenshots(google, self.shots(de=5, en=5))
+        self.assertIn("Store-Präsenz verwalten", str(raised.exception))
+        self.assertEqual(google.committed, [])
+        self.assertEqual(google.calls[-1][0], "DELETE")              # Googles Entwurf verworfen: der Store-Eintrag bleibt, wie er war
+        self.assertTrue(google.calls[-1][1].startswith("/edits/edit1"))
+
+    def test_too_few_screenshots_or_no_matching_language_change_nothing(self):
+        for google, counts in ((FakeGoogle(), {"de": 1}), (FakeGoogle(), {})):
+            with self.assertRaises(play.PlayError):
+                play.upload_screenshots(google, self.shots(**counts))
+            self.assertEqual(google.committed, [])
+        for name in list(Path(self.dir.name).glob("screenshot-*.png")):
+            name.unlink()
+
+    def test_screenshot_commit_falls_back_when_google_wants_manual_review_sending(self):
+        google = FakeGoogle(no_review=True)
+        result = play.upload_screenshots(google, self.shots(de=2))
+        self.assertEqual((result["sentForReview"], len(google.committed)), (False, 1))
+
     def test_release_notes_come_from_the_repository_and_respect_the_limit(self):
         notes = play.release_notes()
         self.assertEqual({note["language"] for note in notes}, {"de-DE", "en-US"})
@@ -148,7 +203,9 @@ class UploadPlayTests(unittest.TestCase):
         workflow = (ROOT / ".github/workflows/wu-lunch-android.yml").read_text(encoding="utf-8")
         self.assertIn("inputs.aufgabe == 'app-bauen-und-play-intern'", workflow)
         self.assertIn("inputs.aufgabe == 'play-zugang-pruefen'", workflow)
-        self.assertEqual(workflow.count("secrets.PLAY_SERVICE_ACCOUNT_JSON"), 2)
+        self.assertEqual(workflow.count("secrets.PLAY_SERVICE_ACCOUNT_JSON"), 3)
+        self.assertIn("inputs.aufgabe == 'play-bilder-hochladen'", workflow)       # Screenshots: eigene Aufgabe, baut nichts
+        self.assertIn("inputs.aufgabe != 'play-bilder-hochladen'", workflow)
         self.assertIn("default: app-bauen", workflow)           # ohne Auswahl wird nie hochgeladen
 
 

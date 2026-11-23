@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       aufgabe:
-        description: 'app-bauen: APK + App-Bundle für Google Play. app-bauen-und-play-intern: zusätzlich in den internen Test von Google Play hochladen. play-zugang-pruefen: nur den Play-Zugang prüfen, nichts ändern. upload-schluessel-erzeugen: einmalig den Upload-Schlüssel anlegen. signatur-testen: Probelauf mit Wegwerf-Schlüssel, ohne Ergebnis-Dateien.'
+        description: 'app-bauen: APK + App-Bundle für Google Play. app-bauen-und-play-intern: zusätzlich in den internen Test von Google Play hochladen. play-zugang-pruefen: nur den Play-Zugang prüfen, nichts ändern. play-bilder-hochladen: Screenshots im Store-Eintrag bei Google Play ersetzen, baut nichts. upload-schluessel-erzeugen: einmalig den Upload-Schlüssel anlegen. signatur-testen: Probelauf mit Wegwerf-Schlüssel, ohne Ergebnis-Dateien.'
         type: choice
-        options: [app-bauen, app-bauen-und-play-intern, play-zugang-pruefen, upload-schluessel-erzeugen, signatur-testen]
+        options: [app-bauen, app-bauen-und-play-intern, play-zugang-pruefen, play-bilder-hochladen, upload-schluessel-erzeugen, signatur-testen]
         default: app-bauen
   pull_request:
     paths: ['wu-lunch-app/**', '.github/workflows/wu-lunch-android.yml']
@@ -66,8 +66,26 @@ jobs:
           "$RUNNER_TEMP/play/bin/pip" install --quiet google-auth==2.38.0 requests==2.32.3
           "$RUNNER_TEMP/play/bin/python" scripts/upload-play.py --check
 
+  # Smartphone-Screenshots des Store-Eintrags bei Google Play ersetzen (store-listing/screenshot-*.png). Baut nichts.
+  play-images:
+    if: github.event_name == 'workflow_dispatch' && inputs.aufgabe == 'play-bilder-hochladen'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: wu-lunch-app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Screenshots im Store-Eintrag ersetzen
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          python3 -m venv "$RUNNER_TEMP/play"
+          "$RUNNER_TEMP/play/bin/pip" install --quiet google-auth==2.38.0 requests==2.32.3
+          "$RUNNER_TEMP/play/bin/python" scripts/upload-play.py --screenshots
+
   build-apk:
-    if: (github.event_name == 'workflow_dispatch' && inputs.aufgabe != 'upload-schluessel-erzeugen' && inputs.aufgabe != 'play-zugang-pruefen') || contains(github.event.pull_request.title, '[APK]')
+    if: (github.event_name == 'workflow_dispatch' && inputs.aufgabe != 'upload-schluessel-erzeugen' && inputs.aufgabe != 'play-zugang-pruefen' && inputs.aufgabe != 'play-bilder-hochladen') || contains(github.event.pull_request.title, '[APK]')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     defaults:
