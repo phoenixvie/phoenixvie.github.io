@@ -163,7 +163,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Gemeinsam essen gehen','Datum','12:00 Uhr','Vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich an, damit die anderen wissen, dass du kommst.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.',"So läuft's ab",'Mit deinem Vornamen anmelden.','Um 12:00 Uhr beim Baum vor der Mensa treffen.','Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen.','Bereits angemeldet','Teilnehmen','Google Maps öffnen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Datum','12:00 Uhr','Vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich an, damit die anderen wissen, dass du kommst.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.',"So läuft's ab",'Mit deinem Vornamen anmelden.','Um 12:00 Uhr beim Baum vor der Mensa treffen.','Um 12:05 Uhr gemeinsam losgehen und ein Lokal aussuchen.','Bereits angemeldet','Teilnehmen','Google Maps öffnen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
@@ -295,7 +295,7 @@ test('list entry shows the number of people signed up for the next date, and not
   assert.equal(offline.context.meetBadge(),'');assert.equal(offline.painted,null);assert.match(offline.warnings.join('\n'),/Anzahl: offline/);
   // Die Liste baut die Zahl über meetBadge() ein; in der Wels-Ausgabe gibt es den Eintrag gar nicht.
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  assert.match(app,/let meetBadge=\(\)=>'';/);assert.match(app,/Gemeinsam essen gehen<\/span><\/span>\$\{meetBadge\(\)\}\$\{icon\('chevron_right','chevron'\)\}/);
+  assert.match(app,/let meetBadge=\(\)=>'';/);assert.match(app,/data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}<\/span><\/span>\$\{meetBadge\(\)\}\$\{icon\('chevron_right','chevron'\)\}/);
   const {ui}=globalThis.WULunchI18n;assert.equal(ui['{count} angemeldet'],'{count} signed up');
 });
 
@@ -443,16 +443,16 @@ test('Meet-to-eat weekdays come from the operator settings and drive dates and t
   assert.equal(make({}).meetDaysText('hint'),'Jeden Mittwoch');
   assert.equal(make({}).meetDaysText('intro'),'Findet jeden Mittwoch statt.');
   assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('hint'),'Jeden Montag und Mittwoch');
-  // Listeneintrag (Vorgabe 23.11.2026): "Mittwoch: Meet to eat" – der Tag kommt aus den Einstellungen.
-  assert.equal(make({}).meetDaysText('title'),'Mittwoch');
-  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('title'),'Montag & Mittwoch');
-  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('title'),'Wednesday');
+  // Listeneintrag (Vorgabe 23.11.2026): Titel "Meet to eat", darunter "Mittwochs gemeinsam essen gehen" – der Tag kommt aus den Einstellungen.
+  assert.equal(make({}).meetDaysText('title'),'Mittwochs gemeinsam essen gehen');
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('title'),'Montags & Mittwochs gemeinsam essen gehen');
+  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('title'),'Wednesdays: lunch together');
   // Fußzeile der Liste (Vorgabe 23.11.2026): "Change language" mit kleinem l; bei Umbruch immer zwei und zwei.
   // "Change language" steht unter jedem Menü und deshalb nicht mehr in der Fußzeile der Liste (Vorgabe 23.11.2026).
   assert.doesNotMatch(app.slice(app.indexOf('<footer class="list-footer">'),app.indexOf('</footer>',app.indexOf('<footer class="list-footer">'))),/data-change-language/);
   assert.match(app,/function fitListFooter\(\)\{[^}]*classList\.remove\('two-rows'\)/);
   assert.match(app,/localize\.apply\(app\);fitSourceNote\(\);fitListFooter\(\);/);
-  assert.match(app,/<span class="restaurant-name" data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}: Meet to eat<\/span>/);
+  assert.match(app,/<span class="restaurant-name">Meet to eat<\/span><span class="restaurant-type" style="display:block" data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}<\/span>/);
   assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch statt.');
   assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('hint'),'Every Wednesday:');
   assert.equal(make({meet_weekdays:[1,3,5]},'en').meetDaysText('intro'),'Takes place every Monday, Wednesday and Friday.');

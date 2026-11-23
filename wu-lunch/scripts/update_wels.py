@@ -45,12 +45,15 @@ PRICE = r"(\d{1,2})[.,](\d{2})"
 
 # Stammdaten laut den Webseiten der Restaurants (abgerufen am 17.11.2026);
 # Koordinaten aus OpenStreetMap zur jeweiligen Adresse.
+# Öffnungszeiten ("hours"): Wortlaut der eigenen Webseite des Lokals, zuletzt geprüft am 23.11.2026.
+# Die monatliche Kontrolle (geplante Aufgabe „Öffnungszeiten prüfen") gleicht sie neu ab.
 RESTAURANTS = [
     {"id": "naschmarkt", "name": "Naschmarkt Wels", "restaurantType": "Österreichisch",
      "url": "https://www.naschmarkt-wels.at/speisekarte-wels-restaurant/",
      "address": "Kaiser-Josef-Platz 21, 4600 Wels", "latitude": 48.1590092, "longitude": 14.0226595,
      "phone": "+43 7242 45 22 94 44", "email": "office@naschmarkt-wels.at",
-     "hours": ["Montag bis Freitag 08:00–15:00 Uhr"], "brandColor": "#b5462f"},
+     "hours": ["Montag bis Freitag 08:00–15:00 Uhr", "Warme Küche 11:00–14:30 Uhr", "Samstag und Sonntag geschlossen"],
+     "brandColor": "#b5462f"},
     {"id": "inshaas", "name": "In's Haas", "restaurantType": "Café · Bistro",
      "url": "https://www.inshaas.at/mittagskarte/",
      "address": "Stadtplatz 34, 4600 Wels", "latitude": 48.1576037, "longitude": 14.0261885,
@@ -66,7 +69,9 @@ RESTAURANTS = [
     {"id": "dokkhun", "name": "Dok Khun", "restaurantType": "Thailändisch",
      "url": "https://dok-khun.metro.biz/?lang=de",
      "address": "Maria-Theresia-Straße 16, 4600 Wels", "latitude": 48.1553411, "longitude": 14.0170914,
-     "phone": "+43 7242 252670", "email": "office@dok-khun-thai.at", "brandColor": "#c0842b"},
+     "phone": "+43 7242 252670", "email": "office@dok-khun-thai.at",
+     "hours": ["Dienstag bis Samstag 11:30–14:30 und 17:30–22:00 Uhr", "Küche 11:30–14:00 und 17:30–21:00 Uhr",
+               "Sonntag und Montag geschlossen"], "brandColor": "#c0842b"},
     # Welche BILLA-PLUS-Filiale gemeint ist, ist nicht bekannt – daher ohne Adresse und Kartenpunkt.
     {"id": "billa", "name": "BILLA PLUS Marktküche", "restaurantType": "Marktküche",
      "url": "https://www.billa.at/unsere-maerkte/billa-plus/marktkueche",
@@ -74,7 +79,10 @@ RESTAURANTS = [
     # Ergänzt am 17.11.2026 (zweite Liste des Betreibers).
     {"id": "denns", "name": "Denns BioMarkt Bistro", "restaurantType": "Bio-Bistro",
      "url": "https://www.denns-biomarkt.at/wels-malvenstr-5/mittagsgerichte/",
-     "address": "Malvenstraße 5, 4600 Wels", "latitude": 48.1439914, "longitude": 13.9704601, "brandColor": "#6a9a2d"},
+     "address": "Malvenstraße 5, 4600 Wels", "latitude": 48.1439914, "longitude": 13.9704601,
+     # Die Webseite nennt nur die Zeiten des Markts, keine eigenen Bistro-Zeiten.
+     "hours": ["Markt Montag bis Freitag 08:30–19:00 Uhr", "Samstag 08:30–18:00 Uhr", "Sonntag geschlossen"],
+     "brandColor": "#6a9a2d"},
     {"id": "huber", "name": "Gasthaus Huber", "restaurantType": "Österreichisch",
      "url": "https://www.gasthaus-huber.at/tages-menue",
      "address": "Wiesenstraße 69, 4600 Wels", "latitude": 48.1630194, "longitude": 14.0450788,
@@ -84,12 +92,15 @@ RESTAURANTS = [
     {"id": "goesser", "name": "Gösserbräu", "restaurantType": "Österreichisch",
      "url": "https://www.goesserbraeu.at/restaurant/mittagsmenue/",
      "address": "Kaiser-Josef-Platz 27, 4600 Wels", "latitude": 48.1586061, "longitude": 14.0212375,
-     "phone": "+43 7242 60 460", "brandColor": "#1f6b3a"},
+     "phone": "+43 7242 60 460",
+     "hours": ["Täglich 10:00–24:00 Uhr", "Küche 11:00–22:00 Uhr", "Geschlossen am 25.12., 26.12. und 01.01."],
+     "brandColor": "#1f6b3a"},
     {"id": "hannibal", "name": "Hannibal", "restaurantType": "Österreichisch",
      "url": "https://www.restaurant-hannibal.at/mittagskarte/",
      "address": "Maxlheid 9, 4600 Wels", "latitude": 48.1864802, "longitude": 14.0759777,
      "phone": "+43 7242 46716 46", "email": "hotel@maxlhaid.at",
-     "hours": ["Montag bis Freitag 10:00–23:30 Uhr (außer Feiertage)", "Warme Küche 11:30–21:30 Uhr"],
+     "hours": ["Montag bis Freitag 10:00–23:30 Uhr (außer Feiertage)", "Warme Küche 11:30–21:30 Uhr",
+               "Samstag, Sonntag und Feiertage Ruhetag"],
      "brandColor": "#8c2f39"},
     {"id": "hayashi", "name": "Hayashi", "restaurantType": "Asiatisch",
      "url": "https://www.hayashi.at/menu4.html",
@@ -108,7 +119,8 @@ RESTAURANTS = [
      "url": "https://lalina.at/lunchevents/",
      "address": "Europastraße 45, 4600 Wels", "latitude": 48.14983, "longitude": 13.9939371,
      "phone": "+43 690 106 33 193", "email": "office@lalina.at",
-     "hours": ["Lunch Dienstag bis Freitag 11:30–14:00 Uhr"], "brandColor": "#b0607a"},
+     "hours": ["Dienstag bis Samstag 11:00–22:00 Uhr", "Lunch Dienstag bis Freitag 11:30–14:00 Uhr",
+               "Sonntag und Montag Ruhetag"], "brandColor": "#b0607a"},
     {"id": "ox", "name": "OX", "restaurantType": "Steaks & Grill",
      "url": "https://www.ox-wels.at/",
      "address": "Waidhausenstraße 26, 4600 Wels", "latitude": 48.1470255, "longitude": 13.9776431,
