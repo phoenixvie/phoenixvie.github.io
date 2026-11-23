@@ -60,10 +60,12 @@
 .material-svg{display:inline-block;width:24px;height:24px;flex:none;fill:currentColor}.meet-fact>.material-svg{width:23px;height:23px;color:#6f8192}.meet-person .material-svg{width:23px;height:23px;color:#8a98a5}.meet-brand-logo .material-svg{width:34px;height:34px;filter:drop-shadow(0 1px 3px #0009);transform:scaleX(-1)}.meet-locked-label .material-svg{width:16px;height:16px}
 .meet-count{display:inline-flex;align-items:center;gap:2px;flex:none;margin-right:-8px;color:#8a98a5;font-size:13px;line-height:1}.meet-count .material-svg{width:17px;height:17px;color:#a9b4be}
 .meet-name-field{margin-top:22px}.meet-name-field+.meet-primary{margin-top:12px}
-.meet-why{margin:10px 0 0;color:#5f6a75;font-size:13px;text-align:center}
 /* Meet to eat, Aufbau seit 23.11.2026: Termin in einer Zeile, Foto des Treffpunkts, „X sind schon dabei", Ablauf, unten angeheftete Anmeldung. */
 .meet-time{flex:none;font-size:15px;color:#26313c;white-space:nowrap}
 .meet-content>.meet-facts{margin:0 0 16px}
+/* Mit der festen Anmelde-Leiste endet die Seite knapp unter dem Foto – keine leere Fläche zum Weiterscrollen. */
+.meet-content>.meet-facts:last-child{margin-bottom:0}
+.meet-content:has(+.meet-cta){padding-bottom:10px}
 .meet-facts .meet-fact .meet-date-picker{display:inline-block;max-width:100%;vertical-align:top}
 .meet-facts .meet-fact .meet-date-picker select{width:auto;max-width:100%}
 @keyframes meet-nudge{0%{box-shadow:0 0 0 0 rgba(8,124,244,.5);transform:scale(1)}35%{transform:scale(1.04)}70%{box-shadow:0 0 0 12px rgba(8,124,244,0);transform:scale(1)}100%{box-shadow:0 0 0 0 rgba(8,124,244,0);transform:scale(1)}}
@@ -71,7 +73,7 @@
 @media (prefers-reduced-motion:reduce){.meet-cta .meet-primary[data-nudge]{animation:none}}
 .meet-fact.meet-joined{background:#eef5fd}
 .meet-fact.meet-joined>.material-svg,.meet-fact.meet-joined>.material-symbols-outlined{color:#087cf4}
-.meet-facts .meet-fact .meet-count{font-weight:600;color:#14365c}
+.meet-facts .meet-fact .meet-joined-count{font-weight:600;color:#14365c}
 .meet-fact small{display:block;margin-top:2px;font-size:12px;color:#5f6a75}
 .meet-facts .meet-place{margin:0}
 .meet-facts .meet-place .meet-photo-visible{border-radius:0;display:block;width:100%;height:auto}
