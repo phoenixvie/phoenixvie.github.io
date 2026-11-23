@@ -1050,17 +1050,107 @@
    ],
    "brandColor": "#d9534f",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [],
-    "2026-11-25": [],
-    "2026-11-26": [],
-    "2026-11-27": []
+    "2026-11-23": [
+     {
+      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
+      "price": 15.9
+     },
+     {
+      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
+      "price": 13.9
+     },
+     {
+      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
+      "price": 12.9
+     }
+    ],
+    "2026-11-24": [
+     {
+      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
+      "price": 15.9
+     },
+     {
+      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
+      "price": 13.9
+     },
+     {
+      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
+      "price": 12.9
+     }
+    ],
+    "2026-11-25": [
+     {
+      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
+      "price": 15.9
+     },
+     {
+      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
+      "price": 13.9
+     },
+     {
+      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
+      "price": 12.9
+     }
+    ],
+    "2026-11-26": [
+     {
+      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
+      "price": 15.9
+     },
+     {
+      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
+      "price": 13.9
+     },
+     {
+      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
+      "price": 12.9
+     }
+    ],
+    "2026-11-27": [
+     {
+      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
+      "price": 5.2,
+      "category": "Suppe"
+     },
+     {
+      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
+      "price": 15.9
+     },
+     {
+      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
+      "price": 13.9
+     },
+     {
+      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
+      "price": 12.9
+     }
+    ]
    },
    "import": {
-    "state": "not_published",
-    "message": "Sorry Mama zeigt die Woche ab 16.11."
+    "state": "ok",
+    "message": ""
    }
   }
  ],
- "updatedAt": "2026-11-23T09:59:56+01:00"
+ "updatedAt": "2026-11-23T10:14:05+01:00"
 }
