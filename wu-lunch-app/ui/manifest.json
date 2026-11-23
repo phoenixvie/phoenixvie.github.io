@@ -1,6 +1,6 @@
 {
- "design": "f763c9cda5fb6ad9fb66fe19b9118799023a114d8b6e4683688cdbe32016e56b",
- "sha256": "7f5a1c8d190eb0ef8ebf85dfc5fe996ee524e2cd5e1cc043a22a0ca57067c32a",
+ "design": "30ee1ce6eae3222de196361ceba699d67c93d57bda6ad9cd8ddea1b687ff5c6a",
+ "sha256": "a8ff7466be8259bfd067737979c87b4777681e051a54cd4d399aaa17a37af5bc",
  "min_native": "0.5.9",
  "bytes": 491544
 }
