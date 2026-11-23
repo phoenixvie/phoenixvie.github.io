@@ -334,6 +334,16 @@ class SecondListTests(unittest.TestCase):
         finally:
             wels.parse_ox = original
 
+    def test_meat_words_cover_dishes_that_do_not_name_the_animal(self):
+        # Hannibal, 25.11.2026: "Tafelspitz | Kräuterkruste …" blieb ohne Preis, weil kein Fleischwort erkannt wurde.
+        for name in ('Tafelspitz | Kräuterkruste | Kartoffelschmarrn', 'Zwiebelrostbraten mit Braterdäpfeln',
+                     'Fleischlaibchen mit Püree', 'Spare Ribs & Chicken Wings', 'Cordon Bleu mit Reis', 'Gebratener Saibling'):
+            self.assertTrue(wels.MEAT_OR_FISH.search(name), name)
+        for name in ('Kürbis-Lauchstrudel | Kräutersauce', 'Überbackene Gnocchi | Kürbis | Zucchini', 'Kürbisrisotto | Parmesan | Rucola',
+                     'Gebackene Champignons | Kartoffeln | Sauce Tatar', 'Geschmorte Melanzani / Kirschtomatenragout',
+                     'Linsen-Bolognese mit Spaghetti', 'Salat mit Fleischtomaten und Mozzarella'):
+            self.assertFalse(wels.MEAT_OR_FISH.search(name), name)
+
     def test_goesser_monthly_plan_without_prices_and_without_allergen_letters(self):
         days = wels.check(wels.parse_goesser(read('goesser-november.txt'), MONDAY), MONDAY)
         self.assertEqual(len(days), 5)
