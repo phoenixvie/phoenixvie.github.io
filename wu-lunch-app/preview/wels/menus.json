@@ -451,15 +451,11 @@
     "2026-11-25": [
      {
       "name": "Tafelspitz | Kräuterkruste | Kartoffelschmarrn | Apfelkren",
-      "price": null,
-      "priceLabel": " ",
-      "description": "Fleischgericht 12,00 € · Vegetarisch 11,50 € · Burger 13,90 €"
+      "price": 12.0
      },
      {
       "name": "Kürbis-Lauchstrudel | Kräutersauce",
-      "price": null,
-      "priceLabel": " ",
-      "description": "Fleischgericht 12,00 € · Vegetarisch 11,50 € · Burger 13,90 €"
+      "price": 11.5
      }
     ],
     "2026-11-26": [
@@ -772,15 +768,110 @@
    ],
    "brandColor": "#3f6f5a",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [],
-    "2026-11-25": [],
-    "2026-11-26": [],
-    "2026-11-27": []
+    "2026-11-23": [
+     {
+      "name": "Freiland-Puten Rollbraten / Rosmarin Gnocchi / Wintergemüse",
+      "price": 12.5
+     },
+     {
+      "name": "Orchiette / Kürbiscreme / Blattspinat / Parmesan / Kürbiskerne",
+      "price": 11.9
+     },
+     {
+      "name": "Bunter Blattsalat / Linsen / Räucherlachs / Gurke / Joghurt",
+      "price": 11.5,
+      "category": "Salat"
+     },
+     {
+      "name": "Tagessuppe",
+      "price": 4.9,
+      "category": "Suppe"
+     }
+    ],
+    "2026-11-24": [
+     {
+      "name": "Paprikahendl / Spätzle / Sauerrahm / Röstzwiebel",
+      "price": 12.5
+     },
+     {
+      "name": "Kartoffel-Lauch Strudel / Babyspinat / Creme fraiche",
+      "price": 11.9
+     },
+     {
+      "name": "Roter Rüben Salat / Cous-Cous / Birne / Walnuss / Croutons",
+      "price": 11.5,
+      "category": "Salat"
+     },
+     {
+      "name": "Tagessuppe",
+      "price": 4.9,
+      "category": "Suppe"
+     }
+    ],
+    "2026-11-25": [
+     {
+      "name": "Geschmorter Rinderbraten / Schupfnudeln / Zucchini-Gemüse",
+      "price": 12.5
+     },
+     {
+      "name": "Kartoffelgulasch / Creme fraiche / Paprika",
+      "price": 11.9
+     },
+     {
+      "name": "Bunter Blattsalat / Tzatziki / Kaspressknödel",
+      "price": 11.5,
+      "category": "Salat"
+     },
+     {
+      "name": "Tagessuppe",
+      "price": 4.9,
+      "category": "Suppe"
+     }
+    ],
+    "2026-11-26": [
+     {
+      "name": "Wiener Schnitzel vom Freilandhuhn / Gemüsereis / Preiselbeeren",
+      "price": 12.5
+     },
+     {
+      "name": "Mediterrane Gemüselasagne / Melanzani / Tomate / Feta",
+      "price": 11.9
+     },
+     {
+      "name": "Eiernudelsalat / Tempura Gemüse / Erdnusssauce / Sprossen",
+      "price": 11.5,
+      "category": "Salat"
+     },
+     {
+      "name": "Tagessuppe",
+      "price": 4.9,
+      "category": "Suppe"
+     }
+    ],
+    "2026-11-27": [
+     {
+      "name": "Gelbes Fisch Curry / Garnelen / Lachs / Kabeljau / Sprossen / Jasminreis",
+      "price": 12.5
+     },
+     {
+      "name": "Geschmorter Ofenkürbis / Parmesanpolenta / Kürbiskerne",
+      "price": 11.9
+     },
+     {
+      "name": "Orientalischer Quinoa Salat / Kichererbsen / Ofenkürbis / Feta",
+      "price": 11.5,
+      "category": "Salat"
+     },
+     {
+      "name": "Tagessuppe",
+      "price": 4.9,
+      "category": "Suppe"
+     }
+    ]
    },
    "import": {
-    "state": "not_published",
-    "message": "In's Haas zeigt 2026-11-16"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -1152,5 +1243,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-23T10:14:05+01:00"
+ "updatedAt": "2026-11-23T10:45:42+01:00"
 }
