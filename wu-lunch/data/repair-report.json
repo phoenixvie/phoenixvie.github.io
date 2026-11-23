@@ -1,62 +1,9 @@
 {
-  "checked_at": "2026-11-23T10:46:42+01:00",
+  "checked_at": "2026-11-23T11:30:54+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 1,
+  "api_calls": 0,
   "results": [
-    {
-      "restaurant": "karmafood",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Kopfzeile nennt nur 23.11.–25.11., obwohl die Seite auch Donnerstag und Freitag aufführt.",
-        "Die Bestandteile der Lunch Combo und die Bedeutung von „Lassi & Lunch“ werden nicht näher erläutert.",
-        "Die undatierten Einträge im Abschnitt „Extras“ wurden keinem Wochentag zugeordnet und daher nicht als Tagesgerichte aufgenommen. ",
-        "Keine eindeutig veröffentlichte aktuelle Karte"
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "6519792f7326e35565cd4dc4604331b11a407bf206a234543b73209ec825aad0"
-      },
-      "usage": {
-        "input_tokens": 2661,
-        "input_tokens_details": {
-          "cache_write_tokens": 2658,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2658
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 2930,
-        "output_tokens_details": {
-          "reasoning_tokens": 925
-        },
-        "total_tokens": 5591
-      }
-    },
-    {
-      "restaurant": "mensa",
-      "issues": [],
-      "action": "dedicated_pdf_ai",
-      "repairs": []
-    },
-    {
-      "restaurant": "topfdeckel",
-      "issues": [],
-      "action": "browser_import",
-      "repairs": []
-    },
-    {
-      "restaurant": "finn",
-      "issues": [],
-      "action": "dedicated_image_ai",
-      "repairs": []
-    },
     {
       "restaurant": "omakueche",
       "issues": [],
