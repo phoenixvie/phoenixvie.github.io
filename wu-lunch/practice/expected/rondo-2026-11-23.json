@@ -1,0 +1,77 @@
+{
+ "checked": "2026-11-23, von Hand mit der Karte verglichen: Menü 1 und Menü 2 je Tag; die Gerichtzeile vor jeder Tagesüberschrift ist eine Wiederholung und zählt nicht zum Vortag",
+ "days": {
+  "2026-11-23": [
+   {
+    "name": "Suppe oder Salat",
+    "price": null
+   },
+   {
+    "name": "Naturschnitzerl vom Steirerschwein, Serviettenknödel",
+    "price": null
+   },
+   {
+    "name": "Griechische Nudelpfanne mit Oliven, Kapern, Fetakäse und Blattsalat",
+    "price": null
+   }
+  ],
+  "2026-11-24": [
+   {
+    "name": "Suppe oder Salat",
+    "price": null
+   },
+   {
+    "name": "Gebackene Maishenderlbrust mit Erbsenreis",
+    "price": null
+   },
+   {
+    "name": "Süßkartoffelauflauf mit Rotkraut und Gemüsejus, Blattsalat",
+    "price": null
+   }
+  ],
+  "2026-11-25": [
+   {
+    "name": "Suppe oder Salat",
+    "price": null
+   },
+   {
+    "name": "Open Pulled Pork Sandwich mit spicy wedges, Cole slaw",
+    "price": null
+   },
+   {
+    "name": "Kürbisrisotto mit süßsauren Zuchiniwürfel, Parmesan, Salat",
+    "price": null
+   }
+  ],
+  "2026-11-26": [
+   {
+    "name": "Überbackene Schinkenspätzle mit Blattsalat",
+    "price": null
+   },
+   {
+    "name": "Suppe oder Salat",
+    "price": null
+   },
+   {
+    "name": "Oma`s Gemüse-Linsen-Eintopf mit flaumigen Serviettenknödel",
+    "price": null
+   }
+  ],
+  "2026-11-27": [
+   {
+    "name": "Suppe oder Salat",
+    "price": null
+   },
+   {
+    "name": "Zanderfilet nach Mailänder Art, Selleriepüree, Basilikumpesto",
+    "price": null
+   },
+   {
+    "name": "Gebackener Blumenkohl auf Gemüsebouquet, Sauce Tartar, Salat",
+    "price": null
+   }
+  ]
+ },
+ "id": "rondo",
+ "week": "2026-11-23"
+}

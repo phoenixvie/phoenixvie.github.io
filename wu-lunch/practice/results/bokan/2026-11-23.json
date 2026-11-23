@@ -55,10 +55,8 @@
   "ok": true
  },
  "detail": {
-  "agreement": 0.944,
-  "only_ai": [
-   "2026-11-27: krautfleckerl"
-  ],
+  "agreement": 1.0,
+  "only_ai": [],
   "only_generic": []
  },
  "generic": {
@@ -95,13 +93,21 @@
    ],
    "2026-11-26": [
     {
-     "name": "Tagessuppe gekochtes Rindfleisch mit Spinat und Röstkartoffeln",
+     "name": "Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "gekochtes Rindfleisch mit Spinat und Röstkartoffeln",
      "price": null
     }
    ],
    "2026-11-27": [
     {
      "name": "Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Krautfleckerl",
      "price": null
     }
    ]

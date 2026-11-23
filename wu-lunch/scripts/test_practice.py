@@ -61,6 +61,10 @@ class Judge(unittest.TestCase):
         # Der Ersatzleser zeigt eine Karte, die laut Vergleichslesung zu einer anderen Woche gehört: der schwerste Fall.
         self.assertEqual(practice.judge(ok, other)[0], "uneinig")
         self.assertEqual(practice.judge(ok, {"ok": True, "days": days("Ganz anderes Gericht")})[0], "uneinig")
+        # Der Ersatzleser nennt alles aus der Vergleichslesung und dazu mehr (Vorspeise, Wochengericht): keine Abweichung in der Sache.
+        more = {"ok": True, "days": days("Rindsgulasch mit Knödel", "Tagessuppe oder Salat", "Gemüseschnitzel mit Erdäpfeln")}
+        self.assertEqual(practice.judge(more, ok)[0], "mehr_gelesen")
+        self.assertEqual(practice.judge(ok, more)[0], "uneinig")               # umgekehrt fehlt dem Ersatzleser etwas
         # Ohne Vergleichslesung (kein Schlüssel) wird nichts behauptet, was niemand geprüft hat.
         self.assertEqual(practice.judge(ok, None)[0], "nur_ersatzleser")
         self.assertEqual(practice.judge(failed, None)[0], "beide_gescheitert")

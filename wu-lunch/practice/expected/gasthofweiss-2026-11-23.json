@@ -1,0 +1,63 @@
+{
+ "checked": "2026-11-23, von Hand mit der Karte verglichen: Mittagsmenü I und II je Tag (Montag bis Donnerstag); Datumsbruchstück der Seite ist kein Gericht",
+ "days": {
+  "2026-11-23": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Wiener Schnitzel vom Schwein mit Petersilienkartoffeln",
+    "price": null
+   },
+   {
+    "name": "Käsespätzle",
+    "price": null
+   }
+  ],
+  "2026-11-24": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Spaghetti mit Chorizo, Oliven & Tomatensoße",
+    "price": null
+   },
+   {
+    "name": "Gebackene Champignons mit Sauce Tartar",
+    "price": null
+   }
+  ],
+  "2026-11-25": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Chicken Wrap",
+    "price": null
+   },
+   {
+    "name": "Kürbis-schafskäse Krapferl mit Dip",
+    "price": null
+   }
+  ],
+  "2026-11-26": [
+   {
+    "name": "Tagessuppe",
+    "price": null
+   },
+   {
+    "name": "Wurzelfleisch mit Kren & Kartoffeln",
+    "price": null
+   },
+   {
+    "name": "Enchiladas mit Dip, Soja, Mais, Bohnen & Cheddar",
+    "price": null
+   }
+  ]
+ },
+ "id": "gasthofweiss",
+ "week": "2026-11-23"
+}

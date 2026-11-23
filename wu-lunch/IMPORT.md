@@ -184,7 +184,8 @@ die WU Food gar nicht zeigt (`wu-lunch/practice/sources.json`, derzeit 16 Karten
 1. **Dienstags** holt der Workflow „WU Lunch – Leseübung an fremden Karten“ die Karten. Der Ersatzleser (Regeln)
    und der KI-Leser lesen jede Karte unabhängig; der KI-Leser dient als Vergleichslesung und darf nur übernehmen,
    was wörtlich in der Karte steht.
-2. Je Karte gibt es ein Urteil: `einig`, `nur_ki` (der Ersatzleser scheitert, die Karte ist lesbar – der Lernfall),
+2. Je Karte gibt es ein Urteil: `einig`, `mehr_gelesen` (der Ersatzleser nennt alles aus der Vergleichslesung und
+   dazu mehr, etwa Vorspeise oder Wochengericht), `nur_ki` (der Ersatzleser scheitert, die Karte ist lesbar – der Lernfall),
    `uneinig`, `beide_gescheitert`, `andere_woche` (alte Karte, kein Lesefehler), `abruf_fehlgeschlagen`.
 3. **Mittwochs** wertet Claude die Fälle aus, verbessert den Ersatzleser mit allgemeinen Regeln (nie mit
    Sonderregeln für ein Übungslokal) und hält geprüfte Karten als feste Tests fest (`practice/expected`).
@@ -200,4 +201,20 @@ Erste Runde (23.11.2026, nur Ersatzleser): 8 von 14 erreichbaren Karten gelesen,
 Verbesserungen 11 von 14 (Zeitraum mit „bis“, Datum ohne Jahr, Aufzählungszeichen, Preiszeile mit Zusatz;
 Urlaubshinweise im Seitenkopf gelten nicht mehr als Kartenwoche). Bekannte offene Fälle: zweispaltige PDFs
 (Menü 1 / Menü 2 nebeneinander), PDFs mit verwürfelter Lesereihenfolge, Gericht vor der Tagesüberschrift.
+
+Zweite Runde (23.11.2026, mit Vergleichslesung): Von 15 lesbaren Karten waren zunächst 6 einig und 4 uneinig.
+Aus den vier Abweichungen gelernt (alles allgemeine Regeln im Ersatzleser):
+
+- mehrere Menüblöcke mit denselben Wochentagen direkt hintereinander („Menü 1 / Menü 2“) gehören zur selben Woche;
+- nennt eine Seite jedes Gericht zusätzlich direkt vor der Tagesüberschrift, zählt diese Zeile nicht zum Vortag;
+- ein Wochengericht hinter dem letzten Tag („Vegetarische Alternative“) gilt an jedem Tag;
+- Trennzeilen („***“) beenden die Karte nicht; Gerichte aus einem Wort („Käsespätzle“) zählen; Linktexte
+  („… als PDF laden“) und Datumsbruchstücke sind keine Gerichte.
+
+Danach: 7 einig, 2 mehr gelesen, 1 uneinig. Fünf Karten sind von Hand geprüft und feste Tests (`practice/expected`).
+
+Die verbleibende Abweichung (Gericht steht VOR der Tagesüberschrift, ohne Wiederholung) lässt sich mit Regeln nicht
+sicher erkennen. Deshalb fragt der Wels-Import in der Rückfallebene jetzt **beide** Leser: Sind sie sich einig (oder
+hat der Ersatzleser nur mehr gelesen), gilt der Ersatzleser; weichen sie ab, gilt die wörtlich geprüfte KI-Lesung;
+belegt die KI-Lesung eine andere Woche, wird nichts gezeigt. Je Kartentext bleibt es bei höchstens einem KI-Aufruf.
 

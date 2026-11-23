@@ -55,11 +55,8 @@
   "ok": true
  },
  "detail": {
-  "agreement": 0.889,
-  "only_ai": [
-   "2026-11-26: rindergulasch serviert mit butterspätzle a c g o",
-   "2026-11-27: backhendl serviert mit kartoffeln und blatt salat a c g o"
-  ],
+  "agreement": 1.0,
+  "only_ai": [],
   "only_generic": []
  },
  "generic": {
@@ -96,13 +93,21 @@
    ],
    "2026-11-26": [
     {
-     "name": "Zwiebel Suppe serviert mit Butterspätzle (A, C, G, O)",
+     "name": "Zwiebel Suppe",
+     "price": null
+    },
+    {
+     "name": "Rindergulasch serviert mit Butterspätzle (A, C, G, O)",
      "price": null
     }
    ],
    "2026-11-27": [
     {
      "name": "Fritatten Suppe",
+     "price": null
+    },
+    {
+     "name": "Backhendl serviert mit Kartoffeln und Blatt Salat (A, C, G, O)",
      "price": null
     }
    ]
