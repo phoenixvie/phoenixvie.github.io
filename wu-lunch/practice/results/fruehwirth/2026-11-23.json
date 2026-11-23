@@ -1,0 +1,82 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Tomatisierte Fischsuppe und Salate vom Buffet",
+     "price": null
+    },
+    {
+     "name": "Pasta bolognese",
+     "price": null
+    },
+    {
+     "name": "Brokkoli-Erdäpfelgratin auf Cremespinat und Spiegelei",
+     "price": null
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Krenschaumsuppe und Salate vom Buffet",
+     "price": null
+    },
+    {
+     "name": "Hühnerbrust im Speckmantel, mit Frischkäsefülle und Bratkartoffeln",
+     "price": null
+    },
+    {
+     "name": "Chili-Cheese Nugets auf geschmortem Kürbis-Paprika-Gemüse",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Kürbiscremesuppe und Salate vom Buffet",
+     "price": null
+    },
+    {
+     "name": "Putenschnitzel mit Champignonrahm, Gemüse und Butterreis",
+     "price": null
+    },
+    {
+     "name": "Pasta Pomodoro mit Grana Padano",
+     "price": null
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Gemüsecremesuppe und Salate vom Buffet",
+     "price": null
+    },
+    {
+     "name": "Fiaker-Gulasch mit Gebäck",
+     "price": null
+    },
+    {
+     "name": "Gebackene Briespitzen auf Erdäpfel-Kernölsalat und Birnenchutney",
+     "price": null
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Klare Gemüsesuppe mit Frittaten und Salate vom Buffet",
+     "price": null
+    },
+    {
+     "name": "Fischfilet im Muschelsud mit Salzkartoffeln und Wurzelgemüse",
+     "price": null
+    },
+    {
+     "name": "Veggi Burger mit Kräuterseitlingen und Cole Slaw",
+     "price": null
+    }
+   ]
+  },
+  "ok": true
+ },
+ "id": "fruehwirth",
+ "verdict": "nur_ersatzleser",
+ "week": "2026-11-23"
+}

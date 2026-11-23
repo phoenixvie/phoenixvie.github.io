@@ -280,13 +280,17 @@ def dish(name, price=None, **extra):
 DAY_WORD = re.compile(r"((?:mon|die|don|fre)[a-zäöü]{0,6}tag|mittwoch|mo|di|mi|do|fr)(?![a-zäöü])[\s.,:–-]*", re.I)
 DAY_KEYS = {"mo": 0, "di": 1, "mi": 2, "do": 3, "fr": 4}
 SHORT_DATE = re.compile(r"(\d{1,2})\.\s?(\d{1,2})\.(?:\s?(\d{4}|\d{2})\b)?")
-SHORT_PERIOD = re.compile(r"(\d{1,2})\.\s?(?:(\d{1,2})\.)?\s?(?:\d{4})?\s*[–-]\s*(\d{1,2})\.\s?(\d{1,2})\.")
+# "23.11. – 27.11.", "23.11. bis 27.11.", "17.-20.11.2026", "Di 17.11- Fr 20.11" (Leseübung 23.11.2026: "bis", Wochentag vor
+# dem Enddatum, fehlender Schlusspunkt). Monat nur 1–12, damit Preise und Uhrzeiten ("8.50 - 12.90") kein Zeitraum sind.
+SHORT_PERIOD = re.compile(r"(?<![\d.,])(\d{1,2})\.\s?(?:(0?[1-9]|1[0-2])\.?)?\s?(?:\d{4})?\s*(?:[–-]|\bbis\b)\s*"
+                          r"(?:(?:Mo|Di|Mi|Do|Fr|Sa|So)[a-zäöü]*[.,]?\s*)?(\d{1,2})\.\s?(0?[1-9]|1[0-2])(?:\.|(?![\d,]))")
 NOT_A_DISH = re.compile(r"@|https?:|www\.|\bUhr\b|\d{1,2}[:.]\d{2}\s*(?:–|-|bis)\s*\d{1,2}[:.]\d{2}|©|\+43|\bTel\b|"
                         r"reservier|geschlossen|ruhetag|öffnungszeit|impressum|datenschutz|cookie|gutschein|newsletter|"
                         r"änderungen vorbehalten|solange der vorrat|aufpreis|sonderw[uü]nsch|nur hauptspeise", re.I)
 LABEL = re.compile(r"(vorspeise|hauptspeise|nachspeise|dessert|suppe|menü\s*\d?|tagesteller|tagesmenü|oder|und|"
                    r"vegetarisch|vegan|fleisch|fisch|×)\s*:?", re.I)
 PRICE_ONLY = re.compile(r"(?:€\s*" + PRICE + r"|" + PRICE + r"\s*€)")
+PRICE_LEAD = re.compile(r"€\s*" + PRICE + r"(?=\s*(?:\(|$))")
 PRICE_END = re.compile(r"\s*(?:€\s*" + PRICE + r"|" + PRICE + r"\s*€)\s*$")
 
 
@@ -304,6 +308,21 @@ def _day_heading(line):
 def _short_date(text, monday):
     found = SHORT_DATE.search(text)
     return near_date(int(found.group(1)), int(found.group(2)), monday) if found and 1 <= int(found.group(2)) <= 12 else None
+
+
+MONTH_DATE = re.compile(r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]{3,})\.?\s*(\d{4})?")
+
+
+def _month_date(text, monday):
+    """'23. November', '23. November2026', '23. Nov. 2026' → Datum; ohne Jahr das zur gesuchten Woche nächste."""
+    found = MONTH_DATE.search(text)
+    month = MONTHS.get(found.group(2).lower()) if found else None
+    if not month:
+        return None
+    try:
+        return date(int(found.group(3)), month, int(found.group(1))) if found.group(3) else near_date(int(found.group(1)), month, monday)
+    except ValueError:
+        return None
 
 
 def generic_week(text, monday):
@@ -325,15 +344,22 @@ def generic_week(text, monday):
     head = " ".join(rows[max(0, run[0][0] - 12):run[0][0]])
     period = period_of(head, monday)
     if not period:
-        short = SHORT_PERIOD.search(head)
-        if short:
+        # Im Seitenkopf stehen oft weitere Zeiträume (Betriebsurlaub "27.12 bis 4.1"): Es zählt der, der die Woche trifft.
+        for short in SHORT_PERIOD.finditer(head):
             last = near_date(int(short.group(3)), int(short.group(4)), monday)
             first = near_date(int(short.group(1)), int(short.group(2) or short.group(4)), monday)
-            period = (first, last) if first and last else None
+            if first and last and (not period or any(first <= day <= last for day in week)):
+                period = (first, last)
+                if any(first <= day <= last for day in week):
+                    break
+    # Ein Zeitraum, der die Woche nicht trifft, ist nur dann ein Gegenbeweis, wenn sonst nichts die Woche belegt
+    # (Leseübung 23.11.2026: Urlaubshinweis über einer Karte mit richtigen Tagesdaten).
+    stale = None
     if period:
-        if not any(period[0] <= day <= period[1] for day in week):
-            raise NotThisWeek(f"Ersatzleser: Karte gilt ab {period[0].isoformat()}")
-        proof = "Zeitraum"
+        if any(period[0] <= day <= period[1] for day in week):
+            proof = "Zeitraum"
+        else:
+            stale = NotThisWeek(f"Ersatzleser: Karte gilt ab {period[0].isoformat()}")
     week_number = re.search(r"\bKW\s*(\d{1,2})\b", head, re.I)
     if week_number and not proof:
         if int(week_number.group(1)) != monday.isocalendar().week:
@@ -348,14 +374,17 @@ def generic_week(text, monday):
         entries, day_price, next_price, after_label = [], None, None, False
         for offset, line in enumerate(lines):
             # Tagesdatum: steht allein in der Zeile direkt bei der Überschrift ("16.11.", "16. November 2026").
-            bare = clean(SHORT_DATE.sub(" ", re.sub(r"\d{1,2}\.\s*[A-Za-zäöüÄÖÜ]+\s+\d{4}", " ", line)))
-            stated = (long_date(line) or _short_date(line, monday)) if offset < 2 and len(bare) < 4 else None
+            # Auch ohne Jahr ("Montag, 23. November", das Jahr steht in der nächsten Zeile oder gar nicht).
+            named = _month_date(line, monday)
+            bare = clean(SHORT_DATE.sub(" ", MONTH_DATE.sub(" ", line) if named else line))
+            stated = (named or _short_date(line, monday)) if offset < 2 and len(bare) < 4 else None
             if stated:
                 if stated != week[weekday]:
                     raise NotThisWeek(f"Ersatzleser: Karte zeigt den {stated.isoformat()}")
                 proof = "Tagesdatum"
                 continue
-            cost = PRICE_ONLY.fullmatch(line)
+            # Auch mit Zusatz dahinter: "€ 13,60 (ohne Vorspeise: € 12,50)" ist eine Preiszeile, kein Gericht.
+            cost = PRICE_ONLY.fullmatch(line) or PRICE_LEAD.match(line)
             if cost:
                 value = euro(cost.group(1) or cost.group(3), cost.group(2) or cost.group(4))
                 if 2 <= value <= 45:
@@ -375,7 +404,8 @@ def generic_week(text, monday):
             if PERIOD.search(line) or SHORT_PERIOD.search(line):
                 continue  # wiederholter Kartenkopf (mehrseitige PDFs)
             cost = PRICE_END.search(line)
-            name = clean(PRICE_END.sub("", line)) if cost else line
+            # Aufzählungszeichen vor dem Gericht ("◦Pasta bolognese") gehören nicht zum Namen.
+            name = re.sub(r"^[◦•▪■●○‣⁃·*»›]+\s*", "", clean(PRICE_END.sub("", line)) if cost else line)
             price = euro(cost.group(1) or cost.group(3), cost.group(2) or cost.group(4)) if cost else None
             if price is not None and not 2 <= price <= 45:
                 continue  # z. B. "Nur Hauptspeise: - € 1,00" ist kein Gericht
@@ -405,6 +435,8 @@ def generic_week(text, monday):
             days[week[weekday].isoformat()] = entries
             most = max(most, len(entries))
     if not proof:
+        if stale:
+            raise stale
         raise ValueError("Ersatzleser: kein Beleg für die Woche (weder Zeitraum noch Tagesdatum)")
     if len(days) < 3:
         raise ValueError("Ersatzleser: weniger als drei Tage mit Gerichten")

@@ -1,0 +1,82 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Gegrilltes Hühnerfilet Súpreme mit Butterhörnchen und Gemüse",
+     "price": null
+    },
+    {
+     "name": "Pizza Capricciosa oder Pizza Salami",
+     "price": null
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Tomaten-Mozzarellasuppe",
+     "price": null
+    },
+    {
+     "name": "Thai Curry vom Huhn mit Butterreis",
+     "price": null
+    },
+    {
+     "name": "Pizza Capricciosa oder Pizza Salami",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Klare Rindsuppe mit Grießnockerl",
+     "price": null
+    },
+    {
+     "name": "Spare Ribs & Chicken Wings mit Wedges und BBQ",
+     "price": null
+    },
+    {
+     "name": "Pizza Capricciosa oder Pizza Salami",
+     "price": null
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Knoblauchrahmsuppe mit Croutons",
+     "price": null
+    },
+    {
+     "name": "Cordon Bleu vom Hühnerfilet mit Reis und Kartoffeln",
+     "price": null
+    },
+    {
+     "name": "Pizza Capricciosa oder Pizza Salami",
+     "price": null
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Klare Rindsuppe mit Nudeln",
+     "price": null
+    },
+    {
+     "name": "Gegrilltes Lachsfilet auf Tomaten-Basilikum-Risotto",
+     "price": null
+    },
+    {
+     "name": "Pizza Capricciosa oder Pizza Sala",
+     "price": null
+    }
+   ]
+  },
+  "ok": true
+ },
+ "id": "oxwn",
+ "verdict": "nur_ersatzleser",
+ "week": "2026-11-23"
+}

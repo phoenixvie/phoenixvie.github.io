@@ -1,0 +1,54 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Brokkoli-Creme Suppe",
+     "price": null
+    },
+    {
+     "name": "Walliser Putenschnitzel gegrilltes Putenschnitzel mit Schinken und Käse-überbacken, serviert mit Kartoffelrösti",
+     "price": null
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Zucchini-creme Suppe",
+     "price": null
+    },
+    {
+     "name": "Vom Backofen, serviert mit Pommes und Salat (A, C, G, O)",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Leberknödel Suppe",
+     "price": null
+    },
+    {
+     "name": "Cordon bleu von der heimischen Pute oder Schwein gefüllt mit Schinken und Käse, serviert mit Reis, Preiselbeeren und grüner Salat (A, C, G, O)",
+     "price": null
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Zwiebel Suppe serviert mit Butterspätzle (A, C, G, O)",
+     "price": null
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Fritatten Suppe",
+     "price": null
+    }
+   ]
+  },
+  "ok": true
+ },
+ "id": "rauchkuchl",
+ "verdict": "nur_ersatzleser",
+ "week": "2026-11-23"
+}

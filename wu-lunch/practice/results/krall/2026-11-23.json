@@ -1,0 +1,12 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "error": "Ersatzleser: Karte gilt ab 2026-11-17",
+  "ok": false,
+  "other_week": true
+ },
+ "id": "krall",
+ "verdict": "andere_woche",
+ "week": "2026-11-23"
+}

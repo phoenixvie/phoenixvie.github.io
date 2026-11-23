@@ -1,0 +1,36 @@
+{
+ "ai": null,
+ "detail": null,
+ "generic": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Tagliatelle al Ragu(Bolognese)",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Bistecca di Manzo(Entrecote vom Rind) mit Pomes",
+     "price": null
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Spaghetti frutti di mare(Meeresfrüchte)",
+     "price": null
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "oder wahlweise eine Pizza mit einem Belag inkl. gemischtem Salat",
+     "price": null
+    }
+   ]
+  },
+  "ok": true
+ },
+ "id": "engelhard",
+ "verdict": "nur_ersatzleser",
+ "week": "2026-11-23"
+}

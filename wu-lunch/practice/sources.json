@@ -1,0 +1,133 @@
+[
+ {
+  "id": "bokan",
+  "name": "Hotel Gasthof Bokan",
+  "city": "Graz",
+  "url": "https://www.bokan-exclusiv.at/speisekarte--menue",
+  "kind": "html",
+  "layout": "date-range headline, then 'Weekday, DD. Month YYYY' headings with soup / *** / main below, single menu price at the end"
+ },
+ {
+  "id": "cafebazar",
+  "name": "Café Bazar",
+  "city": "Salzburg",
+  "url": "https://www.cafe-bazar.at/de/gut-essen-in-salzburg/mittagsmenues/",
+  "kind": "html",
+  "layout": "KW + date-range line, 'Weekday, DD. Month YYYY' headings, one dish per day with inline price (EUR 18.90 style, dot decimal)"
+ },
+ {
+  "id": "dreihasen",
+  "name": "Gasthaus drei Hasen",
+  "city": "Salzburg",
+  "url": "https://www.drei-hasen.at/",
+  "kind": "html",
+  "layout": "homepage with much other text; 'DD.MM. bis DD.MM.' line, weekday headings with starter, main and price line each, plus vegetarian alternative block"
+ },
+ {
+  "id": "engelhard",
+  "name": "Gasthaus Engel",
+  "city": "Hard",
+  "url": "https://www.engel-hard.at/",
+  "kind": "html",
+  "layout": "homepage block; dish line comes BEFORE its uppercase weekday heading, Wednesday is RUHETAG, no prices, header mislabelled 'KW 47 (23.11-27.11.26)'"
+ },
+ {
+  "id": "gasthofweiss",
+  "name": "Gasthof Hotel Weiss",
+  "city": "Munderfing",
+  "url": "https://www.gasthof-weiss.at/speisekarte",
+  "kind": "html",
+  "layout": "two blocks 'MITTAGSMENÜ I' / 'MITTAGSMENÜ II', each with 'Weekday, DD. Month YYYY' headings Mon-Thu (soup + main), block price at end, typos in dates"
+ },
+ {
+  "id": "oxwn",
+  "name": "OX Steaks & Pizza Fischapark",
+  "city": "Wiener Neustadt",
+  "url": "https://ox-wrneustadt.at/",
+  "kind": "html",
+  "layout": "homepage; price range in intro, 'Weekday DD. Month YYYY' headings with soup, main and a repeated pizza alternative line"
+ },
+ {
+  "id": "rauchkuchl",
+  "name": "Restaurant Rauchkuchl",
+  "city": "Linz",
+  "url": "https://www.restaurant-rauchkuchl.at/speisekarte/mittagsmenue",
+  "kind": "html",
+  "layout": "'DD.MM. - DD.MM.YYYY' line, weekday headings with soup, dish title and separate description line with allergen codes, no price in the menu block"
+ },
+ {
+  "id": "rondo",
+  "name": "Restaurant Rondo",
+  "city": "Graz",
+  "url": "https://www.restaurant-rondo.at/",
+  "kind": "html",
+  "layout": "homepage; 'Menüplan für KW 48', Menü 1 / Menü 2 sections with price, each dish text appears twice (before and after the weekday heading), followed by a priced a-la-carte list"
+ },
+ {
+  "id": "waldviertlerhof",
+  "name": "Waldviertlerhof",
+  "city": "Wien (1050)",
+  "url": "https://www.waldviertlerhof.at/Mittagsmen%C3%BC",
+  "kind": "html",
+  "layout": "'DD. bis DD. Month YYYY' line, one flat price line, weekday headings with soup and main, components separated by '|'"
+ },
+ {
+  "id": "adlerzirl",
+  "name": "Schwarzer Adler Zirl",
+  "city": "Zirl",
+  "url": "https://www.schwarzer-adler-zirl.at/resources/PDF_lists/mittagskarte.pdf",
+  "kind": "pdf",
+  "layout": "one-page PDF; date range + [KW 48] line, weekday headings, dish left and price right-aligned in a second column (price sometimes on the next line)"
+ },
+ {
+  "id": "fruehwirth",
+  "name": "Der Frühwirth",
+  "city": "Graz",
+  "url": "http://www.derfruehwirth.at/assets/files/wochenmenu.pdf",
+  "kind": "pdf",
+  "layout": "one-page PDF; 'MENÜPLAN KW 48' + date range, 'Weekday DD.MM.YYYY' headings, soup line then two bulleted mains, single menu price at the bottom"
+ },
+ {
+  "id": "eckel",
+  "name": "Restaurant Eckel",
+  "city": "Wien (1190)",
+  "url": "https://restauranteckel.at/karten/Wochenkarte_Restaurant_Eckel.pdf",
+  "kind": "pdf",
+  "layout": "3-page PDF; long priced a-la-carte weekly card with date range, lunch plates as 'Weekday: dish  price' lines (Tue-Fri) in a small MITTAGSTELLER section"
+ },
+ {
+  "id": "innswirtshaus",
+  "name": "Inn's Wirtshaus (ATZ OÖ)",
+  "city": "Braunau am Inn",
+  "url": "https://www.atzooe.at/inns-wirtshaus/",
+  "kind": "pdf-link",
+  "pdf_link_hint": "app/download/\\d+/Menu[^\"]*plan\\+KW\\+\\d+[^\"]*\\.pdf",
+  "layout": "PDF with two side-by-side columns (Klassisches Menü / Vitales Menü, price in column header), 'Weekday, DD.MM.YYYY' headings Mon-Thu, phone number and origin table as noise"
+ },
+ {
+  "id": "krall",
+  "name": "Gasthof Krall",
+  "city": "Klagenfurt",
+  "url": "https://www.gasthofkrall.at/speisekarten",
+  "kind": "pdf-link",
+  "pdf_link_hint": "app/download/\\d+/Wochenmen[^\"]*\\.pdf",
+  "layout": "one-page PDF; 'Di DD.MM- Fr DD.MM' line, flat price, centered weekday headings Tue-Fri with two dishes side by side in columns and allergen letter codes"
+ },
+ {
+  "id": "rondopdf",
+  "name": "Restaurant Rondo (PDF variant)",
+  "city": "Graz",
+  "url": "https://www.restaurant-rondo.at/",
+  "kind": "pdf-link",
+  "pdf_link_hint": "/s/Wochenmenu-KW-\\d+-\\d+\\.pdf",
+  "layout": "one-page PDF; a-la-carte block on top, then 'WOCHENMENÜ KW 48' as two-column table MENÜ 1 / MENÜ 2 with weekday headings repeated in both columns"
+ },
+ {
+  "id": "dreihasenpdf",
+  "name": "Gasthaus drei Hasen (PDF variant)",
+  "city": "Salzburg",
+  "url": "https://www.drei-hasen.at/mittagstisch.pdf",
+  "kind": "pdf",
+  "layout": "2-page PDF, centered single column; 'DD.MM. bis DD.MM.' line, weekday headings with starter, main and price line each"
+ }
+]

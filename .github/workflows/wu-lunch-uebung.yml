@@ -1,0 +1,84 @@
+name: WU Lunch – Leseübung an fremden Karten
+
+# Einmal pro Woche üben die beiden allgemeinen Leser (Ersatzleser und KI-Leser) an Wochenkarten von Lokalen,
+# die WU Food gar nicht zeigt (wu-lunch/practice/sources.json – nur deren eigene Webseiten). Abgelegt werden
+# der Kartenausschnitt, beide Leseergebnisse und das Urteil; daraus entsteht die Punktetafel
+# (wu-lunch/practice/scoreboard.json). Angezeigt wird davon nichts, und ein Fehler hier kann weder WU Food
+# noch Wels stören. Beschreibung: wu-lunch/scripts/practice.py und wu-lunch/IMPORT.md.
+
+on:
+  schedule:
+    # Dienstag am späten Vormittag: Die meisten Wochenkarten stehen dann sicher online.
+    - cron: '37 9 * * 2'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wu-lunch-uebung
+  cancel-in-progress: false
+
+jobs:
+  practise:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: wu-lunch/requirements.txt
+      - name: Abhängigkeiten installieren
+        run: pip install -r wu-lunch/requirements.txt
+      - name: Karten der Übungslokale holen und von beiden Lesern lesen lassen
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        working-directory: wu-lunch/scripts
+        shell: bash
+        run: python practice.py | tee "$RUNNER_TEMP/uebung.txt"
+      - name: Ergebnis in die Zusammenfassung schreiben
+        if: always()
+        run: |
+          {
+            echo '### Leseübung'
+            echo '```'
+            tail -n 30 "$RUNNER_TEMP/uebung.txt" 2>/dev/null || echo 'kein Ergebnis'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Übungssammlung ablegen
+        shell: bash
+        run: |
+          set -euo pipefail
+          folder="wu-lunch/practice"
+          git add "$folder"
+          if git diff --cached --quiet; then
+            echo "Keine Änderung"
+            exit 0
+          fi
+          git config user.name "wu-lunch-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -rf "$RUNNER_TEMP/uebung" && cp -r "$folder" "$RUNNER_TEMP/uebung"
+          # Den Ordner schreibt nur dieser Workflow. Wird der Push abgelehnt (andere Dateien auf master sind
+          # neuer), wird der eigene Stand auf den neuen master gesetzt – wie beim Wels-Import.
+          for attempt in 1 2 3 4 5; do
+            git commit -q -m "Leseübung $(TZ=Europe/Vienna date +%F)"
+            if git push origin HEAD:master; then
+              exit 0
+            fi
+            echo "Push abgelehnt ($attempt/5), neuer Stand wird eingearbeitet"
+            git fetch origin master
+            git reset -q --hard origin/master
+            rm -rf "$folder" && cp -r "$RUNNER_TEMP/uebung" "$folder"
+            git add "$folder"
+            if git diff --cached --quiet; then
+              echo "Stand ist inzwischen abgelegt"
+              exit 0
+            fi
+          done
+          echo "::warning::Übungssammlung konnte nicht abgelegt werden"
+          exit 1
