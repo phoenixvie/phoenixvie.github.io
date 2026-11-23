@@ -149,10 +149,13 @@
       ? '<div class="meet-confirm"><p><svg class="meet-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2f9e5b"/><path d="M6.8 12.4l3.4 3.4 7-7.2" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Du bist für diesen Termin angemeldet.</span></p><p><svg class="meet-check" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#56718c"/><path d="M12 10.6v6.6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="7.2" r="1.5" fill="#fff"/></svg><span>Bitte melde dich aus Rücksicht auf die anderen ab, wenn du doch nicht kommen kannst.</span></p></div><button class="meet-primary meet-icon-button" data-action="meet-leave">' + icon('logout') + '<span>' + esc(text('Meet to eat: Abmelden', {}, 'Abmelden')) + '</span></button>'
       : (!registrationOpen(selected) ? '<p class="meet-notice">Die Anmeldung für diesen Termin ist geschlossen.</p>'
         : elsewhere ? `<p class="meet-notice">${esc(text('Du bist bereits für {date} angemeldet. Melde dich dort ab, wenn du lieber zu diesem Termin kommst.', {date: dateValue(elsewhere.meeting_date, {weekday: 'long', day: 'numeric', month: 'long'})}))}</p>`
-        : '<p class="meet-why">Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎</p>');
+        : '<p class="meet-why">Melde dich bitte an, damit die anderen wissen, dass du kommst.</p>');
     // Feste Leiste unter dem scrollenden Inhalt (wie der Hinweis unter den Menüs): Vorname und Knopf in einer Zeile,
     // eine Meldung zum Namen direkt darüber. So ist die Anmeldung immer erreichbar.
-    const cta = own || !registrationOpen(selected) || elsewhere ? '' : `<div class="meet-cta">${nameError ? errorHtml.replace('class="meet-notice"', 'class="meet-notice meet-name-error"') : ''}<div class="meet-cta-row">${emailVerification ? '' : `<input id="meet-first-name" aria-label="Dein Vorname" autocomplete="off" maxlength="40" placeholder="Dein Vorname" autocapitalize="words" value="${esc(state.pendingName)}">`}<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}>Teilnehmen</button></div></div>`;
+    // Kurz nach dem Öffnen macht der Knopf mit drei sanften Pulsen auf sich aufmerksam (Vorgabe des Betreibers, 23.11.2026);
+    // danach nicht mehr – auch nicht bei den regelmäßigen Aktualisierungen der Seite.
+    const nudge = Date.now() - (state.openedAt || 0) < 4000 ? ' data-nudge' : '';
+    const cta = own || !registrationOpen(selected) || elsewhere ? '' : `<div class="meet-cta">${nameError ? errorHtml.replace('class="meet-notice"', 'class="meet-notice meet-name-error"') : ''}<div class="meet-cta-row">${emailVerification ? '' : `<input id="meet-first-name" aria-label="Dein Vorname" autocomplete="off" maxlength="40" placeholder="Dein Vorname" autocapitalize="words" value="${esc(state.pendingName)}">`}<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}${nudge}>Teilnehmen</button></div></div>`;
     return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}${art}<p class="meet-lead">Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen. <span data-ui-literal>${esc(typeof meetDaysText === 'function' ? meetDaysText('intro') : 'Findet jeden Mittwoch statt.')}</span></p>${facts}${action}</div>${cta}</div>`;
   }
   async function join(name, meetingDate) {
@@ -166,7 +169,7 @@
   }
   async function action(target) {
     const a = target.dataset.action;
-    if (a === 'meet-preview') { track('meet_open', {entry: target.classList?.contains?.('meet-invite') ? 'menu_hint' : 'list'}); meetPreviewOpen=true; meetSlot=0; meetForm=false; state.error=''; state.selectedDate=null; state.pendingName=''; render(); await refresh(); return; }
+    if (a === 'meet-preview') { track('meet_open', {entry: target.classList?.contains?.('meet-invite') ? 'menu_hint' : 'list'}); meetPreviewOpen=true; state.openedAt=Date.now(); meetSlot=0; meetForm=false; state.error=''; state.selectedDate=null; state.pendingName=''; render(); await refresh(); return; }
     if (a === 'meet-share') {
       // Einladung mit dem gewählten Termin; der Link öffnet Meet to eat direkt (wufood.at/?meet=1).
       const day = dateValue(date(), {weekday: 'long', day: 'numeric', month: 'long'});
@@ -248,7 +251,7 @@
     meetJoined = !!state.own.find(item => item.meeting_date === date());
     render();
   });
-  if (returningFromLink || window.WU_START_SCREEN === 'meet' || /[?&]meet=/.test(typeof location === 'undefined' ? '' : location.search || '')) { meetPreviewOpen=true; meetSlot=0; void refresh(); }
+  if (returningFromLink || window.WU_START_SCREEN === 'meet' || /[?&]meet=/.test(typeof location === 'undefined' ? '' : location.search || '')) { meetPreviewOpen=true; state.openedAt=Date.now(); meetSlot=0; void refresh(); }
   setInterval(() => { if (meetPreviewOpen && !meetForm && !state.busy) void refresh(); }, 30000);
   // Anzahl in der Liste: beim Start, alle fünf Minuten und wenn die App wieder in den Vordergrund kommt.
   if (!returningFromLink) void refreshCount();

@@ -54,6 +54,11 @@ test('paused e-mail flow still works when switched back on (verified email, then
   // das Foto schließt direkt an. Die Uhrzeit steht nur noch in der Tabelle; „So läuft's ab" ist entfallen.
   assert.match(context.renderMeet(),/<div class="meet-facts"><div class="meet-fact">[^]*?<div><strong>Datum<\/strong><span class="meet-date-picker"><select id="meet-date" aria-label="Datum">[^]*?<\/select><\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Uhrzeit am Treffpunkt<\/strong><span>12:00 Uhr<\/span><\/div><\/div><div class="meet-fact">[^]*?<strong>Gemeinsam losgehen<\/strong><span>12:05 Uhr<\/span><\/div><\/div><div class="meet-fact meet-joined">[^]*?<\/div><\/div><div class="meet-fact">[^]*?<strong>Treffpunkt auf der WU<\/strong><span>Vor dem Baum direkt bei der Mensa<\/span><\/div><\/div><figure class="meet-place">/);
   assert.doesNotMatch(context.renderMeet(),/meet-steps|So läuft|meet-when|meet-info|Zusammenwarten| um 12:00 Uhr<\/option>/);
+  // Hinweis auf den Knopf: drei sanfte Pulse kurz nach dem Öffnen, nicht bei reduzierter Bewegung (Vorgabe 23.11.2026).
+  { const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8'), live=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
+    assert.match(css,/\.meet-cta \.meet-primary\[data-nudge\]:not\(:disabled\)\{animation:meet-nudge 1\.6s ease-out \.6s 3\}/);
+    assert.match(css,/@media \(prefers-reduced-motion:reduce\)\{\.meet-cta \.meet-primary\[data-nudge\]\{animation:none\}\}/);
+    assert.match(live,/const nudge = Date\.now\(\) - \(state\.openedAt \|\| 0\) < 4000 \? ' data-nudge' : '';/); }
   // Das Datumsfeld ist nur so breit wie sein Text (Vorgabe 23.11.2026).
   assert.match(await readFile(new URL('../preview/style.css',import.meta.url),'utf8'),/\.meet-facts \.meet-fact \.meet-date-picker select\{width:auto;max-width:100%\}/);
   assert.equal(handlers.touchstart,undefined);assert.equal(handlers.touchend,undefined);
@@ -65,7 +70,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   assert.doesNotMatch(context.renderMeet(),/google\.com\/maps|Google Maps|meet-map-link/);
   assert.doesNotMatch(context.renderMeet(),/<a [^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
   // Wozu die Anmeldung dient, steht im Text; Vorname und Knopf stehen in einer festen Leiste unter dem scrollenden Inhalt.
-  assert.match(context.renderMeet(),/<p class="meet-why">Melde dich bitte an, damit die anderen wissen, dass du kommst\. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎<\/p>/);
+  assert.match(context.renderMeet(),/<p class="meet-why">Melde dich bitte an, damit die anderen wissen, dass du kommst\.<\/p>/);
   assert.match(context.renderMeet(),/<p class="meet-why">[^<]*<\/p><\/div><div class="meet-cta"><div class="meet-cta-row"><button class="meet-primary" data-action="meet-show-form"[^>]*>Teilnehmen<\/button><\/div><\/div><\/div>$/);
   // Die Seite beginnt mit der Zeichnung, dann der eine Satz, worum es geht.
   assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^]*?<\/svg><\/div><p class="meet-lead">Triff dich mit anderen freundlichen WU-Studierenden am WU Campus/);
@@ -170,7 +175,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Uhrzeit am Treffpunkt','Gemeinsam losgehen','Treffpunkt auf der WU','12:00 Uhr','12:05 Uhr','Teilnehmer','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst. Wenn alle interessiert sind, sich aber niemand anmeldet, funktioniert es nicht ☺︎','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Uhrzeit am Treffpunkt','Gemeinsam losgehen','Treffpunkt auf der WU','12:00 Uhr','12:05 Uhr','Teilnehmer','Die Namen siehst du nach deiner Anmeldung.','Melde dich bitte an, damit die anderen wissen, dass du kommst.','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
