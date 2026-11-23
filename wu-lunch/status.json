@@ -1,25 +1,24 @@
 {
-  "checked_at": "2026-11-23T17:30:48+01:00",
+  "checked_at": "2026-11-23T17:50:23+01:00",
   "week_start": "2026-11-23",
   "week_end": "2026-11-27",
   "health": "healthy",
   "sources": {
     "karmafood": {
-      "state": "cached",
-      "last_success": "2026-11-23T10:46:12+01:00",
-      "checked_at": "2026-11-23T10:46:12+01:00",
+      "state": "ok",
+      "last_success": "2026-11-23T17:50:29+01:00",
+      "checked_at": "2026-11-23T17:50:29+01:00",
       "consecutive_failures": 0,
-      "content_sha256": "0bcac40ea62d82746f67b31c8c0eeb2a9a46aff159009a470520d024dae4a4fa",
+      "content_sha256": "9ee8191177c7f2d58d73b5a99ff9460de1d72e806b2a2b05d57089e9e5cbfc1c",
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-23",
-      "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Veganes_Lunch_Menu_Karma_Food_K48.pdf?v=1795193798",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Veganes_Lunch_Menu_Karma_Food_K48.pdf?v=1795193798"
     },
     "finn": {
       "state": "cached",
       "last_success": "2026-11-21T18:00:39+01:00",
-      "checked_at": "2026-11-23T10:46:12+01:00",
+      "checked_at": "2026-11-23T17:50:29+01:00",
       "consecutive_failures": 0,
       "content_sha256": "58313a2c3ae047259f25991493a9f9606a72a9410f112afec747d986bcf97103",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
@@ -30,7 +29,7 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-23T17:30:48+01:00",
+      "last_success": "2026-11-23T17:50:23+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
@@ -39,16 +38,14 @@
       "last_success": "2026-11-23T10:00:12+01:00",
       "consecutive_failures": 0,
       "parser_version": "ai-pdf-9-notice-wording",
-      "content_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "content_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190"
     },
     "glashaus": {
       "state": "cached",
       "last_success": "2026-11-23T10:13:04+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
-      "content_sha256": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "content_sha256": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1"
     },
     "campus": {
       "state": "cached",
@@ -73,33 +70,30 @@
       "content_sha256": null
     },
     "topfdeckel": {
-      "state": "cached",
-      "last_success": "2026-11-23T10:46:41+01:00",
+      "state": "ok_browser",
+      "last_success": "2026-11-23T17:53:22+01:00",
       "consecutive_failures": 0,
       "day_sha256": {
-        "2026-11-23": "346ba27656056a3603a1b1d01ee2f2766fc711b17e2081f7e1faae0a3e90c9a6",
-        "2026-11-24": "1aaf10e7b881984be73cedc95edcea0413393d164fd4f0a4d7174629d0510da2",
-        "2026-11-25": "d38e171ba7e44c3a4ee3b0780f49d728461ee613360f2bb3194fc4ac9e39075f",
-        "2026-11-26": "27082ad4169d575d3d1ad7d1cd19e61fd5d1ac83507bfc4c5d47fb6c1e7fa198",
-        "2026-11-27": "46fe9dbf9f3eb156f609f5a2be022b8e2de9452a2bf5b28ac280bb037a7f423c"
-      },
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+        "2026-11-23": "89c79ffb51ace725024f9a408f76c25e76c57f3326e0012a79fa7108e2edb389",
+        "2026-11-24": "6739444b1ec757ae47a299780c29810efdb23fa44ea6ed47dd8b7a7b4f0597e9",
+        "2026-11-25": "37c1803055bd216d4cec98e0391aa7a25530c5bc40a3078a1100ed0740fb76a6",
+        "2026-11-26": "24e496d90a14fc7ee96d77313f04e48c2ce2b13c7fc0f873bb27bf7f6d6aa50f",
+        "2026-11-27": "858e14c034ef926e8921ac08d3ddcb149b0b4ee388eaadc2920789ed0eea5ab8"
+      }
     },
     "gruenehuette": {
       "state": "cached",
       "last_success": "2026-11-23T10:00:12+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
-      "content_sha256": "6bcaa9b74842d8d3b612ac21eab8c7e5445dcb7e3228e50c7f1f126d1f17f316",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "content_sha256": "6bcaa9b74842d8d3b612ac21eab8c7e5445dcb7e3228e50c7f1f126d1f17f316"
     },
     "lia": {
       "state": "cached",
       "last_success": "2026-11-23T10:13:04+01:00",
       "consecutive_failures": 0,
       "parser_version": 4,
-      "content_sha256": "c02f93ff1d6f0dac569ca1ac4388bff16af066af388dcc319773d4c2cf4038b9",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "content_sha256": "c02f93ff1d6f0dac569ca1ac4388bff16af066af388dcc319773d4c2cf4038b9"
     }
   },
   "problems": [],
@@ -167,10 +161,10 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-23T10:46:42+01:00",
+      "last_checked": "2026-11-23T17:54:29+01:00",
       "review_version": "complete-v4-row-evidence",
       "review_week_start": "2026-11-23",
-      "source_fingerprint": "0bcac40ea62d82746f67b31c8c0eeb2a9a46aff159009a470520d024dae4a4fa",
+      "source_fingerprint": "9ee8191177c7f2d58d73b5a99ff9460de1d72e806b2a2b05d57089e9e5cbfc1c",
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
@@ -180,36 +174,35 @@
   "topf_luna_audit": {
     "state": "review_needed",
     "model": "gpt-6-luna",
-    "fingerprint": "148aceb08911d5f8cd073a890941c31481923a45bca0f0f7b58ddfe033c0148d",
-    "checked_at": "2026-11-23T10:14:52+01:00",
+    "fingerprint": "ac2d455750482ce06f2834db387d5c42352b6f932bb2b8d04c828d5cccf6f560",
+    "checked_at": "2026-11-23T17:54:28+01:00",
     "validation_issues": [
       "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
     ],
     "ai_only_examples": {},
     "warnings": [
-      "Die Quelle nennt keinen Preis für ein gebündeltes Menü aus Hauptspeise und Suppe/Salat oder Dessert. Solche Kombinationsangebote wurden nicht angenommen.",
-      "Beim Mittwoch-Gericht „Marokanische Karfiol-Pfanne“ sind im sichtbaren Tab keine Allergene angegeben.",
-      "Der Mittwoch-Hauptgang nennt Couscous im Namen und nochmals im Zusatztext; Couscous wird nicht als zusätzliche Beilage doppelt erfasst."
+      "Die Tabs weisen keine ausdrückliche Menükombination aus; es wurde keine Kombination oder kostenlose Suppe abgeleitet.",
+      "Bei der Marokkanischen Karfiol-Pfanne steht Couscous bereits im Namen und erneut in der Beschreibung; nicht doppelt erfasst."
     ],
     "usage": {
-      "input_tokens": 49581,
+      "input_tokens": 48956,
       "input_tokens_details": {
-        "cache_write_tokens": 0,
+        "cache_write_tokens": 48953,
         "cache_write_tokens_details": {
           "ttl_12h_tokens": 0,
-          "ttl_30m_tokens": 0
+          "ttl_30m_tokens": 48953
         },
-        "cached_tokens": 49578
+        "cached_tokens": 0
       },
-      "output_tokens": 9201,
+      "output_tokens": 9080,
       "output_tokens_details": {
-        "reasoning_tokens": 617
+        "reasoning_tokens": 997
       },
-      "total_tokens": 58782
+      "total_tokens": 58036
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-23T10:46:10+01:00",
+    "checked_at": "2026-11-23T17:50:27+01:00",
     "source_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
     "week_start": "2026-11-23",
