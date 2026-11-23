@@ -183,14 +183,64 @@
    "brandColor": "#c0842b",
    "days": {
     "2026-11-23": [],
-    "2026-11-24": [],
-    "2026-11-25": [],
-    "2026-11-26": [],
-    "2026-11-27": []
+    "2026-11-24": [
+     {
+      "name": "Gai Pad Kratherm (gebratenes Hühnerfleisch, hausgemachte Knoblauchsauce, Gemüse, Reis)",
+      "price": 14.5,
+      "included_starter": "Gemischter Salat",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     },
+     {
+      "name": "Bla Pad Künchai (Buntbarschfilet, Selleriestangen, Ingwer, Jungzwiebel, Champignons, Babymais, Spitzpaprika, Reis)",
+      "price": 15.5,
+      "included_starter": "Gemischter Salat",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     }
+    ],
+    "2026-11-25": [
+     {
+      "name": "Pad Pak Ruam Nuea (gebratenes Wokgemüse mit Rindfleisch und Reis)",
+      "price": 15.5,
+      "included_starter": "Hausgemachte Frühlingsrollen gefüllt mit Hühnerfleisch und Gemüse",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     },
+     {
+      "name": "Pad Suki Gai (gebratene Glasnudeln, Hühnerfleisch, Gemüse, hausgemachte Suki-Sauce) Menü Sonderwünsche werden mit Aufpreis verrechnet!",
+      "price": 14.5,
+      "included_starter": "Hausgemachte Frühlingsrollen gefüllt mit Hühnerfleisch und Gemüse",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     }
+    ],
+    "2026-11-26": [
+     {
+      "name": "Pad Krapao Pak Ruam Gung (gebratene Garnelen, grüne Bohnen, Karotten, Karfiol, Zwiebel,Thaibasilikum, Spitzpaprika, Reis) leicht scharf",
+      "price": 15.5,
+      "description": "Mit Nachspeise: Hausgemachter Schoko-Kirschkuchen · Nur Hauptspeise: 1,00 € günstiger"
+     },
+     {
+      "name": "Kauw Pad Kiaw Wan Gai (gebratener Reis mit Hühnerfleisch, grüne Bohnen, Karotten, süßes Thaibasilikum, Spitzpaprika) mittel scharf",
+      "price": 14.5,
+      "description": "Mit Nachspeise: Hausgemachter Schoko-Kirschkuchen · Nur Hauptspeise: 1,00 € günstiger"
+     }
+    ],
+    "2026-11-27": [
+     {
+      "name": "Gai Pad Pong Gari (gebratenes Hühnerfleisch, Karotten, Zwiebel, Stangensellerie, Spitzpaprika, Curry, Reis)",
+      "price": 14.5,
+      "included_starter": "Yum Wun Sen Gai Sab (Glasnudelsalat mit gehacktem Hühnerfleisch",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     },
+     {
+      "name": "Gaeng Tea Po Gai (rotes Curry mit Hühnerfleisch, Karfiol, Pak-Choi, Karotten, Reis) Menü Sonderwünsche werden mit Aufpreis verrechnet!",
+      "price": 14.5,
+      "included_starter": "Yum Wun Sen Gai Sab (Glasnudelsalat mit gehacktem Hühnerfleisch",
+      "description": "Nur Hauptspeise: 1,00 € günstiger"
+     }
+    ]
    },
    "import": {
-    "state": "error",
-    "message": "ValueError: Dok Khun: Zeitraum des Wochenmenüs nicht gefunden"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -209,15 +259,24 @@
    ],
    "brandColor": "#7a5a3a",
    "days": {
-    "2026-11-23": [],
+    "2026-11-23": [
+     {
+      "name": "Hühnercurry mit Basmatireis und gem. Salat",
+      "price": 13.5
+     },
+     {
+      "name": "Champignon gebacken mit Kartoffeln und Sc. Tatare",
+      "price": 12.5
+     }
+    ],
     "2026-11-24": [],
     "2026-11-25": [],
     "2026-11-26": [],
     "2026-11-27": []
    },
    "import": {
-    "state": "not_published",
-    "message": "Huber zeigt die Tageskarte vom 2026-11-20"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -659,31 +718,36 @@
     "2026-11-23": [
      {
       "name": "Restaurant geschlossen.",
-      "price": 13.4
+      "price": null,
+      "priceLabel": " "
      }
     ],
     "2026-11-24": [
      {
       "name": "Restaurant geschlossen.",
-      "price": 13.4
+      "price": null,
+      "priceLabel": " "
      }
     ],
     "2026-11-25": [
      {
       "name": "Restaurant geschlossen.",
-      "price": 13.4
+      "price": null,
+      "priceLabel": " "
      }
     ],
     "2026-11-26": [
      {
       "name": "Restaurant geschlossen.",
-      "price": 13.4
+      "price": null,
+      "priceLabel": " "
      }
     ],
     "2026-11-27": [
      {
       "name": "Restaurant geschlossen.",
-      "price": 13.4
+      "price": null,
+      "priceLabel": " "
      }
     ]
    },
@@ -897,16 +961,76 @@
    ],
    "brandColor": "#5b3a29",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [],
-    "2026-11-25": [],
-    "2026-11-26": [],
-    "2026-11-27": []
+    "2026-11-23": [
+     {
+      "name": "Gegrilltes Hühnerfilet Súpreme mit Butterhörnchen und Gemüse",
+      "price": 13.9,
+      "included_starter": "Tagessuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     },
+     {
+      "name": "Spinatspätzle in Rahmsauce und Parmesan gratiniert",
+      "price": 13.9,
+      "included_starter": "Tagessuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     }
+    ],
+    "2026-11-24": [
+     {
+      "name": "Thai Curry vom Huhn mit Butterreis",
+      "price": 13.9,
+      "included_starter": "Pastinakencremesuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     },
+     {
+      "name": "Zwiebelringe in Bierteig",
+      "price": 13.9,
+      "included_starter": "Pastinakencremesuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     }
+    ],
+    "2026-11-25": [
+     {
+      "name": "Spare Ribs & Chicken Wings mit Wedges und BBQ",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Frittaten",
+      "description": "Mittagsmenü ab € 13,90"
+     },
+     {
+      "name": "Gebackene Champignons mit Sauce Tartar",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Frittaten",
+      "description": "Mittagsmenü ab € 13,90"
+     }
+    ],
+    "2026-11-26": [
+     {
+      "name": "Cordon Bleu vom Hühnerfilet mit Reis und Kartoffeln",
+      "price": 13.9,
+      "included_starter": "Broccolicremesuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     },
+     {
+      "name": "OMÁS Karottenschnitte",
+      "price": 13.9,
+      "included_starter": "Broccolicremesuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     }
+    ],
+    "2026-11-27": [
+     {
+      "name": "Gegrilltes Lachsfilet auf Tomaten-Basilikum-Risotto",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Profiteroles",
+      "description": "Mittagsmenü ab € 13,90"
+     }
+    ]
    },
    "import": {
-    "state": "error",
-    "message": "ValueError: OX: keine Tage erkannt",
-    "stale": "d17f8d95c12483a6"
+    "state": "ok",
+    "message": "",
+    "stale": "d17f8d95c12483a6",
+    "fingerprint": "8f35aed7c10ee4e9"
    }
   },
   {
@@ -938,5 +1062,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-22T21:38:23+01:00"
+ "updatedAt": "2026-11-23T09:59:56+01:00"
 }
