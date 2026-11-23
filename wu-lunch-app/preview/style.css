@@ -75,6 +75,7 @@
 .meet-fact.meet-joined>.material-svg,.meet-fact.meet-joined>.material-symbols-outlined{color:#087cf4}
 .meet-facts .meet-fact .meet-joined-count{font-weight:600;color:#14365c}
 .meet-fact small{display:block;margin-top:2px;font-size:12px;color:#5f6a75}
+.meet-fact small+small{margin-top:5px}
 .meet-facts .meet-place{margin:0}
 .meet-facts .meet-place .meet-photo-visible{border-radius:0;display:block;width:100%;height:auto}
 .meet-place .meet-photo-visible{aspect-ratio:1/1;object-fit:cover;object-position:60% 60%;border-radius:10px}

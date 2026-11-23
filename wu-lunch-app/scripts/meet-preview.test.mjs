@@ -178,7 +178,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Uhrzeit am Treffpunkt','Gemeinsam losgehen','Treffpunkt auf der WU','12:00 Uhr','12:05 Uhr','Teilnehmer','Bitte anmelden, damit alle Bescheid wissen.','Die Namen siehst du danach.','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Datum','Vor dem Baum direkt bei der Mensa','Uhrzeit am Treffpunkt','Gemeinsam losgehen','Treffpunkt auf der WU','12:00 Uhr','12:05 Uhr','Teilnehmer','Bitte anmelden, damit alle Bescheid wissen.','Die Namen der Teilnehmenden siehst du danach.','Kommst du am {date} mit zu Meet to eat? Wir treffen uns um 12:00 Uhr am WU Campus und gehen gemeinsam Mittag essen.','Sei die erste Person.','1 Person ist schon dabei.','{count} sind schon dabei.','Bereits angemeldet','Teilnehmen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
@@ -294,7 +294,7 @@ test('list entry shows the number of people signed up for the next date, and not
   // Drei Personen beim nächsten Termin, eine beim übernächsten: gezählt wird nur der nächste.
   const busy=await start(days=>[...['Lena','Jonas','Mia'].map(first_name=>({meeting_date:days[0],first_name})),{meeting_date:days[1],first_name:'Tom'}]);
   // Vor der eigenen Anmeldung steht dort nur die Zahl (Vorgabe 23.11.2026): keine Namen, also auch kein Melde-Link.
-  assert.match(busy.context.renderMeet(),/<div class="meet-fact meet-joined">[^]*?<span class="meet-joined-count">3 sind schon dabei\.<\/span><small>Bitte anmelden, damit alle Bescheid wissen\. Die Namen siehst du danach\.<\/small><\/div><\/div>/);
+  assert.match(busy.context.renderMeet(),/<div class="meet-fact meet-joined">[^]*?<span class="meet-joined-count">3 sind schon dabei\.<\/span><small>Bitte anmelden, damit alle Bescheid wissen\.<\/small><small>Die Namen der Teilnehmenden siehst du danach\.<\/small><\/div><\/div>/);
   assert.doesNotMatch(busy.context.renderMeet(),/Lena|Jonas|Mia|meet-report|meet-names/);
   // Der Melde-Link gehört zur Namensliste, die erst nach der eigenen Anmeldung erscheint.
   assert.match(source,/<span class="meet-names">\$\{entries\}<\/span>\$\{names\.length \? `<a class="meet-report" href="mailto:\$\{esc\(contactEmail\(\)\)\}\?subject=/);
