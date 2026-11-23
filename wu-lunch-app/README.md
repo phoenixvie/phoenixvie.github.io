@@ -87,6 +87,30 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
 - Android behandelt das als neue App: Eine installierte 0.5.4 oder älter wird nicht aktualisiert, sondern muss vorher deinstalliert werden.
 - Nach dem ersten Upload zu Google Play ist der Paketname endgültig.
 
+## Oberfläche nachladen (Stand 23.11.2026, ab App-Version 0.5.9)
+
+Ziel: Änderungen an Aufbau, Texten und Links wirken ohne neuen Build und ohne Store.
+
+- `npm run bundle:preview` erzeugt neben `src/previewHtml.ts` (eingebaute Oberfläche) dieselbe Seite als
+  `ui/app.html` und dazu `ui/manifest.json` (Kennung `design`, Prüfsumme `sha256`, `min_native`). Beides wird mit
+  dem Zusammenführen über GitHub Pages veröffentlicht.
+- Die App (`src/remoteUi.ts`, eingebunden in `App.tsx`) sieht beim Start und bei der Rückkehr in den Vordergrund
+  nach (höchstens alle fünf Minuten), lädt eine neue Fassung herunter, prüft die Prüfsumme und zeigt sie beim
+  nächsten Start bzw. nach mindestens 30 Sekunden im Hintergrund.
+- Sicherungen: Die eingebaute Oberfläche bleibt die Reserve. Eine nachgeladene Fassung muss sich innerhalb von
+  12 Sekunden melden (`ui-ready`, gesendet nach dem ersten Zeichnen); sonst wird sie verworfen, nie wieder versucht
+  und die eingebaute gezeigt. Beschädigte oder falsch beschriftete Dateien werden nicht übernommen.
+- `ui/min-native.json`: älteste App-Version, die die Oberfläche laden darf. Erhöhen, wenn die Oberfläche etwas
+  braucht, das erst eine neuere App kann (z. B. eine neue Nachricht an die App) – ältere Apps behalten dann ihre
+  eingebaute bzw. zuletzt bewährte Fassung.
+- Abschalten für alle: Admin, „App-Oberfläche nachladen" (Einstellung `remote_ui` in `lunch_settings`; dafür einmal
+  `wu-lunch/supabase/20261123_remote_ui.sql` ausführen). Ohne Eintrag ist das Nachladen eingeschaltet.
+- Weiterhin nur per Build: App-Symbol, App-Name, Zurück-Leiste, PDF-Betrachter, Berechtigungen und alles andere
+  außerhalb der Oberfläche.
+- Folge für die Arbeit: Jede zusammengeführte Änderung an `preview/` erreicht sofort alle Apps ab 0.5.9. Vor dem
+  Zusammenführen deshalb immer die Tests und die Browser-Prüfung der Vorschau laufen lassen.
+- Tests: `scripts/remote-ui.test.mjs`.
+
 ## Einstellungen ohne App-Update (Stand 22.11.2026)
 
 - Tabelle `lunch_settings` in Supabase (`wu-lunch/supabase/20261122_settings.sql`), im Admin der Webseite bearbeitbar; die App lädt sie beim Start, alle fünf Minuten und beim Zurückkehren in den Vordergrund.

@@ -93,6 +93,14 @@
         <p class="notice" id="updateNotice" aria-live="polite"></p>
       </section>
       <section class="panel">
+        <h2>App-Oberfläche nachladen</h2>
+        <p class="muted">Ab App-Version 0.5.9 holt die App ihre Oberfläche (Aufbau, Texte, Links) vom Server; Änderungen wirken dann ohne neue App-Version. Startet eine neue Fassung nicht, nimmt die App von selbst wieder die eingebaute. Hier lässt sich das Nachladen für alle abschalten – die Apps zeigen dann beim nächsten Öffnen wieder ihre eingebaute Oberfläche.</p>
+        <label><input id="remoteUiEnabled" type="checkbox" style="width:auto"> Nachladen eingeschaltet</label>
+        <p class="muted" id="remoteUiState"></p>
+        <button id="saveRemoteUi" type="button">Einstellung speichern</button>
+        <p class="notice" id="remoteUiNotice" aria-live="polite"></p>
+      </section>
+      <section class="panel">
         <h2>Meet to eat: Anmeldungen</h2>
         <p class="muted">Angemeldete Vornamen ab heute. „Löschen" entfernt den Eintrag sofort für alle; die Person kann sich danach neu anmelden.</p>
         <button id="reloadMeet" type="button" class="secondary">Anmeldungen aktualisieren</button>
@@ -405,7 +413,19 @@
       if(value.enabled&&!/^\d+\.\d+\.\d+$/.test(value.min_version))throw new Error('Bitte die Version in der Form 0.5.7 angeben.');
       return saveSetting('update_notice',value);
     }
+    // App-Oberfläche nachladen: Vorgabe ist eingeschaltet (kein Eintrag in der Tabelle).
+    async function saveRemoteUi(enabled){
+      try{return await saveSetting('remote_ui',{enabled:enabled===true});}
+      catch(error){throw new Error('Konnte nicht gespeichert werden. Vermutlich fehlt die Datenbank-Erweiterung: Datei supabase/20261123_remote_ui.sql in Supabase ausführen.');}
+    }
+    async function publishedUi(){
+      try{const response=await fetch('../wu-lunch-app/ui/manifest.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return '';const manifest=await response.json();
+        return /^[0-9a-f]{64}$/.test(manifest.design)?'Veröffentlichte Fassung: '+manifest.design.slice(0,8)+' (für Apps ab Version '+String(manifest.min_native)+').':'';}
+      catch(error){return '';}
+    }
     function renderSettingsAdmin(settings){
+      document.getElementById('remoteUiEnabled').checked=!(settings.remote_ui&&settings.remote_ui.enabled===false);
+      publishedUi().then(line=>{document.getElementById('remoteUiState').textContent=line;});
       const days=validWeekdays(settings.meet_weekdays),box=document.getElementById('meetDays');box.replaceChildren();
       weekdayLabels.forEach((label,index)=>{const item=document.createElement('label');item.innerHTML='<input type="checkbox" value="'+(index+1)+'"> '+label;item.querySelector('input').checked=(days.length?days:[3]).includes(index+1);box.append(item);});
       const notice=settings.update_notice||{};
@@ -473,6 +493,7 @@
     document.getElementById('editLanguage').onchange=async event=>{if(menuEditor.dataset.dirty==='true'&&!confirm('Nicht gespeicherte Menüänderungen verwerfen?')){event.target.value=editLanguage;return;}editLanguage=event.target.value;await loadEnglishRows();renderProfile();renderSelectedMenu();renderAnnouncementLanguage();renderUiTexts();document.getElementById('addDishButton').disabled=editLanguage==='en';document.getElementById('resetMenuButton').disabled=editLanguage==='en';};
     document.getElementById('reloadMeet').onclick=refreshMeetRegistrations;
     document.getElementById('saveMeetDays').onclick=async()=>{const notice=document.getElementById('meetDaysNotice');text(notice,'Speichert …');try{const days=[...document.querySelectorAll('#meetDays input:checked')].map(input=>Number(input.value));const saved=await saveMeetDays(days);text(notice,'Gespeichert: '+saved.map(day=>weekdayLabels[day-1]).join(', ')+'.','success');}catch(error){text(notice,error.message,'error');}};
+    document.getElementById('saveRemoteUi').onclick=async()=>{const notice=document.getElementById('remoteUiNotice');text(notice,'Speichert …');try{const saved=await saveRemoteUi(document.getElementById('remoteUiEnabled').checked);text(notice,saved.enabled?'Gespeichert: Nachladen ist eingeschaltet.':'Gespeichert: Nachladen ist abgeschaltet. Die Apps zeigen beim nächsten Öffnen wieder die eingebaute Oberfläche.','success');}catch(error){text(notice,error.message,'error');}};
     document.getElementById('saveUpdateNotice').onclick=async()=>{const notice=document.getElementById('updateNotice');text(notice,'Speichert …');try{const saved=await saveUpdateNotice({enabled:document.getElementById('updateEnabled').checked,min_version:document.getElementById('updateVersion').value,message_de:document.getElementById('updateMessageDe').value,message_en:document.getElementById('updateMessageEn').value});text(notice,saved.enabled?'Aktiv: Versionen vor '+saved.min_version+' sehen den Hinweis.':'Gespeichert, Hinweis ist aus.','success');}catch(error){text(notice,error.message,'error');}};
     document.getElementById('translationSearch').oninput=renderTranslationList;
     document.getElementById('reloadTranslations').onclick=()=>loadEnglishRows().catch(e=>alert(e.message));

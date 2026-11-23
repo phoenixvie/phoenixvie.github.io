@@ -23,6 +23,12 @@ const html = template
   .replace(/<link rel="stylesheet" href="\.\/style\.css(?:\?[^"<>]*)?">/, `<style>${css}\n${nativeCSS}</style>`)
   .replace(/<script defer src="\.\/app\.js(?:\?[^"<>]*)?"><\/script>/, `<script>window.WU_FOOD_BUILD='${hash}';${i18n}document.addEventListener('DOMContentLoaded',()=>{\n${js.replace(/<\/script/gi, '<\\/script')}\n${meetNative.replace(/<\/script/gi, '<\\/script')}\n});</script>`);
 await writeFile(resolve(root, 'src/previewHtml.ts'), `// Generated from preview sources; run npm run bundle:preview.\nexport const designHash = ${JSON.stringify(hash)};\nexport const previewHtml = ${JSON.stringify(html)};\n`);
+// Dieselbe Seite zum Nachladen (src/remoteUi.ts): Installierte Apps holen sie vom Server und zeigen sie statt der
+// eingebauten Fassung. manifest.json nennt die Prüfsumme der Datei und die älteste App-Version, die sie laden darf.
+const minNative = JSON.parse(await read('ui/min-native.json')).min_native;
+if (!/^\d+\.\d+\.\d+$/.test(minNative)) throw new Error('ui/min-native.json: min_native fehlt');
+await writeFile(resolve(root, 'ui/app.html'), html);
+await writeFile(resolve(root, 'ui/manifest.json'), JSON.stringify({design: hash, sha256: createHash('sha256').update(html).digest('hex'), min_native: minNative, bytes: Buffer.byteLength(html)}, null, 1) + '\n');
 console.log('Bundled current preview design: ' + hash);
 
 await writeFile(resolve(root,'../wu-lunch/admin-menu-rules.js'),js.slice(js.indexOf('function restaurantDisplayRules('),js.indexOf('function dishes('))+'\nwindow.WUMenuRules={restaurantDisplayRules,mensaStations};');

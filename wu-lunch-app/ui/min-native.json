@@ -1,0 +1,4 @@
+{
+  "min_native": "0.5.9",
+  "hinweis": "Älteste App-Version, die diese Oberfläche laden darf. Erhöhen, wenn die Oberfläche etwas braucht, das erst eine neuere App kann (z. B. eine neue Nachricht an die App)."
+}
