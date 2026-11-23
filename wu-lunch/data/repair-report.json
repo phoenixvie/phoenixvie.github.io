@@ -1,9 +1,126 @@
 {
-  "checked_at": "2026-11-23T10:07:59+01:00",
+  "checked_at": "2026-11-23T10:14:52+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 0,
+  "api_calls": 3,
   "results": [
+    {
+      "restaurant": "lia",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Für eine Menü-Kombination mit Suppe und/oder Salat ist kein Preis angegeben; sie wurde daher nicht als kostenloses Inklusivangebot behandelt.",
+        "Es sind keine konkreten Tagessuppen, Salate oder Nachspeisen für den WU Campus aufgeführt."
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://lia.coffee/": "56e5bbaab7fa8f276f1fc6dcd28da4706261cdae382228e764b855a7a2ceb7ea"
+      },
+      "usage": {
+        "input_tokens": 7599,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 0
+          },
+          "cached_tokens": 7596
+        },
+        "output_tokens": 2234,
+        "output_tokens_details": {
+          "reasoning_tokens": 427
+        },
+        "total_tokens": 9833
+      }
+    },
+    {
+      "restaurant": "glashaus",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.dasglashaus.at/menues": "5d82bea060541d5dddbaf82001aee0df982fd2f1f8c12ee8b73378caac86de55"
+      },
+      "usage": {
+        "input_tokens": 2781,
+        "input_tokens_details": {
+          "cache_write_tokens": 2778,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2778
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 2848,
+        "output_tokens_details": {
+          "reasoning_tokens": 824
+        },
+        "total_tokens": 5629
+      }
+    },
+    {
+      "restaurant": "karmafood",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Widerspruch zwischen dem Seitenkopf „23.11.-25.11.“ und den zusätzlich vorhandenen Abschnitten Donnerstag und Freitag.",
+        "Für die meisten Gerichte ist kein Einzelpreis angegeben.",
+        "Die angezeigte Lunch-Combo-Pauschale von €13,50 ist keinem konkreten Gericht eindeutig als Einzelpreis zuordenbar.",
+        "Im Quelltext sind keine separat bepreisten Tagessuppen, Salate oder Nachspeisen aufgeführt.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "8c9577b30c5f7b5e1ddb24f3281f4e1abeb278af1e2278b9b9660b9fec5e15ed"
+      },
+      "usage": {
+        "input_tokens": 2673,
+        "input_tokens_details": {
+          "cache_write_tokens": 2670,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2670
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 3169,
+        "output_tokens_details": {
+          "reasoning_tokens": 945
+        },
+        "total_tokens": 5842
+      }
+    },
+    {
+      "restaurant": "mensa",
+      "issues": [],
+      "action": "dedicated_pdf_ai",
+      "repairs": []
+    },
+    {
+      "restaurant": "topfdeckel",
+      "issues": [],
+      "action": "browser_import",
+      "repairs": []
+    },
+    {
+      "restaurant": "finn",
+      "issues": [],
+      "action": "dedicated_image_ai",
+      "repairs": []
+    },
     {
       "restaurant": "omakueche",
       "issues": [],
