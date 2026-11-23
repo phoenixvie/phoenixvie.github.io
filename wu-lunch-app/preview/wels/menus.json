@@ -85,6 +85,11 @@
    "address": "Malvenstraße 5, 4600 Wels",
    "latitude": 48.1439914,
    "longitude": 13.9704601,
+   "hours": [
+    "Markt Montag bis Freitag 08:30–19:00 Uhr",
+    "Samstag 08:30–18:00 Uhr",
+    "Sonntag geschlossen"
+   ],
    "brandColor": "#6a9a2d",
    "days": {
     "2026-11-23": [
@@ -180,6 +185,11 @@
    "longitude": 14.0170914,
    "phone": "+43 7242 252670",
    "email": "office@dok-khun-thai.at",
+   "hours": [
+    "Dienstag bis Samstag 11:30–14:30 und 17:30–22:00 Uhr",
+    "Küche 11:30–14:00 und 17:30–21:00 Uhr",
+    "Sonntag und Montag geschlossen"
+   ],
    "brandColor": "#c0842b",
    "days": {
     "2026-11-23": [],
@@ -339,6 +349,11 @@
    "latitude": 48.1586061,
    "longitude": 14.0212375,
    "phone": "+43 7242 60 460",
+   "hours": [
+    "Täglich 10:00–24:00 Uhr",
+    "Küche 11:00–22:00 Uhr",
+    "Geschlossen am 25.12., 26.12. und 01.01."
+   ],
    "brandColor": "#1f6b3a",
    "days": {
     "2026-11-23": [
@@ -424,7 +439,8 @@
    "email": "hotel@maxlhaid.at",
    "hours": [
     "Montag bis Freitag 10:00–23:30 Uhr (außer Feiertage)",
-    "Warme Küche 11:30–21:30 Uhr"
+    "Warme Küche 11:30–21:30 Uhr",
+    "Samstag, Sonntag und Feiertage Ruhetag"
    ],
    "brandColor": "#8c2f39",
    "days": {
@@ -885,7 +901,9 @@
    "phone": "+43 690 106 33 193",
    "email": "office@lalina.at",
    "hours": [
-    "Lunch Dienstag bis Freitag 11:30–14:00 Uhr"
+    "Dienstag bis Samstag 11:00–22:00 Uhr",
+    "Lunch Dienstag bis Freitag 11:30–14:00 Uhr",
+    "Sonntag und Montag Ruhetag"
    ],
    "brandColor": "#b0607a",
    "days": {
@@ -951,7 +969,9 @@
    "phone": "+43 7242 45 22 94 44",
    "email": "office@naschmarkt-wels.at",
    "hours": [
-    "Montag bis Freitag 08:00–15:00 Uhr"
+    "Montag bis Freitag 08:00–15:00 Uhr",
+    "Warme Küche 11:00–14:30 Uhr",
+    "Samstag und Sonntag geschlossen"
    ],
    "brandColor": "#b5462f",
    "days": {
@@ -1243,5 +1263,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-23T10:45:42+01:00"
+ "updatedAt": "2026-11-23T17:50:47+01:00"
 }
