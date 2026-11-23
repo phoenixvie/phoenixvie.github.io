@@ -182,11 +182,14 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   // Vorgabe vom 17.11.2026: ein einziger Fließtext unter jedem Menü, an jedem Tag gleich:
   // "Montags & Mittwochs gemeinsam essen gehen. Prüfe die Menüs auf der Restaurantwebseite. Change language."
   const note=menu.slice(menu.indexOf('<div class="source-note">'));
-  assert.ok(note.startsWith('<div class="source-note">${site.standalone?\'\':`<span data-ui-literal>${esc(meetDaysText(\'hint\'))}</span> <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen gehen</button>.<br>`}<span>Prüfe die Menüs auf der</span> '));
+  // Vorgabe vom 23.11.2026: drei Zeilen – "Change language." steht als eigene Zeile über dem Meet-to-eat-Satz.
+  assert.ok(note.startsWith('<div class="source-note">${site.standalone?\'\':`<a href="#" class="source-link" data-change-language>Change language.</a><br><span data-ui-literal>${esc(meetDaysText(\'hint\'))}</span> <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen gehen</button>.<br>`}<span>Prüfe die Menüs auf der</span> '));
+  assert.equal(note.slice(0,note.indexOf('</section>')).split('data-change-language').length,2);   // genau einmal
+  assert.match(source,/const wanted=\(note\.querySelectorAll\?\.\('br'\)\.length\|\|1\)\+1;/);
   assert.doesNotMatch(menu,/\[0,2\]\.includes\(dayIndex\)|Angaben ohne Gewähr|WU Studenten|localize\.language==='en'\?`Every/);
   // Zwei Zeilen, die erste (Meet to eat) immer kürzer als die zweite (Vorgabe 17.11.2026): fester Umbruch nach dem
   // ersten Satz; der zweite Satz ist in beiden Sprachen länger, auf schmalen Handys umbricht er weiter unten.
-  for(const [first,second] of [['Montags & Mittwochs gemeinsam essen gehen.','Prüfe die Menüs auf der Restaurantwebseite. Change language.'],['Mondays & Wednesdays: eat together.','Check the menus on the restaurant website. Change language.']])assert.ok(first.length<second.length);
+  for(const lines of [['Change language.','Jeden Mittwoch gemeinsam essen gehen.','Prüfe die Menüs auf der Restaurantwebseite.'],['Sprache ändern.','Every Wednesday: eat together.','Check the menus on the restaurant website.']])assert.ok(lines[0].length<lines[1].length&&lines[1].length<lines[2].length);
   // Alles hintereinander: der Meet-Link ist kein eigener Block mehr.
   const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8');
   assert.match(css,/\.meet-invite\{display:inline;/);assert.doesNotMatch(css,/\.meet-invite\{display:block/);
@@ -417,11 +420,17 @@ test('Meet-to-eat weekdays come from the operator settings and drive dates and t
   assert.deepEqual([...make({meet_weekdays:[1,3]}).meetWeekdays()],[1,3]);
   assert.deepEqual([...make({meet_weekdays:['4',2,2,9,0,'x']}).meetWeekdays()],[2,4]);    // nur Montag bis Freitag, sortiert, ohne Doppelte
   assert.deepEqual([...make({meet_weekdays:[]}).meetWeekdays()],[3]);                     // leer -> Vorgabe
-  assert.equal(make({}).meetDaysText('hint'),'Mittwochs');
+  // Vorgabe vom 23.11.2026: "Jeden Mittwoch gemeinsam essen gehen" statt "Mittwochs …".
+  assert.equal(make({}).meetDaysText('hint'),'Jeden Mittwoch');
   assert.equal(make({}).meetDaysText('intro'),'Findet jeden Mittwoch statt.');
-  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('hint'),'Montags & Mittwochs');
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('hint'),'Jeden Montag und Mittwoch');
+  // Listeneintrag (Vorgabe 23.11.2026): "Mittwochs: Meet to eat" – der Tag kommt aus den Einstellungen.
+  assert.equal(make({}).meetDaysText('title'),'Mittwochs');
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('title'),'Montags & Mittwochs');
+  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('title'),'Wednesdays');
+  assert.match(app,/<span class="restaurant-name" data-ui-literal>\$\{esc\(meetDaysText\('title'\)\)\}: Meet to eat<\/span>/);
   assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('intro'),'Findet jeden Montag und Mittwoch statt.');
-  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('hint'),'Wednesdays:');
+  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('hint'),'Every Wednesday:');
   assert.equal(make({meet_weekdays:[1,3,5]},'en').meetDaysText('intro'),'Takes place every Monday, Wednesday and Friday.');
   // Termine in Meet to eat folgen den Einstellungen (feste Uhr: Dienstag, 17.11.2026).
   const source=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
