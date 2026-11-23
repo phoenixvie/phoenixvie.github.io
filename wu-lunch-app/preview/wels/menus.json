@@ -423,8 +423,8 @@
     ]
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "error",
+    "message": "ConnectionError: HTTPSConnectionPool(host='www.goesserbraeu.at', port=443): Max retries exceeded with url: /restaurant/mittagsmenue/ (Caused by NewConnectionError(\"HTTPSConnection(host='www.goesserbraeu.at', port=443): Failed to establish a"
    }
   },
   {
@@ -1263,5 +1263,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-23T17:50:47+01:00"
+ "updatedAt": "2026-11-24T00:00:31+01:00"
 }
