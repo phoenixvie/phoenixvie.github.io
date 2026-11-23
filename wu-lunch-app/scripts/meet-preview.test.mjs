@@ -46,9 +46,14 @@ test('paused e-mail flow still works when switched back on (verified email, then
   assert.equal((context.renderMeet().match(/placeholder="Max"/g)||[]).length,0);
   assert.equal((context.renderMeet().match(/class="meet-fact"/g)||[]).length,5);
   assert.equal(handlers.touchstart,undefined);assert.equal(handlers.touchend,undefined);
-  // Vor der Anmeldung gibt es weder Treffpunkt-Bereich noch Karte, auch nicht unscharf.
-  assert.doesNotMatch(context.renderMeet(),/meet-reveal|meet-map|meet-locked|Nach Anmeldung sichtbar|meeting-point|maps\/search/);
-  assert.match(context.renderMeet(),/<b>Info nach Anmeldung<\/b>/);
+  // Vorgabe vom 23.11.2026: Treffpunkt, Foto und Google-Maps-Link sind schon vor der Anmeldung sichtbar –
+  // nichts wird mehr versteckt ("Info nach Anmeldung" gibt es nicht mehr). Keine eingebettete Karte, kein Platzhalter.
+  assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-locked|Nach Anmeldung sichtbar|Info nach Anmeldung/);
+  assert.match(context.renderMeet(),/<section class="meet-reveal"><h3>Treffpunkt auf der WU<\/h3>/);
+  assert.match(context.renderMeet(),/<a data-action="meet-open-url"[^>]*href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
+  assert.match(context.renderMeet(),/meeting-point\.webp/);
+  // Unter dem Knopf steht, wozu die Anmeldung dient.
+  assert.match(context.renderMeet(),/>Teilnehmen<\/button><p class="meet-why">Melde dich an, damit die anderen wissen, dass du kommst\.<\/p>/);
   // Über dem Einleitungstext steht eine schlichte Zeichnung (Treffpunkt mit Besteck, Personen kommen zusammen), nicht im Formular.
   assert.match(context.renderMeet(),/id="meet-screen"><div class="meet-art"><svg [^>]*aria-label="Personen kommen an einem Treffpunkt zum gemeinsamen Essen zusammen"/);
   assert.match(context.renderMeet(),/Findet jeden Mittwoch statt\./);assert.doesNotMatch(context.renderMeet(),/Montag/);
@@ -78,7 +83,7 @@ test('paused e-mail flow still works when switched back on (verified email, then
   // Der Treffpunkt in der Übersicht ist ein Link zu Google Maps.
   assert.match(context.renderMeet(),/<a data-action="meet-open-url"[^>]*href="https:\/\/www\.google\.com\/maps\/search\/[^"]*"[^>]*>Vor dem Baum direkt bei der Mensa<\/a>/);
   await click('meet-leave');assert.equal(own.length,0);
-  assert.doesNotMatch(context.renderMeet(),/meet-reveal|meet-map|meet-own/);assert.match(context.renderMeet(),/Noch niemand – sei die erste Person/);assert.equal(context.meetJoined,false);
+  assert.doesNotMatch(context.renderMeet(),/id="meet-map"|meet-own/);assert.match(context.renderMeet(),/meet-reveal/);assert.match(context.renderMeet(),/Noch niemand – sei die erste Person/);assert.equal(context.meetJoined,false);
   // Abgemeldet, Name lokal gemerkt: erneutes Anmelden braucht kein Formular mehr.
   assert.equal(store.get('wu-meet-preview-name'),'Anna');
   store.clear();await click('meet-show-form');assert.match(context.renderMeet(),/E-Mail-Adresse ist bestätigt/);
@@ -152,7 +157,7 @@ test('texts fall back to German and use the shared catalogue for English', async
   assert.equal(english('Meet to eat: Abmelden',{},'Abmelden'),'Cancel sign-up');
   // Jeder feste Text des Bildschirms hat eine englische Fassung (sonst "English translation pending").
   const app=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
-  for(const key of ['Gemeinsam essen gehen','Datum','Uhrzeit am Treffpunkt','12:00 Uhr','Gemeinsam losgehen','12:05 Uhr','Treffpunkt auf der WU','Info nach Anmeldung','Vor dem Baum direkt bei der Mensa','Teilnehmer','WU-Studenten Gruppe','Bereits angemeldet','Teilnehmen','Google Maps öffnen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.']){
+  for(const key of ['Gemeinsam essen gehen','Datum','Uhrzeit am Treffpunkt','12:00 Uhr','Gemeinsam losgehen','12:05 Uhr','Treffpunkt auf der WU','Vor dem Baum direkt bei der Mensa','Die Namen siehst du nach deiner Anmeldung.','Melde dich an, damit die anderen wissen, dass du kommst.','Teilnehmer','WU-Studenten Gruppe','Bereits angemeldet','Teilnehmen','Google Maps öffnen','Vorname','Verifizierung via Mail starten','Bestätigungscode','Code bestätigen und anmelden','Neuen Code anfordern','Die Anmeldung für diesen Termin ist geschlossen.','Das hat nicht funktioniert. Bitte versuche es erneut.','Triff dich am WU Campus mit anderen Studierenden und geht gemeinsam als Gruppe Mittag essen.']){
     assert.ok(source.includes(key)||app.includes(key),'Text wird verwendet: '+key);
     assert.ok(ui[key]&&ui[key]!==key,'englische Fassung fehlt: '+key);
   }
@@ -184,14 +189,14 @@ test('restaurant menu offers an internal Meet-to-eat link above the source note'
   const note=menu.slice(menu.indexOf('<div class="source-note">'));
   // Vorgabe vom 23.11.2026: drei Zeilen – "Change language." steht als eigene Zeile über dem Meet-to-eat-Satz.
   // "Change" ist kein Link, nur das Wort "language" (Vorgabe 23.11.2026) – wie bei "Prüfe die Menüs auf der Restaurantwebseite".
-  assert.ok(note.startsWith('<div class="source-note">${site.standalone?\'\':`<span data-ui-literal>Change</span> <a href="#" class="source-link" data-change-language>language</a>.<br><span data-ui-literal>${localize.language===\'en\'?\'Send menu\':\'Menü\'}</span> <button type="button" class="source-link" data-action="share">an Freunde schicken</button>.<br><span data-ui-literal>${esc(meetDaysText(\'hint\'))}</span> <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen</button>${localize.language===\'en\'?\'\':\' <span data-ui-literal>gehen</span>\'}.<br>`}<span>Prüfe die Menüs auf der</span> '));
+  assert.ok(note.startsWith('<div class="source-note">${site.standalone?\'\':`<span data-ui-literal>Change</span> <a href="#" class="source-link" data-change-language>language</a>.<br><span data-ui-literal>${localize.language===\'en\'?\'Send this menu\':\'Dieses Menü\'}</span> <button type="button" class="source-link" data-action="share">an Freunde schicken</button>.<br><span data-ui-literal>${esc(meetDaysText(\'hint\'))}</span> <button type="button" class="source-link meet-invite" data-action="meet-preview">gemeinsam essen</button>${localize.language===\'en\'?\'\':\' <span data-ui-literal>gehen</span>\'}.<br>`}<span>Prüfe die Menüs auf der</span> '));
   // "gehen" ist kein Link (Vorgabe 23.11.2026); im Englischen gibt es das Wort nicht ("Every Wednesday: eat together.").
   assert.equal(note.slice(0,note.indexOf('</section>')).split('data-change-language').length,2);   // genau einmal
   assert.match(source,/const wanted=\(note\.querySelectorAll\?\.\('br'\)\.length\|\|1\)\+1;/);
   assert.doesNotMatch(menu,/\[0,2\]\.includes\(dayIndex\)|Angaben ohne Gewähr|WU Studenten|localize\.language==='en'\?`Every/);
   // Zwei Zeilen, die erste (Meet to eat) immer kürzer als die zweite (Vorgabe 17.11.2026): fester Umbruch nach dem
   // ersten Satz; der zweite Satz ist in beiden Sprachen länger, auf schmalen Handys umbricht er weiter unten.
-  for(const lines of [['Change language.','Menü an Freunde schicken.','Jeden Mittwoch gemeinsam essen gehen.','Prüfe die Menüs auf der Restaurantwebseite.'],['Change language.','Send menu to friends.','Every Wednesday: eat together.','Check the menus on the restaurant website.']])assert.ok(lines.every((line,index)=>index===0||lines[index-1].length<line.length));
+  for(const lines of [['Change language.','Dieses Menü an Freunde schicken.','Jeden Mittwoch gemeinsam essen gehen.','Prüfe die Menüs auf der Restaurantwebseite.'],['Change language.','Send this menu to friends.','Every Wednesday: eat together.','Check the menus on the restaurant website.']])assert.ok(lines.every((line,index)=>index===0||lines[index-1].length<line.length));
   // Vorgabe vom 23.11.2026: Teilen zusätzlich als Satz unter "Change language" ("Menü an Freunde schicken."); das Symbol oben bleibt.
   assert.equal(globalThis.WULunchI18n.ui['an Freunde schicken'],'to friends');
   assert.match(source,/class="[^"]*" data-action="share"[^>]*>\$\{icon\('share'\)|data-action="share"/);
@@ -267,7 +272,11 @@ test('list entry shows the number of people signed up for the next date, and not
   };
   // Drei Personen beim nächsten Termin, eine beim übernächsten: gezählt wird nur der nächste.
   const busy=await start(days=>[...['Lena','Jonas','Mia'].map(first_name=>({meeting_date:days[0],first_name})),{meeting_date:days[1],first_name:'Tom'}]);
-  assert.match(busy.context.renderMeet(),/<a class="meet-report" href="mailto:kontakt@example\.test\?subject=WU%20Food%3A%20Namen%20melden%20\(\d{4}-\d\d-\d\d\)">Unpassenden Namen melden<\/a>/);
+  // Vor der eigenen Anmeldung steht dort nur die Zahl (Vorgabe 23.11.2026): keine Namen, also auch kein Melde-Link.
+  assert.match(busy.context.renderMeet(),/<strong>Bereits angemeldet<\/strong><span>3 Personen\. Die Namen siehst du nach deiner Anmeldung\.<\/span>/);
+  assert.doesNotMatch(busy.context.renderMeet(),/Lena|Jonas|Mia|meet-report|meet-names/);
+  // Der Melde-Link gehört zur Namensliste, die erst nach der eigenen Anmeldung erscheint.
+  assert.match(source,/<span class="meet-names">\$\{entries\}<\/span>\$\{names\.length \? `<a class="meet-report" href="mailto:\$\{esc\(contactEmail\(\)\)\}\?subject=/);
   assert.deepEqual(busy.asked,[['meet_preview_participants','meeting_date,first_name','meeting_date']],'nur die öffentliche Teilnehmerliste wird gelesen');
   assert.match(busy.context.meetBadge(),/^<span class="meet-count" data-ui-literal aria-label="3 signed up"><i>person<\/i>3<\/span>$/);
   assert.deepEqual(busy.painted,['beforebegin',busy.context.meetBadge()],'Zahl steht vor dem Pfeil des Eintrags');
