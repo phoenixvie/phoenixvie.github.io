@@ -4,6 +4,7 @@
 Aufruf im Workflow „WU Lunch Android APK":
     python scripts/upload-play.py --check              # nur Zugang prüfen, nichts ändern
     python scripts/upload-play.py pfad/zur/datei.aab   # hochladen und im internen Test bereitstellen
+    python scripts/upload-play.py --screenshots        # Smartphone-Screenshots des Store-Eintrags ersetzen
 
 Zugang: Dienstkonto-Schlüssel (JSON) im Secret PLAY_SERVICE_ACCOUNT_JSON. Der Schlüssel wird nur an Googles
 Anmeldebibliothek übergeben und nie ausgegeben. Das Dienstkonto braucht in der Play Console nur das Recht,
@@ -115,6 +116,48 @@ def upload(session, bundle, name, notes):
         return upload_once(session, bundle, name, notes, 'draft')
 
 
+def upload_screenshots(session, folder=None):
+    """Smartphone-Screenshots im Store-Eintrag ersetzen – je Sprache des Eintrags die Dateien
+    store-listing/screenshot-<de|en>-<nr>.png. Erst wenn alle Bilder hochgeladen sind, wird bestätigt;
+    scheitert ein Schritt, wird Googles Entwurf verworfen und der Store-Eintrag bleibt, wie er war."""
+    folder = Path(folder or ROOT / 'store-listing')
+    edit = call(session, 'POST', API + '/edits', 'Entwurf anlegen')['id']
+    try:
+        listings = call(session, 'GET', f'{API}/edits/{edit}/listings', 'Store-Einträge lesen').get('listings', [])
+        done = {}
+        for listing in listings:
+            language = listing['language']
+            files = sorted(folder.glob(f"screenshot-{language.split('-')[0].lower()}-*.png"))
+            if not files:
+                continue
+            if not 2 <= len(files) <= 8:
+                raise PlayError(f'Google Play verlangt 2 bis 8 Smartphone-Screenshots je Sprache; für {language} liegen {len(files)} vor.')
+            images = f'{API}/edits/{edit}/listings/{language}/phoneScreenshots'
+            call(session, 'DELETE', images, 'Bisherige Screenshots entfernen')
+            for file in files:
+                with open(file, 'rb') as handle:
+                    call(session, 'POST', f'{UPLOAD}/edits/{edit}/listings/{language}/phoneScreenshots?uploadType=media',
+                         'Screenshot hochladen', data=handle, headers={'Content-Type': 'image/png'}, timeout=300)
+            done[language] = len(files)
+        if not done:
+            raise PlayError('Der Store-Eintrag hat keine Sprache, für die Screenshots im Projekt liegen (Deutsch oder Englisch).')
+        try:
+            call(session, 'POST', f'{API}/edits/{edit}:commit', 'Änderung bestätigen')
+            sent = True
+        except PlayError as error:
+            if 'changesNotSentForReview' not in str(error):
+                raise
+            call(session, 'POST', f'{API}/edits/{edit}:commit?changesNotSentForReview=true', 'Änderung bestätigen')
+            sent = False
+    except PlayError as error:
+        session.request('DELETE', f'{API}/edits/{edit}', timeout=60)
+        if 'HTTP 403' in str(error) or 'HTTP 401' in str(error):
+            raise PlayError(str(error) + ' Für den Store-Eintrag braucht das Dienstkonto in der Play Console zusätzlich'
+                            ' das Recht „Store-Präsenz verwalten".') from None
+        raise
+    return {'screenshots': done, 'sentForReview': sent}
+
+
 def session_from_env():
     raw = os.environ.get('PLAY_SERVICE_ACCOUNT_JSON', '').strip()
     if not raw:
@@ -144,6 +187,16 @@ def main(argv):
         if argv[1] == '--check':
             result = check(session)
             print('Zugang funktioniert. Interner Test derzeit:', json.dumps(result, ensure_ascii=False))
+            return 0
+        if argv[1] == '--screenshots':
+            result = upload_screenshots(session)
+            print('Screenshots ersetzt:', json.dumps(result, ensure_ascii=False))
+            summary = os.environ.get('GITHUB_STEP_SUMMARY')
+            if summary:
+                ending = ('Die Änderung ist zur Prüfung an Google gesendet.' if result['sentForReview'] else
+                          'Bitte in der Play Console unter „Übersicht über die Veröffentlichung" einmal zur Prüfung senden.')
+                with open(summary, 'a', encoding='utf-8') as handle:
+                    handle.write(f"### Google Play: Screenshots im Store-Eintrag ersetzt\n\n{json.dumps(result['screenshots'])}\n\n{ending}\n")
             return 0
         bundle = Path(argv[1])
         if not bundle.is_file():

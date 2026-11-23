@@ -157,7 +157,9 @@
     // Kurz nach dem Öffnen macht der Knopf mit drei sanften Pulsen auf sich aufmerksam (Vorgabe des Betreibers, 23.11.2026);
     // danach nicht mehr – auch nicht bei den regelmäßigen Aktualisierungen der Seite.
     const nudge = Date.now() - (state.openedAt || 0) < 4000 ? ' data-nudge' : '';
-    const cta = own || !registrationOpen(selected) || elsewhere ? '' : `<div class="meet-cta">${nameError ? errorHtml.replace('class="meet-notice"', 'class="meet-notice meet-name-error"') : ''}<div class="meet-cta-row">${emailVerification ? '' : `<input id="meet-first-name" aria-label="Dein Vorname" autocomplete="off" maxlength="40" placeholder="Dein Vorname" autocapitalize="words" value="${esc(state.pendingName)}">`}<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}${nudge}>Teilnehmen</button></div></div>`;
+    // Der Knopf in der Leiste hat auf Englisch einen kurzen Text („Join“): Der lange („Sign up to eat together“) ließ dem
+    // Namensfeld daneben keinen Platz.
+    const cta = own || !registrationOpen(selected) || elsewhere ? '' : `<div class="meet-cta">${nameError ? errorHtml.replace('class="meet-notice"', 'class="meet-notice meet-name-error"') : ''}<div class="meet-cta-row">${emailVerification ? '' : `<input id="meet-first-name" aria-label="Dein Vorname" autocomplete="off" maxlength="40" placeholder="Dein Vorname" autocapitalize="words" value="${esc(state.pendingName)}">`}<button class="meet-primary" data-action="meet-show-form" ${state.busy || !state.loaded ? 'disabled' : ''}${nudge}>${esc(text('Meet to eat: Teilnehmen', {}, 'Teilnehmen'))}</button></div></div>`;
     return `${header}<div class="body"><div class="scroll meet-content" id="meet-screen">${error}${art}<p class="meet-lead">Triff dich mit anderen freundlichen WU-Studierenden am WU Campus und geht gemeinsam als Gruppe Mittag essen. <span data-ui-literal>${esc(typeof meetDaysText === 'function' ? meetDaysText('intro') : 'Findet jeden Mittwoch statt.')}</span></p>${facts}${action}</div>${cta}</div>`;
   }
   async function join(name, meetingDate) {
