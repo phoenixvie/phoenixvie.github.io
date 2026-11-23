@@ -2,11 +2,12 @@ import React, {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Alert, AppState, BackHandler, Linking, Modal, Platform, Pressable, Settings, Share, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {SafeAreaProvider, SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
-import {previewHtml} from './src/previewHtml';
+import {designHash, previewHtml} from './src/previewHtml';
+import {remoteUi, RemotePage} from './src/remoteUi';
 import {encodePdf, pdfViewerHtml} from './src/pdfViewer';
 import {routeAppMessage, webUrl} from './src/nativeLinks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {languagePreferences} from './src/preferences';
+import {AppLanguage, languagePreferences} from './src/preferences';
 import {usage} from './src/analytics';
 import appConfig from './app.json';
 
@@ -22,7 +23,10 @@ const appVersion = /^\d+\.\d+\.\d+$/.test(appConfig.expo.version) ? appConfig.ex
 const storeUrl = Platform.OS === 'ios' ? 'https://apps.apple.com/app/id6836345799' : 'market://details?id=at.startit.wufood';
 const openStore = () => {Linking.openURL(storeUrl).catch(() => {Linking.openURL('https://play.google.com/store/apps/details?id=at.startit.wufood').catch(() => {});});};
 const headScript = (saved?: string) => `<head><script>window.WU_APP={version:'${appVersion}',platform:'${Platform.OS === 'ios' ? 'ios' : 'android'}'};window.WU_SYSTEM_LANGUAGE='${nativeLanguage}';${saved ? `window.WU_SAVED_LANGUAGE='${saved}';` : ''}${startScreen ? `window.WU_START_SCREEN='${startScreen}';` : ''}</script>`;
-const defaultHtmlSource = {html: previewHtml.replace('<head>',headScript()), baseUrl};
+// Oberfläche: eingebaut (previewHtml) oder – wenn vorhanden und bewährt – die vom Server nachgeladene Fassung.
+const pageSource = (html: string, saved?: AppLanguage | null) => ({html: html.replace('<head>', headScript(saved || undefined)), baseUrl});
+const remote = remoteUi(AsyncStorage, appVersion, designHash);
+const READY_TIMEOUT = 12000;
 function openExternal(url: string, language = nativeLanguage, texts: Record<string,string> = {}) {
   if (/^(https?:|mailto:|tel:)/i.test(url)) Linking.openURL(url).catch(() => {
     Alert.alert(texts['Link konnte nicht geöffnet werden']??nativeText('Link konnte nicht geöffnet werden','Could not open link',language),texts['Bitte prüfe, ob eine passende App installiert ist.']??nativeText('Bitte prüfe, ob eine passende App installiert ist.','Please check that a suitable app is installed.',language));
@@ -31,16 +35,33 @@ function openExternal(url: string, language = nativeLanguage, texts: Record<stri
 function AppContent() {
   const [language, setLanguage] = useState<'de' | 'en'>(nativeLanguage);
   const [texts,setTexts]=useState<Record<string,string>>({});
-  const [htmlSource,setHtmlSource]=useState<typeof defaultHtmlSource|null>(null);
+  const [htmlSource,setHtmlSource]=useState<{html: string; baseUrl: string}|null>(null);
+  // Nachgeladene Oberfläche: shownHash = gerade gezeigte Fassung (null = eingebaute); awaiting = wartet noch auf die
+  // Rückmeldung „ui-ready" der Seite. Bleibt sie aus oder meldet der WebView einen Fehler, gilt die Fassung als
+  // unbrauchbar und die eingebaute wird gezeigt.
+  const savedLanguage=useRef<AppLanguage|null>(null);
+  const shownHash=useRef<string|null>(null);
+  const awaiting=useRef<string|null>(null);
+  const readyTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
+  const leftAt=useRef(0);
+  const showPage=(next: RemotePage|null)=>{
+    if(readyTimer.current)clearTimeout(readyTimer.current);
+    shownHash.current=next?.hash??null;awaiting.current=next?.hash??null;
+    setHtmlSource(pageSource(next?next.html:previewHtml,savedLanguage.current));
+    if(next)readyTimer.current=setTimeout(()=>failRemote(next.hash),READY_TIMEOUT);
+  };
+  const failRemote=(hash: string)=>{if(awaiting.current!==hash)return;awaiting.current=null;void remote.reject(hash);showPage(null);};
+  const uiReady=(build: string)=>{if(awaiting.current!==build)return;awaiting.current=null;if(readyTimer.current)clearTimeout(readyTimer.current);void remote.confirm(build);};
   const nativeText = (de: string, en: string) => texts[de]??(language === 'de' ? de : en);
   const openExternalLink = (url: string) => openExternal(url, language,texts);
-  useEffect(()=>{let active=true;void preferences.load().then(saved=>{if(!active)return;if(saved)setLanguage(saved);setHtmlSource(saved?{html:previewHtml.replace('<head>',headScript(saved)),baseUrl}:defaultHtmlSource);});return()=>{active=false};},[]);
+  useEffect(()=>{let active=true;void Promise.all([preferences.load(),remote.start()]).then(([saved,next])=>{if(!active)return;if(saved)setLanguage(saved);savedLanguage.current=saved;showPage(next);void remote.check();});return()=>{active=false;if(readyTimer.current)clearTimeout(readyTimer.current);};},[]);
   const languageRef=useRef(language);languageRef.current=language;
   // iPhone: Der Bereich unter der App (Home-Leiste) ist weiß wie die Liste und die Menüleiste, nicht blau wie die Kopfzeile.
   const insets=useSafeAreaInsets();const iosBottom=Platform.OS==='ios';
   const main = useRef<WebView<{}>>(null);
   const browser = useRef<WebView<{}>>(null);
   const [page, setPage] = useState<{url: string; title: string; loading?: boolean; pdf?: string} | null>(null);
+  const pageRef=useRef(page);pageRef.current=page;
   const sourceRequest = useRef(0);
   const [canGoBack, setCanGoBack] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -64,15 +85,24 @@ function AppContent() {
     } finally {clearTimeout(timeout);}
   };
   const browserBack = () => {if (canGoBack) browser.current?.goBack(); else closePage();};
+  const started=htmlSource!==null;
   useEffect(() => {
-    if(!htmlSource)return;
+    if(!started)return;
     usage.state(AppState.currentState||'active',languageRef.current);
     const listener=AppState.addEventListener('change',state=>{
       usage.state(state,languageRef.current);
-      if(state==='active')main.current?.injectJavaScript('window.wuFoodRefresh?.();true;');
+      if(state!=='active'){if(!leftAt.current)leftAt.current=Date.now();return;}
+      main.current?.injectJavaScript('window.wuFoodRefresh?.();true;');
+      // Zurück im Vordergrund: nach einer neuen Oberfläche sehen. War die App länger weg und ist keine Restaurantseite
+      // offen, wird eine bereitliegende Fassung jetzt gezeigt (oder nach dem Abschalten im Admin wieder die eingebaute).
+      const away=leftAt.current?Date.now()-leftAt.current:0;leftAt.current=0;
+      void remote.check().then(()=>away>=30000&&!pageRef.current?remote.start():undefined).then(next=>{
+        if(next===undefined||awaiting.current)return;
+        if((next?.hash??null)!==shownHash.current)showPage(next);
+      }).catch(()=>{});
     });
     return ()=>listener.remove();
-  },[htmlSource]);
+  },[started]);
   useEffect(() => {
     const handler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (page) {if (canGoBack) browser.current?.goBack(); else closePage();}
@@ -83,10 +113,11 @@ function AppContent() {
   }, [page, canGoBack]);
   const message = ({nativeEvent}: WebViewMessageEvent) => {
     routeAppMessage(nativeEvent.url, nativeEvent.data, baseUrl, {
-      openSource: (url, title) => {void openSource(url, title);}, openExternal: openExternalLink, setLanguage:(next,copy,manual)=>{setLanguage(next);languageRef.current=next;if(copy)setTexts(previous=>JSON.stringify(previous)===JSON.stringify(copy)?previous:copy);if(manual)void preferences.save(next).catch(()=>{});},
+      openSource: (url, title) => {void openSource(url, title);}, openExternal: openExternalLink, setLanguage:(next,copy,manual)=>{setLanguage(next);languageRef.current=next;if(copy)setTexts(previous=>JSON.stringify(previous)===JSON.stringify(copy)?previous:copy);if(manual){savedLanguage.current=next;void preferences.save(next).catch(()=>{});}},
       share: text => {Share.share({message: text}).catch(() => {});},
       exit: () => BackHandler.exitApp(),
       openStore,
+      uiReady,
       usage:(event,props)=>usage.event(event,props),
     });
   };
@@ -95,6 +126,7 @@ function AppContent() {
     <View style={[styles.web, iosBottom ? {paddingBottom: insets.bottom} : null]}>
     {htmlSource ? <WebView<{}> ref={main} source={htmlSource} originWhitelist={['*']} onMessage={message}
       cacheEnabled={false}
+      onError={()=>{if(awaiting.current)failRemote(awaiting.current);}}
       javaScriptEnabled domStorageEnabled setSupportMultipleWindows={false} style={styles.web}
       onShouldStartLoadWithRequest={request => {
         if (request.isTopFrame === false || request.url === 'about:blank' || request.url.split('?')[0] === baseUrl || request.url.split('?')[0] === baseUrl+'index.html') return true;

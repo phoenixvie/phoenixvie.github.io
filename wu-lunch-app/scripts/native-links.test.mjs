@@ -48,5 +48,10 @@ test('the update notice can open the store only through a fixed native action, n
   routeAppMessage(base,JSON.stringify({type:'open-store',url:'https://evil.example/app'}),base,handlers);
   assert.equal(opened,1);assert.deepEqual(calls,[]);
   routeAppMessage('https://evil.example/',JSON.stringify({type:'open-store'}),base,handlers);   // fremde Seite: wirkungslos
+  // Rückmeldung einer nachgeladenen Oberfläche: nur mit gültiger Kennung und nur von der eigenen Seite.
+  const ready=[];
+  for(const build of ['a'.repeat(64),'kaputt','A'.repeat(64),''])routeAppMessage(base,JSON.stringify({type:'ui-ready',build}),base,{...handlers,uiReady:value=>ready.push(value)});
+  routeAppMessage('https://evil.example/',JSON.stringify({type:'ui-ready',build:'b'.repeat(64)}),base,{...handlers,uiReady:value=>ready.push(value)});
+  assert.deepEqual(ready,['a'.repeat(64)]);
   assert.equal(opened,1);
 });

@@ -20,6 +20,7 @@ type LinkHandlers = {
   share: (text: string) => void;
   exit: () => void;
   openStore?: () => void;
+  uiReady?: (build: string) => void;
   usage?: (event: unknown, props: unknown) => void;
   setLanguage?: (language: 'de' | 'en', texts?: Record<string,string>, manual?: boolean) => void;
 };
@@ -37,5 +38,6 @@ export function routeAppMessage(source: unknown, raw: unknown, baseUrl: string, 
   } else if (item.type === 'share' && typeof item.text === 'string') handlers.share(item.text);
   else if (item.type === 'usage') handlers.usage?.(item.event,item.props);
   else if (item.type === 'open-store') handlers.openStore?.();
+  else if (item.type === 'ui-ready' && typeof item.build === 'string' && /^[0-9a-f]{64}$/.test(item.build)) handlers.uiReady?.(item.build);
   else if (item.type === 'exit') handlers.exit();
 }
