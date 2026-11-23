@@ -104,8 +104,8 @@ def parse_karma_html(raw, monday):
         if current is None or heading.name != "h3":
             continue
         name = legacy.tidy(name)
-        if not 5 <= len(name) <= 160:
-            raise ValueError("Karma Food: ungültiger Gerichtname")
+        if not 4 <= len(name) <= 160:
+            continue  # ein einzelner unbrauchbarer Eintrag sperrt nicht die Woche
         fragment = []
         for el in heading.next_elements:
             if getattr(el, "name", None) in ("h2", "h3"):
@@ -119,7 +119,7 @@ def parse_karma_html(raw, monday):
         # Fehlt die Kennzeichnung bei einem Gericht, bleibt nur dessen Symbol weg – nicht die ganze Woche.
         day = (monday + timedelta(days=current)).isoformat()
         if any(normal(x["name"]) == normal(name) for x in result[day]):
-            raise ValueError("Karma Food: doppeltes Tagesgericht")
+            continue  # doppelt aufgeführtes Gericht nur einmal zeigen
         result[day].append({
             "name": name, "price": None, "category": "Special" if is_special else "Hauptgericht",
             "diet": "vegan" if is_vegan else "veggie" if is_vegetarian else "", "description": "",
@@ -214,6 +214,7 @@ def _norm_item(item):
 def validate_finn_pair(first, second, monday, img_url):
     """Two independent model reads must agree completely on all five days."""
     results = [first, second]
+    closed_noted = False
     for result in results:
         warnings = [normal(w) for w in (result.get("warnings") or [])]
         # Finn images omit a year; validated ISO week AND recent Shopify
@@ -221,8 +222,12 @@ def validate_finn_pair(first, second, monday, img_url):
         benign = lambda w: (("jahreszahl" in w or "jahresangabe" in w) and
                             any(x in w for x in ("nicht angegeben", "fehlt", "nicht genannt", "keine jahreszahl", "keine jahresangabe")) and
                             not any(x in w for x in ("unklar", "widerspruch", "abweich", "preis", "unlesbar", "nicht überein")))
+        # Ein ausdrücklich als geschlossen genannter Tag ist kein Lesefehler.
+        closed = lambda w: (any(x in w for x in ("geschlossen", "feiertag", "ruhetag", "kein mittagsmen")) and
+                            not any(x in w for x in ("unklar", "widerspruch", "abweich", "preis", "unlesbar", "nicht überein")))
+        closed_noted = closed_noted or any(closed(w) for w in warnings)
         if (result.get("status") != "found" or
-            any(not benign(w) for w in warnings) or not result.get("items")):
+            any(not (benign(w) or closed(w)) for w in warnings) or not result.get("items")):
             raise ValueError("Finn: Bildanalyse unvollständig oder nicht eindeutig")
         if len(result["items"]) > 20:
             raise ValueError("Finn: zu viele Einträge")
@@ -266,8 +271,7 @@ def validate_finn_pair(first, second, monday, img_url):
         if item.get("included_items"):
             raise ValueError("Finn: Inklusivleistung nicht unabhängig belegt")
         cat = normal(item.get("category"))
-        if cat not in ("veggie", "vegan", "vegetarisch", "fleisch", "meat", "fisch", "fish"):
-            raise ValueError("Finn: unbekannte Hauptgerichtkategorie")
+        # Eine unbekannte Spaltenbezeichnung ("Vegetarisch/Vegan") sperrt nicht die Woche: ohne Symbol zeigen.
         if any(normal(old["name"]) == normal(name) for old in days[d]):
             raise ValueError("Finn: doppeltes Gericht")
         diet = "vegan" if cat == "vegan" else "veggie" if cat in ("veggie", "vegetarisch") else "meat" if cat in ("fleisch", "meat", "fisch", "fish") else "unknown"
@@ -278,7 +282,10 @@ def validate_finn_pair(first, second, monday, img_url):
             "source_url": img_url, "evidence_excerpt": item.get("evidence_excerpt", ""),
             "ai_confidence": "two-model-agreement",
         })
-    if not all(2 <= len(v) <= 4 for v in days.values()):
+    # Ein leerer Tag ist nur erlaubt, wenn die Bildlesung ihn ausdrücklich als geschlossen nennt (Feiertag);
+    # mindestens drei Tage müssen je zwei Hauptgerichte haben. Fehlt ein Tag ohne solchen Hinweis, wird nichts übernommen.
+    filled = [v for v in days.values() if v]
+    if (len(filled) < 5 and not closed_noted) or len(filled) < 3 or not all(2 <= len(v) <= 4 for v in filled):
         raise ValueError("Finn: nicht alle fünf Tage mit zwei Hauptgerichten vorhanden")
     return days
 
@@ -399,7 +406,10 @@ def fetch_finn(monday, *, key, previous, now=None):
         "category aus der Bildspalte: Veggie, Vegan, Fleisch oder Fisch. "
         "included_items ist leer (Suppe ist nicht kostenlos). "
         f"source_url muss exakt {image_url} sein. "
-        "Fehlt ein Wochentag, ein Preis oder ist die Woche unklar: status=unclear; keine erfundenen Inhalte. "
+        "Steht bei einem Wochentag ausdrücklich, dass geschlossen oder Feiertag ist, gib für diesen Tag keine "
+        "Gerichte aus und nenne es in warnings (z. B. 'Dienstag: geschlossen (Feiertag)'); das ist kein Grund für "
+        "status=unclear. Fehlt ein Wochentag sonst, fehlt ein Preis oder ist die Woche unklar: status=unclear; "
+        "keine erfundenen Inhalte. "
         "Verwende das Bild selbst, nicht Metadaten als Beweis für Gerichtnamen."
     )
     payload = [{"role": "user", "content": [

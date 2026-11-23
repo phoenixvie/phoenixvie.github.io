@@ -45,7 +45,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
+      # Immer der aktuelle Stand von master, nicht der Stand zum Zeitpunkt des Auslösens: Wartet ein Lauf
+      # hinter einem anderen, der die Datei geändert hat, würde er sonst auf veralteten Daten aufsetzen
+      # (23.11.2026: Veröffentlichung scheiterte an einem Konflikt).
       - uses: actions/checkout@v4
+        with:
+          ref: master
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -78,16 +83,23 @@ jobs:
           fi
           git config user.name "wu-lunch-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Wels: Mittagsmenüs $(TZ=Europe/Vienna date +%F)"
-          # Die Datei schreibt nur dieser Workflow; bei einem abgelehnten Push
-          # genügt es daher, den eigenen Commit auf den neuen Stand zu setzen.
+          cp "$file" "$RUNNER_TEMP/wels-menus.json"
+          # Die Datei schreibt nur dieser Workflow, und seine Läufe laufen nacheinander. Wird der Push
+          # abgelehnt (andere Dateien auf master sind neuer), wird der eigene Stand auf den neuen master gesetzt.
           for attempt in 1 2 3 4 5; do
+            git commit -q -m "Wels: Mittagsmenüs $(TZ=Europe/Vienna date +%F)"
             if git push origin HEAD:master; then
               exit 0
             fi
             echo "Push abgelehnt ($attempt/5), neuer Stand wird eingearbeitet"
             git fetch origin master
-            git rebase origin/master
+            git reset -q --hard origin/master
+            cp "$RUNNER_TEMP/wels-menus.json" "$file"
+            git add "$file"
+            if git diff --cached --quiet; then
+              echo "Stand ist inzwischen veröffentlicht"
+              exit 0
+            fi
           done
           echo "::warning::Wels-Daten konnten nicht veröffentlicht werden"
           exit 1

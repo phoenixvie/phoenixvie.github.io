@@ -154,5 +154,24 @@ Vier Schichten:
    gibt es genau ein offenes GitHub-Issue mit dem Etikett `import-stoerung` (E-Mail an den Betreiber); es
    schließt sich selbst, sobald die Karte wieder gelesen wird. „Noch nicht veröffentlicht“ ist keine Störung.
 
+Weitere Regeln aus der Durchsicht vom 23.11.2026:
+
+- **Startdatum belegt die Woche** (`week_identity`): Ein vertipptes Enddatum sperrt weder Mensa noch Topf & Deckel,
+  Karma Food oder Grüne Hütte. Beginnt ein Plan nach einem Feiertag später in der Woche, zählt er nur mit der
+  passenden Kalenderwoche.
+- **Geschlossene Tage:** Ein Feiertag bleibt als leerer Tag stehen und sperrt nicht die Woche – bei Mensa und Finn
+  nur, wenn Plan bzw. Bildlesung den Tag ausdrücklich als geschlossen nennen; überall gelten mindestens drei
+  gefüllte Tage. Wie Mensa und Topf & Deckel einen Feiertag tatsächlich drucken, war noch nicht zu sehen
+  (erster Fall: 8.12.2026) – der tägliche Selbst-Check prüft diese Woche mit.
+- **Einzelne auffällige Gerichte** (`candidate_quality_gate`, Karma, Baschly): Ein unbrauchbarer Name wird
+  weggelassen, ein unmöglicher Preis entfernt; erst mehrere solche Einträge sperren die Karte.
+- **Karte ohne Datum (Baschly):** gilt erst als Karte der neuen Woche, wenn sie sich gegenüber der zuletzt gezeigten
+  geändert hat (`undated_card_is_stale`, Feld `shown_week` im Status). Vorher „noch nicht veröffentlicht".
+- **Stille Fälle:** Die Störungsmeldung meldet ab Dienstag 8 Uhr jedes Lokal ganz ohne Karte für die Woche,
+  zurückgehaltene Freigaben, anhaltende Mensa-KI-Fehler und ab drei Fehlversuchen den Browser-Import von
+  Topf & Deckel.
+- **Wels-Lauf:** setzt immer auf dem aktuellen `master` auf und veröffentlicht ohne Rebase (zwei kurz
+  aufeinanderfolgende Läufe führten am 23.11.2026 zu einem Konflikt).
+
 Auslöser: Vom Taktgeber gestartete Importe lösen bei GitHub keine `workflow_run`-Folgeläufe aus. Der Import
 startet den Wels-Import und die englischen Menüs deshalb im letzten Schritt ausdrücklich.
