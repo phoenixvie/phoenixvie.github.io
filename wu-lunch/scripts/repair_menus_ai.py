@@ -175,8 +175,7 @@ def documented_current_week(source, ident, monday, cache):
         text = BeautifulSoup(raw, "html.parser").get_text(" ", strip=True)
         dates = legacy.period(text)
         if dates is not None:
-            cache[url] = dates[0] == monday and dates[1] in (
-                monday + timedelta(days=3), monday + timedelta(days=4))
+            cache[url] = legacy.week_identity(dates, monday, text)
             return cache[url]
         # Some sites omit a complete ISO year in their visible heading;
         # only trust a source-specific deterministic parser which independently

@@ -38,7 +38,7 @@ def wu_problems(status, data):
     for key, row in sorted(status.get("sources", {}).items()):
         if row.get("state") == "error" and int(row.get("consecutive_failures") or 0) >= 3:
             found["wu:" + key] = {"name": names.get(key) or key, "place": "WU", "url": urls.get(key) or "",
-                                  "message": str(row.get("note") or "ohne Angabe"),
+                                  "message": str(row.get("note") or row.get("error") or "ohne Angabe"),
                                   "detail": f"{row.get('consecutive_failures')} Abrufe in Folge fehlgeschlagen, "
                                             f"letzter Erfolg: {row.get('last_success') or 'unbekannt'}"}
     return found

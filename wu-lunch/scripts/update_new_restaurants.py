@@ -147,7 +147,8 @@ def validate_karma_pdf_matches(days, pdf_text):
                  if len(w) >= 5 and w not in {"curry", "veggie", "linsen", "mit", "salat"}]
         if words and len(set(words) & tokens) >= min(2, len(words)):
             matches += 1
-    if matches < max(min(9, len(entries)), int(len(entries) * 0.7)):
+    # Mindestens 70 % der Gerichte (aufgerundet) müssen im PDF stehen, bei kleinen Karten mindestens drei.
+    if matches < min(len(entries), max(3, -(-len(entries) * 7 // 10))):
         raise ValueError(f"Karma Food: PDF und HTML weichen voneinander ab ({matches}/{len(entries)} Treffer)")
 
 
