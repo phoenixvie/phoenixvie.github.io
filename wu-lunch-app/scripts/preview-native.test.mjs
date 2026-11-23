@@ -181,3 +181,21 @@ test('UX follow-ups in the restaurant screens: readable small print, decorative 
   // Menü-Link nur, wenn er sich von der Webseite unterscheidet.
   assert.match(app, /menuWebsite&&menuWebsite\.replace\(\/\\\/\+\$\/,''\)!==website\.replace/);
 });
+
+test('opening hours: the admin entry counts unless the monthly check found newer hours on the website', async () => {
+  const source=await readFile(new URL('../preview/app.js',import.meta.url),'utf8');
+  const start=source.indexOf('function currentHours('),end=source.indexOf('\n}',start)+2;
+  const currentHours=new Function(source.slice(start,end)+';return currentHours;')();
+  const admin={opening_hours:['Mo–Fr 07:30–18:00','Sa, So 08:00–16:00'],updated_at:'2026-11-13T13:38:58+00:00'};
+  const checked=day=>({hours:['Mo–Fr 07:30–18:00','Sa, So geschlossen'],hoursCheckedAt:day});
+  assert.deepEqual(currentHours(admin,{hours:['x']}),admin.opening_hours);                    // ohne Prüfdatum gilt der Admin
+  assert.deepEqual(currentHours(admin,checked('2026-11-10')),admin.opening_hours);             // Admin später gespeichert
+  assert.deepEqual(currentHours(admin,checked('2026-11-13')),admin.opening_hours);             // gleicher Tag: Admin
+  assert.deepEqual(currentHours(admin,checked('2026-11-23')),checked('x').hours);              // Kontrolle ist neuer
+  assert.deepEqual(currentHours({...admin,updated_at:'2026-12-01T08:00:00+00:00'},checked('2026-11-23')),admin.opening_hours);   // danach im Admin gespeichert
+  assert.deepEqual(currentHours(undefined,checked('2026-11-23')),checked('x').hours);
+  assert.deepEqual(currentHours(admin,{}),admin.opening_hours);
+  assert.equal(currentHours(undefined,{}),undefined);
+  assert.deepEqual(currentHours(admin,checked('kaputt')),admin.opening_hours);
+  assert.match(source,/hours:currentHours\(p,info\)\?\?r\.hours/);
+});

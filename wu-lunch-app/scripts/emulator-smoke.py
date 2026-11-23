@@ -72,12 +72,13 @@ tap(label('Zur\u00fcck zum Men\u00fc'))
 wait_for(label('Webseite'),label('\u00d6ffnungszeiten'),label('Adresse'))
 tap(label('Men\u00fc'))
 wait_for('WU Mensa',label('Weiter'))
-tap(label('Zur\u00fcck zur Liste'))
-wait_for('WU Food')
-tap('Change language')
+# Sprachwechsel: seit 23.11.2026 nur noch unter jedem Menü ("Change language." – anklickbar ist das Wort "language").
+tap('language')
 english=not english
+wait_for('WU Mensa',label('Weiter'))
+tap(label('Zur\u00fcck zur Liste'))
 list_label='List' if english else 'Liste'
-wait_for(list_label)
+wait_for('WU Food',list_label)
 adb('shell','am','force-stop','at.startit.wufood')
 adb('shell','am','start','-n','at.startit.wufood/.MainActivity')
 wait_for('WU Food',list_label)
