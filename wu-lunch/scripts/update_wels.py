@@ -36,6 +36,9 @@ USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 MONTHS = {name: number for number, name in enumerate(
     ("januar", "februar", "märz", "april", "mai", "juni", "juli", "august", "september", "oktober",
      "november", "dezember"), start=1)}
+# Österreichische Formen und übliche Abkürzungen ("3. Jänner", "24. Nov.").
+MONTHS.update({"jänner": 1, "feber": 2, "jan": 1, "jän": 1, "feb": 2, "mär": 3, "apr": 4, "jun": 6, "jul": 7,
+               "aug": 8, "sep": 9, "sept": 9, "okt": 10, "nov": 11, "dez": 12})
 DAY_NAMES = ("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
 PRICE = r"(\d{1,2})[.,](\d{2})"
 
@@ -202,8 +205,197 @@ def long_date(text):
     return date(int(match.group(3)), MONTHS[match.group(2).lower()], int(match.group(1)))
 
 
+def near_date(day, month, monday):
+    """Tag und Monat ohne Jahr → das Datum, das der gesuchten Woche am nächsten liegt (Jahreswechsel)."""
+    options = []
+    for year in (monday.year - 1, monday.year, monday.year + 1):
+        try:
+            options.append(date(year, month, day))
+        except ValueError:
+            pass
+    return min(options, key=lambda value: abs((value - monday).days)) if options else None
+
+
+PERIOD = re.compile(
+    r"(\d{1,2})\.\s*(?:([A-Za-zäöüÄÖÜ]+)\.?)?\s*(?:\d{4})?\s*(?:[–-]|\bbis\b)\s*(?:[A-Za-zäöüÄÖÜ]+,\s*)?"
+    r"(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\.?(?:\s+(\d{4}))?")
+
+
+def period_of(text, monday):
+    """'24. November – 27. November [2026]', '17.-20. November 2026' oder
+    '10. November 2026 bis Freitag, 13. November 2026' → (erster, letzter Tag); None, wenn kein Zeitraum dasteht.
+
+    Die Jahreszahl fehlt in den Karten immer wieder; dann zählt das Jahr, das zur gesuchten Woche passt.
+    """
+    for match in PERIOD.finditer(text):
+        last_month = MONTHS.get(match.group(4).lower())
+        first_month = MONTHS.get(match.group(2).lower()) if match.group(2) else last_month
+        if not first_month or not last_month:
+            continue
+        if match.group(5):
+            try:
+                last = date(int(match.group(5)), last_month, int(match.group(3)))
+                first = date(int(match.group(5)), first_month, int(match.group(1)))
+            except ValueError:
+                continue
+            if last < first:  # Zeitraum über den Jahreswechsel: die Jahreszahl gehört zum Enddatum
+                first = first.replace(year=first.year - 1)
+        else:
+            first = near_date(int(match.group(1)), first_month, monday)
+            last = near_date(int(match.group(3)), last_month, monday)
+            if not first or not last:
+                continue
+        return first, last
+    return None
+
+
 def dish(name, price=None, **extra):
     return {"name": clean(name), "price": price, **{key: value for key, value in extra.items() if value}}
+
+
+# ---------------------------------------------------------------------------
+# Ersatzleser: liest eine Wochenkarte ohne Wissen über die Seite
+# ---------------------------------------------------------------------------
+#
+# Jede Karte hat ihren eigenen Leser (unten). Ändert ein Lokal die Form seiner Karte, scheitert dieser –
+# bisher blieb das Lokal dann leer, bis der Leser angepasst war. Der Ersatzleser springt genau dann ein:
+# Er sucht nur die Wochentage und nimmt die Zeilen darunter wörtlich als Gerichte. Er erfindet nichts und
+# zeigt nur, was nachweislich zur gesuchten Woche gehört (Datum oder Zeitraum in der Karte). Das Ergebnis
+# ist schlichter als das eines eigenen Lesers, aber das Lokal bleibt sichtbar; die Störung wird gemeldet.
+
+# Auch vertippte Tagesnamen ("Donnertag") und Kürzel ("Di.").
+DAY_WORD = re.compile(r"((?:mon|die|don|fre)[a-zäöü]{0,6}tag|mittwoch|mo|di|mi|do|fr)(?![a-zäöü])[\s.,:–-]*", re.I)
+DAY_KEYS = {"mo": 0, "di": 1, "mi": 2, "do": 3, "fr": 4}
+SHORT_DATE = re.compile(r"(\d{1,2})\.\s?(\d{1,2})\.(?:\s?(\d{4}|\d{2})\b)?")
+SHORT_PERIOD = re.compile(r"(\d{1,2})\.\s?(?:(\d{1,2})\.)?\s?(?:\d{4})?\s*[–-]\s*(\d{1,2})\.\s?(\d{1,2})\.")
+NOT_A_DISH = re.compile(r"@|https?:|www\.|\bUhr\b|\d{1,2}[:.]\d{2}\s*(?:–|-|bis)\s*\d{1,2}[:.]\d{2}|©|\+43|\bTel\b|"
+                        r"reservier|geschlossen|ruhetag|öffnungszeit|impressum|datenschutz|cookie|gutschein|newsletter|"
+                        r"änderungen vorbehalten|solange der vorrat|aufpreis|sonderw[uü]nsch|nur hauptspeise", re.I)
+LABEL = re.compile(r"(vorspeise|hauptspeise|nachspeise|dessert|suppe|menü\s*\d?|tagesteller|tagesmenü|oder|und|"
+                   r"vegetarisch|vegan|fleisch|fisch|×)\s*:?", re.I)
+PRICE_ONLY = re.compile(r"(?:€\s*" + PRICE + r"|" + PRICE + r"\s*€)")
+PRICE_END = re.compile(r"\s*(?:€\s*" + PRICE + r"|" + PRICE + r"\s*€)\s*$")
+
+
+def _day_heading(line):
+    """(Wochentag 0–4, Rest der Zeile) oder None. "Montag – Freitag …" ist keine Tagesüberschrift."""
+    found = DAY_WORD.match(line)
+    if not found:
+        return None
+    rest = line[found.end():].strip()
+    if DAY_WORD.match(rest) or re.match(r"(bis|und)\b", rest, re.I):
+        return None
+    return DAY_KEYS[found.group(1).lower()[:2]], rest
+
+
+def _short_date(text, monday):
+    found = SHORT_DATE.search(text)
+    return near_date(int(found.group(1)), int(found.group(2)), monday) if found and 1 <= int(found.group(2)) <= 12 else None
+
+
+def generic_week(text, monday):
+    """Wochenkarte aus beliebigem Seitentext: {ISO-Datum: [Gericht, …]} – nur mit Beleg für die gesuchte Woche."""
+    rows = lines_of(text)
+    marks = [(index, *heading) for index, line in enumerate(rows) if (heading := _day_heading(line))]
+    # Erste aufsteigende Folge von mindestens drei Tagen (Seiten enthalten die Karte oft doppelt oder mehrere Wochen).
+    runs, run = [], []
+    for mark in marks:
+        if run and (mark[1] <= run[-1][1] or mark[0] - run[-1][0] > 30):
+            runs.append(run)
+            run = []
+        run.append(mark)
+    runs.append(run)
+    run = next((candidate for candidate in runs if len(candidate) >= 3), None)
+    if not run:
+        raise ValueError("Ersatzleser: keine Folge von Wochentagen gefunden")
+    week, proof = week_dates(monday), None
+    head = " ".join(rows[max(0, run[0][0] - 12):run[0][0]])
+    period = period_of(head, monday)
+    if not period:
+        short = SHORT_PERIOD.search(head)
+        if short:
+            last = near_date(int(short.group(3)), int(short.group(4)), monday)
+            first = near_date(int(short.group(1)), int(short.group(2) or short.group(4)), monday)
+            period = (first, last) if first and last else None
+    if period:
+        if not any(period[0] <= day <= period[1] for day in week):
+            raise NotThisWeek(f"Ersatzleser: Karte gilt ab {period[0].isoformat()}")
+        proof = "Zeitraum"
+    week_number = re.search(r"\bKW\s*(\d{1,2})\b", head, re.I)
+    if week_number and not proof:
+        if int(week_number.group(1)) != monday.isocalendar().week:
+            raise NotThisWeek(f"Ersatzleser: Karte der Kalenderwoche {week_number.group(1)}")
+        proof = "Kalenderwoche"
+    days, most = {}, 0
+    for position, (index, weekday, rest) in enumerate(run):
+        end = run[position + 1][0] if position + 1 < len(run) else min(len(rows), index + 1 + max(most, 3) * 3)
+        lines = ([rest] if rest else []) + rows[index + 1:end]
+        # day_price: Preis über allen Gerichten des Tages; next_price: Preis direkt nach einer Beschriftung
+        # ("Menü 1", "€ 15,50", Gericht) – gilt nur für das nächste Gericht.
+        entries, day_price, next_price, after_label = [], None, None, False
+        for offset, line in enumerate(lines):
+            # Tagesdatum: steht allein in der Zeile direkt bei der Überschrift ("16.11.", "16. November 2026").
+            bare = clean(SHORT_DATE.sub(" ", re.sub(r"\d{1,2}\.\s*[A-Za-zäöüÄÖÜ]+\s+\d{4}", " ", line)))
+            stated = (long_date(line) or _short_date(line, monday)) if offset < 2 and len(bare) < 4 else None
+            if stated:
+                if stated != week[weekday]:
+                    raise NotThisWeek(f"Ersatzleser: Karte zeigt den {stated.isoformat()}")
+                proof = "Tagesdatum"
+                continue
+            cost = PRICE_ONLY.fullmatch(line)
+            if cost:
+                value = euro(cost.group(1) or cost.group(3), cost.group(2) or cost.group(4))
+                if 2 <= value <= 45:
+                    if after_label:
+                        next_price = value
+                    elif entries:
+                        if entries[-1]["price"] is None:
+                            entries[-1]["price"] = value
+                    else:
+                        day_price = value
+                after_label = False
+                continue
+            if LABEL.fullmatch(line):
+                after_label = True
+                continue
+            after_label = False
+            if PERIOD.search(line) or SHORT_PERIOD.search(line):
+                continue  # wiederholter Kartenkopf (mehrseitige PDFs)
+            cost = PRICE_END.search(line)
+            name = clean(PRICE_END.sub("", line)) if cost else line
+            price = euro(cost.group(1) or cost.group(3), cost.group(2) or cost.group(4)) if cost else None
+            if price is not None and not 2 <= price <= 45:
+                continue  # z. B. "Nur Hauptspeise: - € 1,00" ist kein Gericht
+            # Fortsetzungszeile eines umbrochenen Gerichts: offene Klammer, Komma am Ende oder Kleinbuchstabe am Anfang.
+            previous = entries[-1] if entries else None
+            if (previous and len(name) >= 3 and not NOT_A_DISH.search(name) and len(previous["name"]) + len(name) <= 240
+                    and (previous["name"].count("(") > previous["name"].count(")") or previous["name"].endswith((",", "-", " und", " mit"))
+                         or name[0].islower())):
+                previous["name"] = clean(previous["name"] + " " + name)
+                if price is not None and previous["price"] is None:
+                    previous["price"] = price
+                continue
+            plausible = (8 <= len(name) <= 220 and re.search(r"[A-Za-zÄÖÜäöü]{4}", name) and not NOT_A_DISH.search(name)
+                         and (" " in name or re.search(r"suppe|salat|knödel|nockerl|schnitzel|strudel", name, re.I)))
+            if not plausible:
+                if position + 1 == len(run):
+                    break  # hinter dem letzten Tag beginnt der übrige Seitentext
+                continue
+            if position + 1 == len(run) and most and len(entries) >= most:
+                break
+            entries.append(dish(name, price if price is not None else next_price))
+            next_price = None
+        for entry in entries:
+            if entry["price"] is None and day_price is not None:
+                entry["price"] = day_price
+        if entries:
+            days[week[weekday].isoformat()] = entries
+            most = max(most, len(entries))
+    if not proof:
+        raise ValueError("Ersatzleser: kein Beleg für die Woche (weder Zeitraum noch Tagesdatum)")
+    if len(days) < 3:
+        raise ValueError("Ersatzleser: weniger als drei Tage mit Gerichten")
+    return days
 
 
 # ---------------------------------------------------------------------------
@@ -358,14 +550,24 @@ def find_dokkhun_pdf(raw, base):
     raise NotThisWeek("Dok Khun: kein Wochenmenü-PDF verlinkt")
 
 
-def parse_dokkhun(text, monday):
+def dokkhun_week(link):
+    """Kalenderwoche aus dem Dateinamen ('Menu-KW-48.pdf'); None, wenn keine dasteht."""
+    found = re.search(r"kw[-_ ]?(\d{1,2})", str(link).rsplit("/", 1)[-1], re.I)
+    return int(found.group(1)) if found else None
+
+
+def parse_dokkhun(text, monday, file_week=None):
+    """`file_week`: Kalenderwoche aus dem Dateinamen – zweiter Beleg, falls der Zeitraum im PDF fehlt."""
     rows = lines_of(text)
-    period = re.search(r"\(\s*(\d{1,2})\.\s*([A-Za-zäöü]+)\s*[–-]\s*(\d{1,2})\.\s*([A-Za-zäöü]+)\s+(\d{4})\s*\)", " ".join(rows))
-    if not period or period.group(2).lower() not in MONTHS:
+    period = period_of(" ".join(rows), monday)
+    if period:
+        # Die Jahreszahl fehlt manchmal ("24. November – 27. November"); die Woche beginnt nicht immer am Montag.
+        if not any(period[0] <= day <= period[1] for day in week_dates(monday)):
+            raise NotThisWeek(f"Dok Khun zeigt die Woche ab {period[0].isoformat()}")
+    elif file_week is None:
         raise ValueError("Dok Khun: Zeitraum des Wochenmenüs nicht gefunden")
-    first = date(int(period.group(5)), MONTHS[period.group(2).lower()], int(period.group(1)))
-    if first not in week_dates(monday):
-        raise NotThisWeek(f"Dok Khun zeigt die Woche ab {first.isoformat()}")
+    elif file_week != monday.isocalendar().week:
+        raise NotThisWeek(f"Dok Khun zeigt die Kalenderwoche {file_week}")
     reduction = re.search(r"Nur Hauptspeise\s*:\s*-?\s*€\s*" + PRICE, " ".join(rows))
     note = (f"Nur Hauptspeise: {euro(reduction.group(1), reduction.group(2)):.2f} € günstiger".replace(".", ",")
             if reduction else "")
@@ -378,13 +580,15 @@ def parse_dokkhun(text, monday):
             return
         entries = []
         starter = clean(" ".join(parts.get("starter", [])))
+        dessert = clean(" ".join(parts.get("dessert", [])))
+        details = " · ".join(filter(None, [f"Mit Nachspeise: {dessert}" if dessert else "", note]))
         for key in ("menu1", "menu2"):
             body = " ".join(parts.get(key, []))
             price = re.search(r"€\s*" + PRICE, body)
             name = clean(re.sub(r"€\s*" + PRICE, " ", body))
             if name and price:
                 entries.append(dish(name, euro(price.group(1), price.group(2)), included_starter=starter,
-                                    description=note))
+                                    description=details))
         if entries:
             days[(monday + timedelta(days=weekday)).isoformat()] = entries
 
@@ -396,9 +600,10 @@ def parse_dokkhun(text, monday):
             continue
         if weekday is None or re.match(r"Mittagsmenü|\(|Nur Hauptspeise", line):
             continue
-        label = re.match(r"(Vorspeise|Menü\s*1|Menü\s*2)\b\s*(.*)", line)
+        label = re.match(r"(Vorspeise|Nachspeise|Menü\s*1|Menü\s*2)\b\s*(.*)", line)
         if label:
-            part = {"vorspeise": "starter", "menü1": "menu1", "menü2": "menu2"}[re.sub(r"\s", "", label.group(1).lower())]
+            part = {"vorspeise": "starter", "nachspeise": "dessert", "menü1": "menu1",
+                    "menü2": "menu2"}[re.sub(r"\s", "", label.group(1).lower())]
             line = label.group(2)
         if part and line:
             parts.setdefault(part, []).append(line)
@@ -643,28 +848,53 @@ def parse_lalina(text, monday):
 # ---------------------------------------------------------------------------
 
 def parse_ox(text, monday):
+    """Zwei Formen der Karte: früher ein Preis je Tag, seit KW 48/2026 Zeitraum und ein Preis im Kopf."""
     rows = lines_of(text)
     try:
         start = next(index for index, line in enumerate(rows) if line == "Mittagsmenü")
     except StopIteration:
         raise ValueError("OX: Mittagsmenü nicht gefunden") from None
-    days, weekday, names = {}, None, []
-    for line in rows[start:]:
+    try:
+        first_day = next(index for index in range(start, len(rows)) if rows[index] in DAY_NAMES)
+    except StopIteration:
+        raise ValueError("OX: keine Tage erkannt") from None
+    head = " ".join(rows[start:first_day])
+    period = period_of(head, monday)
+    if period and not any(period[0] <= day <= period[1] for day in week_dates(monday)):
+        raise NotThisWeek(f"OX zeigt die Woche ab {period[0].isoformat()}")
+    general = re.search(r"(ab\s*)?€\s*" + PRICE, head)
+    general_price = euro(general.group(2), general.group(3)) if general else None
+    note = f"Mittagsmenü ab € {general.group(2)},{general.group(3)}" if general and general.group(1) else ""
+    days, weekday, names, most = {}, None, [], 0
+
+    def finish(price):
+        nonlocal names, most
+        if weekday is not None and names:
+            starter = names[0] if re.search(r"suppe|salat", names[0], re.I) and len(names) > 1 else ""
+            days[weekday] = [dish(name, price, included_starter=starter, description="" if price != general_price else note)
+                             for name in names[1 if starter else 0:]]
+            most = max(most, len(names))
+        names = []
+
+    for line in rows[first_day:]:
         if line in DAY_NAMES:
+            finish(general_price)
             if DAY_NAMES.index(line) in days or (weekday is not None and DAY_NAMES.index(line) <= weekday):
+                weekday = None
                 break  # die Seite enthält die Karte zweimal (Handy- und Desktop-Ansicht)
-            weekday, names = DAY_NAMES.index(line), []
-            continue
-        if weekday is None:
+            weekday = DAY_NAMES.index(line)
             continue
         cost = re.fullmatch(r"€\s*" + PRICE, line)
         if cost:
-            starter = names[0] if names and re.search(r"suppe|salat", names[0], re.I) and len(names) > 1 else ""
-            days[weekday] = [dish(name, euro(cost.group(1), cost.group(2)), included_starter=starter)
-                             for name in names[1 if starter else 0:]]
-            names = []
-        else:
-            names.append(line)
+            finish(euro(cost.group(1), cost.group(2)))
+            continue
+        # Ende der Karte: Nach dem letzten Tag folgt Seitentext ("OX", "Steaks & Grill" …). Ein Gericht hat
+        # mindestens zwei Wörter (oder ist Suppe/Salat), und kein Tag ist länger als der bisher längste.
+        plausible = (len(line) >= 8 and (" " in line or re.search(r"suppe|salat", line, re.I))) and line != "Mittagsmenü"
+        if not plausible or (most and len(names) >= most):
+            break
+        names.append(line)
+    finish(general_price)
     if not days:
         raise ValueError("OX: keine Tage erkannt")
     return {(monday + timedelta(days=weekday)).isoformat(): rows_ for weekday, rows_ in days.items()}
@@ -868,20 +1098,30 @@ def http_get(url, max_bytes=12_000_000):
     return response.content
 
 
+# Zuletzt gelesener Kartentext je Lokal – damit bei einem Lesefehler der Ersatzleser einspringen kann.
+SEEN_TEXT = {}
+
+
 def fetch(identifier, url, monday, get=http_get):
+    SEEN_TEXT.pop(identifier, None)
+
+    def keep(text):
+        SEEN_TEXT[identifier] = (SEEN_TEXT.get(identifier, "") + "\n" + text).strip()
+        return text
+
     raw = get(DATA_URLS.get(identifier, url))
     if identifier == "imturm":
-        return parse_imturm(html_text(raw), monday)
+        return parse_imturm(keep(html_text(raw)), monday)
     if identifier == "hannibal":
-        return parse_hannibal(html_text(raw), monday)
+        return parse_hannibal(keep(html_text(raw)), monday)
     if identifier == "lalina":
-        return parse_lalina(html_text(raw), monday)
+        return parse_lalina(keep(html_text(raw)), monday)
     if identifier == "ox":
-        return parse_ox(html_text(raw), monday)
+        return parse_ox(keep(html_text(raw)), monday)
     if identifier == "goesser":
         days = {}
         for link in find_goesser_pdfs(raw):
-            days.update(parse_goesser(pdf_text(get(link)), monday))
+            days.update(parse_goesser(keep(pdf_text(get(link))), monday))
         if not days:
             raise NotThisWeek("Gösserbräu: Monatsplan enthält die gesuchte Woche nicht")
         return days
@@ -891,7 +1131,7 @@ def fetch(identifier, url, monday, get=http_get):
         if not viewer:
             raise NotThisWeek("Huber: keine Tageskarte verlinkt")
         from urllib.parse import unquote
-        return parse_huber(pdf_text(get(unquote(viewer.group(0)))), monday)
+        return parse_huber(keep(pdf_text(get(unquote(viewer.group(0))))), monday)
     if identifier == "denns":
         return parse_denns(json.loads(raw.decode("utf-8")), monday)
     if identifier == "sorrymama":
@@ -899,16 +1139,20 @@ def fetch(identifier, url, monday, get=http_get):
     if identifier == "hayashi":
         return hayashi_days(get(HAYASHI_IMAGE), monday)
     if identifier == "naschmarkt":
-        return parse_naschmarkt(html_text(raw), monday)
+        return parse_naschmarkt(keep(html_text(raw)), monday)
     if identifier == "inshaas":
-        return parse_inshaas(html_text(raw), monday)
+        return parse_inshaas(keep(html_text(raw)), monday)
     if identifier == "linde":
-        return parse_linde(html_text(raw), monday)
+        return parse_linde(keep(html_text(raw)), monday)
     if identifier == "dokkhun":
-        return parse_dokkhun(pdf_text(get(find_dokkhun_pdf(raw, url))), monday)
+        link = find_dokkhun_pdf(raw, url)
+        return parse_dokkhun(keep(pdf_text(get(link))), monday, dokkhun_week(link))
     if identifier == "billa":
         return parse_billa(pdf_pages(get(find_billa_pdf(raw, url))), monday)
     raise ValueError("Unbekannte Quelle: " + identifier)
+
+
+CLOSED = re.compile(r"\b(geschlossen|ruhetag|betriebsurlaub|urlaub|kein mittagsmenü)\b", re.I)
 
 
 def check(days, monday):
@@ -926,6 +1170,10 @@ def check(days, monday):
                 raise ValueError(f"unplausibler Gerichtname am {day}: {row['name'][:60]!r}")
             if row.get("price") is not None and not 2 <= row["price"] <= 45:
                 raise ValueError(f"unplausibler Preis am {day}: {row['price']}")
+            if CLOSED.search(row["name"]):
+                # "Restaurant geschlossen." ist ein Hinweis, kein Gericht: ohne Preis anzeigen
+                # (Im Turm, KW 48/2026: geschlossen, in der App stand daneben "13,40 €").
+                row["price"], row["priceLabel"] = None, " "
     return days
 
 
@@ -937,6 +1185,7 @@ def build(previous, monday, now, get=http_get):
     for base in RESTAURANTS:
         old = earlier.get(base["id"], {}) if same_week else {}
         days, state, message, marks = {}, "ok", "", {}
+        SEEN_TEXT.pop(base["id"], None)
         if base["id"] in UNDATED:
             # Maßstab ist die zuletzt als gültig gezeigte Karte einer früheren Woche. Er wird über
             # Wochenwechsel, Abruffehler und Wochen ohne neue Karte hinweg mitgeführt – sonst würde
@@ -962,6 +1211,14 @@ def build(previous, monday, now, get=http_get):
             state, message, days = "error", str(reason), {}
         except Exception as error:  # Abruf- oder Lesefehler: guten Stand derselben Woche behalten
             state, message, days = "error", f"{type(error).__name__}: {error}"[:240], old.get("days", {})
+            if not any(days.values()) and SEEN_TEXT.get(base["id"]):
+                # Der eigene Leser kommt mit der Karte nicht zurecht (meist: neue Form). Statt das Lokal leer zu
+                # zeigen, liest der Ersatzleser die Wochentage wörtlich – nur mit Beleg für die gesuchte Woche.
+                # Der Zustand "fallback" bleibt eine gemeldete Störung, bis der eigene Leser angepasst ist.
+                try:
+                    days, state = check(generic_week(SEEN_TEXT[base["id"]], monday), monday), "fallback"
+                except Exception as second:
+                    print(f"{base['name']}: Ersatzleser ohne Ergebnis – {second}", flush=True)
         complete = {day.isoformat(): days.get(day.isoformat(), []) for day in week_dates(monday)}
         restaurants.append({**base, "days": complete, "import": {"state": state, "message": message, **marks}})
         print(f"{base['name']}: {state}" + (f" – {message}" if message else "")

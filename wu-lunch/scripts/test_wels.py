@@ -6,6 +6,7 @@ der Originalquellen dieses Tages.
 from datetime import date, datetime
 from pathlib import Path
 import json
+import re
 import unittest
 
 import update_wels as wels
@@ -141,6 +142,118 @@ class SecondListTests(unittest.TestCase):
         self.assertEqual([(row['name'], row['price'], row['included_starter']) for row in days['2026-11-18']], [
             ('Cheeseburger | Wedges', 12.9, 'Tagessuppe oder Salat'),
             ('Gemüsereis | Eis | Soja | Ingwer', 12.9, 'Tagessuppe oder Salat')])
+
+    def test_dokkhun_period_without_year_week_starting_on_tuesday_and_dessert(self):
+        # KW 48/2026: "(24. November – 27. November)" ohne Jahreszahl – die Karte fiel deshalb ganz aus.
+        week = date(2026, 11, 23)
+        days = wels.check(wels.parse_dokkhun(read('dokkhun-kw48.txt'), week), week)
+        self.assertEqual(sorted(days), ['2026-11-24', '2026-11-25', '2026-11-26', '2026-11-27'])
+        self.assertEqual([(row['name'][:22], row['price']) for row in days['2026-11-24']],
+                         [('Gai Pad Kratherm (gebr', 14.5), ('Bla Pad Künchai (Buntb', 15.5)])
+        thursday = days['2026-11-26']
+        self.assertTrue(all('Schoko-Kirschkuchen' in row['description'] and 'Kirschkuchen' not in row['name'] for row in thursday))
+        with self.assertRaises(wels.NotThisWeek):
+            wels.parse_dokkhun(read('dokkhun-kw48.txt'), date(2026, 11, 30))
+
+    def test_dokkhun_without_any_period_uses_the_calendar_week_of_the_file_name(self):
+        week = date(2026, 11, 23)
+        text = read('dokkhun-kw48.txt').replace('(24. November – 27. November)', '')
+        self.assertEqual(wels.dokkhun_week('https://cdn.website.dish.co/media/10/2c/10307750/Menu-KW-48.pdf'), 48)
+        self.assertEqual(len(wels.parse_dokkhun(text, week, 48)), 4)
+        with self.assertRaises(wels.NotThisWeek):
+            wels.parse_dokkhun(text, week, 47)
+        with self.assertRaisesRegex(ValueError, 'Zeitraum'):
+            wels.parse_dokkhun(text, week)
+
+    def test_period_without_year_and_across_new_year(self):
+        self.assertEqual(wels.period_of('24. November – 27. November', date(2026, 11, 23)), (date(2026, 11, 24), date(2026, 11, 27)))
+        self.assertEqual(wels.period_of('28. Dezember – 3. Jänner', date(2026, 12, 28)), (date(2026, 12, 28), date(2027, 1, 3)))
+        self.assertEqual(wels.period_of('28. Dezember – 3. Jänner 2027', date(2026, 12, 28)), (date(2026, 12, 28), date(2027, 1, 3)))
+        self.assertIsNone(wels.period_of('Montag – Freitag von 11:30 bis 14:00 Uhr', date(2026, 11, 23)))
+        self.assertEqual(wels.period_of('24. Nov. – 27. Nov.', date(2026, 11, 23)), (date(2026, 11, 24), date(2026, 11, 27)))
+        self.assertEqual(wels.long_date('4. Jänner 2027'), date(2027, 1, 4))
+
+    def test_ox_dated_card_with_one_price_in_the_head(self):
+        # Seit KW 48/2026: Zeitraum und "ab € 13,90" im Kopf, kein Preis mehr je Tag – vorher "keine Tage erkannt".
+        week = date(2026, 11, 23)
+        days = wels.check(wels.parse_ox(read('ox-2026-11-23.txt'), week), week)
+        self.assertEqual([len(days[day]) for day in sorted(days)], [2, 2, 2, 2, 1])
+        self.assertEqual([(row['name'], row['price'], row['included_starter'], row['description']) for row in days['2026-11-27']],
+                         [('Gegrilltes Lachsfilet auf Tomaten-Basilikum-Risotto', 13.9, 'Klare Rindsuppe mit Profiteroles', 'Mittagsmenü ab € 13,90')])
+        self.assertFalse(any('Steaks' in row['name'] or row['name'] == 'OX' for rows in days.values() for row in rows))
+        with self.assertRaises(wels.NotThisWeek):
+            wels.parse_ox(read('ox-2026-11-23.txt'), date(2026, 11, 30))
+
+    def test_fallback_reader_reads_dated_cards_of_any_layout_and_refuses_without_week_proof(self):
+        # Maßstab: die echten Seiten vom 17.11. und 23.11.2026, gelesen ohne Wissen über das jeweilige Lokal.
+        week47, week48 = date(2026, 11, 16), date(2026, 11, 23)
+        ox = wels.check(wels.generic_week(read('ox-2026-11-23.txt'), week48), week48)
+        self.assertEqual([names(ox[day]) for day in sorted(ox)][-1],
+                         ['Klare Rindsuppe mit Profiteroles', 'Gegrilltes Lachsfilet auf Tomaten-Basilikum-Risotto'])
+        self.assertEqual(len(ox), 5)
+        market = wels.generic_week(read('naschmarkt-2026-11-17.txt'), week47)
+        self.assertEqual([(row['name'], row['price']) for row in market['2026-11-17']], [
+            ('Hirschragout mit Kroketten und Rotkraut', 15.9),
+            ('Gefüllte Zucchini mit Mozzarella gratiniert auf Tomatenragout dazu Erdäpfel', 12.9)])
+        thai = wels.generic_week(read('dokkhun-kw48.txt'), week48)
+        self.assertEqual([(row['name'][:16], row['price']) for row in thai['2026-11-24']],
+                         [('Gemischter Salat', None), ('Gai Pad Kratherm', 14.5), ('Bla Pad Künchai ', 15.5)])
+        self.assertTrue(thai['2026-11-24'][1]['name'].endswith('Knoblauchsauce, Gemüse, Reis)'))  # umbrochene Zeile
+        self.assertEqual([(row['name'][:20], row['price']) for row in thai['2026-11-26']][:2],
+                         [('Pad Krapao Pak Ruam ', 15.5), ('Kauw Pad Kiaw Wan Ga', 14.5)])   # Preis vor dem Gericht
+        linde = wels.generic_week(read('linde-2026-11-17.txt'), date(2026, 11, 9))
+        self.assertEqual((linde['2026-11-10'][1]['name'], linde['2026-11-10'][1]['price']),
+                         ('Surbraten vom Schopf mit Kartoffeln und Krautsalat', 14.8))
+        self.assertEqual(len(wels.generic_week(read('dokkhun-kw47.txt'), week47)), 4)        # "Donnertag"
+        everything = [name for text, week in ((read('ox-2026-11-23.txt'), week48), (read('imturm-2026-11-17.txt'), week47),
+                                              (read('inshaas-2026-11-17.txt'), week47), (read('hannibal-2026-11-17.txt'), week47))
+                      for rows in wels.generic_week(text, week).values() for name in names(rows)]
+        self.assertFalse([name for name in everything if re.search(r'@|Uhr|reserv|©|Steaks & Grill|Öffnungs', name, re.I)])
+        # Ohne Datum oder Zeitraum wird nichts gezeigt; eine andere Woche wird als solche erkannt.
+        with self.assertRaisesRegex(ValueError, 'kein Beleg'):
+            wels.generic_week(read('ox-2026-11-17.txt'), week47)
+        with self.assertRaises(wels.NotThisWeek):
+            wels.generic_week(read('ox-2026-11-23.txt'), date(2026, 11, 30))
+        with self.assertRaises(wels.NotThisWeek):
+            wels.generic_week(read('naschmarkt-2026-11-17.txt'), week48)
+        with self.assertRaises(ValueError):
+            wels.generic_week(read('huber-2026-11-17.txt'), week47)
+
+    def test_fallback_steps_in_when_the_own_reader_fails_and_never_replaces_a_good_state(self):
+        now = datetime(2026, 11, 23, 9, 0, tzinfo=wels.TZ)
+        page = ('<html><body><h1>Mittagsmenü</h1><p>23. November – 27. November 2026</p>'
+                + ''.join(f'<h3>{day}</h3><p>Tagessuppe</p><p>Gericht {index} mit Beilage</p>' for index, day in enumerate(wels.DAY_NAMES))
+                + '<p>OX</p></body></html>').encode()
+
+        def get(url):
+            if 'ox-wels' in url:
+                return page
+            raise OSError('offline')
+
+        original = wels.parse_ox
+        try:
+            wels.parse_ox = lambda text, monday: (_ for _ in ()).throw(ValueError('OX: neue Form'))
+            result = wels.build(None, date(2026, 11, 23), now, get)
+            ox = next(row for row in result['restaurants'] if row['id'] == 'ox')
+            self.assertEqual((ox['import']['state'], ox['import']['message']), ('fallback', 'ValueError: OX: neue Form'))
+            self.assertEqual(names(ox['days']['2026-11-25']), ['Tagessuppe', 'Gericht 2 mit Beilage'])
+            # Ein guter Stand derselben Woche bleibt stehen – der Ersatzleser überschreibt ihn nicht.
+            good = json.loads(json.dumps(result))
+            for row in good['restaurants']:
+                if row['id'] == 'ox':
+                    row['days'] = {day: [wels.dish('Vom eigenen Leser', 12.9)] for day in row['days']}
+                    row['import'] = {'state': 'ok', 'message': ''}
+            again = wels.build(good, date(2026, 11, 23), now, get)
+            ox = next(row for row in again['restaurants'] if row['id'] == 'ox')
+            self.assertEqual((ox['import']['state'], names(ox['days']['2026-11-25'])), ('error', ['Vom eigenen Leser']))
+        finally:
+            wels.parse_ox = original
+
+    def test_closed_notice_is_shown_without_a_price(self):
+        days = wels.check({'2026-11-23': [wels.dish('Restaurant geschlossen.', 13.4)],
+                           '2026-11-24': [wels.dish('Schweinebraten / Kartoffeln / Kraut', 13.4)]}, date(2026, 11, 23))
+        self.assertEqual((days['2026-11-23'][0]['price'], days['2026-11-23'][0]['priceLabel']), (None, ' '))
+        self.assertEqual(days['2026-11-24'][0]['price'], 13.4)
 
     def test_goesser_monthly_plan_without_prices_and_without_allergen_letters(self):
         days = wels.check(wels.parse_goesser(read('goesser-november.txt'), MONDAY), MONDAY)

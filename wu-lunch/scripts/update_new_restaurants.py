@@ -50,16 +50,15 @@ def period_karma(html, monday):
     # The page uses "Karma Food 02.11.-07.11." (no year); the explicit
     # month/day interval must agree with the requested calendar week.
     headings = " ".join(soup.stripped_strings)
-    m = re.search(r"Karma\s+Food\s+(\d{1,2})\.(\d{1,2})\.\s*[-–]\s*(\d{1,2})\.(\d{1,2})\.", headings, re.I)
+    m = re.search(r"Karma\s+Food\s+(\d{1,2})\.\s*(\d{1,2})\b", headings, re.I)
     if not m:
         raise ValueError("Karma Food: datierter Wochenkopf fehlt")
-    d, mo, end_d, end_mo = (int(x) for x in m.groups())
+    d, mo = (int(x) for x in m.groups())
     if (d, mo) != (monday.day, monday.month):
         raise ValueError("Karma Food: nur ein Plan für eine andere Woche veröffentlicht")
-    end = monday + timedelta(days=5)
-    if (end_d, end_mo) not in ((end.day, end.month),
-                              ((monday + timedelta(days=4)).day, (monday + timedelta(days=4)).month)):
-        raise ValueError("Karma Food: ungewöhnliches Enddatum")
+    # Das Startdatum belegt die Woche. Das Enddatum wird von Hand getippt und stimmt nicht immer
+    # ("23.11.-25.11." in KW 48/2026 bei vollständiger Karte Montag bis Freitag): Es darf die Karte nicht
+    # sperren. Vollständigkeit und Inhalt sichern die Tagesprüfung und der Abgleich mit dem PDF.
     return soup
 
 
@@ -117,20 +116,22 @@ def parse_karma_html(raw, monday):
         is_special = bool(re.search(r"\bSpecial\s*€\s*\d", info, re.I))
         is_vegan = bool(re.search(r"\bVegan\b", info, re.I))
         is_vegetarian = bool(re.search(r"\bVegetarisch\b", info, re.I))
-        if not (is_vegan or is_vegetarian):
-            raise ValueError("Karma Food: Ernährungskennzeichnung fehlt")
+        # Fehlt die Kennzeichnung bei einem Gericht, bleibt nur dessen Symbol weg – nicht die ganze Woche.
         day = (monday + timedelta(days=current)).isoformat()
         if any(normal(x["name"]) == normal(name) for x in result[day]):
             raise ValueError("Karma Food: doppeltes Tagesgericht")
         result[day].append({
             "name": name, "price": None, "category": "Special" if is_special else "Hauptgericht",
-            "diet": "vegan" if is_vegan else "veggie", "description": "",
+            "diet": "vegan" if is_vegan else "veggie" if is_vegetarian else "", "description": "",
             "allergens": [], "included_soup": None, "included_choices": [],
             "source_url": KARMA_URL, "is_special": is_special,
         })
         if is_special:
             specials.add((day, normal(name)))
-    if len(specials) > 5 or any(not 2 <= len(items) <= 4 for items in result.values()):
+    # Ein geschlossener Tag (Feiertag) oder ein Gericht mehr oder weniger darf die Woche nicht sperren;
+    # eine Karte mit weniger als drei gefüllten Tagen gilt als unvollständig gelesen.
+    filled = [items for items in result.values() if items]
+    if len(specials) > 5 or len(filled) < 3 or any(len(items) > 6 for items in filled):
         raise ValueError("Karma Food: Wochenmenü unvollständig")
     return result, pdf_link
 
@@ -146,7 +147,7 @@ def validate_karma_pdf_matches(days, pdf_text):
                  if len(w) >= 5 and w not in {"curry", "veggie", "linsen", "mit", "salat"}]
         if words and len(set(words) & tokens) >= min(2, len(words)):
             matches += 1
-    if matches < max(9, int(len(entries) * 0.7)):
+    if matches < max(min(9, len(entries)), int(len(entries) * 0.7)):
         raise ValueError(f"Karma Food: PDF und HTML weichen voneinander ab ({matches}/{len(entries)} Treffer)")
 
 

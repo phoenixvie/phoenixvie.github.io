@@ -169,3 +169,37 @@ class NewRestaurantTests(unittest.TestCase):
 
 if __name__=="__main__":
     unittest.main()
+
+
+class KarmaToleranceTests(unittest.TestCase):
+    """Karma Food KW 48/2026: Kopf „23.11.-25.11." (Tippfehler im Enddatum) sperrte die vollständige Wochenkarte."""
+
+    def test_wrong_or_missing_end_date_does_not_block_a_complete_week(self):
+        for head in (b"Karma Food 02.11.-04.11.", b"Karma Food 02.11.-31.11.", b"Karma Food 02.11.", b"Karma Food 02.11. - 07.11.2026"):
+            rows,_=module.parse_karma_html(karma_fixture().replace(b"Karma Food 02.11.-07.11.",head),MON)
+            self.assertEqual(sum(map(len,rows.values())),15,head)
+
+    def test_start_date_still_decides_the_week(self):
+        for head in (b"Karma Food 09.11.-14.11.", b"Karma Food 26.10.-07.11."):
+            with self.assertRaisesRegex(ValueError,"andere Woche"):
+                module.parse_karma_html(karma_fixture().replace(b"Karma Food 02.11.-07.11.",head),MON)
+        with self.assertRaisesRegex(ValueError,"Wochenkopf fehlt"):
+            module.parse_karma_html(karma_fixture().replace(b"Karma Food 02.11.-07.11.",b"Wochenkarte"),MON)
+
+    def test_a_dish_without_diet_label_only_loses_its_symbol(self):
+        page=karma_fixture().replace(b"<h3>Gericht 1 Variation 0 mit Gew\xc3\xbcrzen</h3><div> Vegan Glutenfrei</div>",
+                                     b"<h3>Gericht 1 Variation 0 mit Gew\xc3\xbcrzen</h3><div> Glutenfrei</div>")
+        rows,_=module.parse_karma_html(page,MON)
+        self.assertEqual([item["diet"] for item in rows["2026-11-03"]],["","vegan","vegan"])
+
+    def test_a_closed_day_does_not_block_the_week_but_a_mostly_empty_card_does(self):
+        page=karma_fixture().decode()
+        start,end=page.index("<h2>Mittwoch</h2>")+len("<h2>Mittwoch</h2>"),page.index("<h2>Donnerstag</h2>")
+        holiday=page[:start]+"<p>Feiertag – geschlossen</p>"+page[end:]
+        rows,_=module.parse_karma_html(holiday.encode(),MON)
+        self.assertEqual([len(rows[day]) for day in sorted(rows)],[3,3,0,3,3])
+        text=" ".join(item["name"] for day in rows.values() for item in day)
+        module.validate_karma_pdf_matches(rows,text)
+        empty=page[:page.index("<h2>Mittwoch</h2>")]+"</body>"
+        with self.assertRaisesRegex(ValueError,"unvollständig"):
+            module.parse_karma_html(empty.encode(),MON)
