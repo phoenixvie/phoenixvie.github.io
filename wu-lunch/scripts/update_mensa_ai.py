@@ -309,9 +309,7 @@ def independent_period(pdf_bytes, monday):
                         break
                 except ValueError:
                     continue
-    if found is None or found[0] != monday or found[1] not in (
-        monday + timedelta(days=4), monday + timedelta(days=3)
-    ):
+    if not legacy.week_identity(found, monday, extracted):
         raise ValueError("Mensa: PDF-Woche nicht unabhängig verifiziert")
     return extracted
 

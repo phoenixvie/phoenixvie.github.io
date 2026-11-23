@@ -32,7 +32,8 @@ def verify_week(text,monday):
     if not m:raise ValueError("Topf-Browser: sichtbares Wochendatum fehlt")
     start=date(int(m.group(5)),MONTHS[m.group(2).casefold()],int(m.group(1)))
     end=date(int(m.group(5)),MONTHS[m.group(4).casefold()],int(m.group(3)))
-    if start!=monday or end!=monday+timedelta(days=4):
+    # Das Startdatum belegt die Woche; ein vertipptes Enddatum sperrt die Karte nicht.
+    if start!=monday:
         raise ValueError(f"Topf-Browser: Wochenquelle {start} bis {end} ist nicht aktuelle Woche {monday}")
 
 TAB_CLASSES_JS = """names => names.map(name => {

@@ -30,7 +30,7 @@ TZ = ZoneInfo("Europe/Vienna")
 WEEKDAYS = ("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
 ALLOWED = {"shop.baschly.com", "www.wumensa.at", "wumensa.at", "www.dascampus.at",
            "dascampus.at", "www.dasglashaus.at", "dasglashaus.at", "losteria.net", "www.losteria.net", "xn--omakche-q2a.at", "www.xn--omakche-q2a.at", "topfdeckel.at", "www.topfdeckel.at", "www.zurgruenenhuette.com", "zurgruenenhuette.com", "lia.coffee", "www.lia.coffee", "karmafood.at", "www.karmafood.at", "finn.wien", "www.finn.wien", "cdn.shopify.com"}
-MONTHS = {"jan":1,"jänner":1,"feb":2,"mär":3,"maer":3,"apr":4,"mai":5,"jun":6,"jul":7,
+MONTHS = {"jan":1,"jän":1,"jänner":1,"feb":2,"mär":3,"maer":3,"apr":4,"mai":5,"jun":6,"jul":7,
           "aug":8,"sep":9,"okt":10,"nov":11,"dez":12}
 URLS = {
     "mensa":"https://www.wumensa.at/menuplan-deutsch/",
@@ -55,13 +55,30 @@ def euros(s):
     m = re.search(r"(?:€\s*)?(\d{1,3}[,.]\d{2})\s*€?", str(s))
     return float(m.group(1).replace(",", ".")) if m else None
 
+def _span(start, end):
+    """Zeitraum mit eigenständig datiertem Start. Ein unmögliches Enddatum (Tippfehler: davor oder Wochen
+    später) macht den Plan nicht unlesbar – dann gilt die Arbeitswoche ab dem Start. Ob der Start zur
+    gesuchten Woche passt, prüfen die Aufrufer."""
+    return (start, end) if 0 <= (end-start).days <= 14 else (start, start+timedelta(days=4))
+
+def week_identity(p, monday, text=""):
+    """Wochenbeleg: Der Plan beginnt am Montag der gesuchten Woche. Das handgetippte Enddatum zählt nicht
+    (Karma Food, 23.11.2026: "23.11.-25.11." sperrte eine vollständige Karte). Beginnt der Plan wegen eines
+    Feiertags später in derselben Woche, genügt das zusammen mit der passenden Kalenderwoche im Text."""
+    if p is None:
+        return False
+    if p[0] == monday:
+        return True
+    week = re.search(r"\bKW\s*(\d{1,2})\b", text or "", re.I)
+    return bool(week and int(week.group(1)) == monday.isocalendar().week and monday < p[0] <= monday+timedelta(days=4))
+
 def period(text):
     m = re.search(r"(\d{1,2})\s*[./]\s*(\d{1,2})\s*[./]\s*(\d{2,4})\s*[-–—]\s*(\d{1,2})\s*[./]\s*(\d{1,2})\s*[./]\s*(\d{2,4})", text)
     if m:
         a,b,y,c,d,z = map(int,m.groups())
         try:
             x=date(y if y>99 else y+2000,b,a); q=date(z if z>99 else z+2000,d,c)
-            return (x,q) if 0 <= (q-x).days <= 14 else None
+            return _span(x,q)
         except ValueError: pass
     m=re.search(r"(\d{1,2})\.\s*([a-zäöü]{3,})\.?\s*(\d{4})\s*[-–—]\s*(\d{1,2})\.\s*([a-zäöü]{3,})\.?\s*(\d{4})", text, re.I)
     if m:
@@ -69,7 +86,7 @@ def period(text):
         try:
             x=date(int(y),MONTHS[mo.lower()[:3]],int(a))
             q=date(int(z),MONTHS[mn.lower()[:3]],int(b))
-            return (x,q) if 0 <= (q-x).days <= 14 else None
+            return _span(x,q)
         except (KeyError,ValueError): pass
     # Webseiten mit Jahreszahl nur am Ende: "03.08 bis 07.08.2026".
     m=re.search(r"(\d{1,2})\s*[./]\s*(\d{1,2})\s*(?:[-–—]|bis)\s*(\d{1,2})\s*[./]\s*(\d{1,2})\s*[./]\s*(\d{4})",text,re.I)
@@ -332,7 +349,7 @@ def parse_mensa(raw,monday):
                             p=(monday,end)
                             break
                     except ValueError:pass
-        if p is None or p[0]!=monday or p[1] not in (monday+timedelta(days=4),monday+timedelta(days=3)):
+        if not week_identity(p,monday,text):
             raise ValueError(f"Mensa: PDF ist nicht aus aktueller Woche: {p}; Textlänge={len(text)}, Textanfang={text[:165]!r}")
         cats=[("Tagessuppe",r"^Tagess?uppe$"),
               ("Powered by plants / Veggie",r"^Powered by plants|^100% plant based|^Veggie$"),
@@ -636,9 +653,16 @@ def parse_gruenehuette(raw,monday):
     der Folgetext dem falschen Tag zugeordnet werden.
     """
     lines=html_lines(raw); whole="\n".join(lines)
-    m=re.search(r"TAGESTELLER\s*/\s*LUNCH\s*SPECIAL\s*(\d{1,2})\s*\.\s*(\d{1,2})\s*\.\s*(\d{4})",whole,re.I)
+    # Die Überschrift wird von Hand getippt: Jahr zwei- oder vierstellig oder gar nicht, mit "vom" oder ":" davor.
+    m=re.search(r"TAGESTELLER\s*/\s*LUNCH\s*SPECIAL\D{0,12}?(\d{1,2})\s*\.\s*(\d{1,2})\s*\.?(?:\s*(\d{4}|\d{2})\b)?",whole,re.I)
     if not m:raise ValueError("Grüne Hütte: Datumsüberschrift fehlt")
-    start=date(int(m.group(3)),int(m.group(2)),int(m.group(1)))
+    year=int(m.group(3)) if m.group(3) else monday.year
+    try:
+        start=date(year if year>99 else year+2000,int(m.group(2)),int(m.group(1)))
+    except ValueError:
+        raise ValueError("Grüne Hütte: Datumsüberschrift fehlt") from None
+    if not m.group(3) and abs((start-monday).days)>180:  # Jahreswechsel ohne Jahreszahl
+        start=start.replace(year=start.year+(1 if start<monday else -1))
     if start!=monday:raise ValueError(f"Grüne Hütte: Plan ist nicht von aktueller Woche: {start}")
     out=blank_days(monday)
     labels={"MO":0,"DI":1,"MI":2,"DO":3,"FR":4}

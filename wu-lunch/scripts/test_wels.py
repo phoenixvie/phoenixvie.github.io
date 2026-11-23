@@ -255,6 +255,85 @@ class SecondListTests(unittest.TestCase):
         self.assertEqual((days['2026-11-23'][0]['price'], days['2026-11-23'][0]['priceLabel']), (None, ' '))
         self.assertEqual(days['2026-11-24'][0]['price'], 13.4)
 
+    def test_ai_reader_keeps_only_what_stands_word_for_word_in_the_card(self):
+        week = date(2026, 11, 23)
+        card = ("Unsere Mittagsteller\nKW 48 / 23.11. - 27.11.\nZu Wochenbeginn: Krautfleckerl mit\nSpeck 11,90\n"
+                "Dann: Gebackener Karpfen mit Erdäpfelsalat 14,50\nMitte der Woche: Linsen mit Knödel\n")
+        good = {"week_evidence": "KW 48 / 23.11. - 27.11.", "days": [
+            {"date": "2026-11-23", "dishes": [{"name": "Krautfleckerl mit Speck", "price": 11.9}]},
+            {"date": "2026-11-24", "dishes": [{"name": "Gebackener Karpfen mit Erdäpfelsalat", "price": 14.5},
+                                              {"name": "Linsen mit Knödel", "price": 9.9}]},
+            {"date": "2026-12-01", "dishes": [{"name": "Linsen mit Knödel", "price": None}]}]}
+        calls = []
+
+        def answering(result):
+            def post(url, **kwargs):
+                calls.append(kwargs)
+                return type("Response", (), {"status_code": 200, "json": lambda self: {
+                    "status": "completed", "output": [{"type": "message", "content": [
+                        {"type": "output_text", "text": json.dumps(result)}]}]}})()
+            return post
+
+        days = wels.check(wels.ai_week(card, week, "geheim", answering(good)), week)
+        self.assertEqual(sorted(days), ['2026-11-23', '2026-11-24'])                        # fremde Woche fällt weg
+        self.assertEqual([(row['name'], row['price']) for row in days['2026-11-24']],
+                         [('Gebackener Karpfen mit Erdäpfelsalat', 14.5), ('Linsen mit Knödel', None)])  # 9,90 steht nirgends
+        self.assertEqual(days['2026-11-23'][0]['name'], 'Krautfleckerl mit Speck')           # umbrochene Zeile
+        self.assertEqual(calls[0]['headers']['Authorization'], 'Bearer geheim')
+        self.assertNotIn('geheim', json.dumps(calls[0]['json']))
+        invented = json.loads(json.dumps(good))
+        invented['days'][0]['dishes'] = [{"name": "Wiener Schnitzel vom Kalb", "price": 11.9}]
+        with self.assertRaisesRegex(ValueError, 'nicht wörtlich'):
+            wels.ai_week(card, week, "geheim", answering(invented))
+        with self.assertRaisesRegex(ValueError, 'kein wörtlicher Beleg'):
+            wels.ai_week(card, week, "geheim", answering({**good, "week_evidence": "gültig von 23.11. bis 27.11."}))
+        with self.assertRaisesRegex(ValueError, 'kein wörtlicher Beleg'):
+            wels.ai_week(card, week, "geheim", answering({**good, "week_evidence": ""}))
+        with self.assertRaises(wels.NotThisWeek):
+            wels.ai_week(card, date(2026, 11, 30), "geheim", answering(good))
+        with self.assertRaisesRegex(ValueError, 'nennt kein Datum'):
+            wels.ai_week(card, week, "geheim", answering({**good, "week_evidence": "Unsere Mittagsteller"}))
+
+    def test_ai_reader_is_the_last_resort_and_is_asked_once_per_card(self):
+        now, week = datetime(2026, 11, 23, 9, 0, tzinfo=wels.TZ), date(2026, 11, 23)
+        card = "Mittagsteller KW 48 / 23.11. - 27.11.\nZu Wochenbeginn: Krautfleckerl mit Speck 11,90\nDann: Linsen mit Knödel 10,90"
+        answer = {"week_evidence": "KW 48 / 23.11. - 27.11.", "days": [
+            {"date": "2026-11-23", "dishes": [{"name": "Krautfleckerl mit Speck", "price": 11.9}]},
+            {"date": "2026-11-24", "dishes": [{"name": "Linsen mit Knödel", "price": 10.9}]}]}
+        asked = []
+
+        def post(url, **kwargs):
+            asked.append(url)
+            return type("Response", (), {"status_code": 200, "json": lambda self: {
+                "status": "completed", "output": [{"type": "message", "content": [
+                    {"type": "output_text", "text": json.dumps(answer)}]}]}})()
+
+        def get(url):
+            if 'ox-wels' in url:
+                return ('<html><body>' + ''.join(f'<p>{line}</p>' for line in card.splitlines()) + '</body></html>').encode()
+            raise OSError('offline')
+
+        ox = lambda result: next(row for row in result['restaurants'] if row['id'] == 'ox')
+        original = wels.parse_ox
+        try:
+            wels.parse_ox = lambda text, monday: (_ for _ in ()).throw(ValueError('OX: neue Form'))
+            without_key = wels.build(None, week, now, get)
+            self.assertEqual((ox(without_key)['import']['state'], asked), ('error', []))       # ohne Schlüssel kein Aufruf
+            first = wels.build(without_key, week, now, get, ai_key='geheim', ai_post=post)
+            self.assertEqual((ox(first)['import']['state'], ox(first)['import']['reader'], len(asked)), ('fallback', 'ki', 1))
+            self.assertEqual(names(ox(first)['days']['2026-11-24']), ['Linsen mit Knödel'])
+            second = wels.build(first, week, now, get, ai_key='geheim', ai_post=post)
+            self.assertEqual((ox(second)['import'], len(asked)), (ox(first)['import'], 1))       # gleiche Karte: kein neuer Aufruf
+            self.assertEqual(second['updatedAt'], first['updatedAt'])
+            # Antwort ohne Beleg: nichts wird gezeigt, und dieselbe Karte wird nicht noch einmal gesendet.
+            answer['week_evidence'] = ''
+            failed = wels.build(None, week, now, get, ai_key='geheim', ai_post=post)
+            self.assertEqual((ox(failed)['import']['state'], names(ox(failed)['days']['2026-11-24']), len(asked)), ('error', [], 2))
+            wels.build(failed, week, now, get, ai_key='geheim', ai_post=post)
+            self.assertEqual(len(asked), 2)
+        finally:
+            wels.parse_ox = original
+
     def test_goesser_monthly_plan_without_prices_and_without_allergen_letters(self):
         days = wels.check(wels.parse_goesser(read('goesser-november.txt'), MONDAY), MONDAY)
         self.assertEqual(len(days), 5)

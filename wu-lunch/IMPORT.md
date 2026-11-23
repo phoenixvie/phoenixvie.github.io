@@ -138,7 +138,7 @@ Grundsatz seither: **Der Beleg für die richtige Woche bleibt streng, alles ande
 einer anderen Woche wird nie gezeigt. Tippfehler, fehlende Jahreszahlen, ein geschlossener Tag oder ein einzelnes
 unvollständiges Gericht sperren aber nicht mehr das ganze Lokal.
 
-Drei Schichten:
+Vier Schichten:
 
 1. **Eigener Leser je Lokal** – liefert die beste Darstellung. Jeder Störfall wird mit der Originalquelle als
    Testfall hinterlegt (`scripts/fixtures/`), damit er nicht wiederkehrt.
@@ -146,7 +146,11 @@ Drei Schichten:
    für die Woche noch nichts Gutes vorliegt. Er sucht nur Wochentage und übernimmt die Zeilen darunter wörtlich;
    er zeigt nichts ohne Beleg für die Woche (Zeitraum, Tagesdatum oder Kalenderwoche in der Karte). Zustand
    `fallback`.
-3. **Störungsmeldung (`scripts/report_problems.py`)** – läuft nach jedem Import. Für jede anhaltende Störung
+3. **KI-Leser (Wels, `ai_week`)** – letzte Rückfallebene, wenn auch der Ersatzleser scheitert. Braucht das
+   Secret `OPENAI_API_KEY`; je Kartentext höchstens ein Aufruf. Übernommen wird nur, was wörtlich in der Karte
+   steht (Gerichtnamen und Preise werden im Text gesucht); den Beleg für die Woche prüft der Code, nicht das
+   Modell. Probelauf ohne Veröffentlichung: Workflow „Wels – Mittagsmenüs aktualisieren" mit `ki_probe`.
+4. **Störungsmeldung (`scripts/report_problems.py`)** – läuft nach jedem Import. Für jede anhaltende Störung
    gibt es genau ein offenes GitHub-Issue mit dem Etikett `import-stoerung` (E-Mail an den Betreiber); es
    schließt sich selbst, sobald die Karte wieder gelesen wird. „Noch nicht veröffentlicht“ ist keine Störung.
 
