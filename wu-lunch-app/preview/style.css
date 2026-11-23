@@ -70,7 +70,10 @@
 .meet-facts .meet-fact .meet-date-picker select{width:auto;max-width:100%}
 @keyframes meet-nudge{0%{box-shadow:0 0 0 0 rgba(8,124,244,.5);transform:scale(1)}35%{transform:scale(1.04)}70%{box-shadow:0 0 0 12px rgba(8,124,244,0);transform:scale(1)}100%{box-shadow:0 0 0 0 rgba(8,124,244,0);transform:scale(1)}}
 .meet-cta .meet-primary[data-nudge]:not(:disabled){animation:meet-nudge 1.6s ease-out .6s 3}
-@media (prefers-reduced-motion:reduce){.meet-cta .meet-primary[data-nudge]{animation:none}}
+/* Das Namensfeld pulsiert dezent mit (Rand wird kurz blau), solange niemand hineintippt. */
+@keyframes meet-nudge-field{0%,100%{border-color:#cbd3dd;box-shadow:0 0 0 0 rgba(8,124,244,0)}45%{border-color:#087cf4;box-shadow:0 0 0 3px rgba(8,124,244,.16)}}
+.meet-cta-row:has(.meet-primary[data-nudge]:not(:disabled)) input:not(:focus){animation:meet-nudge-field 1.6s ease-in-out .6s 3}
+@media (prefers-reduced-motion:reduce){.meet-cta .meet-primary[data-nudge],.meet-cta-row input{animation:none!important}}
 .meet-fact.meet-joined{background:#eef5fd}
 .meet-fact.meet-joined>.material-svg,.meet-fact.meet-joined>.material-symbols-outlined{color:#087cf4}
 .meet-facts .meet-fact .meet-joined-count{font-weight:600;color:#14365c}
@@ -84,7 +87,7 @@
 .meet-cta-row{display:flex;gap:10px;align-items:stretch}
 .meet-cta-row input{display:block;box-sizing:border-box;flex:1;min-width:0;width:100%;padding:12px;margin:0;border:1px solid #cbd3dd;border-radius:6px;font:inherit}
 .meet-cta-row input:focus-visible{outline:2px solid #087cf4;outline-offset:1px}
-.meet-cta-row .meet-primary{width:auto;flex:none;margin-top:0;padding:13px 18px}
+.meet-cta-row .meet-primary{width:auto;flex:none;min-width:42%;margin-top:0;padding:13px 18px}
 .meet-cta-row .meet-primary:only-child{flex:1}
 .meet-cta .meet-notice.meet-name-error{margin:0 0 8px}
 .meet-notice.meet-name-error{margin:8px 0 0;background:#fdeeee;color:#a3262a}

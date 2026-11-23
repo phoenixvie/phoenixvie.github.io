@@ -57,7 +57,10 @@ test('paused e-mail flow still works when switched back on (verified email, then
   // Hinweis auf den Knopf: drei sanfte Pulse kurz nach dem Öffnen, nicht bei reduzierter Bewegung (Vorgabe 23.11.2026).
   { const css=await readFile(new URL('../preview/style.css',import.meta.url),'utf8'), live=await readFile(new URL('../preview/meet-live.js',import.meta.url),'utf8');
     assert.match(css,/\.meet-cta \.meet-primary\[data-nudge\]:not\(:disabled\)\{animation:meet-nudge 1\.6s ease-out \.6s 3\}/);
-    assert.match(css,/@media \(prefers-reduced-motion:reduce\)\{\.meet-cta \.meet-primary\[data-nudge\]\{animation:none\}\}/);
+    assert.match(css,/@media \(prefers-reduced-motion:reduce\)\{\.meet-cta \.meet-primary\[data-nudge\],\.meet-cta-row input\{animation:none!important\}\}/);
+    // Das Namensfeld pulsiert dezent mit; der Knopf ist etwas breiter (Vorgaben 23.11.2026).
+    assert.match(css,/\.meet-cta-row:has\(\.meet-primary\[data-nudge\]:not\(:disabled\)\) input:not\(:focus\)\{animation:meet-nudge-field 1\.6s ease-in-out \.6s 3\}/);
+    assert.match(css,/\.meet-cta-row \.meet-primary\{[^}]*min-width:42%/);
     assert.match(live,/const nudge = Date\.now\(\) - \(state\.openedAt \|\| 0\) < 4000 \? ' data-nudge' : '';/); }
   // Die Seite endet knapp unter dem Foto, wenn die Anmelde-Leiste da ist (Vorgabe 23.11.2026).
   assert.match(await readFile(new URL('../preview/style.css',import.meta.url),'utf8'),/\.meet-content:has\(\+\.meet-cta\)\{padding-bottom:10px\}/);
