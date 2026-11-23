@@ -74,7 +74,7 @@ tap(label('Men\u00fc'))
 wait_for('WU Mensa',label('Weiter'))
 tap(label('Zur\u00fcck zur Liste'))
 wait_for('WU Food')
-tap('Change Language')
+tap('Change language')
 english=not english
 list_label='List' if english else 'Liste'
 wait_for(list_label)

@@ -76,14 +76,17 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(data["2026-11-04"][0]["included_soup"],"Französische Zwiebelsuppe")
         self.assertEqual(data["2026-11-05"][0]["included_choices"],["Tagessuppe","kleiner Salat"])
 
-    def test_baschly_missing_one_named_soup_rejected(self):
+    def test_baschly_one_missing_named_soup_only_loses_that_soup(self):
         text='<h2>Lunch Special Veggie</h2><p>€9,50</p><h3>Angebot der Woche</h3>'
         for d in DAYS:
             text+=f'<h3>{d}</h3>'
             if d!='Mittwoch': text+='<p>Tagessuppe: Gemüsesuppe</p>'
             text+='<p>Hauptgericht: Hausgemachte Falafel mit Hummus und Reis</p>'
-        with self.assertRaisesRegex(ValueError,"Tagessuppen fehlen"):
-            parse_baschly(text.encode(),MONDAY)
+        # Früher sperrte die eine fehlende Suppe die ganze Woche; jetzt fehlt nur diese Angabe.
+        data=parse_baschly(text.encode(),MONDAY)
+        soups=[data[day][0].get("included_soup") for day in sorted(data)]
+        self.assertEqual([bool(soup) for soup in soups],[True,True,False,True,True])
+        self.assertEqual(len([day for day in data if data[day]]),5)
 
     @staticmethod
     def make_pdf(valid="02.11.2026 - 06.11.2026"):
@@ -162,8 +165,27 @@ class ParserTests(unittest.TestCase):
     def test_candidate_rejects_malformed_price_and_text(self):
         valid=blank_days(MONDAY)
         valid['2026-11-02']=[make_item('Erdäpfel mit Gemüse',500,'Veggie')]
+        # Ein einzelner unmöglicher Preis: Das Gericht bleibt, der Preis fällt weg.
+        self.assertTrue(candidate_quality_gate('lia',blank_days(MONDAY),valid))
+        self.assertIsNone(valid['2026-11-02'][0]['price'])
+        # Ein einzelner unbrauchbarer Name wird weggelassen, kurze echte Gerichte ("Ramen") bleiben.
+        week=blank_days(MONDAY)
+        for day in week:
+            week[day]=[make_item('Ramen',11.5,'Fleisch'),make_item('Gemüsecurry mit Reis',10.5,'Veggie')]
+        week['2026-11-03'].append(make_item('Tagesteller:',9.9,'Veggie'))
+        self.assertTrue(candidate_quality_gate('karmafood',blank_days(MONDAY),week))
+        self.assertEqual([item['name'] for item in week['2026-11-03']],['Ramen','Gemüsecurry mit Reis'])
+        # Viele auffällige Einträge: Der Leser hat die Karte falsch zerlegt – nichts übernehmen.
+        broken=blank_days(MONDAY)
+        for day in broken:
+            broken[day]=[make_item('Su',500,'Veggie'),make_item('Gemüsecurry mit Reis',700,'Veggie')]
+        with self.assertRaisesRegex(ValueError,'Gerichtsname'):
+            candidate_quality_gate('lia',blank_days(MONDAY),broken)
+        prices=blank_days(MONDAY)
+        for day in prices:
+            prices[day]=[make_item('Gemüsecurry mit Reis',700,'Veggie')]
         with self.assertRaisesRegex(ValueError,'Preis'):
-            candidate_quality_gate('lia',blank_days(MONDAY),valid)
+            candidate_quality_gate('lia',blank_days(MONDAY),prices)
 
     def test_weekly_cache(self):
         dates=blank_days(MONDAY)

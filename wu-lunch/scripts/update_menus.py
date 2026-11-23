@@ -291,7 +291,10 @@ def parse_baschly(raw,monday,meat=False):
     # Wenn die Quelle Tagessuppen nennt, müssen sie vollständig ankommen.
     if re.search(r"Tagessuppe\s*:",txt,re.I):
         missing=[d for d,items in result.items() if items and not items[0].get("included_soup")]
-        if missing: raise ValueError(f"Baschly: Tagessuppen fehlen für {missing}")
+        # Fehlt die Suppe an einzelnen Tagen, bleibt nur die Suppenangabe weg; fehlt sie überall, obwohl die
+        # Seite Suppen nennt, wurde die Karte falsch gelesen.
+        if missing and len(missing)==sum(bool(items) for items in result.values()):
+            raise ValueError(f"Baschly: Tagessuppen fehlen für {missing}")
     return result
 
 def pdf_lines(page):
@@ -431,7 +434,8 @@ def parse_mensa(raw,monday):
                         if re.search(r"Mach den Deal|Smart Menü|Beilagensalat um nur|zu deinem Menü",line,re.I):continue
                         line=re.sub(r"€\s*\d{1,3}[,.]\d{2}|\d{1,3}[,.]\d{2}\s*€?","",line)
                         line=tidy(line)
-                        if line and line.lower() not in {"xxx","-","laut tagesaushang"}:names.append(line)
+                        # Feiertag/geschlossen ist wie "XXX" kein Gericht (z. B. 8. Dezember).
+                        if line and line.lower() not in {"xxx","-","laut tagesaushang"} and not CLOSED_CELL.match(line):names.append(line)
                     title=tidy(" ".join(names))
                     if len(title)<8 or len(title)>180:continue
                     diet="veggie" if label=="Powered by plants / Veggie" else "meat" if label=="Meaty" else "unknown"
@@ -441,9 +445,9 @@ def parse_mensa(raw,monday):
     for day_items in result.values():
         for item in day_items:
             title=item["name"]
-            if not title or len(title)>160 or not re.match(r'["„“«]?[A-ZÄÖÜ]',title):
+            if not title or len(title)>160 or not re.match(r'["„“«(]?[0-9½¼A-ZÄÖÜ]',title):
                 raise ValueError(f"Mensa: verstümmelter Tabellenzelltext erkannt ({title[:55]!r})")
-            if item["category"]=="Tagessuppe" and "suppe" not in title.casefold():
+            if item["category"]=="Tagessuppe" and not SOUP_WORD.search(title):
                 raise ValueError(f"Mensa: verdächtige Suppe ({title[:55]!r})")
     coverage=sum(1 for v in result.values() if sum(x["category"]=="Meaty" for x in v)>0)
     if coverage<3: raise ValueError(f"Mensa: nur {coverage}/5 Tage Meaty erkannt; PDF-Tabelle prüfen")
@@ -695,7 +699,8 @@ def parse_gruenehuette(raw,monday):
                     "veggie" if pending=="veggie" else "unknown",
                     "Suppe optional +2,00 €"))
         pending=None
-    if sum(len(v) for v in out.values())<5 or sum(bool(v) for v in out.values())<4:
+    # Mindestens drei gefüllte Tage: Eine Woche mit Feiertag und Zwickeltag bleibt sichtbar.
+    if sum(len(v) for v in out.values())<3 or sum(bool(v) for v in out.values())<3:
         raise ValueError("Grüne Hütte: unvollständiger Wochenplan; keine leeren Gerichte veröffentlichen")
     # Die vier Suppenarten stehen oberhalb der Wochentage. Sie sind gegen
     # Aufpreis wählbar, NICHT automatisch im Hauptgericht enthalten.
@@ -884,19 +889,47 @@ def menu_fingerprint(raw):
         tag.decompose()
     return hashlib.sha256(" ".join(soup.stripped_strings).encode("utf-8")).hexdigest()
 
+def undated_card_is_stale(meta,digest,monday):
+    """Karte ohne Datum (Baschly): Sie gilt erst als Karte der neuen Woche, wenn sie sich geändert hat.
+
+    `meta` ist der gespeicherte Stand der Quelle: `content_sha256` der zuletzt gezeigten Karte und `shown_week`,
+    die Woche, in der sie gezeigt wurde. Steht in einer späteren Woche noch dieselbe Karte auf der Seite, ist
+    sie die der Vorwoche (beobachtet: Samstag 21.11. bis Montag 23.11.2026, 05:30 Uhr).
+    """
+    shown=meta.get("shown_week")
+    return bool(digest and shown and shown!=monday.isoformat() and meta.get("content_sha256")==digest)
+
+# Zelle eines geschlossenen Tages im Mensa-Plan; Suppen heißen nicht immer "…suppe".
+CLOSED_CELL=re.compile(r"\s*(feiertag|geschlossen|kein betrieb|betriebsurlaub|ruhetag)\b",re.I)
+SOUP_WORD=re.compile(r"suppe|bouillon|brühe|eintopf|minestrone|consomm|fond\b|creme",re.I)
+
 def candidate_quality_gate(identifier,old_days,new_days):
     previous=sum(len(x) for x in old_days.values())
     current=sum(len(x) for x in new_days.values())
     if current<1 or (previous>=5 and current<previous*.65):
         raise ValueError(f"{identifier}: Menü enthält deutlich weniger Gerichte ({previous} -> {current})")
+    # Ein einzelnes auffälliges Gericht darf nicht die ganze Woche sperren: Es wird weggelassen (Name) bzw.
+    # ohne Preis gezeigt. Sind es mehrere, hat der Leser die Karte falsch zerlegt – dann wird nichts übernommen.
+    odd_names,odd_prices=[],[]
     for day,items in new_days.items():
         for item in items:
             name=tidy(item.get("name",""))
             price=item.get("price")
-            if len(name)<7 or len(name)>190 or name.endswith((" /",":")):
-                raise ValueError(f"{identifier} {day}: auffälliger Gerichtsname")
-            if price is not None and (not isinstance(price,(int,float)) or price<=0 or price>120):
-                raise ValueError(f"{identifier} {day}: auffälliger Preis")
+            if len(name)<4 or len(name)>190 or name.endswith((" /",":")):
+                odd_names.append((day,item))
+            elif price is not None and (not isinstance(price,(int,float)) or isinstance(price,bool) or price<=0 or price>120):
+                odd_prices.append((day,item))
+    limit=max(1,current//5)
+    if len(odd_names)>limit:
+        raise ValueError(f"{identifier} {odd_names[0][0]}: auffälliger Gerichtsname")
+    if len(odd_prices)>limit:
+        raise ValueError(f"{identifier} {odd_prices[0][0]}: auffälliger Preis")
+    for day,item in odd_names:
+        logging.warning("%s %s: auffälliges Gericht weggelassen: %r",identifier,day,str(item.get("name"))[:60])
+        new_days[day].remove(item)
+    for day,item in odd_prices:
+        logging.warning("%s %s: auffälliger Preis entfernt: %r",identifier,day,item.get("price"))
+        item["price"]=None
     return True
 
 def compare_verified_week(old_days,new_days):
@@ -1084,6 +1117,8 @@ def run(today):
                                "consecutive_failures":meta.get("consecutive_failures",0),
                                "parser_version":meta.get("parser_version"),
                                "content_sha256":observed_digest}
+            if ident=="baschly":  # unveränderte Karte derselben Woche: Woche der Anzeige festhalten
+                operations[ident]["shown_week"]=meta.get("shown_week") or monday.isoformat()
             continue
         try:
             if ident=="mensa":
@@ -1144,13 +1179,15 @@ def run(today):
                 observed_digest=menu_fingerprint(raw)
             elif ident=="baschly":
                 raws=prefetched_raw if isinstance(prefetched_raw,tuple) else (safe_get(URLS["baschly_veg"]),safe_get(URLS["baschly_meat"]))
+                observed_digest=hashlib.sha256((menu_fingerprint(raws[0])+menu_fingerprint(raws[1])).encode()).hexdigest()
+                if undated_card_is_stale(meta,observed_digest,monday):
+                    raise ValueError("Baschly: Karte seit der Vorwoche unverändert; kein gültiger Wochenplan")
                 veg=parse_baschly(raws[0],monday)
                 meat=parse_baschly(raws[1],monday,True)
                 days={d:veg[d]+meat[d] for d in veg}
                 candidate_quality_gate(ident,restaurant(data,ident).get("days",{}),days)
                 preserve_verified_prices(restaurant(data,"baschly").get("days",{}),days)
                 apply_result(data,"baschly",days,"undated")
-                observed_digest=hashlib.sha256((menu_fingerprint(raws[0])+menu_fingerprint(raws[1])).encode()).hexdigest()
             elif ident=="topfdeckel":
                 # Wochenüberschrift allein belegt nicht, welcher Tab aktiv ist.
                 # Nur die mit einem eigenen Tagesdatum versehene Tageskarte publizieren.
@@ -1177,22 +1214,28 @@ def run(today):
             operations[ident]={"state":"ok","last_success":now,"consecutive_failures":0,
                                "parser_version":4 if ident=="lia" else meta.get("parser_version"),
                                "content_sha256":observed_digest}
+            if ident=="baschly":
+                operations[ident]["shown_week"]=monday.isoformat()
         except Exception as exc:
             desc=f"{type(exc).__name__}: {str(exc)[:220]}"
             # Noch nicht veröffentlichte Pläne sind kein technischer Ausfall.
-            if ident in ("topfdeckel","gruenehuette","lia") and isinstance(exc,ValueError) and any(
+            if ident in ("topfdeckel","gruenehuette","lia","baschly") and isinstance(exc,ValueError) and any(
                 fragment in str(exc).lower() for fragment in (
                   "kein datierter plan für heute","kein datierter plan", "nicht von aktueller woche",
                   "veraltete datumsangabe", "tag nicht veröffentlicht",
                   "kein gültiger wochenplan", "datumsüberschrift fehlt")):
                 operations[ident]={"state":"not_published","last_success":prev_success,
                                    "consecutive_failures":0,"note":str(exc)[:170]}
+                if ident=="baschly":  # Vergleichsstand der Vorwoche weiterführen
+                    operations[ident].update({key:meta[key] for key in ("content_sha256","shown_week") if key in meta})
                 restaurant(data,ident)["status"]=source(data,ident)["status"]="not_published"
                 continue
             failures=meta.get("consecutive_failures",0)+1
             operations[ident]={"state":"error","error":desc,"last_success":prev_success,
                                "consecutive_failures":failures,
                                "content_sha256":meta.get("content_sha256")}
+            if meta.get("shown_week"):
+                operations[ident]["shown_week"]=meta["shown_week"]
             problems.append(f"{ident}: {desc}")
             # Nie alten Wochenplan als neuen Plan ausgeben. Gültige Daten derselben Woche erhalten.
             r=restaurant(data,ident)

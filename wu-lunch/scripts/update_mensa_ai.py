@@ -176,7 +176,7 @@ def pdf_layout(raw, monday):
 
 def content_terms(text):
     words = normalize(text).split()
-    return {'sauce' if w=='sc' else w for w in words if len(w)>1 and not w.isdigit() and w not in STOPWORDS|{'xxx','laut','aushang','tagesaushang','wahlweise','inhalt','des','um','zum','nur','mach','jetzt'}}
+    return {'sauce' if w=='sc' else w for w in words if len(w)>1 and not w.isdigit() and w not in STOPWORDS|{'xxx','laut','aushang','tagesaushang','feiertag','geschlossen','ruhetag','betriebsurlaub','wahlweise','inhalt','des','um','zum','nur','mach','jetzt'}}
 
 
 def money_values(text):
@@ -332,7 +332,7 @@ def validate_menu(result, original_text, monday, pdf_url):
         pizza_station = VALID_CATEGORIES.get(normalize(item.get("category"))) == "Ausgabe 5"
         if not isinstance(name, str) or not ((pizza_station and name.strip() == "Pizza") or 8 <= len(name.strip()) <= 160):
             raise ValueError("Mensa: beschädigter Gerichtname")
-        if not re.match(r'["„“«]?[A-ZÄÖÜ]', name.strip()):
+        if not re.match(r'["„“«(]?[0-9½¼A-ZÄÖÜ]', name.strip()):
             raise ValueError("Mensa: verdächtiger Gerichtbeginn")
         category = VALID_CATEGORIES.get(normalize(item.get("category")))
         if category is None:
@@ -387,7 +387,7 @@ def validate_menu(result, original_text, monday, pdf_url):
         included = clean_item({'name': name, 'included_items': included})['included_items']
         if category == "Global & Grill" and any("suppe" in x.casefold() for x in included):
             raise ValueError("Mensa: Global & Grill darf keine inkludierte Suppe erhalten")
-        if category == "Tagessuppe" and "suppe" not in name.casefold():
+        if category == "Tagessuppe" and not legacy.SOUP_WORD.search(name):
             raise ValueError("Mensa: Tagessuppe nicht plausibel")
         portion = item.get("portion") or ""
         key = (day, normalize(name), normalize(portion))
@@ -431,7 +431,9 @@ def validate_menu(result, original_text, monday, pdf_url):
     if problems:
         more = f" (+{len(problems)-6} weitere)" if len(problems) > 6 else ""
         raise ValueError("; ".join(problems[:6]) + more)
-    if any(not rows for rows in days.values()):
+    # Ein einzelner leerer Tag ist erlaubt, wenn der Plan selbst einen geschlossenen Tag nennt (Feiertag).
+    empty = [day for day, rows in days.items() if not rows]
+    if empty and not (len(empty) == 1 and legacy.CLOSED_CELL.search(re.sub(r"\s+", " ", "\n" + original_text).replace(" ", "\n"))):
         raise ValueError("Mensa: weniger als fünf Wochentage gefunden")
     meaty = sum(any(x["category"] == "Meaty" for x in rows) for rows in days.values())
     if meaty < 3:
@@ -688,7 +690,9 @@ def run(today, model):
         print("::warning::Mensa-KI nicht übernommen: " + detail)
         audit.update(state="error", error=detail)
         status["mensa_luna_audit"] = audit
-        status.setdefault("sources", {}).setdefault("mensa", {}).update(state="error", error=detail)
+        source = status.setdefault("sources", {}).setdefault("mensa", {})
+        # Fehlversuche zählen, damit eine anhaltende Störung gemeldet wird (report_problems.py).
+        source.update(state="error", error=detail, consecutive_failures=int(source.get("consecutive_failures") or 0) + 1)
         status["problems"] = [p for p in status.get("problems", []) if not p.startswith("mensa:")]+["mensa: "+detail]
         status["health"] = "degraded"
         STATUS.write_text(json.dumps(status, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")

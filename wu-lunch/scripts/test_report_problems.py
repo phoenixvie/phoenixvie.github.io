@@ -42,6 +42,36 @@ class ReportProblemsTests(unittest.TestCase):
                                ("not_published", "OX zeigt noch die Karte der Vorwoche"), ("ok", "")):
             self.assertEqual(report.wels_problems(wels(state, message)), {}, (state, message))
 
+    def test_restaurants_without_any_menu_are_reported_from_tuesday_morning(self):
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+        at = lambda day, hour: datetime(2026, 11, day, hour, 0, tzinfo=ZoneInfo("Europe/Vienna"))
+        week = {f"2026-11-{day}": [] for day in range(23, 28)}
+        data = {"weekStart": "2026-11-23", "restaurants": [
+            {"id": "inshaas", "name": "In's Haas", "url": "https://x", "days": dict(week),
+             "import": {"state": "not_published", "message": "In's Haas zeigt 2026-11-16"}},
+            {"id": "linde", "name": "Linde", "days": {**week, "2026-11-25": [{"name": "Schnitzel mit Reis"}]},
+             "import": {"state": "ok", "message": ""}}]}
+        self.assertEqual(report.wels_problems(data, at(23, 11)), {})                       # Montag: normal
+        self.assertEqual(report.wels_problems(data, at(24, 7)), {})                        # Dienstag früh: noch still
+        tuesday = report.wels_problems(data, at(24, 9))
+        self.assertEqual(list(tuesday), ["wels:inshaas"])                                  # Linde hat eine Karte
+        self.assertIn("keine Karte", tuesday["wels:inshaas"]["detail"])
+        self.assertEqual(list(report.wels_problems(data, at(26, 9))), ["wels:inshaas"])    # Tageskarten bleiben still
+        self.assertEqual(report.wels_problems(data, at(28, 9)), {})                        # Samstag: neue Woche
+        self.assertEqual(report.wels_problems({**data, "weekStart": "2026-11-16"}, at(24, 9)), {})
+        # WU: Saisonkarte und Dauerangebot haben bewusst keine Tageskarte; zurückgehaltene Freigabe wird gemeldet.
+        wu = {"weekStart": "2026-11-23", "restaurants": [
+            {"id": "gruenehuette", "name": "Grüne Hütte", "status": "not_published", "days": dict(week)},
+            {"id": "losteria", "name": "L'Osteria", "status": "seasonal", "days": dict(week)},
+            {"id": "mensa", "name": "Mensa", "status": "verified", "days": {day: [{"name": "x"}] for day in week}}]}
+        status = {"sources": {"gruenehuette": {"state": "not_published", "note": "Grüne Hütte: Datumsüberschrift fehlt"},
+                              "mensa": {"state": "withheld", "note": "doppeltes Gericht"}}}
+        self.assertEqual(list(report.wu_problems(status, wu, at(23, 11))), ["wu:mensa"])
+        found = report.wu_problems(status, wu, at(24, 9))
+        self.assertEqual(sorted(found), ["wu:gruenehuette", "wu:mensa"])
+        self.assertIn("Datumsüberschrift fehlt", found["wu:gruenehuette"]["message"])
+
     def test_one_issue_per_problem_and_closing_after_recovery(self):
         problems = report.wels_problems(wels("error", "ValueError: OX: keine Tage erkannt"))
         github = FakeGitHub()

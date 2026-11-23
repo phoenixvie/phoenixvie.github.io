@@ -27,6 +27,8 @@ DATA=ROOT/"data"/"menus.json"
 FRONTEND=ROOT/"data.js"
 STATUS=ROOT/"status.json"
 
+CLOSED_DAY=re.compile(r"\b(geschlossen|feiertag|betriebsurlaub|ruhetag)\b",re.I)
+
 def verify_week(text,monday):
     m=re.search(r"(\d{1,2})\.\s*(Jänner|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*[–-]\s*(\d{1,2})\.\s*(Jänner|Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)\s*(\d{4})",text,re.I)
     if not m:raise ValueError("Topf-Browser: sichtbares Wochendatum fehlt")
@@ -103,16 +105,25 @@ def collect_week(monday, *, with_snapshots=False):
                 starters=topf_starters(lines)
                 mains=topf_main_items(lines)
                 desserts=topf_desserts(lines)
-                if (not starters or not any(x["category"]=="Suppe" for x in starters)
-                        or len(mains)<2 or not desserts):
+                day_key=(monday+timedelta(days=index)).isoformat()
+                if not mains and CLOSED_DAY.search(" ".join(lines)):
+                    # Geschlossener Tag (Feiertag): bleibt leer, sperrt aber nicht die Woche.
+                    days[day_key]=[]
+                    hashes[day_key]=hashlib.sha256(html.encode("utf-8")).hexdigest()
+                    snapshots[day_key]=html
+                    print(f"{day}: geschlossen",flush=True)
+                    continue
+                # Pflicht sind zwei Hauptgerichte; Suppe und Nachspeise dürfen an einem Tag fehlen.
+                if len(mains)<2:
                     raise ValueError(f"Topf-Browser: {day}: Suppen/Salate/Nachspeisen/Hauptgerichte fehlen")
                 items=starters+mains+desserts+topf_combo_items()
                 for x in starters+mains:
+                    if x.get("category")=="Special":
+                        continue  # ein Special hat einen eigenen Preis statt kleiner/großer Portion
                     if x.get("price_small") is None or x.get("price_large") is None:
                         raise ValueError(f"Topf-Browser: {day}: Portionspreis fehlt")
                     if not x["price_small"]<x["price_large"]:
                         raise ValueError(f"Topf-Browser: {day}: Portionenpreise widersprüchlich")
-                day_key=(monday+timedelta(days=index)).isoformat()
                 digest=hashlib.sha256(html.encode("utf-8")).hexdigest()
                 hashes[day_key]=digest
                 snapshots[day_key]=html
@@ -123,8 +134,10 @@ def collect_week(monday, *, with_snapshots=False):
                 days[day_key]=items
                 print(f"{day}: {len(starters)} Vorspeise(n), {len(mains)} Hauptgerichte, {len(items)} gesamt",flush=True)
             # Guard against 5 buttons selecting one identical default panel.
-            fingerprints=[tuple(x["name"] for x in v if x["category"]=="Hauptgericht") for v in days.values()]
-            if len(set(fingerprints))<4:
+            fingerprints=[tuple(x["name"] for x in v if x["category"]=="Hauptgericht") for v in days.values() if v]
+            if len(fingerprints)<3:
+                raise ValueError("Topf-Browser: weniger als drei Tage mit Gerichten")
+            if len(set(fingerprints))<len(fingerprints)-1:
                 raise ValueError("Topf-Browser: Tab-Wechsel nicht glaubwürdig, Gerichte mehrfach identisch")
         finally:
             browser.close()
@@ -219,7 +232,9 @@ def record_failed_attempt(error):
         status=json.loads(STATUS.read_text(encoding="utf-8"))
         status["topf_browser_attempt"]={
             "at":datetime.now(ZoneInfo("Europe/Vienna")).isoformat(timespec="seconds"),
-            "error":str(error)[:220]}
+            "error":str(error)[:220],
+            # Zähler für die Störungsmeldung (report_problems.py): ein einzelner Fehlversuch bleibt still.
+            "failures":int((status.get("topf_browser_attempt") or {}).get("failures") or 0)+1}
         STATUS.write_text(json.dumps(status,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     except (OSError,ValueError):
         pass

@@ -547,7 +547,12 @@ def parse_naschmarkt(text, monday):
 MEAT_OR_FISH = re.compile(
     r"huhn|hühn|hendl|henderl|pute|schwein|rind|kalb|lamm|wild|hirsch|reh|ente|gans|speck|schinken|wurst|würstel|"
     r"faschiert|schnitzel|geschnetzelt|gulasch vom|braten|leberkäs|lachs|kabeljau|fisch|forelle|zander|garnele|"
-    r"thunfisch|beef|steak|burger", re.I)
+    r"thunfisch|beef|steak|burger|"
+    # Ergänzt am 23.11.2026: "Tafelspitz" (Hannibal) wurde nicht als Fleischgericht erkannt und blieb ohne Preis.
+    # Bewusst ohne "Ragout" und "Bolognese": beides gibt es oft vegetarisch (Kirschtomatenragout, Linsen-Bolognese).
+    r"tafelspitz|beiried|rostbraten|kotelett|karree|stelze|haxe|leber|cordon bleu|"
+    r"ribs|wings|chicken|pork|fleisch(?!tomate)|kassler|geselcht|salami|prosciutto|cevapcici|kebap|döner|"
+    r"saibling|karpfen|scholle|dorsch|seelachs|calamari|tintenfisch|shrimp|scampi|truthahn|backhuhn", re.I)
 
 
 def parse_inshaas(text, monday):
