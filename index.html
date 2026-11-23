@@ -6,9 +6,9 @@
 <title>WU Food – Mittagsmenüs am WU Campus</title>
 <meta name="description" content="WU Food zeigt die Mittagsmenüs der Lokale am WU Campus Wien auf einen Blick.">
 <link rel="canonical" href="/wu-lunch/">
-<!-- Startseite der Domain: führt ohne Umweg zu WU Food (wu-lunch/). Geteilte Links (wufood.at/?restaurant=…) öffnen das
-     Lokal in der neuen Ansicht. Adresszusätze (?… und #…) bleiben erhalten. -->
-<script>location.replace((new URLSearchParams(location.search).has('restaurant') ? '/wu-lunch-app/preview/' : '/wu-lunch/') + location.search + location.hash);</script>
+<!-- Startseite der Domain: führt ohne Umweg zu WU Food (wu-lunch/). Geteilte Links (wufood.at/?restaurant=… und
+     wufood.at/?meet=1) öffnen das Lokal bzw. Meet to eat in der neuen Ansicht. Adresszusätze (?… und #…) bleiben erhalten. -->
+<script>location.replace((/[?&](restaurant|meet)=/.test(location.search) ? '/wu-lunch-app/preview/' : '/wu-lunch/') + location.search + location.hash);</script>
 <meta http-equiv="refresh" content="0; url=/wu-lunch/">
 <style>body{font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;margin:0;padding:40px 20px;color:#191919;background:#fff;text-align:center}a{color:#087cf4}</style>
 </head>
