@@ -445,10 +445,10 @@ test('Meet-to-eat weekdays come from the operator settings and drive dates and t
   assert.equal(make({}).meetDaysText('hint'),'Jeden Mittwoch');
   assert.equal(make({}).meetDaysText('intro'),'Findet jeden Mittwoch um 12:00 Uhr statt.');
   assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('hint'),'Jeden Montag und Mittwoch');
-  // Listeneintrag (Vorgabe 23.11.2026): Titel "Meet to eat", darunter "Mittwochs gemeinsam essen gehen" – der Tag kommt aus den Einstellungen.
-  assert.equal(make({}).meetDaysText('title'),'Mittwochs gemeinsam essen gehen');
-  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('title'),'Montags & Mittwochs gemeinsam essen gehen');
-  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('title'),'Wednesdays: lunch together');
+  // Listeneintrag (Vorgabe 23.11.2026): Titel "Meet to eat", darunter "Gemeinsam essen gehen" – ohne Wochentag.
+  assert.equal(make({}).meetDaysText('title'),'Gemeinsam essen gehen');
+  assert.equal(make({meet_weekdays:[1,3]}).meetDaysText('title'),'Gemeinsam essen gehen');
+  assert.equal(make({meet_weekdays:[3]},'en').meetDaysText('title'),'Lunch together');
   // Fußzeile der Liste (Vorgabe 23.11.2026): "Change language" mit kleinem l; bei Umbruch immer zwei und zwei.
   // "Change language" steht unter jedem Menü und deshalb nicht mehr in der Fußzeile der Liste (Vorgabe 23.11.2026).
   assert.doesNotMatch(app.slice(app.indexOf('<footer class="list-footer">'),app.indexOf('</footer>',app.indexOf('<footer class="list-footer">'))),/data-change-language/);
