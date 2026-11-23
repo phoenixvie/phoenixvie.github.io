@@ -1,7 +1,8 @@
 name: Wels – Mittagsmenüs aktualisieren
 
 # Zwischenprojekt: Zweit-Ausgabe der App für Wels (wu-lunch-app/preview/wels/).
-# Bewusst getrennt vom WU-Import: eigene Datei, keine Zugangsschlüssel, keine KI.
+# Bewusst getrennt vom WU-Import: eigene Datei. KI nur als letzte Rückfallebene, wenn
+# ein Leser an einer Karte scheitert (Secret OPENAI_API_KEY; je Kartentext ein Aufruf).
 # Ein Fehler hier kann WU Food nicht stören.
 #
 # Zeitpunkte: GitHubs eigener Zeitplan startet in diesem Repository nur wenige
@@ -18,6 +19,11 @@ on:
   schedule:
     - cron: '23 5-16 * * *'
   workflow_dispatch:
+    inputs:
+      ki_probe:
+        description: 'Nur den KI-Leser an einer gespeicherten Karte ausprobieren (veröffentlicht nichts)'
+        type: boolean
+        default: false
   push:
     branches: [master]
     paths:
@@ -51,7 +57,14 @@ jobs:
         # Scheitert die Installation, fällt nur dieses eine Restaurant aus.
         continue-on-error: true
         run: sudo apt-get update -q && sudo apt-get install -y -q tesseract-ocr tesseract-ocr-deu
+      - name: KI-Leser ausprobieren (nur auf Wunsch)
+        if: github.event_name == 'workflow_dispatch' && inputs.ki_probe
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python wu-lunch/scripts/update_wels.py --ai-probe
       - name: Mittagsmenüs der Welser Restaurants lesen
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python wu-lunch/scripts/update_wels.py
       - name: Nur bei Änderung veröffentlichen
         shell: bash
