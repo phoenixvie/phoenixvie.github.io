@@ -1,6 +1,51 @@
 {
- "ai": null,
- "detail": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Hausgemachte Cannelloni mit Ricotta&Spinat",
+     "price": null
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Tagliatelle al Ragu(Bolognese)",
+     "price": null
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Bistecca di Manzo(Entrecote vom Rind) mit Pomes",
+     "price": null
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Spaghetti frutti di mare(Meeresfrüchte)",
+     "price": null
+    },
+    {
+     "name": "oder wahlweise eine Pizza mit einem Belag inkl. gemischtem Salat",
+     "price": null
+    }
+   ]
+  },
+  "ok": true
+ },
+ "detail": {
+  "agreement": 0.222,
+  "only_ai": [
+   "2026-11-23: hausgemachte cannelloni mit ricotta spinat",
+   "2026-11-24: tagliatelle al ragu bolognese",
+   "2026-11-26: bistecca di manzo entrecote vom rind mit pomes",
+   "2026-11-27: spaghetti frutti di mare meeresfrüchte"
+  ],
+  "only_generic": [
+   "2026-11-23: tagliatelle al ragu bolognese",
+   "2026-11-25: bistecca di manzo entrecote vom rind mit pomes",
+   "2026-11-26: spaghetti frutti di mare meeresfrüchte"
+  ]
+ },
  "generic": {
   "days": {
    "2026-11-23": [
@@ -31,6 +76,6 @@
   "ok": true
  },
  "id": "engelhard",
- "verdict": "nur_ersatzleser",
+ "verdict": "uneinig",
  "week": "2026-11-23"
 }

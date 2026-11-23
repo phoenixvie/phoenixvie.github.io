@@ -1,5 +1,9 @@
 {
- "ai": null,
+ "ai": {
+  "error": "ValueError: KI-Leser: kein wörtlicher Beleg für die Woche",
+  "ok": false,
+  "other_week": false
+ },
  "detail": null,
  "generic": {
   "error": "ValueError: Ersatzleser: kein Beleg für die Woche (weder Zeitraum noch Tagesdatum)",

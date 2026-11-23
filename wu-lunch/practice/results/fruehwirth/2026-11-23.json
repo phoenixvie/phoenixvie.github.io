@@ -1,6 +1,84 @@
 {
- "ai": null,
- "detail": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Tomatisierte Fischsuppe und Salate vom Buffet",
+     "price": 11.5
+    },
+    {
+     "name": "Pasta bolognese",
+     "price": 11.5
+    },
+    {
+     "name": "Brokkoli-Erdäpfelgratin auf Cremespinat und Spiegelei",
+     "price": 11.5
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Krenschaumsuppe und Salate vom Buffet",
+     "price": 11.5
+    },
+    {
+     "name": "Hühnerbrust im Speckmantel, mit Frischkäsefülle und Bratkartoffeln",
+     "price": 11.5
+    },
+    {
+     "name": "Chili-Cheese Nugets auf geschmortem Kürbis-Paprika-Gemüse",
+     "price": 11.5
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Kürbiscremesuppe und Salate vom Buffet",
+     "price": 11.5
+    },
+    {
+     "name": "Putenschnitzel mit Champignonrahm, Gemüse und Butterreis",
+     "price": 11.5
+    },
+    {
+     "name": "Pasta Pomodoro mit Grana Padano",
+     "price": 11.5
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Gemüsecremesuppe und Salate vom Buffet",
+     "price": 11.5
+    },
+    {
+     "name": "Fiaker-Gulasch mit Gebäck",
+     "price": 11.5
+    },
+    {
+     "name": "Gebackene Briespitzen auf Erdäpfel-Kernölsalat und Birnenchutney",
+     "price": 11.5
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Klare Gemüsesuppe mit Frittaten und Salate vom Buffet",
+     "price": 11.5
+    },
+    {
+     "name": "Fischfilet im Muschelsud mit Salzkartoffeln und Wurzelgemüse",
+     "price": 11.5
+    },
+    {
+     "name": "Veggi Burger mit Kräuterseitlingen und Cole Slaw",
+     "price": 11.5
+    }
+   ]
+  },
+  "ok": true
+ },
+ "detail": {
+  "agreement": 1.0,
+  "only_ai": [],
+  "only_generic": []
+ },
  "generic": {
   "days": {
    "2026-11-23": [
@@ -77,6 +155,6 @@
   "ok": true
  },
  "id": "fruehwirth",
- "verdict": "nur_ersatzleser",
+ "verdict": "einig",
  "week": "2026-11-23"
 }

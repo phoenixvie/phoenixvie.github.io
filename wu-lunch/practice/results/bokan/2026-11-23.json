@@ -1,6 +1,66 @@
 {
- "ai": null,
- "detail": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Sesamschnitzel mit Petersilienkartoffeln und Salat",
+     "price": 11.6
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Pasta asciutta mit Salat",
+     "price": 11.6
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Reisfleisch mit grünem Salat",
+     "price": 11.6
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "gekochtes Rindfleisch mit Spinat und Röstkartoffeln",
+     "price": 11.6
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Krautfleckerl",
+     "price": 11.6
+    }
+   ]
+  },
+  "ok": true
+ },
+ "detail": {
+  "agreement": 0.944,
+  "only_ai": [
+   "2026-11-27: krautfleckerl"
+  ],
+  "only_generic": []
+ },
  "generic": {
   "days": {
    "2026-11-23": [
@@ -49,6 +109,6 @@
   "ok": true
  },
  "id": "bokan",
- "verdict": "nur_ersatzleser",
+ "verdict": "einig",
  "week": "2026-11-23"
 }

@@ -1,6 +1,95 @@
 {
- "ai": null,
- "detail": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Tagessuppe",
+     "price": 12.7
+    },
+    {
+     "name": "Wiener Schnitzel vom Schwein mit Petersilienkartoffeln",
+     "price": 12.7
+    },
+    {
+     "name": "Tagessuppe",
+     "price": 12.7
+    },
+    {
+     "name": "Käsespätzle",
+     "price": 12.7
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Tagessuppe",
+     "price": 12.7
+    },
+    {
+     "name": "Spaghetti mit Chorizo, Oliven & Tomatensoße",
+     "price": 12.7
+    },
+    {
+     "name": "Tagessuppe",
+     "price": 12.7
+    },
+    {
+     "name": "Gebackene Champignons mit Sauce Tartar",
+     "price": 12.7
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Tagessuppe",
+     "price": 12.7
+    },
+    {
+     "name": "Chicken Wrap",
+     "price": 12.7
+    },
+    {
+     "name": "Tagessuppe",
+     "price": 12.7
+    },
+    {
+     "name": "Kürbis-schafskäse Krapferl mit Dip",
+     "price": 12.7
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Tagessuppe",
+     "price": 12.7
+    },
+    {
+     "name": "Wurzelfleisch mit Kren & Kartoffeln",
+     "price": 12.7
+    },
+    {
+     "name": "Tagessuppe",
+     "price": 12.7
+    },
+    {
+     "name": "Enchiladas mit Dip, Soja, Mais, Bohnen & Cheddar",
+     "price": 12.7
+    }
+   ]
+  },
+  "ok": true
+ },
+ "detail": {
+  "agreement": 0.632,
+  "only_ai": [
+   "2026-11-23: käsespätzle",
+   "2026-11-24: gebackene champignons mit sauce tartar",
+   "2026-11-25: kürbis schafskäse krapferl mit dip",
+   "2026-11-26: enchiladas mit dip soja mais bohnen cheddar",
+   "2026-11-26: tagessuppe",
+   "2026-11-26: wurzelfleisch mit kren kartoffeln"
+  ],
+  "only_generic": [
+   "2026-11-25: mber 2026 ove"
+  ]
+ },
  "generic": {
   "days": {
    "2026-11-23": [
@@ -41,6 +130,6 @@
   "ok": true
  },
  "id": "gasthofweiss",
- "verdict": "nur_ersatzleser",
+ "verdict": "uneinig",
  "week": "2026-11-23"
 }

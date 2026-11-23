@@ -1,5 +1,59 @@
 {
- "ai": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Naturschnitzerl vom Steirerschwein, Serviettenknödel",
+     "price": 13.8
+    },
+    {
+     "name": "Griechische Nudelpfanne mit Oliven, Kapern, Fetakäse und Blattsalat",
+     "price": 13.3
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Gebackene Maishenderlbrust mit Erbsenreis",
+     "price": 13.8
+    },
+    {
+     "name": "Süßkartoffelauflauf mit Rotkraut und Gemüsejus, Blattsalat",
+     "price": 13.3
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Open Pulled Pork Sandwich mit spicy wedges, Cole slaw",
+     "price": 13.8
+    },
+    {
+     "name": "Kürbisrisotto mit süßsauren Zuchiniwürfel, Parmesan, Salat",
+     "price": 13.3
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Überbackene Schinkenspätzle mit Blattsalat",
+     "price": 13.8
+    },
+    {
+     "name": "Oma`s Gemüse-Linsen-Eintopf mit flaumigen Serviettenknödel",
+     "price": 13.3
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Zanderfilet nach Mailänder Art, Selleriepüree, Basilikumpesto",
+     "price": 13.8
+    },
+    {
+     "name": "Gebackener Blumenkohl auf Gemüsebouquet, Sauce Tartar, Salat",
+     "price": 13.3
+    }
+   ]
+  },
+  "ok": true
+ },
  "detail": null,
  "generic": {
   "error": "ValueError: Ersatzleser: kein Beleg für die Woche (weder Zeitraum noch Tagesdatum)",
@@ -7,6 +61,6 @@
   "other_week": false
  },
  "id": "rondopdf",
- "verdict": "beide_gescheitert",
+ "verdict": "nur_ki",
  "week": "2026-11-23"
 }

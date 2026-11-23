@@ -1,6 +1,67 @@
 {
- "ai": null,
- "detail": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Brokkoli-Creme Suppe",
+     "price": 10.9
+    },
+    {
+     "name": "Walliser Putenschnitzel gegrilltes Putenschnitzel mit Schinken und Käse-überbacken, serviert mit Kartoffelrösti",
+     "price": 10.9
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Zucchini-creme Suppe",
+     "price": 10.9
+    },
+    {
+     "name": "Spareribs Vom Backofen, serviert mit Pommes und Salat (A, C, G, O)",
+     "price": 10.9
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Leberknödel Suppe",
+     "price": 10.9
+    },
+    {
+     "name": "Cordon bleu von der heimischen Pute oder Schwein gefüllt mit Schinken und Käse, serviert mit Reis, Preiselbeeren und grüner Salat (A, C, G, O)",
+     "price": 10.9
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Zwiebel Suppe",
+     "price": 10.9
+    },
+    {
+     "name": "Rindergulasch serviert mit Butterspätzle (A, C, G, O)",
+     "price": 10.9
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Fritatten Suppe",
+     "price": 10.9
+    },
+    {
+     "name": "Backhendl serviert mit Kartoffeln und Blatt Salat (A, C, G, O)",
+     "price": 10.9
+    }
+   ]
+  },
+  "ok": true
+ },
+ "detail": {
+  "agreement": 0.889,
+  "only_ai": [
+   "2026-11-26: rindergulasch serviert mit butterspätzle a c g o",
+   "2026-11-27: backhendl serviert mit kartoffeln und blatt salat a c g o"
+  ],
+  "only_generic": []
+ },
  "generic": {
   "days": {
    "2026-11-23": [
@@ -49,6 +110,6 @@
   "ok": true
  },
  "id": "rauchkuchl",
- "verdict": "nur_ersatzleser",
+ "verdict": "einig",
  "week": "2026-11-23"
 }

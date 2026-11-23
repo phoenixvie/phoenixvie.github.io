@@ -1,5 +1,9 @@
 {
- "ai": null,
+ "ai": {
+  "error": "ValueError: KI-Leser: 0 von 0 Gerichten stehen nicht wörtlich in der Karte",
+  "ok": false,
+  "other_week": false
+ },
  "detail": null,
  "generic": {
   "error": "ValueError: Ersatzleser: weniger als drei Tage mit Gerichten",

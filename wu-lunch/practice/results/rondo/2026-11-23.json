@@ -1,6 +1,79 @@
 {
- "ai": null,
- "detail": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Naturschnitzerl vom Steirerschwein, Serviettenknödel",
+     "price": 13.8
+    },
+    {
+     "name": "Griechische Nudelpfanne mit Oliven, Kapern, Fetakäse und Blattsalat",
+     "price": 13.3
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Gebackene Maishenderlbrust mit Erbsenreis",
+     "price": 13.8
+    },
+    {
+     "name": "Süßkartoffelauflauf mit Rotkraut und Gemüsejus, Blattsalat",
+     "price": 13.3
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Open Pulled Pork Sandwich mit spicy wedges, Cole slaw",
+     "price": 13.8
+    },
+    {
+     "name": "Kürbisrisotto mit süßsauren Zuchiniwürfel, Parmesan, Salat",
+     "price": 13.3
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Überbackene Schinkenspätzle mit Blattsalat",
+     "price": 13.8
+    },
+    {
+     "name": "Oma`s Gemüse-Linsen-Eintopf mit flaumigen Serviettenknödel",
+     "price": 13.3
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Zanderfilet nach Mailänder Art, Selleriepüree, Basilikumpesto",
+     "price": 13.8
+    },
+    {
+     "name": "Gebackener Blumenkohl auf Gemüsebouquet, Sauce Tartar, Salat",
+     "price": 13.3
+    }
+   ]
+  },
+  "ok": true
+ },
+ "detail": {
+  "agreement": 0.435,
+  "only_ai": [
+   "2026-11-23: griechische nudelpfanne mit oliven kapern fetakäse und blattsalat",
+   "2026-11-24: süßkartoffelauflauf mit rotkraut und gemüsejus blattsalat",
+   "2026-11-25: kürbisrisotto mit süßsauren zuchiniwürfel parmesan salat",
+   "2026-11-26: oma s gemüse linsen eintopf mit flaumigen serviettenknödel",
+   "2026-11-27: gebackener blumenkohl auf gemüsebouquet sauce tartar salat"
+  ],
+  "only_generic": [
+   "2026-11-23: gebackene maishenderlbrust mit erbsenreis",
+   "2026-11-23: suppe oder salat",
+   "2026-11-24: open pulled pork sandwich mit spicy wedges cole slaw",
+   "2026-11-24: suppe oder salat",
+   "2026-11-25: suppe oder salat",
+   "2026-11-25: überbackene schinkenspätzle mit blattsalat",
+   "2026-11-26: zanderfilet nach mailänder art selleriepüree basilikumpesto",
+   "2026-11-27: suppe oder salat"
+  ]
+ },
  "generic": {
   "days": {
    "2026-11-23": [
@@ -69,6 +142,6 @@
   "ok": true
  },
  "id": "rondo",
- "verdict": "nur_ersatzleser",
+ "verdict": "uneinig",
  "week": "2026-11-23"
 }

@@ -1,6 +1,64 @@
 {
- "ai": null,
- "detail": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Rindsuppe | Frittaten",
+     "price": 14.6
+    },
+    {
+     "name": "Schinkenfleckerl | grüner Salat",
+     "price": 14.6
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Rotkrautschaumsuppe",
+     "price": 14.6
+    },
+    {
+     "name": "„Zürcher“ Geschnetzeltes vom Schwein | Spätzle",
+     "price": 14.6
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Rindsuppe | Schinkenkipferl",
+     "price": 14.6
+    },
+    {
+     "name": "Selchfleisch | Erdäpfelpürée",
+     "price": 14.6
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Erdäpfel-Rahmsuppe",
+     "price": 14.6
+    },
+    {
+     "name": "Letchoschnitzel vom Huhn | Reis",
+     "price": 14.6
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Klare Gemüsesuppe",
+     "price": 14.6
+    },
+    {
+     "name": "Gebackenes Zanderfilet | Erdäpfelsalat",
+     "price": 14.6
+    }
+   ]
+  },
+  "ok": true
+ },
+ "detail": {
+  "agreement": 1.0,
+  "only_ai": [],
+  "only_generic": []
+ },
  "generic": {
   "days": {
    "2026-11-23": [
@@ -57,6 +115,6 @@
   "ok": true
  },
  "id": "waldviertlerhof",
- "verdict": "nur_ersatzleser",
+ "verdict": "einig",
  "week": "2026-11-23"
 }

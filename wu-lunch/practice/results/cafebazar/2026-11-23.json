@@ -1,9 +1,76 @@
 {
- "ai": null,
- "detail": null,
- "error": "ConnectionError: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))",
- "generic": null,
+ "ai": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Gerösteter Knödel mit Ei, kleiner Salat",
+     "price": 18.9
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Hirshkalbs- Sugo mit Bandnudeln",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Gebackenes Rindfleisch auf Erdäpfel- Vogerlsalat",
+     "price": 24.9
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Spinat- Topfennockerl mit brauner Butter und Parmesan",
+     "price": 19.9
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Gebratene Lachsschnitte auf Kohlrabirahmsauce und Petersilerdäpfeln",
+     "price": 28.9
+    }
+   ]
+  },
+  "ok": true
+ },
+ "detail": {
+  "agreement": 0.889,
+  "only_ai": [
+   "2026-11-27: gebratene lachsschnitte auf kohlrabirahmsauce und petersilerdäpfeln"
+  ],
+  "only_generic": []
+ },
+ "generic": {
+  "days": {
+   "2026-11-23": [
+    {
+     "name": "Gerösteter Knödel mit Ei, kleiner Salat",
+     "price": 18.9
+    }
+   ],
+   "2026-11-24": [
+    {
+     "name": "Hirshkalbs- Sugo mit Bandnudeln € 22",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Gebackenes Rindfleisch auf Erdäpfel- Vogerlsalat",
+     "price": 24.9
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Spinat- Topfennockerl mit brauner Butter und Parmesan",
+     "price": 19.9
+    }
+   ]
+  },
+  "ok": true
+ },
  "id": "cafebazar",
- "verdict": "abruf_fehlgeschlagen",
+ "verdict": "einig",
  "week": "2026-11-23"
 }
