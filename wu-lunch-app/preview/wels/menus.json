@@ -505,8 +505,8 @@
     ]
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "error",
+    "message": "ConnectTimeout: HTTPSConnectionPool(host='www.restaurant-hannibal.at', port=443): Max retries exceeded with url: /mittagskarte/ (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.restaurant-hannibal.at', port=443) at 0x7d5f179a0980>,"
    }
   },
   {
@@ -895,8 +895,8 @@
     ]
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "error",
+    "message": "ConnectTimeout: HTTPSConnectionPool(host='www.inshaas.at', port=443): Max retries exceeded with url: /mittagskarte/ (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.inshaas.at', port=443) at 0x7d5f173ccf50>, 'Connection to www.insh"
    }
   },
   {
@@ -1267,10 +1267,10 @@
     ]
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "error",
+    "message": "ConnectTimeout: HTTPSConnectionPool(host='www.sorrymama.at', port=443): Max retries exceeded with url: /mittagskarte/ (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.sorrymama.at', port=443) at 0x7d5f1796a4e0>, 'Connection to www."
    }
   }
  ],
- "updatedAt": "2026-11-24T09:50:38+01:00"
+ "updatedAt": "2026-11-25T00:31:30+01:00"
 }
