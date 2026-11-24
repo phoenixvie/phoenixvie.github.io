@@ -279,7 +279,16 @@
       "price": 12.5
      }
     ],
-    "2026-11-24": [],
+    "2026-11-24": [
+     {
+      "name": "Rinderbraten \"Burgunderart\" mit Nudelnl und gem. Salat",
+      "price": 16.5
+     },
+     {
+      "name": "Quinoa mit Grillgemüse, Rucula und Mango sowie einen Blattsalat",
+      "price": 12.7
+     }
+    ],
     "2026-11-25": [],
     "2026-11-26": [],
     "2026-11-27": []
@@ -1263,5 +1272,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-24T01:57:28+01:00"
+ "updatedAt": "2026-11-24T09:50:38+01:00"
 }
