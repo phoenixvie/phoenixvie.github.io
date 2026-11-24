@@ -1,0 +1,704 @@
+{
+  "version": 1,
+  "restaurant_id": "topfdeckel",
+  "week_start": "2026-11-23",
+  "menu_sha256": "7dd212df6605b8e8b89c1654806ec2d6db8cc15913965034698a39cd0acf8b98",
+  "captured_at": "2026-11-24T13:43:08+00:00",
+  "run_id": "45405684973",
+  "code_commit": "85e2abb51b8839210964f2109302722959d25ea4",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "ok_browser",
+    "last_success": "2026-11-24T14:40:45+01:00",
+    "consecutive_failures": 0,
+    "day_sha256": {
+      "2026-11-23": "92957d7d26f81d9ecfb0dd34d08d0dca4d01c8ef7d10658a8a761f53e9377583",
+      "2026-11-24": "1022659d7d1a16605b88bf7dcd8b62aa36137854223a753ce735bf6bb14be13d",
+      "2026-11-25": "7c4776dfc129b03d8c004ba4633974a1a3094add9839315637f970b9ca6e7270",
+      "2026-11-26": "7ff4b7a81fb12bac990f78aca955f5e2985d9d6180c8da330ac9302e314d409c",
+      "2026-11-27": "c0fb360989cfef3b64ba915b543fdd3b1274c8c4b90ce7d9a3d8300c2b5ed6e2"
+    }
+  },
+  "ai_audit": {
+    "state": "review_needed",
+    "model": "gpt-6-luna",
+    "fingerprint": "e3bcdfa242d1e110091777db4b4cb1e85ec68f867744e6f05e689a4ed859f3e1",
+    "checked_at": "2026-11-24T14:42:01+01:00",
+    "validation_issues": [
+      "Über 55 Gerichte: Ausgabe gekürzt/verdächtig"
+    ],
+    "ai_only_examples": {},
+    "warnings": [
+      "Die Quelle nennt keine ausdrückliche Menü-Kombination mit Gesamtpreis; Suppe oder Salat werden daher nicht als kostenloses Extra zu Hauptgerichten behandelt.",
+      "Die Newsletter-Werbung „Gratis-Dessert zum Start“ ist kein Tagesmenü-Angebot und wurde nicht als Gratis-Dessert erfasst.",
+      "Für Haussalat und Dessert sind keine Allergene angegeben. Leere Allergenlisten bedeuten daher nur, dass im sichtbaren Tab keine Codes ausgewiesen sind."
+    ],
+    "usage": {
+      "input_tokens": 49604,
+      "input_tokens_details": {
+        "cache_write_tokens": 49601,
+        "cache_write_tokens_details": {
+          "ttl_12h_tokens": 0,
+          "ttl_30m_tokens": 49601
+        },
+        "cached_tokens": 0
+      },
+      "output_tokens": 9088,
+      "output_tokens_details": {
+        "reasoning_tokens": 1209
+      },
+      "total_tokens": 58692
+    }
+  },
+  "sources": [
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/",
+      "at": "2026-11-24T13:40:12+00:00",
+      "sha256": "cf5d621d5993351a16f6554e49438f93489c57c76bb3a98eb18041853ec00ad6",
+      "bytes": 118184,
+      "format": "html",
+      "blob": "cf5d621d5993351a16f6554e49438f93489c57c76bb3a98eb18041853ec00ad6.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:42+00:00",
+      "sha256": "438f0490826526e700da7647f735c342147d781afc668188bf9663852f99352d",
+      "bytes": 80521,
+      "format": "html",
+      "blob": "438f0490826526e700da7647f735c342147d781afc668188bf9663852f99352d.html",
+      "stage": "topf_browser",
+      "context": "Montag",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:43+00:00",
+      "sha256": "9ecd3a9ca66c9aa5c29df621453db7d53aee029961273fba909d4677b9cfbaa5",
+      "bytes": 1071565,
+      "format": "png",
+      "blob": "9ecd3a9ca66c9aa5c29df621453db7d53aee029961273fba909d4677b9cfbaa5.png",
+      "stage": "topf_browser",
+      "context": "Montag",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:43+00:00",
+      "sha256": "784902c80074a0860fa8a4b665bb923b8404fa640b0ab1cc02b02fc0eeb534a8",
+      "bytes": 80633,
+      "format": "html",
+      "blob": "784902c80074a0860fa8a4b665bb923b8404fa640b0ab1cc02b02fc0eeb534a8.html",
+      "stage": "topf_browser",
+      "context": "Dienstag",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:43+00:00",
+      "sha256": "c2e6132cf8b72f883b525201c3c694ad745489d20c2feb2ac2551e9f4f1d1ea4",
+      "bytes": 1150150,
+      "format": "png",
+      "blob": "c2e6132cf8b72f883b525201c3c694ad745489d20c2feb2ac2551e9f4f1d1ea4.png",
+      "stage": "topf_browser",
+      "context": "Dienstag",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:44+00:00",
+      "sha256": "6e180b6b7d6d81ae61a6cd22963b396a932d0cbb6c9e3b84bc596b0efefc92a9",
+      "bytes": 80799,
+      "format": "html",
+      "blob": "6e180b6b7d6d81ae61a6cd22963b396a932d0cbb6c9e3b84bc596b0efefc92a9.html",
+      "stage": "topf_browser",
+      "context": "Mittwoch",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:44+00:00",
+      "sha256": "fa2c3fc2be0b6d3d7a6674d21b954b86d9c911817ad597aa4c17d6a165044241",
+      "bytes": 848414,
+      "format": "png",
+      "blob": "fa2c3fc2be0b6d3d7a6674d21b954b86d9c911817ad597aa4c17d6a165044241.png",
+      "stage": "topf_browser",
+      "context": "Mittwoch",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:44+00:00",
+      "sha256": "1c9cc55ccbc2e9bd247bb6b417f43accd63d32646450e5e42b495b8f4367d3ce",
+      "bytes": 79253,
+      "format": "html",
+      "blob": "1c9cc55ccbc2e9bd247bb6b417f43accd63d32646450e5e42b495b8f4367d3ce.html",
+      "stage": "topf_browser",
+      "context": "Donnerstag",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:45+00:00",
+      "sha256": "533785aa9d610d777e40ac48d37ae2109f33e5d5ffe49016b201e1f083bd6230",
+      "bytes": 890547,
+      "format": "png",
+      "blob": "533785aa9d610d777e40ac48d37ae2109f33e5d5ffe49016b201e1f083bd6230.png",
+      "stage": "topf_browser",
+      "context": "Donnerstag",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:45+00:00",
+      "sha256": "68720b79b77033268697e575dd047f228f927f9e39cd86a7a30f78632a4883cc",
+      "bytes": 77329,
+      "format": "html",
+      "blob": "68720b79b77033268697e575dd047f228f927f9e39cd86a7a30f78632a4883cc.html",
+      "stage": "topf_browser",
+      "context": "Freitag",
+      "used_for_extraction": true
+    },
+    {
+      "restaurant_id": "topfdeckel",
+      "url": "https://topfdeckel.at/wochenmenu",
+      "at": "2026-11-24T13:40:45+00:00",
+      "sha256": "a0c690bcf1fb23ad197f8f4f65012fe2c4db456ee0f49dad74c49a5457118fc3",
+      "bytes": 910930,
+      "format": "png",
+      "blob": "a0c690bcf1fb23ad197f8f4f65012fe2c4db456ee0f49dad74c49a5457118fc3.png",
+      "stage": "topf_browser",
+      "context": "Freitag",
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-23": [
+        {
+          "name": "Karfiolsuppe",
+          "price": 3.9,
+          "category": "Suppe",
+          "diet": "unknown",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Haussalat",
+          "price": 3.9,
+          "category": "Salat",
+          "diet": "veggie",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Grünes Thai Curry mit Huhn & Wokgemüse in Kokos-Zitronensauce",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Hühnerpfanne mit Bratkartoffel, Schmorgemüse & Tzatziki Dip",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Kürbis-Feta Lasagne mit Bechamelsauce",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Kichererbsen-Tofu-Curry mit asiatischem Gemüse & Sesam",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Dessert des Tages",
+          "price": 2.9,
+          "category": "Nachspeise",
+          "diet": "unknown",
+          "description": "Separat erhältlich",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 9.5,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum kleinen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 13.9,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum großen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-24": [
+        {
+          "name": "Weißwein-Brokkoli Suppe",
+          "price": 3.9,
+          "category": "Suppe",
+          "diet": "unknown",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Haussalat",
+          "price": 3.9,
+          "category": "Salat",
+          "diet": "veggie",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Griechisches Moussaka aus dem Ofen mit Fleischragout & Schmormelanzani",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Indisches Chicken Tikka in cremiger Masalasauce",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Mexikanisches Süßkartoffel-Chili sin Carne mit Guacamole Dip",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Cremige Gnocchi in Kürbis-Feta-Sauce mit jungem Spinat",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Dessert des Tages",
+          "price": 2.9,
+          "category": "Nachspeise",
+          "diet": "unknown",
+          "description": "Separat erhältlich",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 9.5,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum kleinen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 13.9,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum großen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-25": [
+        {
+          "name": "Erdäpfelcremesuppe",
+          "price": 3.9,
+          "category": "Suppe",
+          "diet": "unknown",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Haussalat",
+          "price": 3.9,
+          "category": "Salat",
+          "diet": "veggie",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Ofenfrische Lasagne Bolognese mit herzhaftem Fleischragout & Mozzarella",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Indisches Butter Chicken in cremiger Cashewsauce mit Joghurt-Dip",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Süßkartoffel-Feta Gratin aus dem Ofen mit Spinat",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Marokkanische Karfiol-Pfanne mit Couscous & Joghurt-Knoblauch Sauce",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Dessert des Tages",
+          "price": 2.9,
+          "category": "Nachspeise",
+          "diet": "unknown",
+          "description": "Separat erhältlich",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 9.5,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum kleinen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 13.9,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum großen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-26": [
+        {
+          "name": "Süßkartoffel-Ingwercremesuppe",
+          "price": 3.9,
+          "category": "Suppe",
+          "diet": "unknown",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Haussalat",
+          "price": 3.9,
+          "category": "Salat",
+          "diet": "veggie",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Ofenfrische Burritos mit Chili con Carne, geschmolzenem Käse & Guacamole Dip",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Mediterrane Hühnerpfanne mit Ofengemüse, getrockneten Tomaten & Joghurt-Zitronen-Dip",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Cremiges Safran-Risotto mit geschmorten Cherrytomaten",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Japanisches Hokkaido Curry",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Dessert des Tages",
+          "price": 2.9,
+          "category": "Nachspeise",
+          "diet": "unknown",
+          "description": "Separat erhältlich",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 9.5,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum kleinen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 13.9,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum großen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ],
+      "2026-11-27": [
+        {
+          "name": "Karottencremesuppe",
+          "price": 3.9,
+          "category": "Suppe",
+          "diet": "unknown",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Haussalat",
+          "price": 3.9,
+          "category": "Salat",
+          "diet": "veggie",
+          "description": "Vorspeise, separat erhältlich; klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 3.9,
+          "price_large": 5.9
+        },
+        {
+          "name": "Quiche Lorraine aus dem Ofen mit würzigem Speck & Käse",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Tan Tan Faschiertes mit Asian Slaw, Basmatireis, Limetten-Sesam-Mayo & Nori Crunch",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Cremiger Spinatspätzle-Mozzarella-Auflauf mit getrockneten Tomaten",
+          "price": 7.5,
+          "category": "Hauptgericht",
+          "diet": "unknown",
+          "description": "Preis klein / groß",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [],
+          "price_small": 7.5,
+          "price_large": 11.9
+        },
+        {
+          "name": "Dessert des Tages",
+          "price": 2.9,
+          "category": "Nachspeise",
+          "diet": "unknown",
+          "description": "Separat erhältlich",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Light Lunch Kombi: kleines Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 9.5,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum kleinen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        },
+        {
+          "name": "Big Lunch Kombi: großes Hauptgericht + kleine Suppe/Salat, Getränk oder Dessert",
+          "price": 13.9,
+          "category": "Menükombo",
+          "diet": "unknown",
+          "description": "Eine Option zum großen Hauptgericht wählbar",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": []
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-23",
+    "validUntil": "2026-11-27"
+  }
+}

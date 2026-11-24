@@ -1,46 +1,78 @@
 {
-  "checked_at": "2026-11-23T23:58:56+01:00",
+  "checked_at": "2026-11-24T14:42:01+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 1,
+  "api_calls": 2,
   "results": [
+    {
+      "restaurant": "losteria",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Gerichte sind nicht ausdrücklich der geprüften Woche zugeordnet."
+      ],
+      "ai_only_items": 4,
+      "parser_only_items": 0,
+      "ai_only_examples": [
+        "None: crema di patate con tartufo",
+        "None: pizza bianca tacchino e cipolletartufo di cielo",
+        "None: tagliatelle tartufo e funghi",
+        "None: tortina di mandorle"
+      ],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://losteria.net/at/menue/menu-della-casa/": "ffc6bece33f71597e2f454691984cb35adbcfdc03e8d76db7f95d78c3203b0e0"
+      },
+      "usage": {
+        "input_tokens": 1922,
+        "input_tokens_details": {
+          "cache_write_tokens": 1919,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 1919
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 834,
+        "output_tokens_details": {
+          "reasoning_tokens": 101
+        },
+        "total_tokens": 2756
+      }
+    },
     {
       "restaurant": "karmafood",
       "issues": [],
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Für Donnerstag, 2026-11-26, und Freitag, 2026-11-27, enthält die geladene Quelle keine Gerichte.",
-        "Die Quelle nennt „Lassi & Lunch“, weist dafür aber keinen Preis aus und erläutert die Kombination nicht näher."
+        "Abweichung zwischen dem Kopfzeitraum 23.11.-25.11. und den aufgeführten Gerichten bis Freitag; Donnerstag und Freitag sind nach den Wochentagsüberschriften der angefragten Woche zugeordnet.",
+        "„Lunch Combo €13,50“ ist als Kombiangebot ausgewiesen, aber die Quelle belegt keine konkrete Kombination oder Zuordnung zu einzelnen Gerichten.",
+        "Keine separat bepreisten Tagessuppen, Salate oder Nachspeisen erkennbar."
       ],
       "ai_only_items": 0,
-      "parser_only_items": 6,
+      "parser_only_items": 0,
       "ai_only_examples": [],
-      "parser_only_examples": [
-        "2026-11-26: mama masala linsen dal",
-        "2026-11-26: sweet potato quinoa bowl mit limetten dip",
-        "2026-11-26: veggie bolognese lasagne mit salat",
-        "2026-11-27: cremiges goa veggie curry",
-        "2026-11-27: dal makhni mit veganer butter"
-      ],
+      "parser_only_examples": [],
       "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "67a337b3ad8b8bf2ea29085d4958b78de68aa3925d0ce21b4bcd559835e9d164"
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "0a24feccb15ce1342fe81997a4c33ac726c3a3d7e835c792ace1dc4f0685a2d8"
       },
       "usage": {
-        "input_tokens": 2668,
+        "input_tokens": 2669,
         "input_tokens_details": {
-          "cache_write_tokens": 2665,
+          "cache_write_tokens": 2666,
           "cache_write_tokens_details": {
             "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2665
+            "ttl_30m_tokens": 2666
           },
           "cached_tokens": 0
         },
-        "output_tokens": 2268,
+        "output_tokens": 2872,
         "output_tokens_details": {
-          "reasoning_tokens": 749
+          "reasoning_tokens": 668
         },
-        "total_tokens": 4936
+        "total_tokens": 5541
       }
     },
     {
