@@ -3,65 +3,29 @@
   "days": {
    "2026-11-23": [
     {
-     "name": "Salat oder Schöberlsuppe",
-     "price": null
-    },
-    {
      "name": "Ofenfrische Ripperl, Ofenkartoffel, Sauerrahmsauce",
-     "price": 13.6
-    },
-    {
-     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
      "price": 13.6
     }
    ],
    "2026-11-24": [
     {
-     "name": "Salat oder Leberknödelsuppe",
-     "price": null
-    },
-    {
      "name": "½ gebratenes Maishendl, Natursauce, Basmatireis",
-     "price": 13.6
-    },
-    {
-     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
      "price": 13.6
     }
    ],
    "2026-11-25": [
     {
-     "name": "Salat oder Frittatensuppe",
-     "price": null
-    },
-    {
      "name": "Schnitzel Wiener Art vom Schwein, Petersilkartoffeln",
-     "price": 13.6
-    },
-    {
-     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
      "price": 13.6
     }
    ],
    "2026-11-26": [
     {
-     "name": "Salat oder Nudelsuppe",
-     "price": null
-    },
-    {
      "name": "Cheese Burger, Ketchup, Pommes",
-     "price": 13.6
-    },
-    {
-     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
      "price": 13.6
     }
    ],
    "2026-11-27": [
-    {
-     "name": "Salat oder Grießnockerlsuppe",
-     "price": null
-    },
     {
      "name": "Gebackenes Seelachsfilet, Kartoffel-Rucolasalat",
      "price": 13.6
@@ -75,14 +39,17 @@
   "ok": true
  },
  "detail": {
-  "agreement": 0.857,
+  "agreement": 0.462,
   "only_ai": [],
   "only_generic": [
+   "2026-11-23: gebackenes gemüseschnitzel petersilkartoffeln",
+   "2026-11-23: salat oder schöberlsuppe",
    "2026-11-23: salat oder tagessuppe",
+   "2026-11-24: gebackenes gemüseschnitzel petersilkartoffeln",
+   "2026-11-24: salat oder leberknödelsuppe",
    "2026-11-24: salat oder tagessuppe",
-   "2026-11-25: salat oder tagessuppe",
-   "2026-11-26: salat oder tagessuppe",
-   "2026-11-27: salat oder tagessuppe"
+   "2026-11-25: gebackenes gemüseschnitzel petersilkartoffeln",
+   "2026-11-25: salat oder frittatensuppe"
   ]
  },
  "generic": {
@@ -181,6 +148,6 @@
   "ok": true
  },
  "id": "dreihasen",
- "verdict": "einig",
+ "verdict": "mehr_gelesen",
  "week": "2026-11-23"
 }

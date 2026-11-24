@@ -1,16 +1,98 @@
 {
  "ai": {
-  "error": "KI-Leser: Karte gilt für eine andere Woche",
-  "ok": false,
-  "other_week": true
+  "days": {
+   "2026-11-24": [
+    {
+     "name": "Gebackenes Gemüseschnitzel mit Petersilkartoffel und Tartaresauce",
+     "price": 13.9
+    },
+    {
+     "name": "Burgunder Rindsragout mit Spätzle",
+     "price": 13.9
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "Ofenkartoffel mit Creme fraiche und Röstgemüse",
+     "price": 13.9
+    },
+    {
+     "name": "Pork Belly mit Erdnusssauce und gebratenem Eierreis",
+     "price": 13.9
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "Tortellini mit Gemüse-Sojasugo",
+     "price": 13.9
+    },
+    {
+     "name": "Gefüllte Paprike mit Erdäpfelpüree",
+     "price": 13.9
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Süßer Topfen-Reisauflauf mit Himbeermark",
+     "price": 13.9
+    },
+    {
+     "name": "Wiener Schnitzel vom Schwein mit Pommes frites",
+     "price": 13.9
+    }
+   ]
+  },
+  "ok": true
  },
- "detail": null,
+ "detail": {
+  "agreement": 0.933,
+  "only_ai": [
+   "2026-11-27: wiener schnitzel vom schwein mit pommes frites"
+  ],
+  "only_generic": []
+ },
  "generic": {
-  "error": "Ersatzleser: Karte gilt ab 2026-11-17",
-  "ok": false,
-  "other_week": true
+  "days": {
+   "2026-11-24": [
+    {
+     "name": "Gebackenes Gemüseschnitzel mit Petersilkartoffel und Tartaresauce",
+     "price": null
+    },
+    {
+     "name": "Burgunder Rindsragout mit Spätzle",
+     "price": null
+    }
+   ],
+   "2026-11-25": [
+    {
+     "name": "mit Creme fraiche und Röstgemüse",
+     "price": null
+    },
+    {
+     "name": "Pork Belly mit Erdnusssauce und gebratenem Eierreis",
+     "price": null
+    }
+   ],
+   "2026-11-26": [
+    {
+     "name": "mit Gemüse-Sojasugo",
+     "price": null
+    },
+    {
+     "name": "Gefüllte Paprike mit Erdäpfelpüree",
+     "price": null
+    }
+   ],
+   "2026-11-27": [
+    {
+     "name": "Süßer Topfen-Reisauflauf mit Himbeermark",
+     "price": null
+    }
+   ]
+  },
+  "ok": true
  },
  "id": "krall",
- "verdict": "andere_woche",
+ "verdict": "einig",
  "week": "2026-11-23"
 }

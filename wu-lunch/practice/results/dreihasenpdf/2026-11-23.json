@@ -4,7 +4,7 @@
    "2026-11-23": [
     {
      "name": "Salat oder Schöberlsuppe",
-     "price": 13.6
+     "price": null
     },
     {
      "name": "Ofenfrische Ripperl, Ofenkartoffel, Sauerrahmsauce",
@@ -14,7 +14,7 @@
    "2026-11-24": [
     {
      "name": "Salat oder Leberknödelsuppe",
-     "price": 13.6
+     "price": null
     },
     {
      "name": "½ gebratenes Maishendl, Natursauce, Basmatireis",
@@ -24,7 +24,7 @@
    "2026-11-25": [
     {
      "name": "Salat oder Frittatensuppe",
-     "price": 13.6
+     "price": null
     },
     {
      "name": "Schnitzel Wiener Art vom Schwein, Petersilkartoffeln",
@@ -34,7 +34,7 @@
    "2026-11-26": [
     {
      "name": "Salat oder Nudelsuppe",
-     "price": 13.6
+     "price": null
     },
     {
      "name": "Cheese Burger, Ketchup, Pommes",
@@ -44,10 +44,18 @@
    "2026-11-27": [
     {
      "name": "Salat oder Grießnockerlsuppe",
-     "price": 13.6
+     "price": null
     },
     {
      "name": "Gebackenes Seelachsfilet, Kartoffel-Rucolasalat",
+     "price": 13.6
+    },
+    {
+     "name": "Salat oder Tagessuppe",
+     "price": null
+    },
+    {
+     "name": "Gebackenes Gemüseschnitzel, Petersilkartoffeln",
      "price": 13.6
     }
    ]
@@ -55,7 +63,7 @@
   "ok": true
  },
  "detail": {
-  "agreement": 0.667,
+  "agreement": 0.75,
   "only_ai": [],
   "only_generic": [
    "2026-11-23: gebackenes gemüseschnitzel petersilkartoffeln",

@@ -7,7 +7,7 @@
      "price": 10.9
     },
     {
-     "name": "Walliser Putenschnitzel gegrilltes Putenschnitzel mit Schinken und Käse-überbacken, serviert mit Kartoffelrösti",
+     "name": "Walliser Putenschnitzel",
      "price": 10.9
     }
    ],
@@ -17,7 +17,7 @@
      "price": 10.9
     },
     {
-     "name": "Spareribs Vom Backofen, serviert mit Pommes und Salat (A, C, G, O)",
+     "name": "Spareribs",
      "price": 10.9
     }
    ],
@@ -27,7 +27,7 @@
      "price": 10.9
     },
     {
-     "name": "Cordon bleu von der heimischen Pute oder Schwein gefüllt mit Schinken und Käse, serviert mit Reis, Preiselbeeren und grüner Salat (A, C, G, O)",
+     "name": "Cordon bleu",
      "price": 10.9
     }
    ],
@@ -37,7 +37,7 @@
      "price": 10.9
     },
     {
-     "name": "Rindergulasch serviert mit Butterspätzle (A, C, G, O)",
+     "name": "Rindergulasch",
      "price": 10.9
     }
    ],
@@ -47,7 +47,7 @@
      "price": 10.9
     },
     {
-     "name": "Backhendl serviert mit Kartoffeln und Blatt Salat (A, C, G, O)",
+     "name": "Backhendl",
      "price": 10.9
     }
    ]
@@ -55,9 +55,13 @@
   "ok": true
  },
  "detail": {
-  "agreement": 1.0,
-  "only_ai": [],
-  "only_generic": []
+  "agreement": 0.9,
+  "only_ai": [
+   "2026-11-24: spareribs"
+  ],
+  "only_generic": [
+   "2026-11-24: vom backofen serviert mit pommes und salat a c g o"
+  ]
  },
  "generic": {
   "days": {

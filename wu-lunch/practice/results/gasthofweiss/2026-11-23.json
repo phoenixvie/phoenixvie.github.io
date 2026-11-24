@@ -1,86 +1,10 @@
 {
  "ai": {
-  "days": {
-   "2026-11-23": [
-    {
-     "name": "Tagessuppe",
-     "price": 12.7
-    },
-    {
-     "name": "Wiener Schnitzel vom Schwein mit Petersilienkartoffeln",
-     "price": 12.7
-    },
-    {
-     "name": "Tagessuppe",
-     "price": 12.7
-    },
-    {
-     "name": "Käsespätzle",
-     "price": 12.7
-    }
-   ],
-   "2026-11-24": [
-    {
-     "name": "Tagessuppe",
-     "price": 12.7
-    },
-    {
-     "name": "Spaghetti mit Chorizo, Oliven & Tomatensoße",
-     "price": 12.7
-    },
-    {
-     "name": "Tagessuppe",
-     "price": 12.7
-    },
-    {
-     "name": "Gebackene Champignons mit Sauce Tartar",
-     "price": 12.7
-    }
-   ],
-   "2026-11-25": [
-    {
-     "name": "Tagessuppe",
-     "price": 12.7
-    },
-    {
-     "name": "Chicken Wrap",
-     "price": 12.7
-    },
-    {
-     "name": "Tagessuppe",
-     "price": 12.7
-    },
-    {
-     "name": "Kürbis-schafskäse Krapferl mit Dip",
-     "price": 12.7
-    }
-   ],
-   "2026-11-26": [
-    {
-     "name": "Tagessuppe",
-     "price": 12.7
-    },
-    {
-     "name": "Wurzelfleisch mit Kren & Kartoffeln",
-     "price": 12.7
-    },
-    {
-     "name": "Tagessuppe",
-     "price": 12.7
-    },
-    {
-     "name": "Enchiladas mit Dip, Soja, Mais, Bohnen & Cheddar",
-     "price": 12.7
-    }
-   ]
-  },
-  "ok": true
+  "error": "ValueError: KI-Leser: kein wörtlicher Beleg für die Woche",
+  "ok": false,
+  "other_week": false
  },
- "detail": {
-  "agreement": 1.0,
-  "only_ai": [],
-  "only_generic": []
- },
+ "detail": null,
  "generic": {
   "days": {
    "2026-11-23": [
@@ -143,6 +67,6 @@
   "ok": true
  },
  "id": "gasthofweiss",
- "verdict": "einig",
+ "verdict": "nur_ersatzleser",
  "week": "2026-11-23"
 }
