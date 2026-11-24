@@ -27,10 +27,16 @@ Import deshalb erst um 13:42 Uhr – Finn, Lia und Topf & Deckel erschienen vers
 | Sonntag | 09:00, 15:00, 21:00 |
 | Montag | ab 05:30 **alle 15 Minuten, solange Menüs fehlen** (bis 13:30); zusätzlich feste Termine 05:30, 07:00, 08:30, 10:00, 11:30, 13:30, 15:30, 17:30 |
 | Dienstag bis Freitag | 07:00 und 10:30, **solange noch ein Menü fehlt** |
+| Montag bis Freitag (Wels) | 08:30, 09:30, 10:30 und 11:30 stößt der Wächter den **Welser Import** an, solange die Tageskarte eines Lokals mit täglich neuer Karte fehlt (derzeit Gasthaus Huber) |
 
 Warum "Freitagnacht" kurz nach Mitternacht liegt: Bis Freitag 24:00 zeigen Seite und App die laufende Woche. Der Import stellt deshalb erst am
 Samstag auf die neue Woche um; ein Lauf am Freitagabend könnte Menüs der nächsten Woche noch nirgends ablegen. Um 00:10 ist alles vom
 Freitagabend erfasst und ab Samstag früh sichtbar.
+
+Lokale mit täglich neuer Karte veröffentlichen erst am Vormittag des Tages. Am 24.11.2026 stand Hubers Dienstagsmenü um 09:50 auf
+der Webseite, aber nicht in der App: Seit der Nacht war kein Import gelaufen, weil bei den WU-Lokalen nichts fehlte. Seither hält eine
+fehlende Tageskarte den Wächter wach (auch über Nacht, damit er am Morgen sicher läuft); die Zeiten stehen in `update-policy.json`
+unter `watch.daily`. Ein Lokal, das bis zur Wochenmitte noch gar nichts gezeigt hat (Betriebsurlaub), zählt dabei nicht.
 
 Der Wächter ist von **Freitag 18:00 bis Montag 18:00 immer aktiv** und darüber hinaus, solange ein Menü fehlt (dann auch über Nacht, damit der
 Termin um 07:00 sicher stattfindet). Ist alles veröffentlicht, endet er bis zum nächsten Wochenende. Alle Zeiten stehen in `update-policy.json`

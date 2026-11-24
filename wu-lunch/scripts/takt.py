@@ -172,11 +172,59 @@ def missing_menus(data, status, local, watch):
     return sorted(missing)
 
 
-def decide(now, *, config, missing, last_import_at, started_at, budget_minutes=BUDGET_MINUTES):
+def missing_daily(data, local, daily):
+    """Lokale mit täglich neuer Karte (Wels: Gasthaus Huber), deren Menü für den als Nächstes gebrauchten Tag fehlt.
+
+    Solche Karten erscheinen erst am Vormittag des Tages. Fehlt sie, bleibt der Wächter wach (auch über Nacht,
+    damit er am Morgen sicher läuft) und stößt zu festen Zeiten den zuständigen Import an. Freitagnachmittag
+    zählt nicht mehr; ebenso wenig ein Lokal, das in dieser Woche bis zur Wochenmitte noch gar nichts gezeigt
+    hat (Betriebsurlaub) – es hält den Wächter nicht die ganze Woche wach.
+    """
+    if not daily or not data:
+        return []
+    day = target_day(local)
+    if day == local.date() and local.hour >= LOOK_AHEAD_HOUR:
+        return []
+    monday = day - timedelta(days=day.weekday())
+    week_matches = data.get("weekStart") == monday.isoformat()
+    missing = []
+    for restaurant in data.get("restaurants", []):
+        if restaurant.get("id") not in daily.get("restaurants", []):
+            continue
+        days = restaurant.get("days", {}) if week_matches else {}
+        if days.get(day.isoformat()):
+            continue
+        earlier = [days.get((monday + timedelta(days=offset)).isoformat()) for offset in range(day.weekday())]
+        if day.weekday() >= 2 and not any(earlier):
+            continue
+        missing.append(restaurant["id"])
+    return sorted(missing)
+
+
+def daily_due(local, daily, missing, last_trigger):
+    """Ist jetzt ein fester Termin für den Tageskarten-Import fällig, der noch nicht bedient wurde?
+
+    Nur am Tag selbst (nicht in der Nacht davor) und nur, solange die Karte fehlt.
+    """
+    if not daily or not missing or target_day(local) != local.date():
+        return False
+    due = [slot for slot in (datetime.combine(local.date(), clock_time(*map(int, text.split(":"))), tzinfo=local.tzinfo)
+                             for text in daily.get("slots", [])) if slot <= local]
+    return bool(due) and (last_trigger is None or last_trigger < due[-1])
+
+
+def seconds_to_daily_slot(local, daily):
+    """Sekunden bis zum nächsten Tageskarten-Termin heute (None, wenn heute keiner mehr kommt)."""
+    coming = [slot for slot in (datetime.combine(local.date(), clock_time(*map(int, text.split(":"))), tzinfo=local.tzinfo)
+                                for text in (daily or {}).get("slots", [])) if slot > local]
+    return (coming[0] - local).total_seconds() if coming else None
+
+
+def decide(now, *, config, missing, last_import_at, started_at, budget_minutes=BUDGET_MINUTES, keep_alive=False):
     """Nächster Schritt des Wächters als reine Entscheidung (ohne Nebenwirkungen)."""
     watch = config["watch"]
     local = vienna(now, config)
-    if not (in_period(local, watch) or missing):
+    if not (in_period(local, watch) or missing or keep_alive):
         return {"action": "stop", "reason": "außerhalb des Wachzeitraums und kein Menü ausständig"}
     if (now - started_at).total_seconds() >= budget_minutes * 60:
         return {"action": "handover", "reason": "Laufzeitgrenze des Jobs erreicht"}
@@ -349,13 +397,31 @@ def run():
         return 0
     last_import = last_completed(published("data/update-status.json")[0] or {})
     failed_starts = 0
+    daily, daily_trigger = watch.get("daily"), None
     while True:
         now = datetime.now(zone)
         menus, status = published("data/menus.json", "status.json")
         missing = missing_menus(menus, status, now, watch)
-        step = decide(now, config=config, missing=missing, last_import_at=last_import, started_at=started)
+        open_daily = missing_daily(published(daily["file"])[0], now, daily) if daily else []
+        step = decide(now, config=config, missing=missing, last_import_at=last_import, started_at=started,
+                      keep_alive=bool(open_daily))
         print(now.isoformat(timespec="seconds"), step["action"], "–", step["reason"],
-              "| ausständig:", ", ".join(missing) or "nichts", flush=True)
+              "| ausständig:", ", ".join(missing + ["Tageskarte " + name for name in open_daily]) or "nichts", flush=True)
+        # Tageskarte fehlt und ein Termin ist fällig: den zuständigen Import direkt anstoßen (kein WU-Import nötig).
+        # Löst der Wächter ohnehin gerade einen WU-Import aus, startet dieser den Folgelauf selbst.
+        if step["action"] == "sleep" and daily_due(now, daily, open_daily, daily_trigger):
+            try:
+                gh("workflow", "run", daily["workflow"], "--ref", branch)
+                print("Tageskarten-Import angestoßen:", daily["workflow"], flush=True)
+            except Exception as error:
+                print("::warning::Tageskarten-Import konnte nicht angestoßen werden:", str(error)[:200], flush=True)
+            daily_trigger = now
+        if step["action"] in ("import", "sleep") and open_daily:
+            wait = seconds_to_daily_slot(now, daily)
+            if step["action"] == "sleep" and wait is not None:
+                step["seconds"] = max(1, min(step["seconds"], wait))
+            if step["action"] == "import":
+                daily_trigger = now
         if step["action"] == "stop":
             return 0
         if step["action"] == "handover":
@@ -392,7 +458,9 @@ def ensure():
     data_path, status_path = ROOT / "data/menus.json", ROOT / "status.json"
     read = lambda path: json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
     missing = missing_menus(read(data_path), read(status_path), local, watch)
-    if not (in_period(local, watch) or missing):
+    daily = watch.get("daily")
+    open_daily = missing_daily(read((ROOT / daily["file"]).resolve()), local, daily) if daily else []
+    if not (in_period(local, watch) or missing or open_daily):
         print("Wächter derzeit nicht nötig.")
         return 0
     if other_watch(watch["workflow"], "", ""):

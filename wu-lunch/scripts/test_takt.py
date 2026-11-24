@@ -273,11 +273,64 @@ class HandoverTests(unittest.TestCase):
         self.assertGreaterEqual(limit - takt.BUDGET_MINUTES - 25, 3 * attempt)
 
 
+def wels(*filled, week='2026-11-16', name='huber'):
+    """Welser Stand: das Lokal mit Tageskarte hat an den genannten Tagen (Tag im November) Gerichte."""
+    monday = date.fromisoformat(week)
+    days = {(monday + timedelta(days=i)).isoformat(): ([{'name': 'Tagesteller'}] if (monday + timedelta(days=i)).day in filled else [])
+            for i in range(5)}
+    return {'weekStart': week, 'restaurants': [{'id': name, 'days': days}, {'id': 'goesser', 'days': {day: [] for day in days}}]}
+
+
+class DailyMenuTests(unittest.TestCase):
+    """Lokale mit täglich neuer Karte (Wels: Gasthaus Huber) – 24.11.2026: Das Dienstagsmenü stand um 09:50 auf der
+    Webseite, aber nicht in der App, weil seit der Nacht kein Import gelaufen war."""
+
+    DAILY = WATCH['daily']
+
+    def test_settings_name_the_wels_import_and_morning_times(self):
+        self.assertEqual(self.DAILY['workflow'], 'wels-mittag.yml')
+        self.assertEqual(self.DAILY['restaurants'], ['huber'])
+        self.assertEqual(self.DAILY['slots'], ['08:30', '09:30', '10:30', '11:30'])
+        self.assertTrue((takt.ROOT / self.DAILY['file']).resolve().exists())
+
+    def test_todays_card_counts_as_missing_until_the_afternoon(self):
+        missing = lambda now, data: takt.missing_daily(data, now, self.DAILY)
+        self.assertEqual(missing(at(17, 9, 0), wels(16)), ['huber'])            # Dienstagvormittag: heute fehlt
+        self.assertEqual(missing(at(17, 9, 0), wels(16, 17)), [])               # heute ist da
+        self.assertEqual(missing(at(17, 15, 0), wels(16, 17)), ['huber'])       # nachmittags zählt schon morgen (wach bleiben)
+        self.assertEqual(missing(at(20, 9, 0), wels(16, 17, 18, 19)), ['huber'])   # Freitagvormittag
+        self.assertEqual(missing(at(20, 15, 0), wels(16, 17, 18, 19)), [])      # Freitagnachmittag: nichts mehr zu holen
+        self.assertEqual(missing(at(16, 7, 0), wels()), ['huber'])              # Montagfrüh
+        self.assertEqual(missing(at(17, 9, 0), None), [])                       # Datei nicht lesbar: kein Dauerlauf
+        self.assertEqual(takt.missing_daily(wels(16), at(17, 9, 0), None), [])  # nicht eingerichtet
+
+    def test_a_restaurant_silent_all_week_does_not_keep_the_watch_awake(self):
+        self.assertEqual(takt.missing_daily(wels(), at(17, 9, 0), self.DAILY), ['huber'])   # Dienstag: Montag kann ein Ausrutscher sein
+        self.assertEqual(takt.missing_daily(wels(), at(18, 9, 0), self.DAILY), [])          # Mittwoch, noch nie etwas: Betriebsurlaub
+        self.assertEqual(takt.missing_daily(wels(16), at(18, 9, 0), self.DAILY), ['huber'])
+
+    def test_import_is_due_at_each_morning_time_once_and_only_on_the_day_itself(self):
+        due = lambda now, last=None, missing=('huber',): takt.daily_due(now, self.DAILY, list(missing), last)
+        self.assertFalse(due(at(17, 8, 0)))                                     # vor dem ersten Termin
+        self.assertTrue(due(at(17, 8, 31)))
+        self.assertFalse(due(at(17, 8, 50), last=at(17, 8, 31)))                # 08:30 ist bedient
+        self.assertTrue(due(at(17, 9, 31), last=at(17, 8, 31)))
+        self.assertFalse(due(at(17, 9, 31), missing=()))                        # Karte ist da
+        self.assertFalse(due(at(17, 20, 0)))                                    # abends gilt schon morgen: kein Abruf in der Nacht
+        self.assertEqual(takt.seconds_to_daily_slot(at(17, 8, 0), self.DAILY), 1800)
+        self.assertIsNone(takt.seconds_to_daily_slot(at(17, 12, 0), self.DAILY))
+
+    def test_watch_stays_awake_for_a_missing_daily_card(self):
+        quiet = at(18, 9, 0)                                                    # Mittwoch, außerhalb des Wachzeitraums, WU vollständig
+        self.assertEqual(takt.decide(quiet, config=CONFIG, missing=[], last_import_at=quiet, started_at=quiet)['action'], 'stop')
+        self.assertEqual(takt.decide(quiet, config=CONFIG, missing=[], last_import_at=quiet, started_at=quiet, keep_alive=True)['action'], 'sleep')
+
+
 class WatchRunSimulation(unittest.TestCase):
     """Ganzer Wachlauf mit simulierter Uhr."""
 
     def simulate(self, start, until, publish_at, rival=False, max_minutes=None, swallowed=0, outage=0,
-                 failing_starts=0):
+                 failing_starts=0, daily=None, complete=False):
         clock = {'now': start, 'imported': False}   # 'imported': neue Menüs wurden tatsächlich abgeholt
         log = {'imports': [], 'dispatched': [], 'failed': []}
         github = {'listings': 0, 'failing_starts': failing_starts}
@@ -296,10 +349,12 @@ class WatchRunSimulation(unittest.TestCase):
             if now < at(14, 0, 0):                      # bis Freitag 24:00: laufende Woche, vollständig
                 data = menus(week='2026-11-09')
             else:                                       # neue Woche; Finn und Topf kommen später
-                data = menus(missing=() if clock['imported'] else ('finn', 'topfdeckel'))
+                data = menus(missing=() if clock['imported'] or complete else ('finn', 'topfdeckel'))
             files = {'data/menus.json': data, 'status.json': {},
                      'data/update-status.json': {'last_completed': (start - timedelta(hours=3)).isoformat()}}
-            return [files[path] for path in paths]
+            if daily:                                   # Welser Tageskarte: Stand je nach Uhrzeit
+                files[WATCH['daily']['file']] = daily(now)
+            return [files.get(path) for path in paths]
         def trigger(workflow, branch, **kwargs):
             if github['failing_starts'] > 0:            # GitHub nimmt den Start gerade nicht an
                 github['failing_starts'] -= 1
@@ -356,6 +411,28 @@ class WatchRunSimulation(unittest.TestCase):
         self.assertEqual(day('Tue'), [])                                         # alles veröffentlicht: Wächter beendet
         self.assertLess(ended, at(16, 18, 30))
         self.assertEqual(log['dispatched'], [])
+
+    def test_daily_card_is_fetched_by_the_wels_import_on_the_morning_it_appears(self):
+        # Dienstag, WU vollständig. Huber veröffentlicht um 09:45. Der Welser Import wird um 08:30 und 09:30 direkt
+        # angestoßen (noch nichts da). Um 10:30 läuft der feste WU-Termin, der den Welser Import als Folgelauf startet –
+        # danach ist die Karte da, und bis zum Nachmittag wird nichts mehr angestoßen.
+        daily = lambda now: wels(16, 17) if now >= at(17, 10, 35) else wels(16)
+        ended, log = self.simulate(at(17, 6, 0), until=at(17, 13, 55), publish_at=at(17, 9, 45), daily=daily, complete=True)
+        wels_runs = [call for call in log['dispatched'] if call[:3] == ('workflow', 'run', 'wels-mittag.yml')]
+        self.assertEqual(len(wels_runs), 2)
+        self.assertEqual(self.stamps(log), ['Tue 07:00', 'Tue 10:30'])
+        self.assertEqual([call for call in log['dispatched'] if call[:2] == ('workflow', 'run') and call[2] != 'wels-mittag.yml'], [])
+
+    def test_daily_card_that_never_appears_is_tried_at_the_four_times_and_not_more(self):
+        ended, log = self.simulate(at(17, 6, 0), until=at(17, 13, 55), publish_at=at(19, 0, 0), daily=lambda now: wels(16), complete=True)
+        wels_runs = [call for call in log['dispatched'] if call[:3] == ('workflow', 'run', 'wels-mittag.yml')]
+        self.assertEqual(len(wels_runs), 3)        # 08:30, 09:30, 11:30 – um 10:30 startet ihn der WU-Import als Folgelauf
+        self.assertEqual(self.stamps(log), ['Tue 07:00', 'Tue 10:30'])
+
+    def test_without_a_daily_card_problem_the_week_stays_quiet(self):
+        ended, log = self.simulate(at(17, 6, 0), until=at(17, 13, 55), publish_at=at(16, 0, 0), daily=lambda now: wels(16, 17), complete=True)
+        self.assertEqual(log['dispatched'], [])
+        self.assertEqual(self.stamps(log), [])     # Wächter endet sofort: nichts ausständig
 
     def test_gap_after_monday_is_checked_daily_until_closed(self):
         # Veröffentlichung erst Mittwoch 08:00: Di 07:00/10:30, Mi 07:00 und 10:30 (holt es ab), danach Ende.
