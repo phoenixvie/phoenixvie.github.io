@@ -289,7 +289,16 @@
       "price": 12.7
      }
     ],
-    "2026-11-25": [],
+    "2026-11-25": [
+     {
+      "name": "Spareribs mit Bbq-sauce und Kartoffel-wedges",
+      "price": 12.9
+     },
+     {
+      "name": "Berglinseneintopf mit Speck Debreziner und Kartoffeln",
+      "price": 12.7
+     }
+    ],
     "2026-11-26": [],
     "2026-11-27": []
    },
@@ -1272,5 +1281,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-25T01:54:35+01:00"
+ "updatedAt": "2026-11-25T07:01:33+01:00"
 }
