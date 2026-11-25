@@ -1,47 +1,9 @@
 {
-  "checked_at": "2026-11-25T07:00:42+01:00",
+  "checked_at": "2026-11-25T14:02:07+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 1,
+  "api_calls": 0,
   "results": [
-    {
-      "restaurant": "losteria",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Quelle belegt nicht, dass diese Saisonkarte in der geprüften Woche gültig war.",
-        "Keine separat angebotenen Tagesgerichte oder Menü-Kombinationen für die geprüfte Woche ausgewiesen."
-      ],
-      "ai_only_items": 4,
-      "parser_only_items": 0,
-      "ai_only_examples": [
-        "None: crema di patate con tartufo",
-        "None: pizza bianca tacchino e cipolletartufo di cielo",
-        "None: tagliatelle tartufo e funghi",
-        "None: tortina di mandorle"
-      ],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "ffc6bece33f71597e2f454691984cb35adbcfdc03e8d76db7f95d78c3203b0e0"
-      },
-      "usage": {
-        "input_tokens": 1922,
-        "input_tokens_details": {
-          "cache_write_tokens": 1919,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 1919
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 833,
-        "output_tokens_details": {
-          "reasoning_tokens": 228
-        },
-        "total_tokens": 2755
-      }
-    },
     {
       "restaurant": "omakueche",
       "issues": [],
