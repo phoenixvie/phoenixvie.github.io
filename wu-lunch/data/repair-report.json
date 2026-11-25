@@ -1,8 +1,8 @@
 {
-  "checked_at": "2026-11-24T14:42:01+01:00",
+  "checked_at": "2026-11-25T07:00:42+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 2,
+  "api_calls": 1,
   "results": [
     {
       "restaurant": "losteria",
@@ -10,7 +10,8 @@
       "action": "review_only",
       "repairs": [],
       "validation_issues": [
-        "Die Gerichte sind nicht ausdrücklich der geprüften Woche zugeordnet."
+        "Die Quelle belegt nicht, dass diese Saisonkarte in der geprüften Woche gültig war.",
+        "Keine separat angebotenen Tagesgerichte oder Menü-Kombinationen für die geprüfte Woche ausgewiesen."
       ],
       "ai_only_items": 4,
       "parser_only_items": 0,
@@ -34,64 +35,12 @@
           },
           "cached_tokens": 0
         },
-        "output_tokens": 834,
+        "output_tokens": 833,
         "output_tokens_details": {
-          "reasoning_tokens": 101
+          "reasoning_tokens": 228
         },
-        "total_tokens": 2756
+        "total_tokens": 2755
       }
-    },
-    {
-      "restaurant": "karmafood",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Abweichung zwischen dem Kopfzeitraum 23.11.-25.11. und den aufgeführten Gerichten bis Freitag; Donnerstag und Freitag sind nach den Wochentagsüberschriften der angefragten Woche zugeordnet.",
-        "„Lunch Combo €13,50“ ist als Kombiangebot ausgewiesen, aber die Quelle belegt keine konkrete Kombination oder Zuordnung zu einzelnen Gerichten.",
-        "Keine separat bepreisten Tagessuppen, Salate oder Nachspeisen erkennbar."
-      ],
-      "ai_only_items": 0,
-      "parser_only_items": 0,
-      "ai_only_examples": [],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "0a24feccb15ce1342fe81997a4c33ac726c3a3d7e835c792ace1dc4f0685a2d8"
-      },
-      "usage": {
-        "input_tokens": 2669,
-        "input_tokens_details": {
-          "cache_write_tokens": 2666,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 2666
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 2872,
-        "output_tokens_details": {
-          "reasoning_tokens": 668
-        },
-        "total_tokens": 5541
-      }
-    },
-    {
-      "restaurant": "mensa",
-      "issues": [],
-      "action": "dedicated_pdf_ai",
-      "repairs": []
-    },
-    {
-      "restaurant": "topfdeckel",
-      "issues": [],
-      "action": "browser_import",
-      "repairs": []
-    },
-    {
-      "restaurant": "finn",
-      "issues": [],
-      "action": "dedicated_image_ai",
-      "repairs": []
     },
     {
       "restaurant": "omakueche",
