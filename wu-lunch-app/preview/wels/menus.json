@@ -299,7 +299,16 @@
       "price": 12.7
      }
     ],
-    "2026-11-26": [],
+    "2026-11-26": [
+     {
+      "name": "Hascheeknödel mit Gulaschsaft und gem. Salat",
+      "price": 12.5
+     },
+     {
+      "name": "1/2 Brathendl gefüllt mit Kartoffeln und gem. Salat",
+      "price": 12.5
+     }
+    ],
     "2026-11-27": []
    },
    "import": {
@@ -1281,5 +1290,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-25T07:01:33+01:00"
+ "updatedAt": "2026-11-26T09:30:25+01:00"
 }
