@@ -1,6 +1,6 @@
 {
   "started_at": "2026-11-08T13:16:40+01:00",
-  "ends_after": null,
+  "ends_after": "2026-12-04",
   "sources": {
     "mensa": {
       "observations": [
@@ -3642,6 +3642,15 @@
           "changed": false,
           "source_url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie",
           "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-26T16:54:10+01:00",
+          "sha256": "903c0b8cec08348d0153d3a6e4deb8f5e1cb7d44f6df3721a0769d58820b25b6",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie",
+          "publication_time_confirmed": false
         }
       ],
       "changes": [
@@ -4475,6 +4484,15 @@
         },
         {
           "at": "2026-11-26T13:42:50+01:00",
+          "sha256": "054c165cf21530cea20543bfbc8d424c7cbc3ba0800caf6eafe3a12c598b9295",
+          "format": "html",
+          "validity": null,
+          "changed": false,
+          "source_url": "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch",
+          "publication_time_confirmed": false
+        },
+        {
+          "at": "2026-11-26T16:54:10+01:00",
           "sha256": "054c165cf21530cea20543bfbc8d424c7cbc3ba0800caf6eafe3a12c598b9295",
           "format": "html",
           "validity": null,
