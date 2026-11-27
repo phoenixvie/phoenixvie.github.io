@@ -77,6 +77,7 @@ Unter `preview/wels/` läuft dieselbe App für 14 Restaurants in Wels – für d
   - `app-bauen-und-play-intern`: wie `app-bauen`; nach bestandener Prüfung (auch im Emulator) lädt `scripts/upload-play.py` das App-Bundle in den Track „Interne Tests". Ohne diese ausdrückliche Auswahl wird nie hochgeladen.
 - Zugang: Secret `PLAY_SERVICE_ACCOUNT_JSON` (gesamter Inhalt der Schlüsseldatei eines Google-Cloud-Dienstkontos). Das Dienstkonto wird in der Play Console unter „Nutzer und Berechtigungen" eingeladen, nur für WU Food und nur mit dem Recht für Test-Tracks. Im Cloud-Projekt muss die „Google Play Android Developer API" aktiviert sein. Der Schlüssel steht nie im Quellcode und wird nie ausgegeben.
 - Versionshinweise je Sprache: `store-listing/release-notes.json` (höchstens 500 Zeichen), vor jedem Build anpassen.
+- Vor dem nächsten iOS-Update: die Schlüsselwörter aus `store-listing/app-store/keywords.json` in App Store Connect eintragen (Wunsch des Betreibers vom 27.11.2026), danach den Hinweis in der Datei entfernen.
 - Solange die App bei Google im Entwurf ist, legt das Skript den Release als Entwurf an; die Einführung wird dann einmal in der Play Console bestätigt. Geschlossener Test und Produktion bleiben Handarbeit in der Play Console.
 - Regel des Betreibers: vor jedem Upload nachfragen.
 - Tests: `wu-lunch/scripts/test_upload_play.py` (nachgestellte Google-Schnittstelle, kein Netz).
