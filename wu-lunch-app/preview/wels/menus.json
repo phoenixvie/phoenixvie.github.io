@@ -309,7 +309,16 @@
       "price": 12.5
      }
     ],
-    "2026-11-27": []
+    "2026-11-27": [
+     {
+      "name": "Seehechtfilet gebacken mit Petersilkartofflen, Sc. Tatare und Blattsalat",
+      "price": 12.9
+     },
+     {
+      "name": "Eiernockerl mit gem. Salat",
+      "price": 12.5
+     }
+    ]
    },
    "import": {
     "state": "ok",
@@ -1290,5 +1299,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-26T09:30:25+01:00"
+ "updatedAt": "2026-11-27T08:30:28+01:00"
 }
