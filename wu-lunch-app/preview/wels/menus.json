@@ -11,15 +11,70 @@
    ],
    "brandColor": "#d8a400",
    "days": {
-    "2026-11-30": [],
-    "2026-12-01": [],
-    "2026-12-02": [],
-    "2026-12-03": [],
-    "2026-12-04": []
+    "2026-11-30": [
+     {
+      "name": "Gemüselaibchen mit Petersilerdäpfeln & Sauerrahmdip",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
+     },
+     {
+      "name": "Pfefferrahmgeschnetzeltes vom Schwein, mit Röstiecken",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert"
+     }
+    ],
+    "2026-12-01": [
+     {
+      "name": "Cremespinat mit gerösteten Erdäpfeln & Spiegelei",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
+     },
+     {
+      "name": "Geselchtes mit Specklinsen & Semmelknödel",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert"
+     }
+    ],
+    "2026-12-02": [
+     {
+      "name": "Kräuterrisotto mit mediterranem Gemüse",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
+     },
+     {
+      "name": "Ausgelöstes Keulenschnitzel vom Huhn, mit Erdäpfelsalat",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
+     }
+    ],
+    "2026-12-03": [
+     {
+      "name": "Grünes Gemüsecurry mit pflanzlichen Filetstückchen & Basmatireis",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
+     },
+     {
+      "name": "Szegediner Krautfleisch mit Salzerdäpfeln & Sauerrahm",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
+     }
+    ],
+    "2026-12-04": [
+     {
+      "name": "Überbackene Schinkenfleckerl mit gemischtem Blattsalat",
+      "price": 8.4,
+      "description": "Mit Suppe oder Dessert"
+     },
+     {
+      "name": "Fischfilet vom Grill mit Kräuterbutter & Potato Wedges",
+      "price": 9.9,
+      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
+     }
+    ]
    },
    "import": {
-    "state": "error",
-    "message": "HTTPError: 500 Server Error: Internal Server Error for url: https://www.billa.at/unsere-maerkte/billa-plus/marktkueche"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -736,5 +791,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-28T00:16:37+01:00"
+ "updatedAt": "2026-11-28T00:35:43+01:00"
 }
