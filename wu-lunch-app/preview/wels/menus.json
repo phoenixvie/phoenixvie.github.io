@@ -532,8 +532,8 @@
     ]
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Hannibal zeigt die Woche ab 2026-11-30"
    }
   },
   {
@@ -1299,5 +1299,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-27T08:30:28+01:00"
+ "updatedAt": "2026-11-27T16:20:02+01:00"
 }
