@@ -1,5 +1,5 @@
 {
- "weekStart": "2026-11-23",
+ "weekStart": "2026-11-30",
  "restaurants": [
   {
    "id": "billa",
@@ -11,70 +11,15 @@
    ],
    "brandColor": "#d8a400",
    "days": {
-    "2026-11-23": [
-     {
-      "name": "Eiernockerl mit frischen Kräutern & gemischtem Blattsalat",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
-     },
-     {
-      "name": "Berner Würstel mit Pommes frites",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert"
-     }
-    ],
-    "2026-11-24": [
-     {
-      "name": "Bunter Gemüseauflauf an einer feinen Kräutersauce",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
-     },
-     {
-      "name": "Paprikarahmhenderl mit Hörnchen",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert"
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Chili sin Carne mit pflanzlichem Dip & einer reschen Semmel",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
-     },
-     {
-      "name": "Gebackener Leberkäse mit Salzerdäpfeln",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Spinat-Käseknödel mit cremiger Champignonsauce",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
-     },
-     {
-      "name": "Halbes Brathenderl mit gedünstetem Reis",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Kürbisstrudel mit Salatbouquet & Knoblauch-Rahm-Dip",
-      "price": 8.4,
-      "description": "Mit Suppe oder Dessert"
-     },
-     {
-      "name": "Seelachs gebacken mit Erdäpfel-Vogerlsalat",
-      "price": 9.9,
-      "description": "Mit Suppe oder Dessert · Gericht kann je Filiale abweichen"
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "error",
+    "message": "HTTPError: 500 Server Error: Internal Server Error for url: https://www.billa.at/unsere-maerkte/billa-plus/marktkueche"
    }
   },
   {
@@ -92,87 +37,15 @@
    ],
    "brandColor": "#6a9a2d",
    "days": {
-    "2026-11-23": [
-     {
-      "name": "Tagessuppe",
-      "price": 4.5,
-      "description": "Vegetarisch",
-      "category": "Suppe"
-     },
-     {
-      "name": "Kartoffel-Linsen-Curry",
-      "price": 6.9,
-      "description": "Vegan"
-     },
-     {
-      "name": "Paprika-Hühnchen mit Basmati-Vollkorn-Reis",
-      "price": 7.9
-     }
-    ],
-    "2026-11-24": [
-     {
-      "name": "Tagessuppe",
-      "price": 4.5,
-      "description": "Vegetarisch",
-      "category": "Suppe"
-     },
-     {
-      "name": "Kürbis-Kichererbsen-Curry",
-      "price": 6.9,
-      "description": "Vegan"
-     },
-     {
-      "name": "Kartoffel-Lachs-Bratlinge mit Kürbisragout",
-      "price": 7.9
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Tagessuppe",
-      "price": 4.5,
-      "description": "Vegetarisch",
-      "category": "Suppe"
-     },
-     {
-      "name": "Hirse-Pfanne mit Gemüse",
-      "price": 6.9,
-      "description": "Vegan"
-     },
-     {
-      "name": "Thai-Fleischpfanne mit Basmati",
-      "price": 7.9
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Tagessuppe",
-      "price": 4.5,
-      "description": "Vegetarisch",
-      "category": "Suppe"
-     },
-     {
-      "name": "Ratatouille & Farfalle d`oliva",
-      "price": 6.9,
-      "description": "Vegan"
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Tagessuppe",
-      "price": 4.5,
-      "description": "Vegetarisch",
-      "category": "Suppe"
-     },
-     {
-      "name": "Scharfer Gemüse-Curry-WOK auf Kurkuma-Curry-Reis mit Erbsen",
-      "price": 7.9,
-      "description": "Vegan"
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Denns: keine Wochenkarte für die gesuchte Woche"
    }
   },
   {
@@ -192,65 +65,15 @@
    ],
    "brandColor": "#c0842b",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [
-     {
-      "name": "Gai Pad Kratherm (gebratenes Hühnerfleisch, hausgemachte Knoblauchsauce, Gemüse, Reis)",
-      "price": 14.5,
-      "included_starter": "Gemischter Salat",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
-     },
-     {
-      "name": "Bla Pad Künchai (Buntbarschfilet, Selleriestangen, Ingwer, Jungzwiebel, Champignons, Babymais, Spitzpaprika, Reis)",
-      "price": 15.5,
-      "included_starter": "Gemischter Salat",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Pad Pak Ruam Nuea (gebratenes Wokgemüse mit Rindfleisch und Reis)",
-      "price": 15.5,
-      "included_starter": "Hausgemachte Frühlingsrollen gefüllt mit Hühnerfleisch und Gemüse",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
-     },
-     {
-      "name": "Pad Suki Gai (gebratene Glasnudeln, Hühnerfleisch, Gemüse, hausgemachte Suki-Sauce) Menü Sonderwünsche werden mit Aufpreis verrechnet!",
-      "price": 14.5,
-      "included_starter": "Hausgemachte Frühlingsrollen gefüllt mit Hühnerfleisch und Gemüse",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Pad Krapao Pak Ruam Gung (gebratene Garnelen, grüne Bohnen, Karotten, Karfiol, Zwiebel,Thaibasilikum, Spitzpaprika, Reis) leicht scharf",
-      "price": 15.5,
-      "description": "Mit Nachspeise: Hausgemachter Schoko-Kirschkuchen · Nur Hauptspeise: 1,00 € günstiger"
-     },
-     {
-      "name": "Kauw Pad Kiaw Wan Gai (gebratener Reis mit Hühnerfleisch, grüne Bohnen, Karotten, süßes Thaibasilikum, Spitzpaprika) mittel scharf",
-      "price": 14.5,
-      "description": "Mit Nachspeise: Hausgemachter Schoko-Kirschkuchen · Nur Hauptspeise: 1,00 € günstiger"
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Gai Pad Pong Gari (gebratenes Hühnerfleisch, Karotten, Zwiebel, Stangensellerie, Spitzpaprika, Curry, Reis)",
-      "price": 14.5,
-      "included_starter": "Yum Wun Sen Gai Sab (Glasnudelsalat mit gehacktem Hühnerfleisch",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
-     },
-     {
-      "name": "Gaeng Tea Po Gai (rotes Curry mit Hühnerfleisch, Karfiol, Pak-Choi, Karotten, Reis) Menü Sonderwünsche werden mit Aufpreis verrechnet!",
-      "price": 14.5,
-      "included_starter": "Yum Wun Sen Gai Sab (Glasnudelsalat mit gehacktem Hühnerfleisch",
-      "description": "Nur Hauptspeise: 1,00 € günstiger"
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Dok Khun zeigt die Woche ab 2026-11-24"
    }
   },
   {
@@ -269,60 +92,15 @@
    ],
    "brandColor": "#7a5a3a",
    "days": {
-    "2026-11-23": [
-     {
-      "name": "Hühnercurry mit Basmatireis und gem. Salat",
-      "price": 13.5
-     },
-     {
-      "name": "Champignon gebacken mit Kartoffeln und Sc. Tatare",
-      "price": 12.5
-     }
-    ],
-    "2026-11-24": [
-     {
-      "name": "Rinderbraten \"Burgunderart\" mit Nudelnl und gem. Salat",
-      "price": 16.5
-     },
-     {
-      "name": "Quinoa mit Grillgemüse, Rucula und Mango sowie einen Blattsalat",
-      "price": 12.7
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Spareribs mit Bbq-sauce und Kartoffel-wedges",
-      "price": 12.9
-     },
-     {
-      "name": "Berglinseneintopf mit Speck Debreziner und Kartoffeln",
-      "price": 12.7
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Hascheeknödel mit Gulaschsaft und gem. Salat",
-      "price": 12.5
-     },
-     {
-      "name": "1/2 Brathendl gefüllt mit Kartoffeln und gem. Salat",
-      "price": 12.5
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Seehechtfilet gebacken mit Petersilkartofflen, Sc. Tatare und Blattsalat",
-      "price": 12.9
-     },
-     {
-      "name": "Eiernockerl mit gem. Salat",
-      "price": 12.5
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Huber zeigt die Tageskarte vom 2026-11-27"
    }
   },
   {
@@ -341,39 +119,15 @@
    ],
    "brandColor": "#4f7d3a",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [
-     {
-      "name": "Gebratene Leberwurst mit Kartoffeln und Sauerkraut",
-      "price": 14.8,
-      "included_soup": "Nudelsuppe oder Tagessuppe"
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Reisfleisch mit Salat",
-      "price": 14.8,
-      "included_soup": "Nudelsuppe oder Tagessuppe"
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Gebackenes Schweinsschnitzel mit Reis und Kartoffelmayonnaisesalat",
-      "price": 14.8,
-      "included_soup": "Nudelsuppe oder Tagessuppe"
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Kalbsbeuschel mit Semmeklnödel",
-      "price": 14.8,
-      "included_soup": "Nudelsuppe oder Tagessuppe"
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Zur Linde zeigt 2026-11-24 bis 2026-11-27"
    }
   },
   {
@@ -392,69 +146,67 @@
    ],
    "brandColor": "#1f6b3a",
    "days": {
-    "2026-11-23": [
+    "2026-11-30": [
      {
-      "name": "Bauernbradl mit Stöcklkraut und Kartoffeln",
+      "name": "Asiatisches knuspriges Huhn mit Reis",
       "price": null,
       "priceLabel": " "
      },
      {
-      "name": "Spinatpalatschinken",
+      "name": "Steirische Nudeln mit Kürbis, Speck,Zwiebel",
+      "price": null,
+      "priceLabel": " "
+     }
+    ],
+    "2026-12-01": [
+     {
+      "name": "Krautrouladen mit Kartoffeln",
+      "price": null,
+      "priceLabel": " "
+     },
+     {
+      "name": "Spaghetti Florentina",
       "price": null,
       "priceLabel": " ",
       "description": "Vegetarisch"
      }
     ],
-    "2026-11-24": [
+    "2026-12-02": [
      {
-      "name": "Hascheeknödel mit Sauerkraut und Kartoffeln",
+      "name": "Tirolerknödel auf Weinkraut",
       "price": null,
       "priceLabel": " "
      },
      {
-      "name": "Gemüsenockerlpfanne",
+      "name": "Gemüsecurry mit Basmatireis",
       "price": null,
       "priceLabel": " ",
       "description": "Vegetarisch"
      }
     ],
-    "2026-11-25": [
+    "2026-12-03": [
      {
-      "name": "Innviertler Grammelknödel mit Sauerkraut und Kartoffeln",
+      "name": "Hühnercurry mit Basmatireis",
       "price": null,
       "priceLabel": " "
      },
      {
-      "name": "Mediterane Gnocci mit Mangold Kapern, Tomaten",
+      "name": "Gemüselasagne mit Linsen",
       "price": null,
       "priceLabel": " ",
       "description": "Vegetarisch"
      }
     ],
-    "2026-11-26": [
+    "2026-12-04": [
      {
-      "name": "Putengeschnetzeltes mit Risi Bisi",
+      "name": "Zanderfilet natur mit Kartofferl und gr Salat",
       "price": null,
       "priceLabel": " "
      },
      {
-      "name": "Spinatknödel mit Butter und Parmesan",
-      "price": null,
-      "priceLabel": " ",
-      "description": "Vegetarisch"
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "gebackenes Buntbarschfilet mit Kartoffelsalat u. Sc.Tartar",
+      "name": "Bröselkarfiol mit Kartoffeln",
       "price": null,
       "priceLabel": " "
-     },
-     {
-      "name": "Gemüseomelette mit Kartoffel",
-      "price": null,
-      "priceLabel": " ",
-      "description": "Vegetarisch"
      }
     ]
    },
@@ -480,60 +232,60 @@
    ],
    "brandColor": "#8c2f39",
    "days": {
-    "2026-11-23": [
+    "2026-11-30": [
      {
-      "name": "Ausgelöstes Backhendl | Kartoffel-Vogerl Salat",
+      "name": "Putenschnitzel natur | Gemüsereis",
       "price": 12.0
      },
      {
-      "name": "Überbackene Gnocchi | Kürbis | Zucchini | Tomatensalsa",
+      "name": "Gnocchi | Spinatsauce | Tomatenpesto",
       "price": 11.5
      }
     ],
-    "2026-11-24": [
+    "2026-12-01": [
      {
-      "name": "Spaghetti Bolognese (Schwein) | Parmesan | Basilikum",
+      "name": "Schweinsbraten | Serviettenknödel | Speckkrautsalat",
       "price": 12.0
      },
      {
-      "name": "Gebackene Champignons | Kartoffeln | Sauce Tatar",
+      "name": "Gemüse-Kartoffel Gratin | Kräuterdip | Rucola",
       "price": 11.5
      }
     ],
-    "2026-11-25": [
+    "2026-12-02": [
      {
-      "name": "Tafelspitz | Kräuterkruste | Kartoffelschmarrn | Apfelkren",
+      "name": "Hühnerbrust | Paprikarahmsauce | Petersilienkartoffeln",
       "price": 12.0
      },
      {
-      "name": "Kürbis-Lauchstrudel | Kräutersauce",
+      "name": "Cremiges Pilzrisotto | Parmesan | frittierte Kräuter",
       "price": 11.5
      }
     ],
-    "2026-11-26": [
+    "2026-12-03": [
      {
-      "name": "Gefüllte Paprika (Rind) | Püree | Tomatensauce",
+      "name": "Faschierte Laibchen | Bratkartoffeln | Röstzwiebel",
       "price": 12.0
      },
      {
-      "name": "Kürbisrisotto | Parmesan | Rucola",
+      "name": "Kichererbsen-Gemüsecurry | Basmatireis",
       "price": 11.5
      }
     ],
-    "2026-11-27": [
+    "2026-12-04": [
      {
-      "name": "Beef Burger | Speck | Zwiebel | Tomate | Eisberg | Pommes",
+      "name": "Chicken Burger | Eisberg | Tomate | BBQ Sauce | Pommes",
       "price": 13.9
      },
      {
-      "name": "Veggi Burger | Zwiebel | Tomate | Eisberg | Pommes",
+      "name": "Veggi Burger | Eisberg | Tomate | BBQ Sauce | Pommes",
       "price": 13.9
      }
     ]
    },
    "import": {
-    "state": "not_published",
-    "message": "Hannibal zeigt die Woche ab 2026-11-30"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -555,8 +307,8 @@
    ],
    "brandColor": "#2b2b2b",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [
+    "2026-11-30": [],
+    "2026-12-01": [
      {
       "name": "Black Pepper Chicken",
       "price": 13.9,
@@ -602,7 +354,7 @@
       "priceLabel": " "
      }
     ],
-    "2026-11-25": [
+    "2026-12-02": [
      {
       "name": "Black Pepper Chicken",
       "price": 13.9,
@@ -648,7 +400,7 @@
       "priceLabel": " "
      }
     ],
-    "2026-11-26": [
+    "2026-12-03": [
      {
       "name": "Black Pepper Chicken",
       "price": 13.9,
@@ -694,7 +446,7 @@
       "priceLabel": " "
      }
     ],
-    "2026-11-27": [
+    "2026-12-04": [
      {
       "name": "Black Pepper Chicken",
       "price": 13.9,
@@ -763,45 +515,15 @@
    ],
    "brandColor": "#35607f",
    "days": {
-    "2026-11-23": [
-     {
-      "name": "Restaurant geschlossen.",
-      "price": null,
-      "priceLabel": " "
-     }
-    ],
-    "2026-11-24": [
-     {
-      "name": "Restaurant geschlossen.",
-      "price": null,
-      "priceLabel": " "
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Restaurant geschlossen.",
-      "price": null,
-      "priceLabel": " "
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Restaurant geschlossen.",
-      "price": null,
-      "priceLabel": " "
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Restaurant geschlossen.",
-      "price": null,
-      "priceLabel": " "
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Im Turm zeigt die Woche ab 23.11."
    }
   },
   {
@@ -820,110 +542,15 @@
    ],
    "brandColor": "#3f6f5a",
    "days": {
-    "2026-11-23": [
-     {
-      "name": "Freiland-Puten Rollbraten / Rosmarin Gnocchi / Wintergemüse",
-      "price": 12.5
-     },
-     {
-      "name": "Orchiette / Kürbiscreme / Blattspinat / Parmesan / Kürbiskerne",
-      "price": 11.9
-     },
-     {
-      "name": "Bunter Blattsalat / Linsen / Räucherlachs / Gurke / Joghurt",
-      "price": 11.5,
-      "category": "Salat"
-     },
-     {
-      "name": "Tagessuppe",
-      "price": 4.9,
-      "category": "Suppe"
-     }
-    ],
-    "2026-11-24": [
-     {
-      "name": "Paprikahendl / Spätzle / Sauerrahm / Röstzwiebel",
-      "price": 12.5
-     },
-     {
-      "name": "Kartoffel-Lauch Strudel / Babyspinat / Creme fraiche",
-      "price": 11.9
-     },
-     {
-      "name": "Roter Rüben Salat / Cous-Cous / Birne / Walnuss / Croutons",
-      "price": 11.5,
-      "category": "Salat"
-     },
-     {
-      "name": "Tagessuppe",
-      "price": 4.9,
-      "category": "Suppe"
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Geschmorter Rinderbraten / Schupfnudeln / Zucchini-Gemüse",
-      "price": 12.5
-     },
-     {
-      "name": "Kartoffelgulasch / Creme fraiche / Paprika",
-      "price": 11.9
-     },
-     {
-      "name": "Bunter Blattsalat / Tzatziki / Kaspressknödel",
-      "price": 11.5,
-      "category": "Salat"
-     },
-     {
-      "name": "Tagessuppe",
-      "price": 4.9,
-      "category": "Suppe"
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Wiener Schnitzel vom Freilandhuhn / Gemüsereis / Preiselbeeren",
-      "price": 12.5
-     },
-     {
-      "name": "Mediterrane Gemüselasagne / Melanzani / Tomate / Feta",
-      "price": 11.9
-     },
-     {
-      "name": "Eiernudelsalat / Tempura Gemüse / Erdnusssauce / Sprossen",
-      "price": 11.5,
-      "category": "Salat"
-     },
-     {
-      "name": "Tagessuppe",
-      "price": 4.9,
-      "category": "Suppe"
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Gelbes Fisch Curry / Garnelen / Lachs / Kabeljau / Sprossen / Jasminreis",
-      "price": 12.5
-     },
-     {
-      "name": "Geschmorter Ofenkürbis / Parmesanpolenta / Kürbiskerne",
-      "price": 11.9
-     },
-     {
-      "name": "Orientalischer Quinoa Salat / Kichererbsen / Ofenkürbis / Feta",
-      "price": 11.5,
-      "category": "Salat"
-     },
-     {
-      "name": "Tagessuppe",
-      "price": 4.9,
-      "category": "Suppe"
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "In's Haas zeigt 2026-11-23"
    }
   },
   {
@@ -943,55 +570,15 @@
    ],
    "brandColor": "#b0607a",
    "days": {
-    "2026-11-23": [],
-    "2026-11-24": [
-     {
-      "name": "Rindsuppe mit Backerbsen – Cordon Bleu mit Reis",
-      "price": 14.9
-     },
-     {
-      "name": "Wrap mit Pommes",
-      "price": 14.9,
-      "description": "Vegetarisches Wochengericht"
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Gemüsesuppe – Kalbgeschnetzeltes mit Nockerl",
-      "price": 14.9
-     },
-     {
-      "name": "Wrap mit Pommes",
-      "price": 14.9,
-      "description": "Vegetarisches Wochengericht"
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Kartoffelcremesuppe – Faschierter Braten mit Kartoffeln und Bratensaft",
-      "price": 14.9
-     },
-     {
-      "name": "Wrap mit Pommes",
-      "price": 14.9,
-      "description": "Vegetarisches Wochengericht"
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Hühnerbrust im Knoblauchrahmsauce – Schokomousse",
-      "price": 14.9
-     },
-     {
-      "name": "Wrap mit Pommes",
-      "price": 14.9,
-      "description": "Vegetarisches Wochengericht"
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "La lina zeigt die Woche ab 2026-11-24"
    }
   },
   {
@@ -1011,85 +598,85 @@
    ],
    "brandColor": "#b5462f",
    "days": {
-    "2026-11-23": [
+    "2026-11-30": [
      {
-      "name": "Hühnerfilet „Art des Hauses“ (Champignons, Speck, Zwiebel und Käse) überbacken dazu Kräuterrösti",
+      "name": "Gefülltes Hühnerbrüstchen mit Prosciutto und Mozzarella dazu Linguine und Zucchinigemüse",
       "price": 14.9
      },
      {
-      "name": "Gemüselaibchen mit Basilikumdip dazu Salat",
+      "name": "Gemüseschmarrn mit Kräuterdip und Salat",
       "price": 12.9
      },
      {
-      "name": "Kürbisrisotto mit Lauch und Prosciutto dazu Salat",
-      "price": 14.9,
+      "name": "Pappardelle mit Putenstreifen, Schafkäse, Blattspinat und rotem Paprika in Kokos-Limettensauce",
+      "price": 13.9,
       "description": "Star der Woche"
      }
     ],
-    "2026-11-24": [
+    "2026-12-01": [
      {
-      "name": "Steirisches Wurzelfleisch mit Kren und Salzkartoffel",
+      "name": "Schweinsbrat’l mit Semmelknödel und warmem Speckkrautsalat",
       "price": 13.9
      },
      {
-      "name": "Spinat-Lachslasagne an Zitronen-Dillsauce dazu Salat",
-      "price": 13.9
-     },
-     {
-      "name": "Kürbisrisotto mit Lauch und Prosciutto dazu Salat",
-      "price": 14.9,
-      "description": "Star der Woche"
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Piccata „Milanese“ von der Pute auf Tomatenspaghetti dazu Salat",
-      "price": 14.9
-     },
-     {
-      "name": "Powidlpofesen an Vanillesauce",
+      "name": "Marillenbuchteln mit Vanillesauce",
       "price": 10.9
      },
      {
-      "name": "Kürbisrisotto mit Lauch und Prosciutto dazu Salat",
-      "price": 14.9,
+      "name": "Pappardelle mit Putenstreifen, Schafkäse, Blattspinat und rotem Paprika in Kokos-Limettensauce",
+      "price": 13.9,
       "description": "Star der Woche"
      }
     ],
-    "2026-11-26": [
+    "2026-12-02": [
      {
-      "name": "Rindergeschnetzeltes „Stroganoff“ mit Butterspätzle und Broccoli",
-      "price": 15.9
+      "name": "Pikantes Reisfleisch von der Pute dazu Salat",
+      "price": 13.9
      },
      {
-      "name": "Bunte Kartoffelgnocchi in Käsesahnesauce dazu Salat",
+      "name": "Gebackene Kürbisknödel an Parmesansauce dazu Salat",
       "price": 12.9
      },
      {
-      "name": "Kürbisrisotto mit Lauch und Prosciutto dazu Salat",
-      "price": 14.9,
+      "name": "Pappardelle mit Putenstreifen, Schafkäse, Blattspinat und rotem Paprika in Kokos-Limettensauce",
+      "price": 13.9,
       "description": "Star der Woche"
      }
     ],
-    "2026-11-27": [
+    "2026-12-03": [
      {
-      "name": "St. Petersfischfilet mit Mandelbutter mit Petersilienkartoffel und Salat",
-      "price": 15.9
+      "name": "Gefüllte Paprika in Tomatensauce dazu Erdäpfel",
+      "price": 13.9
      },
      {
-      "name": "Gebackener Leberkäs mit Kartoffelpüree und Salat",
+      "name": "Schinkenfleckerl mit Salat",
       "price": 12.9
      },
      {
-      "name": "Kürbisrisotto mit Lauch und Prosciutto dazu Salat",
-      "price": 14.9,
+      "name": "Pappardelle mit Putenstreifen, Schafkäse, Blattspinat und rotem Paprika in Kokos-Limettensauce",
+      "price": 13.9,
+      "description": "Star der Woche"
+     }
+    ],
+    "2026-12-04": [
+     {
+      "name": "Gegrilltes Seehechtfilet auf Juliennegemüse und Krensauce dazu Dillkartoffel",
+      "price": 15.9
+     },
+     {
+      "name": "Blunzngröstl mit Sauerkraut",
+      "price": 12.9
+     },
+     {
+      "name": "Pappardelle mit Putenstreifen, Schafkäse, Blattspinat und rotem Paprika in Kokos-Limettensauce",
+      "price": 13.9,
       "description": "Star der Woche"
      }
     ]
    },
    "import": {
-    "state": "not_published",
-    "message": "Naschmarkt zeigt die Woche ab 2026-11-30"
+    "state": "ok",
+    "message": ""
    }
   },
   {
@@ -1108,76 +695,16 @@
    ],
    "brandColor": "#5b3a29",
    "days": {
-    "2026-11-23": [
-     {
-      "name": "Gegrilltes Hühnerfilet Súpreme mit Butterhörnchen und Gemüse",
-      "price": 13.9,
-      "included_starter": "Tagessuppe",
-      "description": "Mittagsmenü ab € 13,90"
-     },
-     {
-      "name": "Spinatspätzle in Rahmsauce und Parmesan gratiniert",
-      "price": 13.9,
-      "included_starter": "Tagessuppe",
-      "description": "Mittagsmenü ab € 13,90"
-     }
-    ],
-    "2026-11-24": [
-     {
-      "name": "Thai Curry vom Huhn mit Butterreis",
-      "price": 13.9,
-      "included_starter": "Pastinakencremesuppe",
-      "description": "Mittagsmenü ab € 13,90"
-     },
-     {
-      "name": "Zwiebelringe in Bierteig",
-      "price": 13.9,
-      "included_starter": "Pastinakencremesuppe",
-      "description": "Mittagsmenü ab € 13,90"
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Spare Ribs & Chicken Wings mit Wedges und BBQ",
-      "price": 13.9,
-      "included_starter": "Klare Rindsuppe mit Frittaten",
-      "description": "Mittagsmenü ab € 13,90"
-     },
-     {
-      "name": "Gebackene Champignons mit Sauce Tartar",
-      "price": 13.9,
-      "included_starter": "Klare Rindsuppe mit Frittaten",
-      "description": "Mittagsmenü ab € 13,90"
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Cordon Bleu vom Hühnerfilet mit Reis und Kartoffeln",
-      "price": 13.9,
-      "included_starter": "Broccolicremesuppe",
-      "description": "Mittagsmenü ab € 13,90"
-     },
-     {
-      "name": "OMÁS Karottenschnitte",
-      "price": 13.9,
-      "included_starter": "Broccolicremesuppe",
-      "description": "Mittagsmenü ab € 13,90"
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Gegrilltes Lachsfilet auf Tomaten-Basilikum-Risotto",
-      "price": 13.9,
-      "included_starter": "Klare Rindsuppe mit Profiteroles",
-      "description": "Mittagsmenü ab € 13,90"
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": "",
-    "stale": "d17f8d95c12483a6",
-    "fingerprint": "8f35aed7c10ee4e9"
+    "state": "not_published",
+    "message": "OX zeigt die Woche ab 2026-11-23",
+    "stale": "8f35aed7c10ee4e9"
    }
   },
   {
@@ -1197,107 +724,17 @@
    ],
    "brandColor": "#d9534f",
    "days": {
-    "2026-11-23": [
-     {
-      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
-      "price": 5.2,
-      "category": "Suppe"
-     },
-     {
-      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
-      "price": 15.9
-     },
-     {
-      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
-      "price": 13.9
-     },
-     {
-      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
-      "price": 12.9
-     }
-    ],
-    "2026-11-24": [
-     {
-      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
-      "price": 5.2,
-      "category": "Suppe"
-     },
-     {
-      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
-      "price": 15.9
-     },
-     {
-      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
-      "price": 13.9
-     },
-     {
-      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
-      "price": 12.9
-     }
-    ],
-    "2026-11-25": [
-     {
-      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
-      "price": 5.2,
-      "category": "Suppe"
-     },
-     {
-      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
-      "price": 15.9
-     },
-     {
-      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
-      "price": 13.9
-     },
-     {
-      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
-      "price": 12.9
-     }
-    ],
-    "2026-11-26": [
-     {
-      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
-      "price": 5.2,
-      "category": "Suppe"
-     },
-     {
-      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
-      "price": 15.9
-     },
-     {
-      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
-      "price": 13.9
-     },
-     {
-      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
-      "price": 12.9
-     }
-    ],
-    "2026-11-27": [
-     {
-      "name": "Suppe oder Menü Salat – Brokkolicremesuppe",
-      "price": 5.2,
-      "category": "Suppe"
-     },
-     {
-      "name": "Piccata Milanese vom Huhn – Linguine | Tomatensauce | Parmesan",
-      "price": 15.9
-     },
-     {
-      "name": "Käsespätzle – Röstzwiebeln | grüner Salat",
-      "price": 13.9
-     },
-     {
-      "name": "Herbstlicher Salatteller – Falafelbällchen | Gurken | Kirschtomaten",
-      "price": 12.9
-     }
-    ]
+    "2026-11-30": [],
+    "2026-12-01": [],
+    "2026-12-02": [],
+    "2026-12-03": [],
+    "2026-12-04": []
    },
    "import": {
-    "state": "ok",
-    "message": ""
+    "state": "not_published",
+    "message": "Sorry Mama zeigt die Woche ab 23.11."
    }
   }
  ],
- "updatedAt": "2026-11-27T23:00:52+01:00"
+ "updatedAt": "2026-11-28T00:16:37+01:00"
 }
