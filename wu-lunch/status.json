@@ -1,67 +1,66 @@
 {
-  "checked_at": "2026-11-27T13:30:23+01:00",
-  "week_start": "2026-11-23",
-  "week_end": "2026-11-27",
+  "checked_at": "2026-11-28T00:10:53+01:00",
+  "week_start": "2026-11-30",
+  "week_end": "2026-12-04",
   "health": "degraded",
   "sources": {
     "karmafood": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-24T14:40:16+01:00",
-      "checked_at": "2026-11-24T14:40:16+01:00",
+      "checked_at": "2026-11-28T00:14:43+01:00",
       "consecutive_failures": 0,
       "content_sha256": "95fb151431a74d8ceda8ba0e1717bfc5a06bbb6f4a985197ba2c5041a2f5709e",
       "source_image": null,
       "review_version": null,
       "review_week_start": "2026-11-23",
       "source_pdf": "https://cdn.shopify.com/s/files/1/0616/3647/7178/files/Veganes_Lunch_Menu_Karma_Food_K48.pdf?v=1795193798",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "note": "Karma Food: nur ein Plan für eine andere Woche veröffentlicht"
     },
     "finn": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-21T18:00:39+01:00",
-      "checked_at": "2026-11-24T14:40:16+01:00",
+      "checked_at": "2026-11-28T00:14:43+01:00",
       "consecutive_failures": 0,
       "content_sha256": "58313a2c3ae047259f25991493a9f9606a72a9410f112afec747d986bcf97103",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
       "review_version": "image-v2-year-warning",
       "review_week_start": "2026-11-23",
       "source_pdf": null,
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "note": "Finn: aktuelle deutschsprachige Wochenkarte noch nicht veröffentlicht"
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-27T13:30:23+01:00",
+      "last_success": "2026-11-28T00:10:53+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
     "mensa": {
-      "state": "cached",
-      "last_success": "2026-11-23T10:00:12+01:00",
-      "consecutive_failures": 0,
+      "state": "error",
+      "last_success": "2026-11-28T00:10:53+01:00",
+      "consecutive_failures": 1,
       "parser_version": "ai-pdf-9-notice-wording",
       "content_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "error": "Mensa: Gericht nicht in seiner Tageszelle: 2026-11-30 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-12-01 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-"
     },
     "glashaus": {
-      "state": "cached",
-      "last_success": "2026-11-23T10:13:04+01:00",
+      "state": "ok",
+      "last_success": "2026-11-28T00:10:53+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
-      "content_sha256": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "content_sha256": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1"
     },
     "campus": {
-      "state": "cached",
+      "state": "error",
+      "error": "ValueError: Campus: Plan nicht für KW 2026-11-30: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))",
       "last_success": "2026-11-21T00:10:35+01:00",
-      "consecutive_failures": 1,
-      "parser_version": null,
+      "consecutive_failures": 2,
       "content_sha256": "1b0895f89e70b5e1ff093dcc596dbeb4c8fbf7798bc1ccaf0194843e0553bf59"
     },
     "baschly": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-23T05:30:35+01:00",
       "consecutive_failures": 0,
-      "parser_version": null,
+      "note": "Baschly: Karte seit der Vorwoche unverändert; kein gültiger Wochenplan",
       "content_sha256": "53082e265e79648e99267f96be9072253f80554584ddfe2ae397298e4b9334b3",
       "shown_week": "2026-11-23"
     },
@@ -76,50 +75,43 @@
       "state": "cached",
       "last_success": "2026-11-24T14:40:45+01:00",
       "consecutive_failures": 0,
-      "day_sha256": {
-        "2026-11-23": "92957d7d26f81d9ecfb0dd34d08d0dca4d01c8ef7d10658a8a761f53e9377583",
-        "2026-11-24": "1022659d7d1a16605b88bf7dcd8b62aa36137854223a753ce735bf6bb14be13d",
-        "2026-11-25": "7c4776dfc129b03d8c004ba4633974a1a3094add9839315637f970b9ca6e7270",
-        "2026-11-26": "7ff4b7a81fb12bac990f78aca955f5e2985d9d6180c8da330ac9302e314d409c",
-        "2026-11-27": "c0fb360989cfef3b64ba915b543fdd3b1274c8c4b90ce7d9a3d8300c2b5ed6e2"
-      },
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "parser_version": null,
+      "content_sha256": null
     },
     "gruenehuette": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-23T10:00:12+01:00",
       "consecutive_failures": 0,
-      "parser_version": null,
-      "content_sha256": "6bcaa9b74842d8d3b612ac21eab8c7e5445dcb7e3228e50c7f1f126d1f17f316",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "note": "Grüne Hütte: Plan ist nicht von aktueller Woche: 2026-11-23"
     },
     "lia": {
-      "state": "cached",
+      "state": "not_published",
       "last_success": "2026-11-23T10:13:04+01:00",
       "consecutive_failures": 0,
-      "parser_version": 4,
-      "content_sha256": "c02f93ff1d6f0dac569ca1ac4388bff16af066af388dcc319773d4c2cf4038b9",
-      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
+      "note": "Lia WU: kein gültiger Wochenplan für 2026-11-30 (veröffentlichte Daten: 2026-11-23, 2026-11-24, 2026-11-25, 2026-11-26, 2026-11-27)"
     }
   },
-  "problems": [],
+  "problems": [
+    "campus: ValueError: Campus: Plan nicht für KW 2026-11-30: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))",
+    "mensa: Mensa: Gericht nicht in seiner Tageszelle: 2026-11-30 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-12-01 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-"
+  ],
   "schedule_url": "update-policy.json",
   "format_version": 1,
   "ai_repair": {
     "lia": {
-      "last_checked": "2026-11-23T10:14:52+01:00",
+      "last_checked": "2026-11-28T00:15:09+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-23",
-      "source_fingerprint": "c02f93ff1d6f0dac569ca1ac4388bff16af066af388dcc319773d4c2cf4038b9",
+      "review_week_start": "2026-11-30",
+      "source_fingerprint": null,
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
       "error": null
     },
     "campus": {
-      "last_checked": "2026-11-21T00:13:03+01:00",
+      "last_checked": "2026-11-28T00:15:09+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-23",
+      "review_week_start": "2026-11-30",
       "source_fingerprint": "1b0895f89e70b5e1ff093dcc596dbeb4c8fbf7798bc1ccaf0194843e0553bf59",
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -137,19 +129,19 @@
       "error": null
     },
     "gruenehuette": {
-      "last_checked": "2026-11-22T21:36:05+01:00",
+      "last_checked": "2026-11-28T00:15:09+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-23",
-      "source_fingerprint": "6bcaa9b74842d8d3b612ac21eab8c7e5445dcb7e3228e50c7f1f126d1f17f316",
+      "review_week_start": "2026-11-30",
+      "source_fingerprint": null,
       "model": "gpt-6-luna",
       "action": "review_only",
       "repairs": 0,
       "error": null
     },
     "baschly": {
-      "last_checked": "2026-11-23T05:30:38+01:00",
+      "last_checked": "2026-11-28T00:15:09+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-23",
+      "review_week_start": "2026-11-30",
       "source_fingerprint": "53082e265e79648e99267f96be9072253f80554584ddfe2ae397298e4b9334b3",
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -157,9 +149,9 @@
       "error": null
     },
     "losteria": {
-      "last_checked": "2026-11-27T07:00:51+01:00",
+      "last_checked": "2026-11-28T00:15:09+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-23",
+      "review_week_start": "2026-11-30",
       "source_fingerprint": null,
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -167,9 +159,9 @@
       "error": null
     },
     "karmafood": {
-      "last_checked": "2026-11-24T14:42:01+01:00",
+      "last_checked": "2026-11-28T00:15:09+01:00",
       "review_version": "complete-v4-row-evidence",
-      "review_week_start": "2026-11-23",
+      "review_week_start": "2026-11-30",
       "source_fingerprint": "95fb151431a74d8ceda8ba0e1717bfc5a06bbb6f4a985197ba2c5041a2f5709e",
       "model": "gpt-6-luna",
       "action": "review_only",
@@ -209,27 +201,29 @@
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-24T14:40:14+01:00",
-    "source_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
+    "checked_at": "2026-11-28T00:11:03+01:00",
+    "source_sha256": "d42584f1f4a2d2018ab06f656d2bca76bff979b17d64bb05b7327e47d4a62085",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
-    "week_start": "2026-11-23",
+    "week_start": "2026-11-30",
     "version": "ai-pdf-9-notice-wording",
-    "last_attempt_at": "2026-11-21T00:10:43+01:00",
-    "state": "cached",
-    "error": null,
+    "last_attempt_at": "2026-11-28T00:11:03+01:00",
+    "state": "error",
+    "error": "Mensa: Gericht nicht in seiner Tageszelle: 2026-11-30 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-12-01 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-",
     "last_success": "2026-11-21T00:10:43+01:00",
     "published_days_sha256": "9cb45bb8b26c73898ae167744417527018040ffd1e6a3df2e3b377994df22a73",
     "attempts": {
-      "identity": "2026-11-23|ai-pdf-9-notice-wording|ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
-      "day": "2026-11-21",
+      "identity": "2026-11-30|ai-pdf-9-notice-wording|d42584f1f4a2d2018ab06f656d2bca76bff979b17d64bb05b7327e47d4a62085",
+      "day": "2026-11-28",
       "count": 1,
-      "last_at": "2026-11-21T00:10:44+01:00"
+      "last_at": "2026-11-28T00:11:04+01:00"
     }
   },
-  "quality_warnings": [
-    "mensa 2026-11-27: Preis fehlt: Stop Food Waste'",
-    "campus 2026-11-27: kein Menü vorhanden"
-  ],
-  "quality_warning_count": 2,
-  "next_run": "Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)"
+  "quality_warnings": [],
+  "quality_warning_count": 0,
+  "next_run": "Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)",
+  "topf_browser_attempt": {
+    "at": "2026-11-28T00:15:09+01:00",
+    "error": "Topf-Browser: Wochenquelle 2026-11-23 bis 2026-11-27 ist nicht aktuelle Woche 2026-11-30",
+    "failures": 1
+  }
 }

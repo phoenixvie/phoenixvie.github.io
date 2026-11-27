@@ -1,15 +1,244 @@
 {
-  "checked_at": "2026-11-27T13:30:25+01:00",
-  "week_start": "2026-11-23",
+  "checked_at": "2026-11-28T00:15:09+01:00",
+  "week_start": "2026-11-30",
   "model": "gpt-6-luna",
-  "api_calls": 0,
+  "api_calls": 6,
   "results": [
+    {
+      "restaurant": "lia",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die angezeigten Tagesgerichte und Preise der älteren Woche wurden nicht als Angebot für die gesuchte Woche übernommen.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://lia.coffee/": "b4b73b5039c6a0cb2664f7f0f8ace85de3a64ababed1be778c8371e2a238d006"
+      },
+      "usage": {
+        "input_tokens": 7601,
+        "input_tokens_details": {
+          "cache_write_tokens": 7598,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 7598
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 231,
+        "output_tokens_details": {
+          "reasoning_tokens": 87
+        },
+        "total_tokens": 7832
+      }
+    },
+    {
+      "restaurant": "campus",
+      "issues": [
+        "source_error"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die angezeigten Gerichte der älteren Woche wurden nicht übernommen.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.dascampus.at/dc-mittagsmenues": "fa9f6d48fd665978be4f0e06f60e0452c0cf9f14c118dfccb0594ce4ea2632c5"
+      },
+      "usage": {
+        "input_tokens": 2283,
+        "input_tokens_details": {
+          "cache_write_tokens": 2280,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2280
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 213,
+        "output_tokens_details": {
+          "reasoning_tokens": 117
+        },
+        "total_tokens": 2496
+      }
+    },
+    {
+      "restaurant": "gruenehuette",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die angegebene Quelle enthält ein älteres Menü und bestätigt kein Angebot für die gesuchte Woche.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://www.zurgruenenhuette.com/mittags-menu": "4446a748e80b8ee2203cd207ea15f8c38e9357393c74052449e2461add2b0193"
+      },
+      "usage": {
+        "input_tokens": 2263,
+        "input_tokens_details": {
+          "cache_write_tokens": 2260,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2260
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 247,
+        "output_tokens_details": {
+          "reasoning_tokens": 145
+        },
+        "total_tokens": 2510
+      }
+    },
+    {
+      "restaurant": "baschly",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Seiten belegen kein datiertes Wochenmenü für den 30.11. bis 04.12.2026.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-veggie": "e90955c3a27e25b906ef071d46da068c47bbcff4f2e2e27f8d5d555aa0805e68",
+        "https://shop.baschly.com/collections/lunch-special/products/lunch-special-mit-fleisch": "48eb0a8f4328bcabdaae22c208894500e4ce5c9a8ed661425ba5b6a9aaccce76"
+      },
+      "usage": {
+        "input_tokens": 2753,
+        "input_tokens_details": {
+          "cache_write_tokens": 2750,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2750
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 287,
+        "output_tokens_details": {
+          "reasoning_tokens": 157
+        },
+        "total_tokens": 3040
+      }
+    },
+    {
+      "restaurant": "losteria",
+      "issues": [],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die Quelle belegt keine Zuordnung dieser Gerichte zur geprüften Woche oder zu einzelnen Wochentagen.",
+        "Eine Allergenkarte wird verlinkt, ihr Inhalt ist in der übergebenen Quelle jedoch nicht enthalten."
+      ],
+      "ai_only_items": 4,
+      "parser_only_items": 0,
+      "ai_only_examples": [
+        "None: crema di patate con tartufo",
+        "None: pizza bianca tacchino e cipolletartufo di cielo",
+        "None: tagliatelle tartufo e funghi",
+        "None: tortina di mandorle"
+      ],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://losteria.net/at/menue/menu-della-casa/": "d954d7e104f2f054f896df9a45d5afefdc4df15f4b68ea55f246358bbcc920d9"
+      },
+      "usage": {
+        "input_tokens": 1921,
+        "input_tokens_details": {
+          "cache_write_tokens": 1918,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 1918
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 975,
+        "output_tokens_details": {
+          "reasoning_tokens": 204
+        },
+        "total_tokens": 2896
+      }
+    },
+    {
+      "restaurant": "karmafood",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "review_only",
+      "repairs": [],
+      "validation_issues": [
+        "Die verlinkte PDF-Datei ist im übergebenen Quelleninhalt nur als Link erkennbar; ihr Inhalt liegt nicht lesbar vor.",
+        "Für 2026-11-30 bis 2026-12-04 sind in der übergebenen Quelle keine Gerichte oder Preise belegt.",
+        "Keine eindeutig veröffentlichte aktuelle Karte"
+      ],
+      "ai_only_items": 0,
+      "parser_only_items": 0,
+      "ai_only_examples": [],
+      "parser_only_examples": [],
+      "source_hashes": {
+        "https://karmafood.at/pages/wochenmenu-karma-food-wien": "bc6952d6039605b616ab80c41e98ae13b1bd5a396618a846f8ef48deb4a032b3"
+      },
+      "usage": {
+        "input_tokens": 2665,
+        "input_tokens_details": {
+          "cache_write_tokens": 2662,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 2662
+          },
+          "cached_tokens": 0
+        },
+        "output_tokens": 328,
+        "output_tokens_details": {
+          "reasoning_tokens": 182
+        },
+        "total_tokens": 2993
+      }
+    },
     {
       "restaurant": "mensa",
       "issues": [
-        "missing_price"
+        "source_error"
       ],
       "action": "dedicated_pdf_ai",
+      "repairs": []
+    },
+    {
+      "restaurant": "topfdeckel",
+      "issues": [],
+      "action": "browser_import",
+      "repairs": []
+    },
+    {
+      "restaurant": "finn",
+      "issues": [
+        "source_not_published"
+      ],
+      "action": "dedicated_image_ai",
       "repairs": []
     },
     {

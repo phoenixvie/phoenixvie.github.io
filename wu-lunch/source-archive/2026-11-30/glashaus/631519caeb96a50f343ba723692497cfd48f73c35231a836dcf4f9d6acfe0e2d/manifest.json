@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "restaurant_id": "glashaus",
+  "week_start": "2026-11-30",
+  "menu_sha256": "631519caeb96a50f343ba723692497cfd48f73c35231a836dcf4f9d6acfe0e2d",
+  "captured_at": "2026-11-27T23:16:09+00:00",
+  "run_id": "46080926851",
+  "code_commit": "74cce7bff84f66fd246a62bc3a0912b681b7d689",
+  "menu_status": "verified",
+  "publication_time_confirmed": false,
+  "training_review_required": true,
+  "source_state": {
+    "state": "ok",
+    "last_success": "2026-11-28T00:10:53+01:00",
+    "consecutive_failures": 0,
+    "parser_version": null,
+    "content_sha256": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1"
+  },
+  "ai_audit": {
+    "last_checked": "2026-11-23T10:14:52+01:00",
+    "review_version": "complete-v4-row-evidence",
+    "review_week_start": "2026-11-23",
+    "source_fingerprint": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1",
+    "model": "gpt-6-luna",
+    "action": "review_only",
+    "repairs": 0,
+    "error": null
+  },
+  "sources": [
+    {
+      "restaurant_id": "glashaus",
+      "url": "https://www.dasglashaus.at/menues",
+      "at": "2026-11-27T23:10:58+00:00",
+      "sha256": "d6eb567262752a3ea2d7e12901f224decdd1143c5118b78c117aa04f27389e12",
+      "bytes": 787295,
+      "format": "html",
+      "blob": "d6eb567262752a3ea2d7e12901f224decdd1143c5118b78c117aa04f27389e12.html",
+      "stage": "parser",
+      "context": null,
+      "used_for_extraction": true
+    }
+  ],
+  "menu": {
+    "days": {
+      "2026-11-30": [
+        {
+          "name": "Süßkartoffel-Curry mit Basmati-Reis",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Vanillehuhn mit Karottenpüree",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ],
+      "2026-12-01": [
+        {
+          "name": "Karfiol-Korma mit Basmati-Reis",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Hühner-Piccata mit Tomatenspaghetti",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ],
+      "2026-12-02": [
+        {
+          "name": "Spinatknödel mit Parmesansauce",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Schweinschnitzel mit Erdäpfelsalat",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ],
+      "2026-12-03": [
+        {
+          "name": "Süßkartoffelgratin mit Feta und Rucola",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Hühnergeschnetzeltes mit Basmati-Reis",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ],
+      "2026-12-04": [
+        {
+          "name": "Gebackener Emmentaler mit Glashaus-Fries",
+          "price": 14.9,
+          "category": "Vegetarisch",
+          "diet": "veggie",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        },
+        {
+          "name": "Gebratenes Seelachsfilet mit Grillgemüse",
+          "price": 15.9,
+          "category": "Fisch / Fleisch",
+          "diet": "meat",
+          "description": "Mit Suppe oder Salat",
+          "allergens": [],
+          "included_soup": null,
+          "included_choices": [
+            "Suppe",
+            "Salat"
+          ]
+        }
+      ]
+    },
+    "seasonal": [],
+    "validFrom": "2026-11-30",
+    "validUntil": "2026-12-04"
+  }
+}

@@ -378,6 +378,42 @@
       "menu_status": "verified",
       "manifest": "2026-11-23/topfdeckel/7dd212df6605b8e8b89c1654806ec2d6db8cc15913965034698a39cd0acf8b98/manifest.json",
       "source_count": 11
+    },
+    {
+      "restaurant_id": "mensa",
+      "week_start": "2026-11-30",
+      "menu_sha256": "3fb11c2b89c979b687edbb364be18a241698ce2419b8f8b4cc5b49b7321f38ca",
+      "captured_at": "2026-11-27T23:16:09+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-30/mensa/3fb11c2b89c979b687edbb364be18a241698ce2419b8f8b4cc5b49b7321f38ca/manifest.json",
+      "source_count": 4
+    },
+    {
+      "restaurant_id": "omakueche",
+      "week_start": "2026-11-30",
+      "menu_sha256": "bc9a482e7b8395170118a4fd0c7de3420ea42f3206f5e94588b8d2997c1b9dea",
+      "captured_at": "2026-11-27T23:16:09+00:00",
+      "menu_status": "recurring",
+      "manifest": "2026-11-30/omakueche/bc9a482e7b8395170118a4fd0c7de3420ea42f3206f5e94588b8d2997c1b9dea/manifest.json",
+      "source_count": 1
+    },
+    {
+      "restaurant_id": "glashaus",
+      "week_start": "2026-11-30",
+      "menu_sha256": "631519caeb96a50f343ba723692497cfd48f73c35231a836dcf4f9d6acfe0e2d",
+      "captured_at": "2026-11-27T23:16:09+00:00",
+      "menu_status": "verified",
+      "manifest": "2026-11-30/glashaus/631519caeb96a50f343ba723692497cfd48f73c35231a836dcf4f9d6acfe0e2d/manifest.json",
+      "source_count": 1
+    },
+    {
+      "restaurant_id": "losteria",
+      "week_start": "2026-11-30",
+      "menu_sha256": "11dcc9584b726cc2494a0558b50eec5535322b2e206cf7d3deaf1a29e9df0a71",
+      "captured_at": "2026-11-27T23:16:09+00:00",
+      "menu_status": "seasonal",
+      "manifest": "2026-11-30/losteria/11dcc9584b726cc2494a0558b50eec5535322b2e206cf7d3deaf1a29e9df0a71/manifest.json",
+      "source_count": 1
     }
   ]
 }
