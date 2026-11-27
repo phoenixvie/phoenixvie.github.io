@@ -2,7 +2,7 @@
   "version": "menu-sanity-v2-word-forms-and-courses",
   "model": "gpt-6-luna",
   "week_start": "2026-11-23",
-  "checked_at": "2026-11-26T12:42:47.414640+00:00",
+  "checked_at": "2026-11-27T06:00:59.370131+00:00",
   "cleanup": [],
   "issues": [],
   "state": "passed",
