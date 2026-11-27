@@ -1,46 +1,9 @@
 {
-  "checked_at": "2026-11-27T07:00:51+01:00",
+  "checked_at": "2026-11-27T10:30:53+01:00",
   "week_start": "2026-11-23",
   "model": "gpt-6-luna",
-  "api_calls": 1,
+  "api_calls": 0,
   "results": [
-    {
-      "restaurant": "losteria",
-      "issues": [],
-      "action": "review_only",
-      "repairs": [],
-      "validation_issues": [
-        "Die Quelle belegt keine Zuordnung der Gerichte zu einzelnen Wochentagen."
-      ],
-      "ai_only_items": 4,
-      "parser_only_items": 0,
-      "ai_only_examples": [
-        "None: crema di patate con tartufo",
-        "None: pizza bianca tacchino e cipolletartufo di cielo",
-        "None: tagliatelle tartufo e funghi",
-        "None: tortina di mandorle"
-      ],
-      "parser_only_examples": [],
-      "source_hashes": {
-        "https://losteria.net/at/menue/menu-della-casa/": "d954d7e104f2f054f896df9a45d5afefdc4df15f4b68ea55f246358bbcc920d9"
-      },
-      "usage": {
-        "input_tokens": 1921,
-        "input_tokens_details": {
-          "cache_write_tokens": 1918,
-          "cache_write_tokens_details": {
-            "ttl_12h_tokens": 0,
-            "ttl_30m_tokens": 1918
-          },
-          "cached_tokens": 0
-        },
-        "output_tokens": 781,
-        "output_tokens_details": {
-          "reasoning_tokens": 206
-        },
-        "total_tokens": 2702
-      }
-    },
     {
       "restaurant": "mensa",
       "issues": [
