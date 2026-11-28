@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-28T00:10:53+01:00",
+  "checked_at": "2026-11-28T08:00:57+01:00",
   "week_start": "2026-11-30",
   "week_end": "2026-12-04",
   "health": "degraded",
@@ -7,7 +7,7 @@
     "karmafood": {
       "state": "not_published",
       "last_success": "2026-11-24T14:40:16+01:00",
-      "checked_at": "2026-11-28T00:14:43+01:00",
+      "checked_at": "2026-11-28T08:04:14+01:00",
       "consecutive_failures": 0,
       "content_sha256": "95fb151431a74d8ceda8ba0e1717bfc5a06bbb6f4a985197ba2c5041a2f5709e",
       "source_image": null,
@@ -19,7 +19,7 @@
     "finn": {
       "state": "not_published",
       "last_success": "2026-11-21T18:00:39+01:00",
-      "checked_at": "2026-11-28T00:14:43+01:00",
+      "checked_at": "2026-11-28T08:04:14+01:00",
       "consecutive_failures": 0,
       "content_sha256": "58313a2c3ae047259f25991493a9f9606a72a9410f112afec747d986bcf97103",
       "source_image": "https://cdn.shopify.com/s/files/1/0292/5182/9839/files/FINN_kw48.jpg?v=1795276124",
@@ -30,30 +30,47 @@
     },
     "omakueche": {
       "state": "recurring",
-      "last_success": "2026-11-28T00:10:53+01:00",
+      "last_success": "2026-11-28T08:00:57+01:00",
       "consecutive_failures": 0,
       "note": "Erwachsenen-Buffet lt. bereitgestelltem Preisaushang (kein täglich wechselnder Onlineplan)"
     },
     "mensa": {
-      "state": "error",
-      "last_success": "2026-11-28T00:10:53+01:00",
-      "consecutive_failures": 1,
+      "state": "ok",
+      "last_success": "2026-11-28T08:04:12+01:00",
+      "consecutive_failures": 0,
       "parser_version": "ai-pdf-9-notice-wording",
-      "content_sha256": "ecae5533ed62c3cd72995e4ee9833cba5f3033cb8ff512e0036e3bd9ee494190",
-      "error": "Mensa: Gericht nicht in seiner Tageszelle: 2026-11-30 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-12-01 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-"
+      "content_sha256": "d42584f1f4a2d2018ab06f656d2bca76bff979b17d64bb05b7327e47d4a62085",
+      "model": "gpt-6-luna",
+      "usage": {
+        "input_tokens": 16871,
+        "input_tokens_details": {
+          "cache_write_tokens": 10423,
+          "cache_write_tokens_details": {
+            "ttl_12h_tokens": 0,
+            "ttl_30m_tokens": 10423
+          },
+          "cached_tokens": 6445
+        },
+        "output_tokens": 9245,
+        "output_tokens_details": {
+          "reasoning_tokens": 294
+        },
+        "total_tokens": 26116
+      }
     },
     "glashaus": {
-      "state": "ok",
+      "state": "cached",
       "last_success": "2026-11-28T00:10:53+01:00",
       "consecutive_failures": 0,
       "parser_version": null,
-      "content_sha256": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1"
+      "content_sha256": "51be528edebf1666e9416f518eed686dd3d6705265c7e629e4a0250c30c801e1",
+      "note": "Wochenkarte bereits geprüft veröffentlicht; kein erneuter Abruf"
     },
     "campus": {
       "state": "error",
       "error": "ValueError: Campus: Plan nicht für KW 2026-11-30: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))",
       "last_success": "2026-11-21T00:10:35+01:00",
-      "consecutive_failures": 2,
+      "consecutive_failures": 3,
       "content_sha256": "1b0895f89e70b5e1ff093dcc596dbeb4c8fbf7798bc1ccaf0194843e0553bf59"
     },
     "baschly": {
@@ -92,8 +109,7 @@
     }
   },
   "problems": [
-    "campus: ValueError: Campus: Plan nicht für KW 2026-11-30: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))",
-    "mensa: Mensa: Gericht nicht in seiner Tageszelle: 2026-11-30 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-12-01 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-"
+    "campus: ValueError: Campus: Plan nicht für KW 2026-11-30: (datetime.date(2026, 11, 23), datetime.date(2026, 11, 26))"
   ],
   "schedule_url": "update-policy.json",
   "format_version": 1,
@@ -201,29 +217,29 @@
     }
   },
   "mensa_luna_audit": {
-    "checked_at": "2026-11-28T00:11:03+01:00",
+    "checked_at": "2026-11-28T08:01:01+01:00",
     "source_sha256": "d42584f1f4a2d2018ab06f656d2bca76bff979b17d64bb05b7327e47d4a62085",
     "source_url": "https://www.wumensa.at/menuplan-deutsch/",
     "week_start": "2026-11-30",
     "version": "ai-pdf-9-notice-wording",
-    "last_attempt_at": "2026-11-28T00:11:03+01:00",
-    "state": "error",
-    "error": "Mensa: Gericht nicht in seiner Tageszelle: 2026-11-30 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-12-01 Soup Deal – Suppe laut Tagesaushang; Mensa: Gericht nicht in seiner Tageszelle: 2026-",
-    "last_success": "2026-11-21T00:10:43+01:00",
-    "published_days_sha256": "9cb45bb8b26c73898ae167744417527018040ffd1e6a3df2e3b377994df22a73",
+    "last_attempt_at": "2026-11-28T08:01:01+01:00",
+    "state": "ok",
+    "error": null,
+    "last_success": "2026-11-28T08:01:01+01:00",
+    "published_days_sha256": "240158900b6c91f9156071b16abcbccff4c66aedcef3153bb29585b7a877e66a",
     "attempts": {
       "identity": "2026-11-30|ai-pdf-9-notice-wording|d42584f1f4a2d2018ab06f656d2bca76bff979b17d64bb05b7327e47d4a62085",
       "day": "2026-11-28",
-      "count": 1,
-      "last_at": "2026-11-28T00:11:04+01:00"
+      "count": 2,
+      "last_at": "2026-11-28T08:01:02+01:00"
     }
+  },
+  "topf_browser_attempt": {
+    "at": "2026-11-28T08:04:49+01:00",
+    "error": "Topf-Browser: Wochenquelle 2026-11-23 bis 2026-11-27 ist nicht aktuelle Woche 2026-11-30",
+    "failures": 2
   },
   "quality_warnings": [],
   "quality_warning_count": 0,
-  "next_run": "Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)",
-  "topf_browser_attempt": {
-    "at": "2026-11-28T00:15:09+01:00",
-    "error": "Topf-Browser: Wochenquelle 2026-11-23 bis 2026-11-27 ist nicht aktuelle Woche 2026-11-30",
-    "failures": 1
-  }
+  "next_run": "Wachlauf Fr-Nacht bis Mo-Abend (Sa/So je 3x, Mo vormittags alle 15 Minuten, solange Menüs fehlen), sonst nach GitHub-Zeitplan (Europe/Vienna)"
 }
