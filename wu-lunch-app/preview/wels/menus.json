@@ -750,16 +750,56 @@
    ],
    "brandColor": "#5b3a29",
    "days": {
-    "2026-11-30": [],
-    "2026-12-01": [],
-    "2026-12-02": [],
+    "2026-11-30": [
+     {
+      "name": "Gebackenes Surschnitzel mit Erdäpfelsalat, Reis und Kartoffeln",
+      "price": 13.9,
+      "included_starter": "Tagessuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     },
+     {
+      "name": "Kürbis-Gnocci in Kürbis-Sahne-Sauce",
+      "price": 13.9,
+      "included_starter": "Tagessuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     }
+    ],
+    "2026-12-01": [
+     {
+      "name": "Burgerbuffet mit Wedges",
+      "price": 13.9,
+      "included_starter": "Erdäpfelsuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     },
+     {
+      "name": "Penne Cabonara",
+      "price": 13.9,
+      "included_starter": "Erdäpfelsuppe",
+      "description": "Mittagsmenü ab € 13,90"
+     }
+    ],
+    "2026-12-02": [
+     {
+      "name": "Knuspriger Schweinsbraten mit Semmelknödel, Krautsalat und Kartoffeln",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Schöberl",
+      "description": "Mittagsmenü ab € 13,90"
+     },
+     {
+      "name": "Gebackener Emmentaler mit Preiselbeersahne",
+      "price": 13.9,
+      "included_starter": "Klare Rindsuppe mit Schöberl",
+      "description": "Mittagsmenü ab € 13,90"
+     }
+    ],
     "2026-12-03": [],
     "2026-12-04": []
    },
    "import": {
-    "state": "not_published",
-    "message": "OX zeigt die Woche ab 2026-11-23",
-    "stale": "8f35aed7c10ee4e9"
+    "state": "ok",
+    "message": "",
+    "stale": "8f35aed7c10ee4e9",
+    "fingerprint": "2a379cf326b66748"
    }
   },
   {
@@ -791,5 +831,5 @@
    }
   }
  ],
- "updatedAt": "2026-11-28T00:35:43+01:00"
+ "updatedAt": "2026-11-28T08:06:08+01:00"
 }
